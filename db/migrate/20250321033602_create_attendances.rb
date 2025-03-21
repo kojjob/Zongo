@@ -8,11 +8,11 @@ class CreateAttendances < ActiveRecord::Migration[8.0]
       t.datetime :cancelled_at
       t.text :additional_info
       t.jsonb :form_responses, default: {}
-      
+
       t.timestamps
     end
-    
-    add_index :attendances, [:user_id, :event_id], unique: true
+
+    add_index :attendances, [ :user_id, :event_id ], unique: true
     add_index :attendances, :status
   end
 end

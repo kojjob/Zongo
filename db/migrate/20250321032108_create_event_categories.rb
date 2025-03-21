@@ -8,6 +8,6 @@ class CreateEventCategories < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :event_categories, [:parent_category_id, :name], unique: true
+    add_index :event_categories, [ :parent_category_id, :name ], unique: true
   end
 end

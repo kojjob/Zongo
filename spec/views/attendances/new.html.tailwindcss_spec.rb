@@ -15,7 +15,6 @@ RSpec.describe "attendances/new", type: :view do
     render
 
     assert_select "form[action=?][method=?]", attendances_path, "post" do
-
       assert_select "input[name=?]", "attendance[user_id]"
 
       assert_select "input[name=?]", "attendance[event_id]"

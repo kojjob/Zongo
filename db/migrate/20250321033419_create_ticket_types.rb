@@ -11,7 +11,7 @@ class CreateTicketTypes < ActiveRecord::Migration[8.0]
       t.integer :sold_count, default: 0
       t.integer :max_per_user
       t.boolean :transferable, default: true
-      
+
       t.timestamps
     end
   end

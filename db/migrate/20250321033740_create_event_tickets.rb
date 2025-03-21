@@ -12,10 +12,10 @@ class CreateEventTickets < ActiveRecord::Migration[8.0]
       t.datetime :refunded_at
       t.string :payment_reference
       t.string :transaction_id
-      
+
       t.timestamps
     end
-    
+
     add_index :event_tickets, :ticket_code, unique: true
     add_index :event_tickets, :status
   end

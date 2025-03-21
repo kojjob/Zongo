@@ -8,10 +8,10 @@ class CreateEventMedia < ActiveRecord::Migration[8.0]
       t.text :description
       t.boolean :is_featured, default: false
       t.integer :display_order
-      
+
       t.timestamps
     end
-    
-    add_index :event_media, [:event_id, :media_type]
+
+    add_index :event_media, [ :event_id, :media_type ]
   end
 end

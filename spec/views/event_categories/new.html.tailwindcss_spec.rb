@@ -14,7 +14,6 @@ RSpec.describe "event_categories/new", type: :view do
     render
 
     assert_select "form[action=?][method=?]", event_categories_path, "post" do
-
       assert_select "input[name=?]", "event_category[name]"
 
       assert_select "textarea[name=?]", "event_category[description]"

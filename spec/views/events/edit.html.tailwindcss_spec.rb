@@ -32,7 +32,6 @@ RSpec.describe "events/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", event_path(event), "post" do
-
       assert_select "input[name=?]", "event[title]"
 
       assert_select "textarea[name=?]", "event[description]"

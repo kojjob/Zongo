@@ -20,7 +20,6 @@ RSpec.describe "event_comments/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", event_comment_path(event_comment), "post" do
-
       assert_select "input[name=?]", "event_comment[event_id]"
 
       assert_select "input[name=?]", "event_comment[user_id]"

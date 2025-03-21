@@ -22,7 +22,6 @@ RSpec.describe "ticket_types/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", ticket_type_path(ticket_type), "post" do
-
       assert_select "input[name=?]", "ticket_type[event_id]"
 
       assert_select "input[name=?]", "ticket_type[name]"

@@ -21,10 +21,10 @@ class CreateEvents < ActiveRecord::Migration[8.0]
       t.integer :favorites_count, default: 0
       t.integer :views_count, default: 0
       t.jsonb :custom_fields, default: {}
-      
+
       t.timestamps
     end
-    
+
     add_index :events, :slug, unique: true
     add_index :events, :start_time
     add_index :events, :status

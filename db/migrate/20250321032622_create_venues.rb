@@ -13,11 +13,11 @@ class CreateVenues < ActiveRecord::Migration[8.0]
       t.integer :capacity
       t.jsonb :facilities, default: {}
       t.references :user, foreign_key: true
-      
+
       t.timestamps
     end
-    
-    add_index :venues, [:latitude, :longitude]
+
+    add_index :venues, [ :latitude, :longitude ]
     add_index :venues, :city
   end
 end

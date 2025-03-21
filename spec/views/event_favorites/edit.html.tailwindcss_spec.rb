@@ -16,7 +16,6 @@ RSpec.describe "event_favorites/edit", type: :view do
     render
 
     assert_select "form[action=?][method=?]", event_favorite_path(event_favorite), "post" do
-
       assert_select "input[name=?]", "event_favorite[event_id]"
 
       assert_select "input[name=?]", "event_favorite[user_id]"
