@@ -1,0 +1,82 @@
+<div id="<%= dom_id event %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= event.title %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Description:</strong>
+    <%= event.description %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Short description:</strong>
+    <%= event.short_description %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Start time:</strong>
+    <%= event.start_time %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">End time:</strong>
+    <%= event.end_time %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Capacity:</strong>
+    <%= event.capacity %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Status:</strong>
+    <%= event.status %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Is featured:</strong>
+    <%= event.is_featured? ? "Yes" : "No" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Is private:</strong>
+    <%= event.is_private? ? "Yes" : "No" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Access code:</strong>
+    <%= event.access_code %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Slug:</strong>
+    <%= event.slug %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Organizer:</strong>
+    <%= event.organizer_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Event category:</strong>
+    <%= event.event_category_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Venue:</strong>
+    <%= event.venue_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Recurrence type:</strong>
+    <%= event.recurrence_type %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Recurrence pattern:</strong>
+    <%= event.recurrence_pattern %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Parent event:</strong>
+    <%= event.parent_event_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Favorites count:</strong>
+    <%= event.favorites_count %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Views count:</strong>
+    <%= event.views_count %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Custom fields:</strong>
+    <%= event.custom_fields %>
+  </div>
+</div>

@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  resources :event_favorites
+  resources :event_comments
+  resources :event_media
+  resources :event_tickets
+  resources :attendances
+  resources :ticket_types
+  resources :events
+  resources :venues
+  resources :event_categories
   # Active Storage routes
   # This is needed since we're using Rails 8.0
   direct :rails_blob do |blob, options = {}|

@@ -1,0 +1,47 @@
+<%= form_with(model: event_comment, class: "contents") do |form| %>
+  <% if event_comment.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(event_comment.errors.count, "error") %> prohibited this event_comment from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% event_comment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :event_id %>
+    <%= form.text_field :event_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:event_id].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:event_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:user_id].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :parent_comment_id %>
+    <%= form.text_field :parent_comment_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:parent_comment_id].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:parent_comment_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :content %>
+    <%= form.textarea :content, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:content].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:content].any?}] %>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.label :is_hidden %>
+    <%= form.checkbox :is_hidden, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:is_hidden].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:is_hidden].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :likes_count %>
+    <%= form.number_field :likes_count, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_comment.errors[:likes_count].none?, "border-red-400 focus:outline-red-600": event_comment.errors[:likes_count].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_21_034150) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "attendances", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.integer "status", default: 0
+    t.datetime "checked_in_at"
+    t.datetime "cancelled_at"
+    t.text "additional_info"
+    t.jsonb "form_responses", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_attendances_on_event_id"
+    t.index ["status"], name: "index_attendances_on_status"
+    t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
   create_table "contact_submissions", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -67,6 +83,111 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
     t.index ["email"], name: "index_contact_submissions_on_email", unique: true
     t.index ["read"], name: "index_contact_submissions_on_read"
     t.index ["read_at"], name: "index_contact_submissions_on_read_at"
+  end
+
+  create_table "event_categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "icon"
+    t.bigint "parent_category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_category_id", "name"], name: "index_event_categories_on_parent_category_id_and_name", unique: true
+    t.index ["parent_category_id"], name: "index_event_categories_on_parent_category_id"
+  end
+
+  create_table "event_comments", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "parent_comment_id"
+    t.text "content", null: false
+    t.boolean "is_hidden", default: false
+    t.integer "likes_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_comments_on_event_id"
+    t.index ["parent_comment_id"], name: "index_event_comments_on_parent_comment_id"
+    t.index ["user_id"], name: "index_event_comments_on_user_id"
+  end
+
+  create_table "event_favorites", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_event_favorites_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_event_favorites_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_event_favorites_on_user_id"
+  end
+
+  create_table "event_media", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "media_type", null: false
+    t.string "title"
+    t.text "description"
+    t.boolean "is_featured", default: false
+    t.integer "display_order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "media_type"], name: "index_event_media_on_event_id_and_media_type"
+    t.index ["event_id"], name: "index_event_media_on_event_id"
+    t.index ["user_id"], name: "index_event_media_on_user_id"
+  end
+
+  create_table "event_tickets", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "event_id", null: false
+    t.bigint "ticket_type_id", null: false
+    t.bigint "attendance_id", null: false
+    t.string "ticket_code", null: false
+    t.integer "status", default: 0
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "used_at"
+    t.datetime "refunded_at"
+    t.string "payment_reference"
+    t.string "transaction_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attendance_id"], name: "index_event_tickets_on_attendance_id"
+    t.index ["event_id"], name: "index_event_tickets_on_event_id"
+    t.index ["status"], name: "index_event_tickets_on_status"
+    t.index ["ticket_code"], name: "index_event_tickets_on_ticket_code", unique: true
+    t.index ["ticket_type_id"], name: "index_event_tickets_on_ticket_type_id"
+    t.index ["user_id"], name: "index_event_tickets_on_user_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description", null: false
+    t.text "short_description"
+    t.datetime "start_time", null: false
+    t.datetime "end_time", null: false
+    t.integer "capacity"
+    t.integer "status", default: 0
+    t.boolean "is_featured", default: false
+    t.boolean "is_private", default: false
+    t.string "access_code"
+    t.string "slug", null: false
+    t.bigint "organizer_id", null: false
+    t.bigint "event_category_id", null: false
+    t.bigint "venue_id", null: false
+    t.integer "recurrence_type", default: 0
+    t.jsonb "recurrence_pattern"
+    t.bigint "parent_event_id"
+    t.integer "favorites_count", default: 0
+    t.integer "views_count", default: 0
+    t.jsonb "custom_fields", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_category_id"], name: "index_events_on_event_category_id"
+    t.index ["is_featured"], name: "index_events_on_is_featured"
+    t.index ["organizer_id"], name: "index_events_on_organizer_id"
+    t.index ["parent_event_id"], name: "index_events_on_parent_event_id"
+    t.index ["slug"], name: "index_events_on_slug", unique: true
+    t.index ["start_time"], name: "index_events_on_start_time"
+    t.index ["status"], name: "index_events_on_status"
+    t.index ["venue_id"], name: "index_events_on_venue_id"
   end
 
   create_table "payment_methods", force: :cascade do |t|
@@ -113,6 +234,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
     t.index ["next_occurrence"], name: "index_scheduled_transactions_on_next_occurrence"
     t.index ["source_wallet_id"], name: "index_scheduled_transactions_on_source_wallet_id"
     t.index ["status"], name: "index_scheduled_transactions_on_status"
+  end
+
+  create_table "ticket_types", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "quantity"
+    t.datetime "sales_start_time"
+    t.datetime "sales_end_time"
+    t.integer "sold_count", default: 0
+    t.integer "max_per_user"
+    t.boolean "transferable", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_ticket_types_on_event_id"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -204,6 +341,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "venues", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "address", null: false
+    t.string "city", null: false
+    t.string "region"
+    t.string "postal_code"
+    t.string "country", default: "Ghana"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.integer "capacity"
+    t.jsonb "facilities", default: {}
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["city"], name: "index_venues_on_city"
+    t.index ["latitude", "longitude"], name: "index_venues_on_latitude_and_longitude"
+    t.index ["user_id"], name: "index_venues_on_user_id"
+  end
+
   create_table "wallets", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "wallet_id", null: false
@@ -221,11 +378,31 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_022638) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendances", "events"
+  add_foreign_key "attendances", "users"
+  add_foreign_key "event_categories", "event_categories", column: "parent_category_id"
+  add_foreign_key "event_comments", "event_comments", column: "parent_comment_id"
+  add_foreign_key "event_comments", "events"
+  add_foreign_key "event_comments", "users"
+  add_foreign_key "event_favorites", "events"
+  add_foreign_key "event_favorites", "users"
+  add_foreign_key "event_media", "events"
+  add_foreign_key "event_media", "users"
+  add_foreign_key "event_tickets", "attendances"
+  add_foreign_key "event_tickets", "events"
+  add_foreign_key "event_tickets", "ticket_types"
+  add_foreign_key "event_tickets", "users"
+  add_foreign_key "events", "event_categories"
+  add_foreign_key "events", "events", column: "parent_event_id"
+  add_foreign_key "events", "users", column: "organizer_id"
+  add_foreign_key "events", "venues"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "scheduled_transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "scheduled_transactions", "wallets", column: "source_wallet_id"
+  add_foreign_key "ticket_types", "events"
   add_foreign_key "transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "transactions", "wallets", column: "source_wallet_id"
   add_foreign_key "user_settings", "users"
+  add_foreign_key "venues", "users"
   add_foreign_key "wallets", "users"
 end
