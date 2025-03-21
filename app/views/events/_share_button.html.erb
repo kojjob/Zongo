@@ -1,0 +1,13 @@
+<%# app/views/events/_share_button.html.erb %>
+<div id="share_button_<%= event.id %>"
+     data-controller="share"
+     data-share-url-value="<%= event_url(event) %>"
+     data-share-title-value="<%= event.title %>"
+     data-share-text-value="<%= event.short_description %>">
+  <button type="button" 
+          data-action="click->share#shareEvent"
+          class="share-button p-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-all shadow-sm"
+          title="Share event">
+    <%= icon "share", class: "w-4 h-4" %>
+  </button>
+</div>

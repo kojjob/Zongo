@@ -1,13 +1,24 @@
 Rails.application.routes.draw do
+  # User favorites
+  get "my/favorites", to: "event_favorites#index", as: "my_favorites"
+
   resources :event_favorites
   resources :event_comments
   resources :event_media
   resources :event_tickets
   resources :attendances
   resources :ticket_types
-  resources :events
+  resources :events do
+    member do
+      post "toggle_favorite"
+    end
+  end
   resources :venues
   resources :event_categories
+
+  # Hero banner routes
+  patch "update_hero_banner", to: "hero_banners#update"
+  delete "remove_hero_banner", to: "hero_banners#destroy"
   # Active Storage routes
   # This is needed since we're using Rails 8.0
   direct :rails_blob do |blob, options = {}|

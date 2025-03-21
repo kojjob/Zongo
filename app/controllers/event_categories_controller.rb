@@ -3,7 +3,8 @@ class EventCategoriesController < ApplicationController
 
   # GET /event_categories or /event_categories.json
   def index
-    @event_categories = EventCategory.all
+    @event_categories = EventCategory.all.order(:name)
+    @root_categories = EventCategory.root_categories.order(:name).includes(:subcategories)
   end
 
   # GET /event_categories/1 or /event_categories/1.json
@@ -60,11 +61,11 @@ class EventCategoriesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event_category
-      @event_category = EventCategory.find(params.expect(:id))
+      @event_category = EventCategory.find(params.require(:id))
     end
 
     # Only allow a list of trusted parameters through.
     def event_category_params
-      params.expect(event_category: [ :name, :description, :icon, :parent_category_id ])
+      params.require(:event_category).permit(:name, :description, :icon, :parent_category_id)
     end
 end

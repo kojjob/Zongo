@@ -1,0 +1,97 @@
+<%# app/views/events/_event_card.html.erb %>
+<div id="<%= dom_id event %>" class="event-card-hover group relative bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-transparent dark:shadow-lg dark:hover:shadow-2xl dark:shadow-gray-900/30">
+  <!-- Event Image -->
+  <div class="relative aspect-[4/3] overflow-hidden">
+    <% if event.event_media.present? %>
+      <%= image_tag event.event_media.first, class: "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" %>
+    <% else %>
+      <div class="w-full h-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105">
+        <%= icon "calendar-event", class: "w-16 h-16" %>
+      </div>
+    <% end %>
+    
+    <!-- Price Tag -->
+    <div class="absolute top-4 left-4 price-tag z-10">
+      <% if defined?(event.is_free?) && event.is_free? %>
+        <span class="inline-block px-3 py-1.5 bg-green-600 text-white text-sm font-medium rounded-lg shadow-md dark:bg-green-500 dark:text-white dark:shadow-lg">FREE</span>
+      <% elsif defined?(event.ticket_price) && event.ticket_price.present? %>
+        <span class="inline-block px-3 py-1.5 bg-primary-600 text-white text-sm font-medium rounded-lg shadow-md dark:bg-primary-500 dark:text-white dark:shadow-lg">$<%= sprintf("%.2f", event.ticket_price) %></span>
+      <% elsif defined?(event.price) && event.price.present? %>
+        <span class="inline-block px-3 py-1.5 bg-primary-600 text-white text-sm font-medium rounded-lg shadow-md dark:bg-primary-500 dark:text-white dark:shadow-lg">$<%= sprintf("%.2f", event.price) %></span>
+      <% else %>
+        <span class="inline-block px-3 py-1.5 bg-gray-600 text-white text-sm font-medium rounded-lg shadow-md dark:bg-gray-500 dark:text-white dark:shadow-lg">EVENT</span>
+      <% end %>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="absolute top-4 right-4 flex space-x-2 z-10">
+      <!-- Share Button -->
+      <%= render 'events/share_button', event: event %>
+      
+      <!-- Favorite Button -->
+      <%= render 'events/favorite_button', event: event %>
+    </div>
+    
+    <!-- Overlay Effect on Hover -->
+    <div class="event-card-overlay"></div>
+  </div>
+  
+  <!-- Event Info -->
+  <div class="p-5">
+    <!-- Date with Month & Day -->
+    <div class="flex items-start mb-3">
+      <div class="date-badge mr-3">
+        <span class="date-badge-month"><%= event.start_time.strftime("%b") %></span>
+        <span class="date-badge-day"><%= event.start_time.strftime("%-d") %></span>
+      </div>
+      
+      <!-- Event Title -->
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">
+        <%= link_to event.title, event, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+      </h3>
+    </div>
+    
+    <!-- Event Details -->
+    <div class="space-y-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <!-- Location -->
+      <div class="flex items-center">
+        <%= icon "location-marker", class: "w-4 h-4 mr-2 flex-shrink-0" %>
+        <span class="truncate"><%= event.venue&.name || event.try(:location) || "Venue" %></span>
+      </div>
+      
+      <!-- Organizer -->
+      <div class="flex items-center">
+        <%= icon "user", class: "w-4 h-4 mr-2 flex-shrink-0" %>
+        <span class="truncate">Organized by <%= event.organizer&.username || "Event Organizer" %></span>
+      </div>
+    </div>
+    
+    <!-- Admin Actions -->
+    <% if defined?(can?) && can?(:manage, event) %>
+      <div class="pt-3 mt-3 border-t border-gray-200 dark:border-gray-700/50 dark:border-opacity-50 flex justify-end space-x-2">
+        <%= link_to event, class: "p-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition", title: "View" do %>
+          <%= icon "eye", class: "w-4 h-4" %>
+        <% end %>
+        
+        <%= link_to edit_event_path(event), class: "p-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition", title: "Edit" do %>
+          <%= icon "pencil", class: "w-4 h-4" %>
+        <% end %>
+        
+        <%= button_to event_path(event), method: :delete, class: "p-1.5 bg-gray-100 dark:bg-gray-700 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 transition", title: "Delete", data: { turbo_confirm: "Are you sure you want to delete this event?" } do %>
+          <%= icon "trash", class: "w-4 h-4" %>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- View Details Link -->
+      <div class="pt-3 mt-3 border-t border-gray-200 dark:border-gray-700/50 dark:border-opacity-50">
+        <%= link_to event, class: "text-primary-600 dark:text-primary-400 font-medium text-sm flex items-center hover:underline" do %>
+          View Details
+          <%= icon "arrow-right", class: "w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Full card link for easy clicking -->
+  <%= link_to "", event, class: "absolute inset-0 z-0", "aria-hidden": true, "tabindex": -1 %>
+</div>

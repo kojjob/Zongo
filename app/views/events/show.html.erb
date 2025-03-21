@@ -1,17 +1,389 @@
-<% content_for :title, "Showing event" %>
+<% content_for :title, @event.title %>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
-  <h1 class="font-bold text-4xl">Showing event</h1>
-
-  <%= render @event %>
-
-  <%= link_to "Edit this event", edit_event_path(@event), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to events", events_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <div class="sm:inline-block mt-2 sm:mt-0 sm:ml-2">
-    <%= button_to "Destroy this event", @event, method: :delete, class: "w-full rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+<div class="event-show-page bg-white dark:bg-gray-900">
+  <!-- Hero Section with Dynamic Image Background -->
+  <div class="relative">
+    <!-- Background Image with Gradient Overlay -->
+    <div class="w-full h-80 md:h-[400px] bg-gradient-to-r from-primary-900 to-secondary-900 overflow-hidden relative">
+      <% if @event.primary_image.present? %>
+        <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('<%= url_for(@event.primary_image) %>'); opacity: 0.7;"></div>
+      <% else %>
+        <!-- Decorative abstract shapes for visual interest -->
+        <div class="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3 w-96 h-96 rounded-full bg-gradient-to-r from-primary-500/20 to-primary-700/30 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 transform -translate-x-1/3 translate-y-1/3 w-96 h-96 rounded-full bg-gradient-to-r from-secondary-500/20 to-secondary-700/30 blur-3xl"></div>
+      <% end %>
+      
+      <!-- Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 dark:to-gray-950 z-10"></div>
+      
+      <!-- Event Highlight Content -->
+      <div class="container mx-auto px-4 relative z-20 flex flex-col h-full justify-center pb-12">
+        <div class="max-w-3xl">
+          <!-- Event Type & Status Badges -->
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-500/90 text-white backdrop-blur-sm">
+              <%= @event.event_category&.name || "Event" %>
+            </span>
+            
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
+              <%= case @event.status 
+                when "draft" then 'bg-gray-500/90 text-white'
+                when "published" then 'bg-green-500/90 text-white'
+                when "cancelled" then 'bg-yellow-500/90 text-white'
+                when "postponed" then 'bg-red-500/90 text-white'
+                when "completed" then 'bg-blue-500/90 text-white'
+                end %> backdrop-blur-sm"
+            >
+              <%= @event.status.titleize %>
+            </span>
+            
+            <% if @event.is_featured? %>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/90 text-white backdrop-blur-sm">
+                <%= icon "star", class: "w-3 h-3 mr-1 fill-current" %>
+                Featured
+              </span>
+            <% end %>
+          </div>
+          
+          <!-- Event Title -->
+          <h1 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight tracking-tight">
+            <%= @event.title %>
+          </h1>
+          
+          <!-- Event Key Info displayed as circular icons with labels -->
+          <div class="flex flex-wrap gap-6 text-white mb-4">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mr-3">
+                <%= icon "calendar", class: "w-5 h-5" %>
+              </div>
+              <div>
+                <div class="text-xs text-white/70">Date</div>
+                <div class="font-medium"><%= @event.start_time.strftime("%B %d, %Y") %></div>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mr-3">
+                <%= icon "clock", class: "w-5 h-5" %>
+              </div>
+              <div>
+                <div class="text-xs text-white/70">Time</div>
+                <div class="font-medium">
+                  <%= @event.start_time.strftime("%I:%M %p") %> - <%= @event.end_time.strftime("%I:%M %p") %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="flex-shrink-0 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mr-3">
+                <%= icon "user-group", class: "w-5 h-5" %>
+              </div>
+              <div>
+                <div class="text-xs text-white/70">Capacity</div>
+                <div class="font-medium"><%= @event.capacity %> Attendees</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons Floating Card -->
+    <div class="container mx-auto px-4 relative z-20">
+      <div class="max-w-4xl mx-auto -mt-16">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-4 md:p-6 border border-gray-200 dark:border-gray-700">
+          <div class="flex flex-col md:flex-row md:items-center justify-between">
+            <!-- Host Info -->
+            <div class="flex items-center mb-4 md:mb-0">
+              <div class="mr-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-yellow-500 flex items-center justify-center text-white text-xl font-semibold">
+                  <%= (@event.organizer&.username || 'J')[0].downcase %>
+                </div>
+              </div>
+              <div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">HOSTED BY</div>
+                <div class="text-gray-900 dark:text-white font-medium"><%= @event.organizer&.username || "Organizer" %></div>
+              </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex gap-3">
+              <button class="btn-action-outline flex-1 md:flex-initial">
+                <span>Favorite</span>
+                <span class="ml-2 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-xs font-medium"><%= @event.favorites_count || 35 %></span>
+              </button>
+              
+              <button class="btn-action-outline flex-1 md:flex-initial">
+                <span>Share</span>
+              </button>
+              
+              <button class="btn-action-primary flex-1 md:flex-initial">
+                <span>Book Now</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Main Content Section -->
+  <div class="container mx-auto px-4 py-8 bg-white dark:bg-gray-900">
+    <div class="max-w-5xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column - Event Details -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Event Description Card -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700">
+            <!-- Tabs Navigation -->
+            <div class="border-b border-gray-200 dark:border-gray-700">
+              <nav class="flex -mb-px">
+                <a href="#description" class="text-primary-600 dark:text-primary-400 border-b-2 border-primary-500 dark:border-primary-400 py-4 px-6 font-medium text-sm">
+                  Description
+                </a>
+                <a href="#schedule" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 py-4 px-6 font-medium text-sm">
+                  Schedule
+                </a>
+                <a href="#venue" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 py-4 px-6 font-medium text-sm">
+                  Venue
+                </a>
+              </nav>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="p-6">
+              <div id="description" class="prose dark:prose-invert max-w-none">
+                <h3 class="flex items-center text-gray-900 dark:text-white text-lg font-medium mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  About This Event
+                </h3>
+                <%= @event.description %>
+                
+                <!-- Event Features (for visual interest) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 not-prose">
+                  <div class="flex items-start bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-900/50 rounded-lg p-2 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="text-base font-medium text-gray-900 dark:text-white">Safe Environment</h4>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">All COVID-19 safety protocols in place</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-900/50 rounded-lg p-2 mr-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="text-base font-medium text-gray-900 dark:text-white">Flexible Booking</h4>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Easy cancellation up to 24 hours in advance</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Event Gallery -->
+          <% if @event.event_media.any? %>
+            <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700">
+              <div class="p-6">
+                <h3 class="flex items-center text-gray-900 dark:text-white text-lg font-medium mb-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Event Gallery
+                </h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <% @event.event_media.each_with_index do |media, index| %>
+                    <div class="<%= index == 0 ? 'col-span-2 row-span-2' : '' %> rounded-lg overflow-hidden aspect-square">
+                      <%= image_tag media, class: "w-full h-full object-cover transition-transform hover:scale-105" %>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          
+          <!-- Comments Section -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="p-6">
+              <h3 class="flex items-center text-gray-900 dark:text-white text-lg font-medium mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                Discussion
+              </h3>
+              
+              <!-- Comments will go here -->
+              <div class="space-y-4">
+                <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-6 text-center">
+                  <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                  </div>
+                  <h4 class="text-gray-900 dark:text-white text-lg font-medium mb-2">Join the conversation</h4>
+                  <p class="text-gray-500 dark:text-gray-400 mb-4">Be the first to share your thoughts about this event!</p>
+                  <button class="btn-action-primary inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                    Write a Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column - Sidebar -->
+        <div class="space-y-6">
+          <!-- Event Details Card -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="p-6">
+              <!-- Capacity Section -->
+              <div class="mb-6">
+                <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Capacity</div>
+                <div class="text-xl font-bold text-gray-900 dark:text-white"><%= @event.capacity %> Attendees</div>
+              </div>
+              
+              <!-- Availability Section -->
+              <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Availability</div>
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    <%= @event.respond_to?(:available_spots) ? @event.available_spots : (@event.capacity - 4) %> spots left
+                  </div>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <% registration_percent = @event.respond_to?(:registration_percentage) ? @event.registration_percentage : 0.1 %>
+                  <div class="bg-green-500 h-2 rounded-full" style="width: <%= registration_percent %>%"></div>
+                </div>
+              </div>
+              
+              <!-- Book Now Button -->
+              <button class="w-full bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg py-3 mb-4 transition-colors">
+                Book Now
+              </button>
+              
+              <!-- Additional Links -->
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <button class="text-center text-green-600 dark:text-green-500 font-medium">
+                  Add to Calendar
+                </button>
+                <button class="text-center text-green-600 dark:text-green-500 font-medium">
+                  Contact Organizer
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- QR Code Section -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="p-6">
+              <!-- QR Code -->
+              <div class="bg-white dark:bg-gray-700 p-4 rounded-lg flex justify-center mb-6">
+                <!-- QR Code Placeholder -->
+                <div class="w-40 h-40 bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-24 h-24 text-gray-400">
+                    <path fill="currentColor" d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 11h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-3 0h2v2h-2v-2zm3 3h3v2h-3v-2zm0 3h3v2h-2v1h-2v-2h1v-1z"/>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Social Sharing Buttons -->
+              <div class="grid grid-cols-4 gap-2">
+                <button class="h-10 rounded-md bg-blue-600 text-white flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                  </svg>
+                </button>
+                
+                <button class="h-10 rounded-md bg-blue-400 text-white flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                  </svg>
+                </button>
+                
+                <button class="h-10 rounded-md bg-pink-600 text-white flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/>
+                  </svg>
+                </button>
+                
+                <button class="h-10 rounded-md bg-green-600 text-white flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Custom CSS for this page only -->
+<style>
+  /* Button styles */
+  .btn-action-primary {
+    background-color: #10b981; /* Green-500 */
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-action-primary:hover {
+    background-color: #059669; /* Green-600 */
+  }
+  
+  .btn-action-outline {
+    background-color: transparent;
+    color: #374151; /* Gray-700 */
+    border: 1px solid #e5e7eb; /* Gray-200 */
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-action-outline:hover {
+    background-color: #f3f4f6; /* Gray-100 */
+  }
+  
+  .dark .btn-action-outline {
+    color: #e5e7eb; /* Gray-200 */
+    border-color: #4b5563; /* Gray-600 */
+  }
+  
+  .dark .btn-action-outline:hover {
+    background-color: #374151; /* Gray-700 */
+  }
+  
+  /* Fix for the social buttons in mobile view */
+  @media (max-width: 640px) {
+    .grid-cols-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_034150) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -180,6 +180,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_034150) do
     t.jsonb "custom_fields", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_free", default: false
     t.index ["event_category_id"], name: "index_events_on_event_category_id"
     t.index ["is_featured"], name: "index_events_on_is_featured"
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
@@ -234,6 +235,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_034150) do
     t.index ["next_occurrence"], name: "index_scheduled_transactions_on_next_occurrence"
     t.index ["source_wallet_id"], name: "index_scheduled_transactions_on_source_wallet_id"
     t.index ["status"], name: "index_scheduled_transactions_on_status"
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.string "key", null: false
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_settings_on_key", unique: true
   end
 
   create_table "ticket_types", force: :cascade do |t|

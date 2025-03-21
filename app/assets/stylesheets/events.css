@@ -1,0 +1,195 @@
+/* Events Page Custom Styles */
+
+/* Hero Section Styles */
+.hero-slider {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Card Hover Effects */
+.event-card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Dropdown Styles */
+.filter-dropdown .dropdown-menu {
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+/* Price Tag Animation */
+.price-tag {
+  transition: transform 0.3s ease;
+}
+
+.event-card-hover:hover .price-tag {
+  transform: scale(1.05);
+}
+
+/* Custom Scrollbar for Event Listings */
+.events-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.events-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.events-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.events-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Animation for the Hero Section */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-content {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Badge Styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.badge-primary {
+  background-color: rgba(79, 70, 229, 0.1);
+  color: rgba(79, 70, 229, 1);
+}
+
+.badge-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: rgba(16, 185, 129, 1);
+}
+
+.badge-warning {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: rgba(245, 158, 11, 1);
+}
+
+/* Dark mode adjustments */
+.dark .badge-primary {
+  background-color: rgba(79, 70, 229, 0.2);
+  color: rgba(165, 180, 252, 1);
+}
+
+.dark .badge-success {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: rgba(110, 231, 183, 1);
+}
+
+.dark .badge-warning {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: rgba(252, 211, 77, 1);
+}
+
+/* Enhanced dark mode card styling */
+.dark .event-card-hover {
+  background-image: linear-gradient(to bottom, rgba(31, 41, 55, 0.4), rgba(17, 24, 39, 0.7));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: transparent;
+}
+
+.dark .event-card-hover:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  transform: translateY(-5px);
+  border-color: transparent;
+}
+
+/* Card hover overlay effect */
+.event-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.event-card-hover:hover .event-card-overlay {
+  opacity: 1;
+}
+
+/* Custom button styles */
+.btn-rounded {
+  border-radius: 9999px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Date badge styles */
+.date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.date-badge-month {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.date-badge-day {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dark .date-badge {
+  background-color: #374151;
+  border-color: transparent;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark .date-badge-month {
+  color: #9ca3af;
+}
+
+.dark .date-badge-day {
+  color: #f9fafb;
+}
+
+/* Share and favorite button enhancements */
+.share-button, .favorite-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.share-button:active, .favorite-button:active {
+  transform: scale(0.85);
+}
+
+.dark .share-button, .dark .favorite-button {
+  background-color: rgba(31, 41, 55, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark .share-button:hover, .dark .favorite-button:hover {
+  background-color: rgba(55, 65, 81, 0.9);
+}
