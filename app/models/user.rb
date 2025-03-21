@@ -10,6 +10,14 @@ class User < ApplicationRecord
   has_one :wallet, dependent: :destroy
   has_one :setting, class_name: "UserSetting", dependent: :destroy
 
+  # Events
+  has_many :event_favorites, dependent: :destroy
+  has_many :favorited_events, through: :event_favorites, source: :event
+  has_many :organized_events, class_name: 'Event', foreign_key: 'organizer_id', dependent: :nullify
+  has_many :event_comments, dependent: :destroy
+  has_many :attendances, dependent: :destroy
+  has_many :attended_events, through: :attendances, source: :event
+
   # has_many :devices, dependent: :destroy
   # has_many :verification_attempts, dependent: :destroy
   has_many :payment_methods, dependent: :destroy

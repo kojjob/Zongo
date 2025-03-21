@@ -1,117 +1,180 @@
 <%= form_with(model: event, class: "contents") do |form| %>
   <% if event.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
-
-      <ul class="list-disc ml-6">
-        <% event.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "exclamation-circle", class: "h-5 w-5 text-red-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+            <ul class="list-disc pl-5 space-y-1">
+              <% event.errors.each do |error| %>
+                <li><%= error.full_message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :title %>
-    <%= form.text_field :title, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:title].none?, "border-red-400 focus:outline-red-600": event.errors[:title].any?}] %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Basic Information</h3>
+    </div>
+    
+    <div class="p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="col-span-2">
+          <%= form.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :title, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div class="col-span-2">
+          <%= form.label :short_description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_area :short_description, rows: 2, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Brief summary of your event (100-150 characters recommended)</p>
+        </div>
+        
+        <div class="col-span-2">
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_area :description, rows: 6, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div>
+          <%= form.label :event_category_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :event_category_id, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter category ID</p>
+        </div>
+        
+        <div>
+          <%= form.label :venue_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :venue_id, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter venue ID</p>
+        </div>
+        
+        <div>
+          <%= form.label :organizer_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :organizer_id, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Enter organizer ID (Organizer model needs to be created)</p>
+        </div>
+        
+        <div>
+          <%= form.label :capacity, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.number_field :capacity, min: 1, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :description %>
-    <%= form.textarea :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:description].none?, "border-red-400 focus:outline-red-600": event.errors[:description].any?}] %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mt-8">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Date & Time</h3>
+    </div>
+    
+    <div class="p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= form.label :start_time, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.datetime_field :start_time, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div>
+          <%= form.label :end_time, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.datetime_field :end_time, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div>
+          <%= form.label :recurrence_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.select :recurrence_type, [["One-time", 0], ["Daily", 1], ["Weekly", 2], ["Monthly", 3], ["Custom", 4]], {}, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div>
+          <%= form.label :recurrence_pattern, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :recurrence_pattern, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">For custom recurrence patterns (e.g., "FREQ=WEEKLY;BYDAY=MO,WE,FR")</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :short_description %>
-    <%= form.textarea :short_description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:short_description].none?, "border-red-400 focus:outline-red-600": event.errors[:short_description].any?}] %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mt-8">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Settings</h3>
+    </div>
+    
+    <div class="p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.select :status, [["Draft", 0], ["Active", 1], ["Pending", 2], ["Cancelled", 3]], {}, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        </div>
+        
+        <div>
+          <%= form.label :slug, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :slug, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">URL-friendly name (auto-generated if left blank)</p>
+        </div>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-6">
+        <div class="flex items-center">
+          <%= form.check_box :is_featured, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" %>
+          <%= form.label :is_featured, class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+        </div>
+        
+        <div class="flex items-center">
+          <%= form.check_box :is_private, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500" %>
+          <%= form.label :is_private, class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+        </div>
+      </div>
+      
+      <div id="private_event_settings" class="<%= event.is_private? ? '' : 'hidden' %>">
+        <div class="mt-4">
+          <%= form.label :access_code, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.text_field :access_code, class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Required for private events</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :start_time %>
-    <%= form.datetime_field :start_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:start_time].none?, "border-red-400 focus:outline-red-600": event.errors[:start_time].any?}] %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mt-8">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Additional Information</h3>
+    </div>
+    
+    <div class="p-6 space-y-6">
+      <div>
+        <%= form.label :custom_fields, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= form.text_area :custom_fields, rows: 4, placeholder: '{"sponsors": ["Acme Inc", "XYZ Corp"], "hashtags": ["tech", "conference"]}', class: "block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono focus:ring-primary-500 focus:border-primary-500 px-3 py-2" %>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Custom data in JSON format</p>
+      </div>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :end_time %>
-    <%= form.datetime_field :end_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:end_time].none?, "border-red-400 focus:outline-red-600": event.errors[:end_time].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :capacity %>
-    <%= form.number_field :capacity, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:capacity].none?, "border-red-400 focus:outline-red-600": event.errors[:capacity].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :status %>
-    <%= form.number_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:status].none?, "border-red-400 focus:outline-red-600": event.errors[:status].any?}] %>
-  </div>
-
-  <div class="my-5 flex items-center gap-2">
-    <%= form.label :is_featured %>
-    <%= form.checkbox :is_featured, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": event.errors[:is_featured].none?, "border-red-400 focus:outline-red-600": event.errors[:is_featured].any?}] %>
-  </div>
-
-  <div class="my-5 flex items-center gap-2">
-    <%= form.label :is_private %>
-    <%= form.checkbox :is_private, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": event.errors[:is_private].none?, "border-red-400 focus:outline-red-600": event.errors[:is_private].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :access_code %>
-    <%= form.text_field :access_code, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:access_code].none?, "border-red-400 focus:outline-red-600": event.errors[:access_code].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :slug %>
-    <%= form.text_field :slug, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:slug].none?, "border-red-400 focus:outline-red-600": event.errors[:slug].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :organizer_id %>
-    <%= form.text_field :organizer_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:organizer_id].none?, "border-red-400 focus:outline-red-600": event.errors[:organizer_id].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :event_category_id %>
-    <%= form.text_field :event_category_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:event_category_id].none?, "border-red-400 focus:outline-red-600": event.errors[:event_category_id].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :venue_id %>
-    <%= form.text_field :venue_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:venue_id].none?, "border-red-400 focus:outline-red-600": event.errors[:venue_id].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :recurrence_type %>
-    <%= form.number_field :recurrence_type, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:recurrence_type].none?, "border-red-400 focus:outline-red-600": event.errors[:recurrence_type].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :recurrence_pattern %>
-    <%= form.text_field :recurrence_pattern, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:recurrence_pattern].none?, "border-red-400 focus:outline-red-600": event.errors[:recurrence_pattern].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :parent_event_id %>
-    <%= form.text_field :parent_event_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:parent_event_id].none?, "border-red-400 focus:outline-red-600": event.errors[:parent_event_id].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :favorites_count %>
-    <%= form.number_field :favorites_count, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:favorites_count].none?, "border-red-400 focus:outline-red-600": event.errors[:favorites_count].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :views_count %>
-    <%= form.number_field :views_count, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:views_count].none?, "border-red-400 focus:outline-red-600": event.errors[:views_count].any?}] %>
-  </div>
-
-  <div class="my-5">
-    <%= form.label :custom_fields %>
-    <%= form.text_field :custom_fields, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event.errors[:custom_fields].none?, "border-red-400 focus:outline-red-600": event.errors[:custom_fields].any?}] %>
-  </div>
-
-  <div class="inline">
-    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  <div class="flex justify-end mt-8">
+    <%= link_to "Cancel", events_path, class: "btn btn-outline mr-3" %>
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isPrivateCheckbox = document.getElementById('event_is_private');
+    const privateSettings = document.getElementById('private_event_settings');
+    
+    if (isPrivateCheckbox && privateSettings) {
+      isPrivateCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          privateSettings.classList.remove('hidden');
+        } else {
+          privateSettings.classList.add('hidden');
+        }
+      });
+    }
+  });
+</script>

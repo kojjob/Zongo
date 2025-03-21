@@ -1,9 +1,68 @@
-<% content_for :title, "New event category" %>
+<% content_for :title, "New Event Category" %>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">New event category</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <% if notice.present? %>
+    <div class="mb-6">
+      <%= render 'shared/flash_message', message: notice, type: 'success' %>
+    </div>
+  <% end %>
 
+  <!-- Breadcrumbs -->
+  <nav class="mb-6">
+    <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+      <li>
+        <%= link_to "Home", root_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+      </li>
+      <li class="flex items-center">
+        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <%= link_to "Event Categories", event_categories_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+      </li>
+      <li class="flex items-center">
+        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li class="font-medium text-gray-700 dark:text-gray-300">
+        New Category
+      </li>
+    </ol>
+  </nav>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create New Category</h1>
+    
+    <%= link_to event_categories_path, class: "btn btn-outline" do %>
+      <%= icon "arrow-left", class: "w-5 h-5 mr-2" %>
+      Back to Categories
+    <% end %>
+  </div>
+
+  <% if params[:parent_category_id].present? %>
+    <% parent = EventCategory.find_by(id: params[:parent_category_id]) %>
+    <% if parent %>
+      <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <%= icon "information-circle", class: "h-5 w-5 text-blue-400" %>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">
+              Creating a subcategory
+            </h3>
+            <div class="mt-2 text-sm text-blue-700 dark:text-blue-400">
+              You are creating a subcategory of <strong><%= parent.name %></strong>.
+              <%= link_to "Change parent", new_event_category_path, class: "underline" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% @event_category.parent_category_id = params[:parent_category_id] if params[:parent_category_id].present? %>
   <%= render "form", event_category: @event_category %>
-
-  <%= link_to "Back to event categories", event_categories_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
 </div>
