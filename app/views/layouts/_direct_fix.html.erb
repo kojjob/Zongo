@@ -1,0 +1,177 @@
+<!-- Direct Fix for Theme and Dropdowns - No Dependencies -->
+<script>
+  (function() {
+    console.log('⚡️ Direct fix script running...');
+    
+    // 1. THEME FIX
+    // ------------------
+    
+    // Function to determine if dark mode should be active
+    function shouldUseDarkMode() {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return savedTheme === 'dark' || (savedTheme !== 'light' && systemPrefersDark);
+    }
+    
+    // Function to apply theme immediately
+    function applyTheme() {
+      const isDark = shouldUseDarkMode();
+      
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      }
+      
+      console.log('Theme applied:', isDark ? 'dark' : 'light');
+      return isDark;
+    }
+    
+    // Apply theme immediately
+    const isDarkMode = applyTheme();
+    
+    // Setup global theme toggling function
+    window.toggleTheme = function() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('theme', 'dark');
+      }
+      
+      updateThemeIcons();
+      console.log('Theme toggled to:', !isDark ? 'dark' : 'light');
+    };
+    
+    // 2. ICON UPDATES
+    // ------------------
+    
+    // Function to update all theme icons
+    function updateThemeIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      // Update any light/dark icons
+      document.querySelectorAll('[data-theme-icon="dark"]').forEach(icon => {
+        icon.classList.toggle('hidden', isDark);
+      });
+      
+      document.querySelectorAll('[data-theme-icon="light"]').forEach(icon => {
+        icon.classList.toggle('hidden', !isDark);
+      });
+      
+      // Old format icons (data-theme-target)
+      document.querySelectorAll('[data-theme-target="darkIcon"]').forEach(icon => {
+        icon.classList.toggle('hidden', isDark);
+      });
+      
+      document.querySelectorAll('[data-theme-target="lightIcon"]').forEach(icon => {
+        icon.classList.toggle('hidden', !isDark);
+      });
+      
+      // Simplified icon IDs
+      const darkIcon = document.getElementById('dark-icon');
+      const lightIcon = document.getElementById('light-icon');
+      
+      if (darkIcon) darkIcon.classList.toggle('hidden', isDark);
+      if (lightIcon) lightIcon.classList.toggle('hidden', !isDark);
+      
+      // Update theme indicator if exists
+      const indicator = document.getElementById('theme-indicator');
+      if (indicator) indicator.textContent = isDark ? 'dark' : 'light';
+    }
+    
+    // 3. DROPDOWN FIX
+    // ------------------
+    
+    // Wait for DOM to be ready to fix dropdowns
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔄 Applying direct fixes...');
+      
+      // Fix theme icons
+      updateThemeIcons();
+      
+      // Fix dropdowns
+      setupDropdowns();
+      
+      // Add an event listener to the toggle theme button(s) if not using our toggleTheme function
+      document.querySelectorAll('[data-action*="theme#toggle"]').forEach(button => {
+        // Remove the original event listener if possible
+        const clone = button.cloneNode(true);
+        button.parentNode.replaceChild(clone, button);
+        
+        // Add our direct toggle function
+        clone.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.toggleTheme();
+        });
+      });
+      
+      console.log('✅ Direct fixes applied successfully');
+    });
+    
+    // Function to set up all dropdowns
+    function setupDropdowns() {
+      // Find all dropdown controllers
+      const dropdownElements = document.querySelectorAll('[data-controller*="dropdown"]');
+      
+      dropdownElements.forEach(dropdown => {
+        // Find toggle button and menu
+        const toggle = dropdown.querySelector('[data-action*="dropdown#toggle"]');
+        const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
+        
+        if (toggle && menu) {
+          // Remove the original event listener if possible
+          const toggleClone = toggle.cloneNode(true);
+          toggle.parentNode.replaceChild(toggleClone, toggle);
+          
+          // Add our direct toggle function
+          toggleClone.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Close all other dropdowns
+            document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
+              if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
+                otherMenu.classList.add('hidden');
+              }
+            });
+            
+            // Toggle this menu
+            menu.classList.toggle('hidden');
+          });
+          
+          console.log('Fixed dropdown:', toggle);
+        }
+      });
+      
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function(e) {
+        document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+          if (!menu.classList.contains('hidden')) {
+            const dropdown = menu.closest('[data-controller*="dropdown"]');
+            
+            if (dropdown && !dropdown.contains(e.target)) {
+              menu.classList.add('hidden');
+            }
+          }
+        });
+      });
+      
+      // Close dropdowns when pressing Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+            menu.classList.add('hidden');
+          });
+        }
+      });
+    }
+  })();
+</script>

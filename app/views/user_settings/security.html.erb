@@ -1,0 +1,193 @@
+<%# User Security Settings %>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Security Settings</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your password, two-factor authentication and security preferences</p>
+  </div>
+
+  <%# Tabs Navigation %>
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-wrap -mb-px">
+      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
+        Overview
+      <% end %>
+      
+      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
+        Profile
+      <% end %>
+      
+      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
+        Security
+      <% end %>
+      
+      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
+        Notifications
+      <% end %>
+      
+      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
+        Appearance
+      <% end %>
+      
+      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
+        Payment
+      <% end %>
+      
+      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
+        Support
+      <% end %>
+    </div>
+  </div>
+
+  <%# Change Password Form %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Change Password</h2>
+      
+      <%= form_with url: user_settings_update_security_path, method: :patch, local: true, class: "space-y-6" do |form| %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="md:col-span-2">
+            <%= form.label :current_password, "Current Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.password_field :current_password, class: "form-input w-full rounded-lg", placeholder: "Enter your current password" %>
+          </div>
+          
+          <div>
+            <%= form.label :password, "New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.password_field :user_password, class: "form-input w-full rounded-lg", placeholder: "Enter new password" %>
+          </div>
+          
+          <div>
+            <%= form.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.password_field :user_password_confirmation, class: "form-input w-full rounded-lg", placeholder: "Confirm new password" %>
+          </div>
+        </div>
+        
+        <div class="flex justify-end">
+          <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
+          <%= form.submit "Update Password", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <%# Two-Factor Authentication %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Two-Factor Authentication</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add an extra layer of security to your account</p>
+        </div>
+        <div class="flex items-center">
+          <span class="ml-3 text-sm text-red-600 dark:text-red-400 font-medium">Not Enabled</span>
+          <button type="button" class="ml-3 btn btn-primary-outline">Enable</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# Login History %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Login History</h2>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white dark:bg-gray-800">
+          <thead>
+            <tr class="border-b border-gray-200 dark:border-gray-700">
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Device</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">IP Address</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                <%= current_user.current_sign_in_at&.strftime("%b %d, %Y %I:%M %p") || "N/A" %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">Accra, Ghana</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">Chrome on Windows</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                <%= current_user.current_sign_in_ip || "N/A" %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  Success
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                <%= current_user.last_sign_in_at&.strftime("%b %d, %Y %I:%M %p") || "N/A" %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">Accra, Ghana</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">Chrome on Windows</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                <%= current_user.last_sign_in_ip || "N/A" %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                  Success
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <%# Security Settings %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Additional Security Settings</h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Transaction PIN</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Require PIN for all financial transactions</p>
+          </div>
+          <button type="button" class="btn btn-primary-outline">Manage PIN</button>
+        </div>
+        
+        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Login Notifications</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when someone logs into your account</p>
+          </div>
+          <div class="relative inline-block w-12 align-middle select-none">
+            <input type="checkbox" name="login_alerts" id="login_alerts" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="login_alerts" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between py-3">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Trusted Devices</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Manage devices that can access your account without verification</p>
+          </div>
+          <button type="button" class="btn btn-primary-outline">Manage Devices</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom toggle switch styles */
+  .toggle-checkbox:checked {
+    @apply right-0 border-primary-600 transform translate-x-full;
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    @apply bg-primary-600;
+  }
+</style>

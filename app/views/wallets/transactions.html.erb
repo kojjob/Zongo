@@ -1,0 +1,267 @@
+<%# Transaction History Page %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="transactions-filter">
+  <div class="flex items-center mb-6">
+    <a href="<%= wallet_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transaction History</h1>
+  </div>
+
+  <%# Filters Section %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <%= form_with url: transactions_wallet_path, method: :get, class: "space-y-6", data: { turbo_frame: "transactions_list", turbo: true, action: "transactions-filter#applyFilters" } do |f| %>
+      <div class="flex flex-col md:flex-row md:items-center md:space-x-4">
+        <div class="w-full md:w-1/4 mb-4 md:mb-0">
+          <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transaction Type</label>
+          <%= f.select :type, 
+              [
+                ['All Types', ''],
+                ['Deposits', 'deposit'],
+                ['Withdrawals', 'withdrawal'],
+                ['Transfers', 'transfer'],
+                ['Payments', 'payment']
+              ],
+              { selected: @filter_type },
+              { class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                data: { action: "change->transactions-filter#submitOnChange" } }
+          %>
+        </div>
+        
+        <div class="w-full md:w-1/4 mb-4 md:mb-0">
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+          <%= f.select :status, 
+              [
+                ['All Statuses', ''],
+                ['Completed', 'completed'],
+                ['Pending', 'pending'],
+                ['Failed', 'failed'],
+                ['Reversed', 'reversed']
+              ],
+              { selected: @filter_status },
+              { class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                data: { action: "change->transactions-filter#submitOnChange" } }
+          %>
+        </div>
+        
+        <div class="w-full md:w-1/4 mb-4 md:mb-0">
+          <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
+          <%= f.date_field :start_date, 
+              value: @filter_start_date, 
+              max: Date.current,
+              class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
+              data: { transactions_filter_target: "startDate", action: "change->transactions-filter#validateDates" } 
+          %>
+        </div>
+        
+        <div class="w-full md:w-1/4">
+          <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date</label>
+          <%= f.date_field :end_date, 
+              value: @filter_end_date, 
+              max: Date.current,
+              class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
+              data: { transactions_filter_target: "endDate", action: "change->transactions-filter#validateDates" } 
+          %>
+        </div>
+      </div>
+      
+      <div class="flex justify-between">
+        <button type="button" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline" data-action="transactions-filter#resetFilters">
+          Reset Filters
+        </button>
+        
+        <button type="submit" class="btn btn-primary">
+          <%= icon "filter", class: "w-4 h-4 mr-1" %>
+          Apply Filters
+        </button>
+      </div>
+    <% end %>
+  </div>
+  
+  <%# Summary Cards %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center mb-2">
+        <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-3">
+          <%= icon "wallet", class: "w-5 h-5" %>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Current Balance</h3>
+      </div>
+      <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @wallet.formatted_balance %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Updated <%= time_ago_in_words(@wallet.updated_at) %> ago</p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center mb-2">
+        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-3">
+          <%= icon "money-in", class: "w-5 h-5" %>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Total Income</h3>
+      </div>
+      <p class="text-3xl font-bold text-green-600 dark:text-green-400"><%= @wallet.currency_symbol %><%= @total_incoming.to_f.round(2) %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">For the selected period</p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center mb-2">
+        <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-600 dark:text-red-400 mr-3">
+          <%= icon "money-out", class: "w-5 h-5" %>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Total Expenses</h3>
+      </div>
+      <p class="text-3xl font-bold text-red-600 dark:text-red-400"><%= @wallet.currency_symbol %><%= @total_outgoing.to_f.round(2) %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">For the selected period</p>
+    </div>
+  </div>
+  
+  <%# Transactions List %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Transactions</h2>
+    </div>
+    
+    <div id="transactions_list">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transaction</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <% if @transactions.empty? %>
+              <tr>
+                <td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                  <div class="flex flex-col items-center justify-center">
+                    <%= icon "empty-list", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+                    <p>No transactions found</p>
+                    <p class="mt-1 text-sm">Try adjusting your filters</p>
+                  </div>
+                </td>
+              </tr>
+            <% else %>
+              <% @transactions.each do |transaction| %>
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <% 
+                        icon_name = case transaction.transaction_type
+                                    when 'deposit' then 'money-in'
+                                    when 'withdrawal' then 'money-out'
+                                    when 'transfer' then 'transfer'
+                                    when 'payment' then 'shopping'
+                                    end
+                                    
+                        icon_color = case transaction.transaction_type
+                                     when 'deposit' then 'text-green-500'
+                                     when 'withdrawal' then 'text-red-500'
+                                     when 'transfer' then 'text-blue-500'
+                                     when 'payment' then 'text-purple-500'
+                                     end
+                      %>
+                      <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center <%= icon_color %>">
+                        <%= icon icon_name, class: "h-4 w-4" %>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                          <%= transaction.transaction_type_description %>
+                        </div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                          <%= transaction.reference %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 dark:text-white">
+                      <%= transaction.created_at.strftime("%b %d, %Y") %>
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      <%= transaction.created_at.strftime("%I:%M %p") %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-gray-900 dark:text-white">
+                      <% if transaction.description.present? %>
+                        <%= transaction.description %>
+                      <% else %>
+                        <%= transaction.transaction_type_description %>
+                      <% end %>
+                    </div>
+                    <% if transaction.transaction_type == 'transfer' %>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                        <%= transaction.direction_for_user(current_user.id) == :outgoing ? "To: " : "From: " %>
+                        <%= transaction.other_party_name(current_user.id) %>
+                      </div>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% amount_class = transaction.direction_for_user(current_user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
+                    <div class="text-sm font-medium <%= amount_class %>">
+                      <%= transaction.signed_amount_for_user(current_user.id) %>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% 
+                      status_class = case transaction.status
+                                    when 'completed' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                    when 'pending' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                                    when 'failed' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                    when 'reversed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                                    end
+                    %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                      <%= transaction.status.capitalize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <a href="<%= wallet_transaction_path(transaction) %>" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+                      View
+                    </a>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      
+      <% if @transactions.any? %>
+        <div class="py-4 px-6 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div class="text-sm text-gray-500 dark:text-gray-400 mb-3 sm:mb-0">
+            <% if defined?(Pagy) %>
+              Showing <%= pagy_info(@pagy) %>
+            <% else %>
+              Showing <%= @pagy.page %> of <%= @pagy.pages %> pages
+            <% end %>
+          </div>
+          <div class="pagination">
+            <% if defined?(Pagy) %>
+              <%== pagy_nav(@pagy) %>
+            <% else %>
+              <div class="flex space-x-2">
+                <% if @pagy.page > 1 %>
+                  <a href="?page=<%= @pagy.page - 1 %>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">Previous</a>
+                <% else %>
+                  <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded opacity-50">Previous</span>
+                <% end %>
+                
+                <span class="px-3 py-1 bg-primary-600 text-white rounded"><%= @pagy.page %></span>
+                
+                <% if @pagy.page < @pagy.pages %>
+                  <a href="?page=<%= @pagy.page + 1 %>" class="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded">Next</a>
+                <% else %>
+                  <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded opacity-50">Next</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

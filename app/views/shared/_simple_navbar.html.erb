@@ -1,0 +1,122 @@
+<header class="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/90 dark:bg-gray-950/90 border-b border-gray-200 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <a href="/" class="flex items-center">
+          <div class="h-10 w-10 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-xl">
+            SG
+          </div>
+          <span class="ml-2 text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-500">
+            Super Ghana
+          </span>
+        </a>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Theme Toggle -->
+        <%= render 'shared/theme_toggle' %>
+        
+        <!-- Notifications Dropdown -->
+        <%= render 'shared/dropdown', width: '80', position: 'right-0 mt-2' do %>
+          <% content_for :trigger do %>
+            <div class="relative p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+              <!-- Badge -->
+              <span class="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">2</span>
+            </div>
+          <% end %>
+          
+          <!-- Dropdown Content -->
+          <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Notifications</h3>
+          </div>
+          
+          <div class="max-h-72 overflow-y-auto divide-y divide-gray-200 dark:divide-gray-700">
+            <!-- Notification Item 1 -->
+            <div class="flex items-start p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Payment Successful</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Your payment of GHS 250 to Accra Grocers has been completed.</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Just now</p>
+              </div>
+            </div>
+            
+            <!-- Notification Item 2 -->
+            <div class="flex items-start p-4 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">Money Received</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 truncate">Kofi Mensah sent you GHS 100.00</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2 hours ago</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="p-3 bg-gray-50 dark:bg-gray-700 text-center border-t border-gray-200 dark:border-gray-600">
+            <a href="#" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+              View all notifications
+            </a>
+          </div>
+        <% end %>
+        
+        <!-- User Profile Dropdown -->
+        <%= render 'shared/dropdown', width: '64', position: 'right-0 mt-2' do %>
+          <% content_for :trigger do %>
+            <div class="relative h-8 w-8 rounded-full overflow-hidden ring-2 ring-primary-600">
+              <div class="h-full w-full bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white text-lg font-bold">
+                SG
+              </div>
+            </div>
+          <% end %>
+          
+          <!-- User Profile Info -->
+          <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="text-center">
+              <div class="inline-block h-16 w-16 rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white text-xl font-bold mb-2">
+                SG
+              </div>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                Guest User
+              </h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                guest@example.com
+              </p>
+            </div>
+          </div>
+          
+          <!-- Menu Items -->
+          <div class="py-2">
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              My Profile
+            </a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              Settings
+            </a>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              Help Center
+            </a>
+            <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+            <a href="#" class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+              Sign out
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>

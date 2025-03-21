@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <title>New Contact Form Submission</title>
+  <style type="text/css">
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 0;
+    }
+    .header {
+      background: linear-gradient(to right, #4f46e5, #7c3aed);
+      color: white;
+      padding: 30px 25px;
+      text-align: center;
+    }
+    .content {
+      padding: 30px 25px;
+    }
+    .message-box {
+      background-color: #f9fafb;
+      border-left: 4px solid #4f46e5;
+      padding: 15px 20px;
+      margin-top: 20px;
+      border-radius: 4px;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 20px 25px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 14px;
+      border-top: 1px solid #e5e7eb;
+    }
+    h1 {
+      color: white;
+      font-size: 24px;
+      margin: 0;
+      letter-spacing: -0.025em;
+    }
+    h2 {
+      color: #4f46e5;
+      font-size: 18px;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+    p {
+      margin: 10px 0;
+    }
+    .field {
+      margin-bottom: 15px;
+      display: block;
+    }
+    .label {
+      font-weight: bold;
+      color: #4b5563;
+      display: inline-block;
+      width: 80px;
+      vertical-align: top;
+    }
+    .value {
+      display: inline-block;
+      max-width: calc(100% - 90px);
+    }
+    @media only screen and (max-width: 620px) {
+      .container {
+        width: 100% !important;
+      }
+      .field {
+        margin-bottom: 20px;
+      }
+      .label, .value {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+      }
+      .label {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f5f5f5;">
+  <div class="container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 0;">
+    <!-- Header with gradient background -->
+    <div class="header" style="background: linear-gradient(to right, #4f46e5, #7c3aed); color: white; padding: 30px 25px; text-align: center;">
+      <h1 style="color: white; font-size: 24px; margin: 0; letter-spacing: -0.025em;">New Contact Form Submission</h1>
+    </div>
+    
+    <!-- Main content -->
+    <div class="content" style="padding: 30px 25px;">
+      <p style="margin: 10px 0;">A new message has been submitted through the Super Ghana contact form. Please find the details below:</p>
+      
+      <div class="field" style="margin-bottom: 15px; display: block;">
+        <span class="label" style="font-weight: bold; color: #4b5563; display: inline-block; width: 80px; vertical-align: top;">Name:</span>
+        <span class="value" style="display: inline-block; max-width: calc(100% - 90px);"><%= @contact.name %></span>
+      </div>
+      
+      <div class="field" style="margin-bottom: 15px; display: block;">
+        <span class="label" style="font-weight: bold; color: #4b5563; display: inline-block; width: 80px; vertical-align: top;">Email:</span>
+        <span class="value" style="display: inline-block; max-width: calc(100% - 90px);"><%= @contact.email %></span>
+      </div>
+      
+      <div class="field" style="margin-bottom: 15px; display: block;">
+        <span class="label" style="font-weight: bold; color: #4b5563; display: inline-block; width: 80px; vertical-align: top;">Phone:</span>
+        <span class="value" style="display: inline-block; max-width: calc(100% - 90px);"><%= @contact.phone %></span>
+      </div>
+      
+      <div class="field" style="margin-bottom: 15px; display: block;">
+        <span class="label" style="font-weight: bold; color: #4b5563; display: inline-block; width: 80px; vertical-align: top;">Subject:</span>
+        <span class="value" style="display: inline-block; max-width: calc(100% - 90px);"><%= @contact.subject %></span>
+      </div>
+      
+      <h2 style="color: #4f46e5; font-size: 18px; margin-top: 25px; margin-bottom: 10px;">Message:</h2>
+      <div class="message-box" style="background-color: #f9fafb; border-left: 4px solid #4f46e5; padding: 15px 20px; margin-top: 20px; border-radius: 4px;">
+        <p style="margin: 10px 0;"><%= @contact.message %></p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer" style="background-color: #f9fafb; padding: 20px 25px; text-align: center; color: #6b7280; font-size: 14px; border-top: 1px solid #e5e7eb;">
+      <p style="margin: 10px 0;">Super Ghana App - Support Team</p>
+      <p style="margin: 10px 0;">This is an automated message. Please respond to the customer directly at their provided email address.</p>
+    </div>
+  </div>
+</body>
+</html>

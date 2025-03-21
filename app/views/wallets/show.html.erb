@@ -1,0 +1,334 @@
+<%# Wallet Dashboard %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="wallet-dashboard">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">My Wallet</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your funds, transactions, and payment methods</p>
+    </div>
+    <div class="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <div data-controller="dropdown" class="dropdown">
+        <button data-action="dropdown#toggle" class="btn btn-primary min-w-[140px]">
+          <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+          Add Money
+        </button>
+        <div data-dropdown-target="menu" class="dropdown-menu hidden left-0 w-56">
+          <%= link_to new_transaction_wallet_path(type: 'deposit'), class: "dropdown-item" do %>
+            <%= icon "money-in", class: "w-5 h-5 mr-2" %>
+            Deposit
+          <% end %>
+          <%= link_to new_transaction_wallet_path(type: 'transfer'), class: "dropdown-item" do %>
+            <%= icon "transfer", class: "w-5 h-5 mr-2" %>
+            Request Money
+          <% end %>
+        </div>
+      </div>
+      
+      <div data-controller="dropdown" class="dropdown">
+        <button data-action="dropdown#toggle" class="btn btn-secondary min-w-[140px]">
+          <%= icon "arrow-right", class: "w-5 h-5 mr-2" %>
+          Send Money
+        </button>
+        <div data-dropdown-target="menu" class="dropdown-menu hidden left-0 w-56">
+          <%= link_to new_transaction_wallet_path(type: 'withdrawal'), class: "dropdown-item" do %>
+            <%= icon "money-out", class: "w-5 h-5 mr-2" %>
+            Withdraw
+          <% end %>
+          <%= link_to new_transaction_wallet_path(type: 'transfer'), class: "dropdown-item" do %>
+            <%= icon "transfer", class: "w-5 h-5 mr-2" %>
+            Transfer
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Balance Card %>
+  <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl p-6 md:p-8 shadow-lg text-white mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h2 class="text-lg font-medium opacity-90">Available Balance</h2>
+        <div class="mt-2 flex items-baseline">
+          <span class="text-3xl md:text-4xl font-bold" data-wallet-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
+          <span class="ml-2 text-lg opacity-90"><%= @wallet.currency %></span>
+          <button type="button" class="ml-2 text-white/70 hover:text-white transition" data-wallet-dashboard-target="refreshButton" data-action="wallet-dashboard#refreshBalance">
+            <%= icon "refresh", class: "w-5 h-5" %>
+          </button>
+        </div>
+        <p class="mt-1 text-sm opacity-75">Daily Limit: <%= @wallet.currency_symbol %><%= @wallet.daily_limit %></p>
+      </div>
+      
+      <div class="mt-6 md:mt-0 flex gap-2">
+        <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="btn-white px-5 py-2 rounded-lg font-medium shadow-sm">
+          <%= icon "money-in", class: "w-5 h-5 mr-1" %>
+          Deposit
+        </a>
+        <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="btn-white-outline px-5 py-2 rounded-lg font-medium">
+          <%= icon "money-out", class: "w-5 h-5 mr-1" %>
+          Withdraw
+        </a>
+      </div>
+    </div>
+    
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white/10 rounded-lg p-4">
+        <p class="text-sm opacity-90">Today's Deposits</p>
+        <p class="text-xl font-semibold mt-1" data-wallet-dashboard-target="statValue" data-value="<%= @today_incoming.to_f.round(2) %>"><%= @wallet.currency_symbol %><%= @today_incoming.to_f.round(2) %></p>
+      </div>
+      <div class="bg-white/10 rounded-lg p-4">
+        <p class="text-sm opacity-90">Today's Withdrawals</p>
+        <p class="text-xl font-semibold mt-1" data-wallet-dashboard-target="statValue" data-value="<%= @today_outgoing.to_f.round(2) %>"><%= @wallet.currency_symbol %><%= @today_outgoing.to_f.round(2) %></p>
+      </div>
+      <div class="bg-white/10 rounded-lg p-4">
+        <p class="text-sm opacity-90">Monthly Net Flow</p>
+        <p class="text-xl font-semibold mt-1" data-wallet-dashboard-target="statValue" data-value="<%= (@this_month_incoming - @this_month_outgoing).to_f.round(2) %>"><%= @wallet.currency_symbol %><%= (@this_month_incoming - @this_month_outgoing).to_f.round(2) %></p>
+      </div>
+    </div>
+  </div>
+  
+  <%# Quick Actions %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-2">
+          <%= icon "money-in", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Deposit</span>
+      </a>
+      
+      <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-2">
+          <%= icon "money-out", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Withdraw</span>
+      </a>
+      
+      <a href="<%= new_transaction_wallet_path(type: 'transfer') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-2">
+          <%= icon "transfer", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Transfer</span>
+      </a>
+      
+      <a href="<%= transactions_wallet_path %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mb-2">
+          <%= icon "history", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">History</span>
+      </a>
+      
+      <a href="<%= payment_methods_path %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-2">
+          <%= icon "credit-card", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Methods</span>
+      </a>
+      
+      <a href="#" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center text-yellow-600 dark:text-yellow-400 mb-2">
+          <%= icon "settings", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Settings</span>
+      </a>
+    </div>
+  </div>
+  
+  <%# Recent Transactions %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
+    <div class="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
+      <div class="mt-2 md:mt-0 flex items-center">
+        <button type="button" class="mr-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition" data-action="wallet-dashboard#refreshTransactions">
+          <%= icon "refresh", class: "w-4 h-4" %>
+        </button>
+        <a href="<%= transactions_wallet_path %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline">
+          View All Transactions
+        </a>
+      </div>
+    </div>
+    
+    <div class="overflow-x-auto" data-wallet-dashboard-target="recentTransactions">
+      <table class="w-full">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Details</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Action</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @recent_transactions.empty? %>
+            <tr>
+              <td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col items-center justify-center">
+                  <%= icon "empty-wallet", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+                  <p>No transactions yet</p>
+                  <p class="mt-1 text-sm">Your transaction history will appear here</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% @recent_transactions.each do |transaction| %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <% 
+                      icon_name = case transaction.transaction_type
+                                  when 'deposit' then 'money-in'
+                                  when 'withdrawal' then 'money-out'
+                                  when 'transfer' then 'transfer'
+                                  when 'payment' then 'shopping'
+                                  end
+                                  
+                      icon_color = case transaction.transaction_type
+                                   when 'deposit' then 'text-green-500'
+                                   when 'withdrawal' then 'text-red-500'
+                                   when 'transfer' then 'text-blue-500'
+                                   when 'payment' then 'text-purple-500'
+                                   end
+                    %>
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center <%= icon_color %>">
+                      <%= icon icon_name, class: "h-4 w-4" %>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">
+                        <%= transaction.transaction_type_description %>
+                      </div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                        <%= transaction.reference %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <%= transaction.created_at.strftime("%b %d, %Y") %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= transaction.created_at.strftime("%I:%M %p") %>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <% if transaction.description.present? %>
+                      <%= transaction.description %>
+                    <% else %>
+                      <%= transaction.transaction_type_description %>
+                    <% end %>
+                  </div>
+                  <% if transaction.transaction_type == 'transfer' %>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      <%= transaction.direction_for_user(current_user.id) == :outgoing ? "To: " : "From: " %>
+                      <%= transaction.other_party_name(current_user.id) %>
+                    </div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% amount_class = transaction.direction_for_user(current_user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
+                  <div class="text-sm font-medium <%= amount_class %>">
+                    <%= transaction.signed_amount_for_user(current_user.id) %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% 
+                    status_class = case transaction.status
+                                  when 'completed' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                                  when 'pending' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                                  when 'failed' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                  when 'reversed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                                  end
+                  %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                    <%= transaction.status.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <a href="<%= wallet_transaction_path(transaction) %>" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+                    View
+                  </a>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <%# Payment Methods %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Payment Methods</h2>
+      <a href="<%= payment_methods_path %>" class="mt-2 md:mt-0 text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline">
+        Manage Payment Methods
+      </a>
+    </div>
+    
+    <div class="px-6 pb-6">
+      <% if @payment_methods.empty? %>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+          <div class="flex flex-col items-center justify-center">
+            <%= icon "credit-card", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+            <h3 class="text-gray-900 dark:text-white font-medium mb-1">No payment methods yet</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Add a payment method to deposit or withdraw funds</p>
+            <a href="<%= new_payment_method_path %>" class="btn btn-primary">
+              <%= icon "plus", class: "w-4 h-4 mr-1" %>
+              Add Payment Method
+            </a>
+          </div>
+        </div>
+      <% else %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @payment_methods.each do |method| %>
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 relative <%= method.default? ? 'bg-primary-50 dark:bg-primary-900/10 border-primary-200 dark:border-primary-800' : 'bg-white dark:bg-gray-800' %>">
+              <% if method.default? %>
+                <div class="absolute top-3 right-3 px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-xs font-medium rounded">
+                  Default
+                </div>
+              <% end %>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                  <%= icon method.icon_name, class: "h-5 w-5" %>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-white"><%= method.description %></h3>
+                  <div class="mt-1 flex items-center">
+                    <span class="text-xs px-1.5 py-0.5 rounded <%= method.status_color == 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' %>">
+                      <%= method.verified? ? 'Verified' : 'Pending Verification' %>
+                    </span>
+                    <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                      <%= method.last_used_at ? "Last used #{time_ago_in_words(method.last_used_at)} ago" : 'Never used' %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-3 flex justify-end space-x-2">
+                <% unless method.default? %>
+                  <%= form_with url: set_default_payment_method_path(method), method: :post, data: { turbo: false } do |f| %>
+                    <%= f.button type: 'submit', class: "text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600" do %>
+                      Make Default
+                    <% end %>
+                  <% end %>
+                <% end %>
+                <a href="<%= edit_payment_method_path(method) %>" class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600">
+                  Edit
+                </a>
+              </div>
+            </div>
+          <% end %>
+          
+          <a href="<%= new_payment_method_path %>" class="border border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-750 transition">
+            <%= icon "plus-circle", class: "w-8 h-8 mb-2" %>
+            <span class="text-sm font-medium">Add New Payment Method</span>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

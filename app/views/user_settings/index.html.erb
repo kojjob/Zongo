@@ -1,0 +1,206 @@
+<%# User Settings Main Page with Tabs %>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your account settings and preferences</p>
+  </div>
+
+  <%# Tabs Navigation %>
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-wrap -mb-px" data-controller="tabs">
+      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
+        Overview
+      <% end %>
+      
+      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
+        Profile
+      <% end %>
+      
+      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
+        Security
+      <% end %>
+      
+      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
+        Notifications
+      <% end %>
+      
+      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
+        Appearance
+      <% end %>
+      
+      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
+        Payment
+      <% end %>
+      
+      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
+        Support
+      <% end %>
+    </div>
+  </div>
+
+  <%# Overview Content %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Account Overview</h2>
+        <%= link_to user_settings_profile_path, class: "text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline" do %>
+          Edit Profile
+        <% end %>
+      </div>
+      
+      <div class="flex flex-col md:flex-row">
+        <%# Profile Photo %>
+        <div class="flex flex-col items-center md:items-start mb-6 md:mb-0 md:mr-8">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, class: "h-24 w-24 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow" %>
+          <% else %>
+            <div class="h-24 w-24 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 text-2xl font-bold">
+              <%= current_user.initials %>
+            </div>
+          <% end %>
+          
+          <%= link_to user_settings_profile_path, class: "mt-3 text-sm text-primary-600 dark:text-primary-400 font-medium hover:underline" do %>
+            Change Photo
+          <% end %>
+        </div>
+        
+        <%# Profile Details %>
+        <div class="flex-1">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Username</div>
+              <div class="mt-1 text-base font-medium text-gray-900 dark:text-white"><%= current_user.username.presence || "Not set" %></div>
+            </div>
+            
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Email</div>
+              <div class="mt-1 text-base font-medium text-gray-900 dark:text-white"><%= current_user.email %></div>
+            </div>
+            
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Phone</div>
+              <div class="mt-1 text-base font-medium text-gray-900 dark:text-white"><%= current_user.phone %></div>
+            </div>
+            
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Account Status</div>
+              <div class="mt-1">
+                <% case current_user.status %>
+                <% when 'active' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    Active
+                  </span>
+                <% when 'pending' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                    Pending
+                  </span>
+                <% when 'suspended' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                    Suspended
+                  </span>
+                <% when 'locked' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                    Locked
+                  </span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Verification Level</div>
+              <div class="mt-1">
+                <% case current_user.kyc_level %>
+                <% when 'basic' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                    Basic
+                  </span>
+                <% when 'intermediate' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                    Intermediate
+                  </span>
+                <% when 'full' %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                    Full
+                  </span>
+                <% end %>
+              </div>
+            </div>
+            
+            <div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Member Since</div>
+              <div class="mt-1 text-base font-medium text-gray-900 dark:text-white"><%= current_user.created_at.strftime("%B %d, %Y") %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# Quick Settings Cards %>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <%# Security Card %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-150">
+      <div class="flex items-start justify-between mb-3">
+        <div class="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-600 dark:text-red-400">
+          <%= icon "shield-check", class: "h-5 w-5" %>
+        </div>
+        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">
+          <%= current_user.last_sign_in_at ? time_ago_in_words(current_user.last_sign_in_at) + " ago" : "Never" %>
+        </div>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">Security Settings</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Manage your password, set up two-factor authentication and more</p>
+      <%= link_to user_settings_security_path, class: "text-primary-600 dark:text-primary-400 text-sm font-medium" do %>
+        Manage Security <%= icon "chevron-right", class: "w-4 h-4 inline-block ml-1" %>
+      <% end %>
+    </div>
+    
+    <%# Notifications Card %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-150">
+      <div class="flex items-start justify-between mb-3">
+        <div class="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+          <%= icon "bell", class: "h-5 w-5" %>
+        </div>
+        <% user_setting = current_user.setting || UserSetting.new(user: current_user) %>
+          <% if user_setting.email_notifications || user_setting.sms_notifications || user_setting.push_notifications %>
+          <div class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">
+            Enabled
+          </div>
+        <% else %>
+          <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">
+            Disabled
+          </div>
+        <% end %>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">Notification Preferences</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Choose what notifications you receive and how you receive them</p>
+      <%= link_to user_settings_notifications_path, class: "text-primary-600 dark:text-primary-400 text-sm font-medium" do %>
+        Manage Notifications <%= icon "chevron-right", class: "w-4 h-4 inline-block ml-1" %>
+      <% end %>
+    </div>
+    
+    <%# Appearance Card %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow duration-150">
+      <div class="flex items-start justify-between mb-3">
+        <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400">
+          <%= icon "paint-brush", class: "h-5 w-5" %>
+        </div>
+        <div class="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-xs px-2 py-1 rounded-full">
+        <%= user_setting.theme_preference.presence || "System Default" %>
+        </div>
+      </div>
+      <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1">Appearance Settings</h3>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Customize the look and feel of your app experience</p>
+      <%= link_to user_settings_appearance_path, class: "text-primary-600 dark:text-primary-400 text-sm font-medium" do %>
+        Manage Appearance <%= icon "chevron-right", class: "w-4 h-4 inline-block ml-1" %>
+      <% end %>
+    </div>
+  </div>
+</div>

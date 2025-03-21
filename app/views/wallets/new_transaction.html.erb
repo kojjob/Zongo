@@ -1,0 +1,335 @@
+<%# New Transaction Page %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="transaction-form">
+  <div class="flex items-center mb-6">
+    <a href="<%= wallet_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <% case @transaction_type %>
+      <% when 'deposit' %>
+        Deposit Funds
+      <% when 'withdrawal' %>
+        Withdraw Funds
+      <% when 'transfer' %>
+        Transfer Money
+      <% else %>
+        New Transaction
+      <% end %>
+    </h1>
+  </div>
+
+  <%# Transaction Form Card %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <%# Top Tabs for Transaction Types %>
+    <div class="flex border-b border-gray-200 dark:border-gray-700">
+      <% 
+        transaction_types = [
+          { id: 'deposit', label: 'Deposit', icon: 'money-in' },
+          { id: 'withdrawal', label: 'Withdraw', icon: 'money-out' },
+          { id: 'transfer', label: 'Transfer', icon: 'transfer' }
+        ]
+      %>
+      <% transaction_types.each do |type| %>
+        <a 
+          href="<%= new_transaction_wallet_path(type: type[:id]) %>" 
+          class="flex-1 px-4 py-3 text-center <%= @transaction_type == type[:id] ? 'bg-primary-50 dark:bg-primary-900/20 border-b-2 border-primary-500 dark:border-primary-400' : 'hover:bg-gray-50 dark:hover:bg-gray-700' %>"
+        >
+          <div class="flex items-center justify-center">
+            <%= icon type[:icon], class: "w-5 h-5 mr-2 #{@transaction_type == type[:id] ? 'text-primary-500 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}" %>
+            <span class="<%= @transaction_type == type[:id] ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-600 dark:text-gray-300' %>">
+              <%= type[:label] %>
+            </span>
+          </div>
+        </a>
+      <% end %>
+    </div>
+
+    <%# Form Section %>
+    <div class="p-6">
+      <% case @transaction_type %>
+      <% when 'deposit' %>
+        <%= form_with url: deposit_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+          <div>
+            <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (<%= @wallet.currency %>)</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "1", required: true, 
+                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                  placeholder: "0.00", 
+                  data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Minimum amount: <%= @wallet.currency_symbol %>1.00</p>
+          </div>
+
+          <div>
+            <label for="payment_method_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Payment Method</label>
+            <div class="mt-1">
+              <% if @payment_methods.empty? %>
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+                  <div class="flex items-center">
+                    <%= icon "alert", class: "w-5 h-5 text-yellow-500 mr-2" %>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">You don't have any payment methods set up.</p>
+                  </div>
+                  <div class="mt-3">
+                    <a href="<%= new_payment_method_path(return_to: request.path) %>" class="btn btn-primary btn-sm">
+                      <%= icon "plus", class: "w-4 h-4 mr-1" %>
+                      Add Payment Method
+                    </a>
+                  </div>
+                </div>
+              <% else %>
+                <div class="space-y-2" data-transaction-form-target="methodsContainer">
+                  <% @payment_methods.each do |method| %>
+                    <div class="relative flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md hover:border-primary-400 dark:hover:border-primary-500 cursor-pointer"
+                         data-action="click->transaction-form#selectMethod">
+                      <%= f.radio_button :payment_method_id, method.id, 
+                          class: "absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary-600 dark:text-primary-500 focus:ring-primary-500", 
+                          required: true,
+                          data: { transaction_form_target: "methodRadio" } %>
+                      <div class="ml-7 flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                          <%= icon method.icon_name, class: "h-5 w-5" %>
+                        </div>
+                        <div class="ml-3">
+                          <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= method.description %></h4>
+                          <% if method.last_used_at %>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Last used <%= time_ago_in_words(method.last_used_at) %> ago</p>
+                          <% end %>
+                        </div>
+                      </div>
+                      <% if method.default? %>
+                        <span class="absolute right-4 top-4 px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-xs font-medium rounded">
+                          Default
+                        </span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="mt-4">
+                  <a href="<%= new_payment_method_path(return_to: request.path) %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline flex items-center">
+                    <%= icon "plus", class: "w-4 h-4 mr-1" %>
+                    Add New Payment Method
+                  </a>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Optional)</label>
+            <div class="mt-1">
+              <%= f.text_area :description, rows: 2, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "Add a note for this deposit" %>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
+              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
+              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
+              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
+            <%= f.submit "Deposit Funds", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          </div>
+        <% end %>
+      <% when 'withdrawal' %>
+        <%= form_with url: withdraw_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (<%= @wallet.currency %>)</label>
+              <span class="text-sm text-gray-500 dark:text-gray-400">Available: <%= @wallet.formatted_balance %></span>
+            </div>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true, 
+                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                  placeholder: "0.00",
+                  data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button type="button" class="text-primary-600 dark:text-primary-400 text-xs font-medium" data-action="transaction-form#setMaxAmount">MAX</button>
+              </div>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daily limit: <%= @wallet.currency_symbol %><%= @wallet.daily_limit %></p>
+          </div>
+
+          <div>
+            <label for="payment_method_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Withdrawal Method</label>
+            <div class="mt-1">
+              <% if @payment_methods.empty? %>
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
+                  <div class="flex items-center">
+                    <%= icon "alert", class: "w-5 h-5 text-yellow-500 mr-2" %>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">You don't have any payment methods set up.</p>
+                  </div>
+                  <div class="mt-3">
+                    <a href="<%= new_payment_method_path(return_to: request.path) %>" class="btn btn-primary btn-sm">
+                      <%= icon "plus", class: "w-4 h-4 mr-1" %>
+                      Add Payment Method
+                    </a>
+                  </div>
+                </div>
+              <% else %>
+                <div class="space-y-2" data-transaction-form-target="methodsContainer">
+                  <% @payment_methods.each do |method| %>
+                    <div class="relative flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md hover:border-primary-400 dark:hover:border-primary-500 cursor-pointer"
+                         data-action="click->transaction-form#selectMethod">
+                      <%= f.radio_button :payment_method_id, method.id, 
+                          class: "absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary-600 dark:text-primary-500 focus:ring-primary-500", 
+                          required: true,
+                          data: { transaction_form_target: "methodRadio" } %>
+                      <div class="ml-7 flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                          <%= icon method.icon_name, class: "h-5 w-5" %>
+                        </div>
+                        <div class="ml-3">
+                          <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= method.description %></h4>
+                          <% if method.last_used_at %>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">Last used <%= time_ago_in_words(method.last_used_at) %> ago</p>
+                          <% end %>
+                        </div>
+                      </div>
+                      <% if method.default? %>
+                        <span class="absolute right-4 top-4 px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-xs font-medium rounded">
+                          Default
+                        </span>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="mt-4">
+                  <a href="<%= new_payment_method_path(return_to: request.path) %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline flex items-center">
+                    <%= icon "plus", class: "w-4 h-4 mr-1" %>
+                    Add New Payment Method
+                  </a>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Optional)</label>
+            <div class="mt-1">
+              <%= f.text_area :description, rows: 2, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "Add a note for this withdrawal" %>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
+              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
+              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
+              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
+            <%= f.submit "Withdraw Funds", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          </div>
+        <% end %>
+      <% when 'transfer' %>
+        <%= form_with url: transfer_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+          <div>
+            <label for="recipient" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Recipient</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <%= f.text_field :recipient, required: true, 
+                  class: "block w-full py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                  placeholder: "Phone, username, or email",
+                  data: { transaction_form_target: "recipient" } %>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter recipient's phone number, username, or email address</p>
+          </div>
+
+          <% if @recent_recipients && @recent_recipients.any? %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recent Recipients</label>
+              <div class="flex flex-wrap gap-2" data-transaction-form-target="recentRecipients">
+                <% @recent_recipients.each do |recipient| %>
+                  <button type="button" 
+                    class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition"
+                    data-recipient="<%= recipient.phone %>"
+                    data-action="transaction-form#selectRecipient">
+                    <div class="w-5 h-5 rounded-full bg-gray-300 dark:bg-gray-500 flex items-center justify-center mr-2 text-xs font-medium">
+                      <%= recipient.initials %>
+                    </div>
+                    <span><%= recipient.display_name %></span>
+                  </button>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (<%= @wallet.currency %>)</label>
+              <span class="text-sm text-gray-500 dark:text-gray-400">Available: <%= @wallet.formatted_balance %></span>
+            </div>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true, 
+                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+                  placeholder: "0.00",
+                  data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <button type="button" class="text-primary-600 dark:text-primary-400 text-xs font-medium" data-action="transaction-form#setMaxAmount">MAX</button>
+              </div>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daily limit: <%= @wallet.currency_symbol %><%= @wallet.daily_limit %></p>
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message (Optional)</label>
+            <div class="mt-1">
+              <%= f.text_area :description, rows: 2, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "Add a message to the recipient" %>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
+              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
+              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
+              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
+            <%= f.submit "Send Money", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

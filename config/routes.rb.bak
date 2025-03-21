@@ -1,0 +1,5 @@
+Rails.application.routes.draw do
+  # Add test route
+  get 'test', to: 'test#index'
+  
+  # Keep existing routes below...

@@ -1,0 +1,26 @@
+/* Tailwind CSS styling for Pagy pagination */
+
+.pagy-nav {
+  @apply inline-flex items-center;
+}
+
+.pagy-nav .page {
+  @apply inline-flex items-center justify-center w-8 h-8 mx-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors;
+}
+
+.pagy-nav .active {
+  @apply bg-primary-600 border-primary-600 text-white dark:bg-primary-700 dark:border-primary-700 hover:bg-primary-700 dark:hover:bg-primary-600;
+}
+
+.pagy-nav .prev,
+.pagy-nav .next {
+  @apply inline-flex items-center justify-center w-8 h-8 mx-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors;
+}
+
+.pagy-nav .disabled {
+  @apply opacity-50 cursor-not-allowed hover:bg-white dark:hover:bg-gray-800;
+}
+
+.pagy-nav .gap {
+  @apply inline-flex items-center justify-center w-8 h-8 mx-1 text-sm text-gray-700 dark:text-gray-300;
+}
