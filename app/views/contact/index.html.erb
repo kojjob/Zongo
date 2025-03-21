@@ -1,0 +1,402 @@
+<div class="relative bg-white dark:bg-gray-900">
+  <!-- Hero Section with Background Pattern -->
+  <div class="relative bg-primary-600 overflow-hidden">
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-r from-primary-700 to-primary-800 opacity-90"></div>
+      <!-- Decorative Pattern -->
+      <div class="absolute inset-y-0 right-0 w-1/2 hidden lg:block">
+        <svg class="h-full w-full text-primary-800 opacity-20" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polygon points="0,0 100,0 50,100 0,100" />
+        </svg>
+      </div>
+      <!-- Circular Decoration -->
+      <div class="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-primary-800 opacity-20"></div>
+      <div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary-800 opacity-20"></div>
+    </div>
+    
+    <div class="relative px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8 max-w-7xl mx-auto">
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-400 sm:text-5xl lg:text-6xl drop-shadow-md">
+        Get in Touch
+      </h1>
+      <p class="mt-6 max-w-2xl text-xl text-gray-400">
+        We're here to help with any questions about our services or if you need assistance with your account.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+      
+      <!-- Contact Form -->
+      <div>
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Send us a message</h2>
+          
+          <%= form_with(url: "/contact/submit", method: :post, local: true, class: "space-y-6") do |form| %>
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
+              <%= form.text_field :name, placeholder: "Your name", class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" %>
+            </div>
+            
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 dark:text-gray-400">
+                  +233
+                </div>
+                <%= form.telephone_field :phone, placeholder: "1234567890", class: "pl-12 w-full py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" %>
+              </div>
+            </div>
+            
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+              <%= form.email_field :email, placeholder: "your.email@example.com", class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" %>
+            </div>
+            
+            <div>
+              <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+              <%= form.select :subject, ["General Inquiry", "Technical Support", "Billing Question", "Account Issue", "Partnership Opportunity"], { include_blank: "Select a subject" }, { class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" } %>
+            </div>
+            
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+              <%= form.text_area :message, rows: 5, placeholder: "How can we help you?", class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400" %>
+            </div>
+            
+            <div class="flex items-center">
+              <%= form.check_box :terms, class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" %>
+              <label for="terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                I agree to the <a href="#" class="text-primary-600 dark:text-primary-400 hover:underline">Privacy Policy</a>
+              </label>
+            </div>
+            
+            <%= form.submit "Send Message", class: "w-full py-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-base transition-colors cursor-pointer" %>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Contact Information -->
+      <div class="space-y-8">
+        <!-- Quick Contact Options -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Quick Contact</h2>
+          
+          <div class="space-y-6">
+            <!-- Phone -->
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white">Phone</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  <a href="tel:+233302123456" class="hover:text-primary-600 dark:hover:text-primary-400">+233 30 212 3456</a>
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Monday-Friday, 8am-6pm GMT</p>
+              </div>
+            </div>
+            
+            <!-- Email -->
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white">Email</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  <a href="mailto:support@superghana.com" class="hover:text-primary-600 dark:hover:text-primary-400">support@superghana.com</a>
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">We respond within 24 hours</p>
+              </div>
+            </div>
+            
+            <!-- WhatsApp -->
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white">WhatsApp</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  <a href="https://wa.me/233501234567" class="hover:text-primary-600 dark:hover:text-primary-400">+233 50 123 4567</a>
+                </p>
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Chat with our support team</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Office Locations -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Visit Our Offices</h2>
+          
+          <div class="space-y-6">
+            <!-- Accra Office -->
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white">Accra (Headquarters)</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Super Ghana Tower<br>
+                  1 Independence Avenue<br>
+                  Accra, Ghana
+                </p>
+                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <a href="https://goo.gl/maps/your-location-link" target="_blank" class="text-primary-600 dark:text-primary-400 flex items-center">
+                    <span>View on map</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </p>
+              </div>
+            </div>
+            
+            <!-- Kumasi Office -->
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white">Kumasi Office</h3>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Super Ghana Building<br>
+                  25 Asafo Street<br>
+                  Kumasi, Ghana
+                </p>
+                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <a href="https://goo.gl/maps/your-location-link" target="_blank" class="text-primary-600 dark:text-primary-400 flex items-center">
+                    <span>View on map</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Social Media & App -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Connect With Us</h2>
+          
+          <!-- Social Media Icons -->
+          <div class="flex items-center space-x-4 mb-6">
+            <a href="#" class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-700 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-blue-400 flex items-center justify-center text-white hover:bg-blue-500 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-pink-600 flex items-center justify-center text-white hover:bg-pink-700 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white hover:bg-red-700 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- App Download -->
+          <div class="space-y-4">
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Download Our App</h3>
+            <div class="flex flex-wrap gap-2">
+              <a href="#" class="flex items-center space-x-2 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.445 13.999c.14-.699.26-1.4.246-2.001-.633.227-1.47.246-2.217.167-.797-.086-1.479-.343-1.501-.35a.653.653 0 01-.364-.536.658.658 0 01.331-.558c.099-.054 2.425-1.312 2.675-3.765.126-1.242-.21-2.333-1.004-3.247-.508-.583-1.214-.898-1.935-.898-.616 0-1.635.19-2.493 1.044-.977.979-1.907 2.548-1.907 5.128 0 2.448 1.06 4.891 2.109 6.489.508.775 1.038 1.389 1.455 1.633a1.54 1.54 0 001.063.262c.43-.084.786-.396 1.127-.723.348-.333.633-.616.926-.616.292 0 .576.283.923.615.342.328.697.64 1.127.723a1.541 1.541 0 001.064-.262c.417-.244.949-.857 1.456-1.633a17.096 17.096 0 00.69-1.113l-.006-.007zM12.053 8.079c.852-.004 1.369-.714 1.369-1.714s-.9-1.719-1.406-1.723c-.94.005-1.379.713-1.379 1.713 0 1.005.784 1.728 1.416 1.724z"/>
+                </svg>
+                <div>
+                  <div class="text-xs text-white">Download on the</div>
+                  <div class="text-sm font-semibold text-white">App Store</div>
+                </div>
+              </a>
+              <a href="#" class="flex items-center space-x-2 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 20.718v-17.436c0-.85.639-1.282 1.414-.955l15.467 8.718c.774.327.774.858 0 1.185l-15.467 8.718c-.775.328-1.414-.104-1.414-.955z"/>
+                </svg>
+                <div>
+                  <div class="text-xs text-white">GET IT ON</div>
+                  <div class="text-sm font-semibold text-white">Google Play</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Map Section -->
+  <div class="bg-gray-50 dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">Find Us</h2>
+      
+      <!-- Map placeholder - in production, replace with actual map embed -->
+      <div class="bg-gray-200 dark:bg-gray-700 h-96 rounded-xl overflow-hidden relative">
+        <!-- Replace this with your actual map embed -->
+        <div class="absolute inset-0">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            style="border:0" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1982.8953247296414!2d-0.18646908356011213!3d5.6037187000000015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9084b2b7a773%3A0xbed14ed8650e2dd3!2sAccra!5e0!3m2!1sen!2sgh!4v1711040844018!5m2!1sen!2sgh" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- FAQ Section -->
+  <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-4">Frequently Asked Questions</h2>
+      <p class="text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+        Find quick answers to common questions about our super app and services.
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- FAQ Item 1 -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          How do I create an account?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Download our app from the App Store or Google Play, then tap "Sign Up". You'll need to verify your phone number and set up a secure PIN to complete registration.
+        </p>
+      </div>
+      
+      <!-- FAQ Item 2 -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          Is my money safe in the app?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Yes, we use bank-level encryption and security measures to protect your money and data. All transactions require PIN verification, and we're fully licensed by the Bank of Ghana.
+        </p>
+      </div>
+      
+      <!-- FAQ Item 3 -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          What fees do you charge?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Most in-app transactions are free. There may be small fees for certain services like withdrawals to bank accounts or cross-border transfers. All fees are clearly displayed before you confirm any transaction.
+        </p>
+      </div>
+      
+      <!-- FAQ Item 4 -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+          How can I reset my PIN?
+        </h3>
+        <p class="text-gray-700 dark:text-gray-300">
+          Go to Settings > Security > Reset PIN in the app. You'll need to verify your identity through SMS or additional security questions before setting a new PIN.
+        </p>
+      </div>
+    </div>
+    
+    <div class="text-center mt-8">
+      <a href="#" class="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium">
+        <span>View all FAQs</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Support Banner -->
+  <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+    <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:py-16 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Need more help?</h2>
+        <p class="text-primary-100">Our support team is available 24/7 to assist you.</p>
+      </div>
+      <div class="mt-8 md:mt-0 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-900 bg-opacity-20 hover:bg-opacity-30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+          </svg>
+          Live Chat
+        </a>
+        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-primary-700 bg-white hover:bg-primary-50">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Email Support
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Add this to app/javascript/controllers/theme_controller.js for dark mode toggle functionality %>
+<%# Make sure your Stimulus setup is configured properly %>
+<%# 
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = [ "lightIcon", "darkIcon" ]
+  
+  connect() {
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+      this.lightIconTarget.classList.remove('hidden')
+    } else {
+      document.documentElement.classList.remove('dark')
+      this.darkIconTarget.classList.remove('hidden')
+    }
+  }
+  
+  toggle() {
+    if (document.documentElement.classList.contains('dark')) {
+      document.documentElement.classList.remove('dark')
+      localStorage.theme = 'light'
+      this.lightIconTarget.classList.add('hidden')
+      this.darkIconTarget.classList.remove('hidden')
+    } else {
+      document.documentElement.classList.add('dark')
+      localStorage.theme = 'dark'
+      this.lightIconTarget.classList.remove('hidden')
+      this.darkIconTarget.classList.add('hidden')
+    }
+  }
+}
+%>

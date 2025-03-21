@@ -1,0 +1,242 @@
+/**
+ * Light Mode Text Visibility Fixes
+ * These styles ensure proper text visibility in light mode
+ */
+
+/* Navbar text fixes for light mode */
+html:not(.dark) .text-gray-600,
+html:not(.dark) .text-gray-700,
+html:not(.dark) .text-gray-800,
+html:not(.dark) .text-gray-900 {
+  color: #111827 !important; /* Force dark color in light mode for better visibility */
+}
+
+/* Hero section text fixes for light mode */
+html:not(.dark) .from-indigo-50.via-blue-50.to-purple-50 .text-gray-600,
+html:not(.dark) .from-indigo-50.via-blue-50.to-purple-50 .text-gray-700 {
+  color: #4B5563 !important; /* Enhance contrast for hero text */
+}
+
+/* Stats section text fixes for light mode - Enhanced */
+html:not(.dark) .bg-gradient-to-r.from-primary-600.to-secondary-600 {
+  background-image: linear-gradient(to right, #16a34a, #ca8a04) !important; /* Ensure gradient is visible */
+}
+
+html:not(.dark) .bg-gradient-to-r.from-primary-600.to-secondary-600 .text-white,
+html:not(.dark) .bg-gradient-to-r.from-primary-600.to-secondary-600 .text-white\/80,
+html:not(.dark) .bg-gradient-to-r.from-primary-600.to-secondary-600 .text-white\/90 {
+  color: white !important; /* Ensure text is white on gradient backgrounds */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Add subtle shadow for better visibility */
+}
+
+html:not(.dark) .bg-white\/10,
+html:not(.dark) .bg-white\/20 {
+  background-color: rgba(255, 255, 255, 0.2) !important; /* Make sure stat boxes are visible */
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Fix gradient text which may have contrast issues in light mode */
+html:not(.dark) .bg-clip-text.text-transparent.bg-gradient-to-r {
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+  background-image: linear-gradient(to right, #16a34a, #ca8a04) !important; /* Brighter gradient colors */
+}
+
+/* Fix invisible text in cards */
+html:not(.dark) .from-white.to-gray-50 .text-gray-700,
+html:not(.dark) .text-gray-900.dark\:text-white {
+  color: #111827 !important; /* Ensure card text is visible */
+}
+
+/* Fix testimonial cards */
+html:not(.dark) .bg-gradient-to-br.from-white.to-gray-50 .text-gray-700 {
+  color: #374151 !important;
+}
+html:not(.dark) .bg-gradient-to-br.from-white.to-gray-50 .text-gray-900 {
+  color: #111827 !important;
+}
+
+/* Force navbar text to be visible in light mode */
+html:not(.dark) .text-gray-700.dark\:text-gray-200 {
+  color: #374151 !important;
+}
+
+/* Fix phone mockup */
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 {
+  background-color: white !important;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 .text-gray-800,
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 .text-gray-900,
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 .font-medium.text-gray-800.dark\:text-gray-200,
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 .text-gray-600.dark\:text-gray-400 {
+  color: #111827 !important; /* Force dark text in phone mockup */
+}
+
+html:not(.dark) .relative.w-full.bg-white.dark\:bg-gray-900.p-4 .text-gray-500.dark\:text-gray-400 {
+  color: #6B7280 !important; /* Medium gray for secondary text */
+}
+
+/* Force app header text to be visible */
+html:not(.dark) .text-primary-600.dark\:text-primary-400 {
+  color: #16a34a !important; /* Bright green for app header */
+}
+
+/* Fix for phone transaction sections and wallet page */
+html:not(.dark) .bg-gray-50.dark\:bg-gray-800,
+html:not(.dark) .bg-white.dark\:bg-gray-800 {
+  background-color: #FFFFFF !important;
+  border: 1px solid #F3F4F6;
+}
+
+/* Fix text in transaction cards and wallet cards */
+html:not(.dark) .flex.items-center.justify-between.bg-gray-50.dark\:bg-gray-800.p-3.rounded-lg .text-sm.font-medium.text-gray-800.dark\:text-gray-200,
+html:not(.dark) .text-sm.font-medium.text-gray-900.dark\:text-white,
+html:not(.dark) .text-sm.text-gray-500.dark\:text-gray-400 {
+  color: #111827 !important;
+}
+
+html:not(.dark) .flex.items-center.justify-between.bg-gray-50.dark\:bg-gray-800.p-3.rounded-lg .text-xs.text-gray-500.dark\:text-gray-400 {
+  color: #6B7280 !important;
+}
+
+/* Fix Quick Actions section and general text */
+html:not(.dark) .text-sm.font-semibold.text-gray-800.dark\:text-gray-200,
+html:not(.dark) .text-gray-900,
+html:not(.dark) .font-semibold.text-gray-900.dark\:text-white,
+html:not(.dark) .text-lg.font-semibold.text-gray-900.dark\:text-white {
+  color: #111827 !important;
+}
+
+html:not(.dark) .text-xs.text-gray-800.dark\:text-gray-200 {
+  color: #111827 !important;
+}
+
+/* Fix background colors in Quick Action icons */
+html:not(.dark) .bg-primary-100.dark\:bg-primary-900\/30 {
+  background-color: #DCFCE7 !important;
+}
+
+html:not(.dark) .bg-blue-100.dark\:bg-blue-900\/30 {
+  background-color: #DBEAFE !important;
+}
+
+html:not(.dark) .bg-purple-100.dark\:bg-purple-900\/30 {
+  background-color: #F3E8FF !important;
+}
+
+html:not(.dark) .bg-yellow-100.dark\:bg-yellow-900\/30 {
+  background-color: #FEF3C7 !important;
+}
+
+html:not(.dark) .bg-green-100.dark\:bg-green-900\/30 {
+  background-color: #DCFCE7 !important;
+}
+
+html:not(.dark) .bg-red-100.dark\:bg-red-900\/30 {
+  background-color: #FEE2E2 !important;
+}
+
+/* Fix icon colors */
+html:not(.dark) .text-primary-600.dark\:text-primary-400,
+html:not(.dark) .text-primary-600 {
+  color: #16A34A !important;
+}
+
+html:not(.dark) .text-blue-600.dark\:text-blue-400 {
+  color: #2563EB !important;
+}
+
+html:not(.dark) .text-purple-600.dark\:text-purple-400 {
+  color: #9333EA !important;
+}
+
+html:not(.dark) .text-yellow-600.dark\:text-yellow-400 {
+  color: #CA8A04 !important;
+}
+
+html:not(.dark) .text-green-600.dark\:text-green-400 {
+  color: #16A34A !important;
+}
+
+html:not(.dark) .text-red-600.dark\:text-red-400 {
+  color: #DC2626 !important;
+}
+
+/* Fix feature cards */
+html:not(.dark) .group:hover .group-hover\:text-primary-600 {
+  color: #16a34a !important;
+}
+
+html:not(.dark) .group:hover .group-hover\:text-secondary-600 {
+  color: #ca8a04 !important;
+}
+
+html:not(.dark) .group:hover .group-hover\:text-accent-600 {
+  color: #dc2626 !important;
+}
+
+html:not(.dark) .group:hover .group-hover\:text-green-600 {
+  color: #16a34a !important;
+}
+
+html:not(.dark) .group:hover .group-hover\:text-red-600 {
+  color: #dc2626 !important;
+}
+
+html:not(.dark) .group:hover .group-hover\:text-purple-600 {
+  color: #9333ea !important;
+}
+
+/* Additional Stats Section fixes */
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 {
+  background-image: linear-gradient(to right, #16a34a, #ca8a04) !important;
+  color: white !important;
+}
+
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .text-3xl,
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .text-4xl,
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .text-5xl,
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .font-bold,
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 p {
+  color: white !important;
+}
+
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .text-xl.text-white\/90 {
+  color: white !important;
+  opacity: 0.9 !important;
+}
+
+html:not(.dark) section.py-20.bg-gradient-to-r.from-primary-600.to-secondary-600 .text-white\/80 {
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+/* Simple section gap fix */
+html:not(.dark) section {
+  position: relative;
+}
+
+/* Wallet page specific fixes */
+html:not(.dark) .bg-gradient-to-r.from-primary-500.to-secondary-500 {
+  background-image: linear-gradient(to right, #22c55e, #eab308) !important;
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+html:not(.dark) .from-primary-500.to-secondary-500 .text-white {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+html:not(.dark) .dark\:bg-gray-700 {
+  background-color: #F9FAFB !important;
+}
+
+html:not(.dark) .hover\:bg-gray-100.dark\:hover\:bg-gray-700:hover {
+  background-color: #F3F4F6 !important;
+}

@@ -1,0 +1,236 @@
+<%# Payment Settings %>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Payment Settings</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your payment methods and preferences</p>
+  </div>
+
+  <%# Tabs Navigation %>
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-wrap -mb-px">
+      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
+        Overview
+      <% end %>
+      
+      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
+        Profile
+      <% end %>
+      
+      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
+        Security
+      <% end %>
+      
+      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
+        Notifications
+      <% end %>
+      
+      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
+        Appearance
+      <% end %>
+      
+      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
+        Payment
+      <% end %>
+      
+      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
+        Support
+      <% end %>
+    </div>
+  </div>
+
+  <%# Payment Methods %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Payment Methods</h2>
+        <%= link_to new_payment_method_path, class: "btn btn-primary-outline" do %>
+          <%= icon "plus", class: "w-4 h-4 mr-1" %>
+          Add Payment Method
+        <% end %>
+      </div>
+      
+      <% if @payment_methods.empty? %>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+          <div class="flex flex-col items-center justify-center">
+            <%= icon "credit-card", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+            <p>No payment methods added yet</p>
+            <p class="mt-1 text-sm">Add a payment method to deposit or withdraw money</p>
+            <%= link_to new_payment_method_path, class: "mt-4 btn btn-primary" do %>
+              <%= icon "plus", class: "w-4 h-4 mr-1" %>
+              Add Payment Method
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="space-y-4">
+          <% @payment_methods.each do |method| %>
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center mb-4 md:mb-0">
+                  <div class="flex-shrink-0">
+                    <div class="h-12 w-12 rounded-full <%= method_type_color(method.method_type) %> flex items-center justify-center">
+                      <%= icon method.icon_name, class: "h-6 w-6" %>
+                    </div>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-base font-medium text-gray-900 dark:text-white flex items-center">
+                      <%= method.provider %>
+                      <% if method.default? %>
+                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          Default
+                        </span>
+                      <% end %>
+                      <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= method_status_color(method.status) %>">
+                        <%= method.status.titleize %>
+                      </span>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      <%= method.masked_account_number %>
+                    </div>
+                    <% if method.last_used_at %>
+                      <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        Last used: <%= time_ago_in_words(method.last_used_at) %> ago
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="flex space-x-2">
+                  <% unless method.default? %>
+                    <%= link_to set_default_payment_method_path(method), method: :post, class: "btn btn-sm btn-white" do %>
+                      <%= icon "star", class: "w-4 h-4 mr-1" %>
+                      Set Default
+                    <% end %>
+                  <% end %>
+                  <div class="relative" data-controller="dropdown">
+                    <button data-action="dropdown#toggle" class="btn btn-sm btn-white">
+                      <%= icon "dots-vertical", class: "w-4 h-4" %>
+                    </button>
+                    <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48">
+                      <%= link_to edit_payment_method_path(method), class: "dropdown-item" do %>
+                        <%= icon "edit", class: "w-4 h-4 mr-2" %>
+                        Edit
+                      <% end %>
+                      <% unless method.verified? %>
+                        <%= link_to verify_payment_method_path(method), method: :post, class: "dropdown-item" do %>
+                          <%= icon "check-circle", class: "w-4 h-4 mr-2" %>
+                          Verify
+                        <% end %>
+                      <% end %>
+                      <%= link_to payment_method_path(method), method: :delete, data: { confirm: "Are you sure you want to remove this payment method?" }, class: "dropdown-item text-red-600" do %>
+                        <%= icon "trash", class: "w-4 h-4 mr-2" %>
+                        Remove
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <%# Payment Preferences %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Payment Preferences</h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Transaction Confirmation</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Require PIN confirmation for all transactions</p>
+          </div>
+          <div class="relative inline-block w-12 align-middle select-none">
+            <input type="checkbox" name="require_pin" id="require_pin" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="require_pin" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Daily Transaction Limit</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Maximum amount to spend per day</p>
+          </div>
+          <div class="flex items-center">
+            <span class="text-gray-900 dark:text-white font-medium mr-2">₵<%= current_user.wallet.daily_limit %></span>
+            <button type="button" class="btn btn-sm btn-primary-outline">Edit</button>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Automatic Payment</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Automatically pay scheduled transactions</p>
+          </div>
+          <div class="relative inline-block w-12 align-middle select-none">
+            <input type="checkbox" name="auto_pay" id="auto_pay" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="auto_pay" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          </div>
+        </div>
+        
+        <div class="flex items-center justify-between py-3">
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white">Payment Receipts</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Email receipts for all transactions</p>
+          </div>
+          <div class="relative inline-block w-12 align-middle select-none">
+            <input type="checkbox" name="email_receipts" id="email_receipts" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="email_receipts" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Custom toggle switch styles */
+  .toggle-checkbox:checked {
+    @apply right-0 border-primary-600 transform translate-x-full;
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    @apply bg-primary-600;
+  }
+</style>
+
+<%# Helper method for payment method type colors %>
+<% 
+  def method_type_color(type)
+    case type
+    when 'bank'
+      'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
+    when 'card'
+      'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
+    when 'mobile_money'
+      'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+    when 'wallet'
+      'bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400'
+    else
+      'bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400'
+    end
+  end
+
+  def method_status_color(status)
+    case status
+    when 'verified'
+      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+    when 'pending'
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+    when 'rejected'
+      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+    when 'expired'
+      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+    else
+      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+    end
+  end
+%>

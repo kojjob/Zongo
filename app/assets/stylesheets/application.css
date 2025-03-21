@@ -8,3 +8,24 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Import theme and component styles */
+@import "theme.css";
+@import "components.css";
+@import "light_mode_fixes.css";
+@import "pagy.css";
+
+/* Global styles */
+:root {
+  --font-sans: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Smooth transitions for theme changes */
+body, .bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .text-gray-500, .text-gray-700,
+.border-gray-200, .border-gray-300, .shadow-sm, .shadow, .shadow-md, .shadow-lg {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}

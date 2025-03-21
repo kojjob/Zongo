@@ -1,0 +1,68 @@
+/**
+ * Section-specific fixes for wallet pages
+ */
+
+/* Fix wallet page light mode issues */
+html:not(.dark) .bg-white.dark\:bg-gray-800.rounded-xl {
+  background-color: white !important;
+  color: #111827 !important;
+}
+
+html:not(.dark) .bg-gray-50.dark\:bg-gray-700.rounded-lg {
+  background-color: #F9FAFB !important;
+}
+
+html:not(.dark) .text-gray-500.dark\:text-gray-300 {
+  color: #6B7280 !important;
+}
+
+html:not(.dark) .text-gray-900.dark\:text-white {
+  color: #111827 !important;
+}
+
+html:not(.dark) .bg-gray-50.dark\:bg-gray-700 {
+  background-color: #F9FAFB !important;
+}
+
+/* Fix table headers and cells in light mode */
+html:not(.dark) .text-left.text-xs.font-medium.text-gray-500.dark\:text-gray-300.uppercase.tracking-wider {
+  color: #6B7280 !important;
+}
+
+html:not(.dark) .bg-white.dark\:bg-gray-800.divide-y.divide-gray-200.dark\:divide-gray-700 {
+  background-color: white !important;
+  --tw-divide-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-divide-opacity)) !important;
+}
+/**
+ * Section spacing fixes
+ * Simple, reliable fixes for section gaps
+ */
+
+/* Reset margins between all sections */
+section + section {
+  margin-top: 0;
+}
+
+/* Ensure wave divider doesn't add extra space */
+.absolute.bottom-0.left-0.right-0,
+.absolute.-bottom-1.left-0.right-0 {
+  pointer-events: none;
+  bottom: 0 !important;
+}
+
+/* Ensure all sections have proper stacking context */
+section {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure proper color transitions between sections */
+section.bg-white + section.bg-gray-50,
+section.bg-white + section.bg-gray-900 {
+  border-top: 1px solid #f3f4f6;
+}
+
+.dark section.dark\:bg-gray-950 + section.dark\:bg-gray-900 {
+  border-top: 1px solid #1f2937;
+}

@@ -1,0 +1,193 @@
+<%# Scheduled Transaction Details %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center mb-6">
+    <a href="<%= scheduled_transactions_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Scheduled Transaction Details</h1>
+  </div>
+
+  <%# Action Buttons %>
+  <div class="mb-6 flex flex-wrap gap-2">
+    <% if @scheduled_transaction.active? %>
+      <%= button_to pause_scheduled_transaction_path(@scheduled_transaction), method: :post, class: "btn btn-secondary" do %>
+        <%= icon "pause", class: "w-4 h-4 mr-2" %>
+        Pause
+      <% end %>
+    <% elsif @scheduled_transaction.paused? %>
+      <%= button_to resume_scheduled_transaction_path(@scheduled_transaction), method: :post, class: "btn btn-secondary" do %>
+        <%= icon "play", class: "w-4 h-4 mr-2" %>
+        Resume
+      <% end %>
+    <% end %>
+
+    <% if ['active', 'paused'].include?(@scheduled_transaction.status) %>
+      <%= button_to execute_scheduled_transaction_path(@scheduled_transaction), method: :post, class: "btn btn-primary" do %>
+        <%= icon "lightning-bolt", class: "w-4 h-4 mr-2" %>
+        Execute Now
+      <% end %>
+    
+      <%= link_to edit_scheduled_transaction_path(@scheduled_transaction), class: "btn btn-outline" do %>
+        <%= icon "pencil", class: "w-4 h-4 mr-2" %>
+        Edit
+      <% end %>
+    
+      <%= button_to scheduled_transaction_path(@scheduled_transaction), 
+                   method: :delete, 
+                   form: { data: { turbo_confirm: "Are you sure you want to cancel this scheduled transaction?" } },
+                   class: "btn btn-outline text-red-600 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/30" do %>
+        <%= icon "trash", class: "w-4 h-4 mr-2" %>
+        Cancel
+      <% end %>
+    <% end %>
+  </div>
+  
+  <%# Transaction Card %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center">
+      <% 
+        icon_name = case @scheduled_transaction.transaction_type
+                      when 'deposit' then 'money-in'
+                      when 'withdrawal' then 'money-out'
+                      when 'transfer' then 'transfer'
+                      when 'payment' then 'shopping'
+                      end
+                      
+        icon_color = case @scheduled_transaction.transaction_type
+                       when 'deposit' then 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
+                       when 'withdrawal' then 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400'
+                       when 'transfer' then 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
+                       when 'payment' then 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
+                       end
+      %>
+      <div class="w-12 h-12 rounded-full <%= icon_color %> flex items-center justify-center mr-4">
+        <%= icon icon_name, class: "w-6 h-6" %>
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+          <%= @scheduled_transaction.transaction_type_description %>
+        </h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          <%= @scheduled_transaction.description || "No description" %>
+        </p>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Amount</h3>
+          <p class="text-lg font-semibold text-gray-900 dark:text-white"><%= @scheduled_transaction.formatted_amount %></p>
+        </div>
+        
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Status</h3>
+          <% 
+            status_class = case @scheduled_transaction.status
+                            when 'active' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                            when 'paused' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                            when 'completed' then 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                            when 'cancelled' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                            when 'failed' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                            end
+          %>
+          <span class="px-2 py-1 text-sm font-medium rounded-md inline-block <%= status_class %>">
+            <%= @scheduled_transaction.status.capitalize %>
+          </span>
+        </div>
+        
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Next Occurrence</h3>
+          <p class="text-gray-900 dark:text-white">
+            <%= @scheduled_transaction.next_occurrence.strftime("%B %d, %Y at %I:%M %p") %>
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            <%= distance_of_time_in_words(Time.current, @scheduled_transaction.next_occurrence) %> from now
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Frequency</h3>
+          <p class="text-gray-900 dark:text-white"><%= @scheduled_transaction.frequency_description %></p>
+        </div>
+        
+        <% if @scheduled_transaction.last_occurrence.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Last Executed</h3>
+            <p class="text-gray-900 dark:text-white">
+              <%= @scheduled_transaction.last_occurrence.strftime("%B %d, %Y at %I:%M %p") %>
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              <%= time_ago_in_words(@scheduled_transaction.last_occurrence) %> ago
+            </p>
+          </div>
+        <% end %>
+        
+        <% if @scheduled_transaction.occurrences_limit.present? %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Progress</h3>
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-2">
+              <% progress_width = (@scheduled_transaction.occurrences_count.to_f / @scheduled_transaction.occurrences_limit.to_f) * 100 %>
+              <div class="bg-primary-600 dark:bg-primary-500 h-2.5 rounded-full" style="width: <%= progress_width %>%"></div>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              <%= @scheduled_transaction.occurrences_count %> of <%= @scheduled_transaction.occurrences_limit %> occurrences
+            </p>
+          </div>
+        <% else %>
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Occurrences</h3>
+            <p class="text-gray-900 dark:text-white"><%= @scheduled_transaction.occurrences_count %> so far (unlimited)</p>
+          </div>
+        <% end %>
+        
+        <% case @scheduled_transaction.transaction_type %>
+        <% when 'transfer' %>
+          <% if @scheduled_transaction.destination_wallet.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Recipient</h3>
+              <p class="text-gray-900 dark:text-white">
+                <%= @scheduled_transaction.destination_wallet.user.display_name %>
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                <%= @scheduled_transaction.destination_wallet.user.email %>
+              </p>
+            </div>
+          <% end %>
+          
+        <% when 'deposit', 'withdrawal' %>
+          <% if @scheduled_transaction.payment_method.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Payment Method</h3>
+              <p class="text-gray-900 dark:text-white"><%= @scheduled_transaction.payment_method %></p>
+              <% if @scheduled_transaction.payment_provider.present? %>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Provider: <%= @scheduled_transaction.payment_provider %>
+                </p>
+              <% end %>
+            </div>
+          <% end %>
+          
+        <% when 'payment' %>
+          <% if @scheduled_transaction.payment_destination.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Payment Destination</h3>
+              <p class="text-gray-900 dark:text-white"><%= @scheduled_transaction.payment_destination %></p>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      
+      <% if @scheduled_transaction.metadata.present? && !@scheduled_transaction.metadata.empty? %>
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Additional Information</h3>
+          <div class="bg-gray-50 dark:bg-gray-900 rounded-md p-3">
+            <code class="text-xs text-gray-900 dark:text-gray-300 font-mono whitespace-pre-wrap">
+              <%= JSON.pretty_generate(@scheduled_transaction.metadata) %>
+            </code>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

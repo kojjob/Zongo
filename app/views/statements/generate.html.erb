@@ -1,0 +1,206 @@
+<%# Statement Preview %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div class="flex items-center mb-4 sm:mb-0">
+      <a href="<%= new_statement_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+        <%= icon "arrow-left", class: "w-5 h-5" %>
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Account Statement</h1>
+    </div>
+    
+    <div class="flex space-x-3">
+      <button type="button" onclick="window.print()" class="btn btn-outline">
+        <%= icon "printer", class: "w-4 h-4 mr-2" %>
+        Print
+      </button>
+      <%= link_to generate_statement_path(start_date: @start_date, end_date: @end_date, format: :pdf), class: "btn btn-primary", target: "_blank" do %>
+        <%= icon "download", class: "w-4 h-4 mr-2" %>
+        Download PDF
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
+    <%# Statement Header %>
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="flex items-center mb-4">
+            <div class="h-10 w-10 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-xl mr-3">
+              SG
+            </div>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Super Ghana Wallet</h2>
+          </div>
+          
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Account ID: <%= @wallet.wallet_id %>
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Currency: <%= @wallet.currency %>
+          </p>
+        </div>
+        
+        <div class="mt-4 sm:mt-0 sm:text-right">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Statement Period:
+          </p>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">
+            <%= @start_date.strftime("%B %d, %Y") %> to <%= @end_date.strftime("%B %d, %Y") %>
+          </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+            Generated on: <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <%# Account Summary %>
+    <div class="p-6 bg-gray-50 dark:bg-gray-750 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Account Summary</h3>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Opening Balance</p>
+          <p class="text-base font-medium text-gray-900 dark:text-white">
+            <%= @wallet.currency_symbol %><%= @opening_balance.to_f.round(2) %>
+          </p>
+        </div>
+        
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Total Incoming</p>
+          <p class="text-base font-medium text-green-600 dark:text-green-400">
+            +<%= @wallet.currency_symbol %><%= @total_inflow.to_f.round(2) %>
+          </p>
+        </div>
+        
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Total Outgoing</p>
+          <p class="text-base font-medium text-red-600 dark:text-red-400">
+            -<%= @wallet.currency_symbol %><%= @total_outflow.to_f.round(2) %>
+          </p>
+        </div>
+        
+        <div>
+          <p class="text-xs text-gray-500 dark:text-gray-400">Closing Balance</p>
+          <p class="text-base font-medium text-gray-900 dark:text-white">
+            <%= @wallet.currency_symbol %><%= @closing_balance.to_f.round(2) %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <%# Transactions %>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Balance</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @transactions.empty? %>
+            <tr>
+              <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                <div class="flex flex-col items-center justify-center">
+                  <%= icon "empty-wallet", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+                  <p>No transactions during this period</p>
+                </div>
+              </td>
+            </tr>
+          <% else %>
+            <% running_balance = @opening_balance %>
+            <% @transactions.each do |transaction| %>
+              <% 
+                # Calculate the effect on balance
+                if transaction.source_wallet_id == @wallet.id
+                  amount = -transaction.amount
+                else
+                  amount = transaction.amount
+                end
+                
+                running_balance += amount if transaction.status == 'completed'
+                
+                amount_class = amount > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+              %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                  <%= transaction.created_at.strftime("%Y-%m-%d") %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                  <%= transaction.description.present? ? transaction.description : transaction.transaction_type_description %>
+                  <% if transaction.transaction_type == 'transfer' %>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      <%= transaction.direction_for_user(current_user.id) == :outgoing ? "To: " : "From: " %>
+                      <%= transaction.other_party_name(current_user.id) %>
+                    </div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                  <%= transaction.reference %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium <%= amount_class %>">
+                  <%= amount > 0 ? '+' : '' %><%= @wallet.currency_symbol %><%= amount.to_f.round(2) %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium text-gray-900 dark:text-white">
+                  <%= @wallet.currency_symbol %><%= running_balance.to_f.round(2) %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <%# Statement Footer %>
+    <div class="p-6 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400">
+      <p>This statement is a summary of transactions in your Super Ghana Wallet for the period specified.</p>
+      <p class="mt-2">If you notice any discrepancies, please contact our customer support team within 30 days of this statement date.</p>
+      <p class="mt-4 text-center">-- End of Statement --</p>
+    </div>
+  </div>
+</div>
+
+<%# Print Styles (only applied when printing) %>
+<style media="print">
+  .btn, a[href="<%= new_statement_path %>"] {
+    display: none !important;
+  }
+  
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .bg-white, .dark\:bg-gray-800 {
+    background-color: white !important;
+  }
+  
+  .text-gray-900, .dark\:text-white {
+    color: black !important;
+  }
+  
+  .text-gray-500, .dark\:text-gray-400 {
+    color: #6b7280 !important;
+  }
+  
+  .shadow-md {
+    box-shadow: none !important;
+  }
+  
+  .border-gray-200 {
+    border-color: #e5e7eb !important;
+  }
+  
+  .rounded-xl {
+    border-radius: 0 !important;
+  }
+  
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+</style>

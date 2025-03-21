@@ -1,0 +1,89 @@
+/* PDF Styles */
+
+body {
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #111827;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #111827;
+}
+
+h3 {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #6b7280;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th {
+  background-color: #f9fafb;
+  padding: 8px;
+  text-align: left;
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 11px;
+}
+
+.text-green {
+  color: #10b981;
+}
+
+.text-red {
+  color: #ef4444;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.summary-box {
+  background-color: #f9fafb;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #e5e7eb;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.statement-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.footer {
+  margin-top: 30px;
+  font-size: 10px;
+  color: #6b7280;
+  text-align: center;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 15px;
+}

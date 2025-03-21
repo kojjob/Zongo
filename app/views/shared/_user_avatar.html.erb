@@ -1,0 +1,27 @@
+<% size = local_assigns.fetch(:size, 10) %>
+<% classes = local_assigns.fetch(:class, "") %>
+<% initials_classes = local_assigns.fetch(:initials_class, "text-primary-600 dark:text-primary-400") %>
+<% bg_classes = local_assigns.fetch(:bg_class, "bg-primary-100 dark:bg-primary-900") %>
+
+<div class="<%= "h-#{size} w-#{size}" %> rounded-full overflow-hidden <%= classes %>">
+  <% if user.avatar.attached? %>
+    <% begin %>
+      <% # First try with variant %>
+      <%= image_tag user.avatar.variant(resize_to_fill: [size * 4, size * 4]), class: "h-full w-full object-cover" %>
+    <% rescue Exception => e %>
+      <% # If variant fails, try direct URL %>
+      <% begin %>
+        <%= image_tag url_for(user.avatar), class: "h-full w-full object-cover" %>
+      <% rescue Exception => e %>
+        <% # Fallback to initials if everything fails %>
+        <div class="h-full w-full <%= bg_classes %> flex items-center justify-center <%= initials_classes %> font-bold">
+          <%= user.initials %>
+        </div>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="h-full w-full <%= bg_classes %> flex items-center justify-center <%= initials_classes %> font-bold">
+      <%= user.initials %>
+    </div>
+  <% end %>
+</div>

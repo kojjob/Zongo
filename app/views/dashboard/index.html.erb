@@ -1,0 +1,386 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="dashboard">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+    <div>
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Welcome back, <%= current_user.username %></p>
+    </div>
+    <div class="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <div data-controller="dropdown" class="dropdown">
+        <button data-action="dropdown#toggle" class="btn btn-primary min-w-[140px]">
+          <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+          Quick Actions
+        </button>
+        <div data-dropdown-target="menu" class="dropdown-menu hidden left-0 w-56">
+          <%= link_to new_transaction_wallet_path(type: 'deposit'), class: "dropdown-item" do %>
+            <%= icon "money-in", class: "w-5 h-5 mr-2" %>
+            Add Money
+          <% end %>
+          <%= link_to new_transaction_wallet_path(type: 'withdrawal'), class: "dropdown-item" do %>
+            <%= icon "money-out", class: "w-5 h-5 mr-2" %>
+            Send Money
+          <% end %>
+          <%= link_to transactions_wallet_path, class: "dropdown-item" do %>
+            <%= icon "history", class: "w-5 h-5 mr-2" %>
+            Transaction History
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Overview Cards %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <%# Balance Card %>
+    <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl p-6 shadow-lg text-white">
+      <div class="flex justify-between items-start">
+        <div>
+          <h2 class="text-lg font-medium opacity-90">Available Balance</h2>
+          <div class="mt-2 flex items-baseline">
+            <span class="text-3xl font-bold" data-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
+            <span class="ml-2 text-lg opacity-90"><%= @wallet.currency %></span>
+          </div>
+        </div>
+        <button type="button" class="text-white/70 hover:text-white transition p-2" data-dashboard-target="refreshButton" data-action="dashboard#refreshBalance">
+          <%= icon "refresh", class: "w-5 h-5" %>
+        </button>
+      </div>
+      
+      <div class="mt-6 flex justify-between">
+        <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="btn-white px-4 py-2 rounded-lg font-medium shadow-sm text-sm">
+          <%= icon "money-in", class: "w-4 h-4 mr-1" %>
+          Deposit
+        </a>
+        <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="btn-white-outline px-4 py-2 rounded-lg font-medium text-sm">
+          <%= icon "money-out", class: "w-4 h-4 mr-1" %>
+          Withdraw
+        </a>
+      </div>
+    </div>
+    
+    <%# Monthly Stats Card %>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Monthly Activity</h2>
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-sm text-gray-500 dark:text-gray-400">Deposits</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white"><%= @wallet.currency_symbol %><%= @this_month_incoming.to_f.round(2) %></span>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <% 
+              # Convert to float to avoid type comparison issues between Integer and BigDecimal
+              incoming = @this_month_incoming.to_f
+              outgoing = @this_month_outgoing.to_f
+              total = incoming + outgoing
+              percentage = total > 0 ? (incoming / total * 100) : 0
+              width = [percentage, 100].min
+            %>
+            <div class="bg-green-500 h-2 rounded-full" style="width: <%= width %>%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-sm text-gray-500 dark:text-gray-400">Withdrawals</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white"><%= @wallet.currency_symbol %><%= @this_month_outgoing.to_f.round(2) %></span>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <% 
+              # Convert to float to avoid type comparison issues between Integer and BigDecimal
+              incoming = @this_month_incoming.to_f
+              outgoing = @this_month_outgoing.to_f
+              total = incoming + outgoing
+              percentage = total > 0 ? (outgoing / total * 100) : 0
+              width = [percentage, 100].min
+            %>
+            <div class="bg-red-500 h-2 rounded-full" style="width: <%= width %>%"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <span class="text-sm text-gray-500 dark:text-gray-400">Net Balance</span>
+            <span class="text-sm font-medium <%= (@this_month_incoming - @this_month_outgoing) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>">
+              <%= @wallet.currency_symbol %><%= (@this_month_incoming - @this_month_outgoing).to_f.round(2) %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <%# Quick Stats Card %>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Quick Stats</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="text-xs text-gray-500 dark:text-gray-400">Today's Deposits</div>
+          <div class="mt-1 text-xl font-semibold text-gray-900 dark:text-white"><%= @wallet.currency_symbol %><%= @today_incoming.to_f.round(2) %></div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="text-xs text-gray-500 dark:text-gray-400">Today's Withdrawals</div>
+          <div class="mt-1 text-xl font-semibold text-gray-900 dark:text-white"><%= @wallet.currency_symbol %><%= @today_outgoing.to_f.round(2) %></div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="text-xs text-gray-500 dark:text-gray-400">Transactions</div>
+          <div class="mt-1 text-xl font-semibold text-gray-900 dark:text-white"><%= @transaction_count %></div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+          <div class="text-xs text-gray-500 dark:text-gray-400">Daily Limit</div>
+          <div class="mt-1 text-xl font-semibold text-gray-900 dark:text-white"><%= @wallet.currency_symbol %><%= @wallet.daily_limit %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# Quick Actions %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+    
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+      <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-2">
+          <%= icon "money-in", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Deposit</span>
+      </a>
+      
+      <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-2">
+          <%= icon "money-out", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Withdraw</span>
+      </a>
+      
+      <a href="<%= new_transaction_wallet_path(type: 'transfer') %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-2">
+          <%= icon "transfer", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Transfer</span>
+      </a>
+      
+      <a href="<%= transactions_wallet_path %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mb-2">
+          <%= icon "history", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">History</span>
+      </a>
+      
+      <a href="<%= payment_methods_path %>" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mb-2">
+          <%= icon "credit-card", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Payment Methods</span>
+      </a>
+      
+      <a href="#" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center text-yellow-600 dark:text-yellow-400 mb-2">
+          <%= icon "settings", class: "w-5 h-5" %>
+        </div>
+        <span class="text-sm font-medium text-gray-900 dark:text-white">Settings</span>
+      </a>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <%# Recent Transactions %>
+    <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Transactions</h2>
+        <div class="mt-2 md:mt-0 flex items-center">
+          <button type="button" class="mr-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition" data-action="dashboard#refreshTransactions">
+            <%= icon "refresh", class: "w-4 h-4" %>
+          </button>
+          <a href="<%= transactions_wallet_path %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline">
+            View All
+          </a>
+        </div>
+      </div>
+      
+      <div class="px-6 pb-6" data-dashboard-target="recentTransactions">
+        <% if @recent_transactions.empty? %>
+          <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+            <div class="flex flex-col items-center justify-center">
+              <%= icon "empty-wallet", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+              <p>No transactions yet</p>
+              <p class="mt-1 text-sm">Your transaction history will appear here</p>
+            </div>
+          </div>
+        <% else %>
+          <div class="space-y-3">
+            <% @recent_transactions.first(5).each do |transaction| %>
+              <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                <div class="flex items-center">
+                  <% 
+                    icon_name = case transaction.transaction_type
+                                when 'deposit' then 'money-in'
+                                when 'withdrawal' then 'money-out'
+                                when 'transfer' then 'transfer'
+                                when 'payment' then 'shopping'
+                                end
+                                
+                    icon_color = case transaction.transaction_type
+                                when 'deposit' then 'text-green-500'
+                                when 'withdrawal' then 'text-red-500'
+                                when 'transfer' then 'text-blue-500'
+                                when 'payment' then 'text-purple-500'
+                                end
+                  %>
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center <%= icon_color %>">
+                    <%= icon icon_name, class: "h-5 w-5" %>
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                      <% if transaction.description.present? %>
+                        <%= transaction.description %>
+                      <% else %>
+                        <%= transaction.transaction_type_description %>
+                      <% end %>
+                    </div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">
+                      <%= transaction.created_at.strftime("%b %d, %Y • %I:%M %p") %>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <% amount_class = transaction.direction_for_user(current_user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
+                  <div class="text-sm font-medium <%= amount_class %>">
+                    <%= transaction.signed_amount_for_user(current_user.id) %>
+                  </div>
+                  <a href="<%= wallet_transaction_path(transaction) %>" class="ml-4 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                    <%= icon "chevron-right", class: "h-5 w-5" %>
+                  </a>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <%# Upcoming Payments %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Upcoming Payments</h2>
+        <a href="<%= scheduled_transactions_path %>" class="mt-2 md:mt-0 text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline">
+          View All
+        </a>
+      </div>
+      
+      <div class="px-6 pb-6">
+        <% if @scheduled_transactions.blank? %>
+          <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+            <div class="flex flex-col items-center justify-center">
+              <%= icon "calendar", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+              <p>No upcoming payments</p>
+              <p class="mt-1 text-sm">Schedule payments to keep track of your bills</p>
+              <a href="<%= new_scheduled_transaction_path %>" class="mt-4 btn btn-primary">
+                <%= icon "plus", class: "w-4 h-4 mr-1" %>
+                Schedule Payment
+              </a>
+            </div>
+          </div>
+        <% else %>
+          <div class="space-y-3">
+            <% @scheduled_transactions.first(3).each do |scheduled| %>
+              <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-3">
+                  <div class="flex items-center">
+                    <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                      <%= icon "calendar", class: "h-5 w-5" %>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white"><%= scheduled.description %></div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                        <% if scheduled.next_date < Date.today %>
+                          <span class="text-red-500">Overdue: <%= scheduled.next_date.strftime("%b %d, %Y") %></span>
+                        <% elsif scheduled.next_date == Date.today %>
+                          <span class="text-green-500">Today</span>
+                        <% else %>
+                          <span><%= time_ago_in_words(scheduled.next_date) %> from now</span>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-sm font-medium text-red-600 dark:text-red-400">
+                    -<%= @wallet.currency_symbol %><%= scheduled.amount %>
+                  </div>
+                </div>
+                <div class="flex justify-end">
+                  <a href="<%= scheduled_transaction_path(scheduled) %>" class="text-xs px-2 py-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-500 mr-2">
+                    View
+                  </a>
+                  <% if scheduled.next_date <= Date.today + 3.days %>
+                    <a href="<%= pay_now_scheduled_transaction_path(scheduled) %>" class="text-xs px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 rounded hover:bg-primary-200 dark:hover:bg-primary-800">
+                      Pay Now
+                    </a>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# JavaScript for the dashboard controller %>
+<script>
+  // This would typically go in a separate JavaScript file
+  import { Controller } from "@hotwired/stimulus"
+
+  export default class extends Controller {
+    static targets = ["balance", "refreshButton", "recentTransactions"]
+    
+    connect() {
+      console.log("Dashboard controller connected")
+      this.setupCounters()
+    }
+    
+    refreshBalance() {
+      // Add a spinning animation to the refresh button
+      this.refreshButtonTarget.classList.add("animate-spin")
+      
+      // Simulate an API call with a timeout
+      setTimeout(() => {
+        // Stop the spinning animation
+        this.refreshButtonTarget.classList.remove("animate-spin")
+        
+        // Flash the balance to indicate it's been updated
+        this.balanceTarget.classList.add("animate-pulse")
+        setTimeout(() => {
+          this.balanceTarget.classList.remove("animate-pulse")
+        }, 1000)
+      }, 800)
+    }
+    
+    refreshTransactions() {
+      // Simulate refreshing transactions
+      this.recentTransactionsTarget.classList.add("opacity-50")
+      setTimeout(() => {
+        this.recentTransactionsTarget.classList.remove("opacity-50")
+      }, 800)
+    }
+    
+    setupCounters() {
+      // Animate counter elements if they exist
+      document.querySelectorAll("[data-counter]").forEach(counter => {
+        const target = parseFloat(counter.getAttribute("data-target") || 0)
+        const duration = 1500
+        const start = 0
+        const increment = target / duration * 10
+        
+        let current = start
+        const updateCounter = () => {
+          current += increment
+          if (current < target) {
+            counter.textContent = current.toFixed(2)
+            setTimeout(updateCounter, 10)
+          } else {
+            counter.textContent = target.toFixed(2)
+          }
+        }
+        
+        updateCounter()
+      })
+    }
+  }
+</script>

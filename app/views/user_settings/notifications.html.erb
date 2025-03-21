@@ -1,0 +1,194 @@
+<%# Notifications Settings %>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Notification Settings</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Control how and when you receive notifications</p>
+  </div>
+
+  <%# Tabs Navigation %>
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-wrap -mb-px">
+      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
+        Overview
+      <% end %>
+      
+      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
+        Profile
+      <% end %>
+      
+      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
+        Security
+      <% end %>
+      
+      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
+        Notifications
+      <% end %>
+      
+      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
+        Appearance
+      <% end %>
+      
+      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
+        Payment
+      <% end %>
+      
+      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
+        Support
+      <% end %>
+    </div>
+  </div>
+
+  <% user_setting = current_user.setting || UserSetting.new(user: current_user) %>
+  <%= form_with model: user_setting, url: user_settings_update_notifications_path, method: :patch, local: true do |form| %>
+    <%# Notification Channels %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Notification Channels</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Choose how you want to receive notifications</p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Email Notifications</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :email_notifications, class: "toggle-checkbox", checked: user_setting.email_notifications, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_email_notifications" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">SMS Notifications</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications via SMS</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :sms_notifications, class: "toggle-checkbox", checked: user_setting.sms_notifications, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_sms_notifications" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Push Notifications</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications on your device</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :push_notifications, class: "toggle-checkbox", checked: user_setting.push_notifications, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_push_notifications" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <%# Transaction Notifications %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Transaction Notifications</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Choose which transaction events trigger notifications</p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Deposits</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Notify me when money is deposited into my wallet</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :deposit_alerts, class: "toggle-checkbox", checked: user_setting.deposit_alerts, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_deposit_alerts" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Withdrawals</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Notify me when money is withdrawn from my wallet</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :withdrawal_alerts, class: "toggle-checkbox", checked: user_setting.withdrawal_alerts, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_withdrawal_alerts" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Transfers</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Notify me about wallet transfers</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :transfer_alerts, class: "toggle-checkbox", checked: user_setting.transfer_alerts, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_transfer_alerts" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Low Balance</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Notify me when my balance falls below 100 GHS</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :low_balance_alerts, class: "toggle-checkbox", checked: user_setting.low_balance_alerts, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_low_balance_alerts" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <%# Marketing Notifications %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Marketing Preferences</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Choose what marketing communications you receive</p>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Product Updates</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications about new features and updates</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :product_updates, class: "toggle-checkbox", checked: user_setting.product_updates, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_product_updates" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between py-3">
+            <div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Promotional Emails</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Receive offers, discounts, and promotions</p>
+            </div>
+            <div class="relative w-12 h-6 mr-2" data-controller="toggle">
+              <%= form.check_box :promotional_emails, class: "toggle-checkbox", checked: user_setting.promotional_emails, data: { toggle_target: "checkbox", action: "toggle#toggle" } %>
+              <label for="user_setting_promotional_emails" class="toggle-label" data-toggle-target="label"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex justify-end">
+      <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
+      <%= form.submit "Save Preferences", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  /* Custom toggle switch styles */
+  .toggle-checkbox:checked {
+    @apply right-0 border-primary-600 transform translate-x-full;
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    @apply bg-primary-600;
+  }
+</style>

@@ -41,6 +41,8 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+gem "ruby-vips", require: false  # For faster image processing
+gem "mini_magick"               # Alternative image processor
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -64,8 +66,21 @@ group :test do
   gem "selenium-webdriver"
 end
 
+# PDF generation
+gem "wicked_pdf"
+gem "wkhtmltopdf-binary"
+
 gem "devise", "~> 4.9"
+
+# Pagination
+gem "pagy", "~> 7.0"
+
+# PDF generation
+gem "wicked_pdf"
+gem "wkhtmltopdf-binary"
 
 gem "rspec-rails", "~> 7.1", groups: [ :development, :test ]
 
 gem "factory_bot_rails", "~> 6.4", groups: [ :development, :test ]
+
+gem "dashboard", "~> 0.0.0"

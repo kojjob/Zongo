@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Super Ghana Wallet Statement</title>
+  <%= wicked_pdf_stylesheet_link_tag "pdf" %>
+  <style>
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #111827;
+      font-size: 12px;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(to right, #16a34a, #ca8a04);
+      border-radius: 8px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin-right: 10px;
+    }
+    
+    .company-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .statement-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .account-info {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    
+    .period-info {
+      text-align: right;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    
+    .period-info .dates {
+      font-weight: bold;
+      color: #111827;
+    }
+    
+    .summary-section {
+      background-color: #f9fafb;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    
+    .summary-title {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+    
+    .summary-grid {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .summary-item {
+      width: 22%;
+    }
+    
+    .summary-label {
+      font-size: 10px;
+      color: #6b7280;
+    }
+    
+    .summary-value {
+      font-size: 13px;
+      font-weight: bold;
+    }
+    
+    .summary-value.positive {
+      color: #10b981;
+    }
+    
+    .summary-value.negative {
+      color: #ef4444;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th {
+      background-color: #f9fafb;
+      padding: 10px;
+      text-align: left;
+      font-size: 10px;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    th:last-child, td:last-child {
+      text-align: right;
+    }
+    
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 11px;
+    }
+    
+    .amount-positive {
+      color: #10b981;
+    }
+    
+    .amount-negative {
+      color: #ef4444;
+    }
+    
+    .transaction-description {
+      width: 30%;
+    }
+    
+    .transaction-reference {
+      font-size: 10px;
+      color: #6b7280;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      font-size: 10px;
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 15px;
+    }
+    
+    .footer-note {
+      text-align: center;
+      margin-top: 20px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <%= yield %>
+</body>
+</html>

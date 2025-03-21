@@ -1,0 +1,15 @@
+<%# Edit Scheduled Transaction %>
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center mb-6">
+    <a href="<%= scheduled_transaction_path(@scheduled_transaction) %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Scheduled Transaction</h1>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      <%= render 'form', scheduled_transaction: @scheduled_transaction %>
+    </div>
+  </div>
+</div>

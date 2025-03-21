@@ -1,0 +1,144 @@
+<script>
+  // Add ThemeManager status
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add a ThemeManager status section
+    const statusDiv = document.querySelector('.space-y-2');
+    
+    const themeManagerStatus = document.createElement('div');
+    themeManagerStatus.className = 'flex space-x-2';
+    themeManagerStatus.innerHTML = `
+      <span class="font-medium text-gray-700 dark:text-gray-300">ThemeManager:</span>
+      <span class="text-primary-600 dark:text-primary-400" id="theme-manager-status">Checking...</span>
+    `;
+    
+    statusDiv.appendChild(themeManagerStatus);
+    
+    // Add Import Status
+    const importStatus = document.createElement('div');
+    importStatus.className = 'flex space-x-2';
+    importStatus.innerHTML = `
+      <span class="font-medium text-gray-700 dark:text-gray-300">Init.js Loaded:</span>
+      <span class="text-primary-600 dark:text-primary-400" id="init-loaded-status">Checking...</span>
+    `;
+    
+    statusDiv.appendChild(importStatus);
+    
+    // Check theme manager
+    setTimeout(function() {
+      const tmStatus = document.getElementById('theme-manager-status');
+      if (window.ThemeManager) {
+        tmStatus.textContent = 'Available';
+        tmStatus.classList.add('font-bold');
+        
+        // Log theme manager methods
+        console.log('ThemeManager methods:', Object.keys(window.ThemeManager));
+      } else {
+        tmStatus.textContent = 'Not Available';
+        tmStatus.classList.add('text-red-500');
+      }
+      
+      const initStatus = document.getElementById('init-loaded-status');
+      if (window.currentTheme !== undefined) {
+        initStatus.textContent = 'Loaded (currentTheme = ' + window.currentTheme + ')';
+        initStatus.classList.add('font-bold');
+      } else {
+        initStatus.textContent = 'Not Loaded';
+        initStatus.classList.add('text-red-500');
+      }
+    }, 1000);
+  });
+</script><div class="max-w-7xl mx-auto p-6">
+  <div class="flex items-center justify-between mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Theme Test Page</h1>
+    
+    <!-- Use theme helper to create properly configured toggle button -->
+    <div class="flex items-center space-x-3">
+      <span class="text-gray-700 dark:text-gray-300">Toggle theme:</span>
+      <%= theme_toggle_button %>
+    </div>
+  </div>
+  <div class="mb-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Theme Testing Page</h1>
+    
+    <p class="text-gray-700 dark:text-gray-300 mb-4">
+      This page helps verify that your theme toggle is working correctly. The background, text, and components should change based on whether you're in light or dark mode.
+    </p>
+    
+    <div class="mb-4" data-controller="theme">
+      <p class="mb-2 text-gray-900 dark:text-white font-medium">Test theme toggle directly:</p>
+      <button class="px-4 py-2 bg-primary-600 dark:bg-primary-700 text-white rounded-lg" data-action="theme#toggle">
+        Toggle Theme
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+        <h3 class="font-medium text-gray-900 dark:text-white">Light vs Dark Box 1</h3>
+        <p class="text-gray-600 dark:text-gray-400 text-sm">This box should change color.</p>
+      </div>
+      
+      <div class="bg-primary-100 dark:bg-primary-900 p-4 rounded-lg">
+        <h3 class="font-medium text-primary-900 dark:text-primary-100">Primary Color Test</h3>
+        <p class="text-primary-700 dark:text-primary-300 text-sm">This tests primary color theming.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Current Theme Status:</h2>
+    
+    <div class="space-y-2">
+      <div class="flex space-x-2">
+        <span class="font-medium text-gray-700 dark:text-gray-300">Dark Mode Class:</span>
+        <span class="text-primary-600 dark:text-primary-400" id="dark-mode-status">Checking...</span>
+      </div>
+      
+      <div class="flex space-x-2">
+        <span class="font-medium text-gray-700 dark:text-gray-300">localStorage Theme:</span>
+        <span class="text-primary-600 dark:text-primary-400" id="localstorage-status">Checking...</span>
+      </div>
+      
+      <div class="flex space-x-2">
+        <span class="font-medium text-gray-700 dark:text-gray-300">System Preference:</span>
+        <span class="text-primary-600 dark:text-primary-400" id="system-preference">Checking...</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Update status elements
+  document.addEventListener('DOMContentLoaded', function() {
+    function updateStatus() {
+      document.getElementById('dark-mode-status').textContent = 
+        document.documentElement.classList.contains('dark') ? 'Applied' : 'Not Applied';
+      
+      document.getElementById('localstorage-status').textContent = 
+        localStorage.theme ? localStorage.theme : 'Not set';
+      
+      document.getElementById('system-preference').textContent = 
+        window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark' : 'Light';
+    }
+    
+    // Update initially
+    updateStatus();
+    
+    // Update when the theme changes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'class') {
+          updateStatus();
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, { attributes: true });
+    
+    // Also listen for localStorage changes
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'theme') {
+        updateStatus();
+      }
+    });
+  });
+</script>
