@@ -1,7 +1,7 @@
 class PaymentMethodsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_payment_method, only: [:show, :edit, :update, :destroy, :set_default, :verify]
-  before_action :ensure_ownership, only: [:show, :edit, :update, :destroy, :set_default]
+  before_action :set_payment_method, only: [ :show, :edit, :update, :destroy, :set_default, :verify ]
+  before_action :ensure_ownership, only: [ :show, :edit, :update, :destroy, :set_default ]
 
   def index
     @payment_methods = current_user.payment_methods.order(default: :desc, created_at: :desc)
@@ -17,7 +17,7 @@ class PaymentMethodsController < ApplicationController
   def create
     @payment_method = PaymentMethod.new(payment_method_params)
     @payment_method.user = current_user
-    
+
     # If this is the first payment method, make it default
     @payment_method.default = true if current_user.payment_methods.empty?
 
@@ -89,7 +89,7 @@ class PaymentMethodsController < ApplicationController
 
   def payment_method_params
     params.require(:payment_method).permit(
-      :method_type, :provider, :account_number, :account_name, 
+      :method_type, :provider, :account_number, :account_name,
       :expiry_date, :description, :default, :icon_name
     )
   end

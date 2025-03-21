@@ -1,5 +1,5 @@
 # Configure Active Storage routes
-Rails.application.config.active_storage.routes_prefix = '/storage'
+Rails.application.config.active_storage.routes_prefix = "/storage"
 
 # Ensure proper handling of variants
 Rails.application.config.active_storage.variant_processor = :mini_magick

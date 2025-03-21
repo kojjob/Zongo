@@ -1,8 +1,8 @@
 class ScheduledTransactionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_wallet
-  before_action :set_scheduled_transaction, only: [:show, :edit, :update, :destroy, :pause, :resume, :execute]
-  before_action :ensure_ownership, only: [:show, :edit, :update, :destroy, :pause, :resume, :execute]
+  before_action :set_scheduled_transaction, only: [ :show, :edit, :update, :destroy, :pause, :resume, :execute ]
+  before_action :ensure_ownership, only: [ :show, :edit, :update, :destroy, :pause, :resume, :execute ]
 
   def index
     @scheduled_transactions = ScheduledTransaction.owned_by(current_user.id)
@@ -29,7 +29,7 @@ class ScheduledTransactionsController < ApplicationController
     @payment_methods = current_user.payment_methods.active_methods.verified_methods
 
     # Load recent recipients for transfers
-    if @scheduled_transaction.transaction_type == 'transfer'
+    if @scheduled_transaction.transaction_type == "transfer"
       @recent_recipients = Transaction.successful
                                      .where(transaction_type: :transfer, source_wallet_id: @wallet.id)
                                      .includes(destination_wallet: :user)
@@ -45,10 +45,10 @@ class ScheduledTransactionsController < ApplicationController
     @scheduled_transaction.source_wallet = @wallet
 
     # Set destination wallet for transfers
-    if @scheduled_transaction.transaction_type == 'transfer' && params[:recipient].present?
-      recipient = User.find_by('phone = ? OR username = ? OR email = ?', 
+    if @scheduled_transaction.transaction_type == "transfer" && params[:recipient].present?
+      recipient = User.find_by("phone = ? OR username = ? OR email = ?",
                             params[:recipient], params[:recipient], params[:recipient])
-      
+
       if recipient
         @scheduled_transaction.destination_wallet = recipient.wallet
       else
@@ -59,7 +59,7 @@ class ScheduledTransactionsController < ApplicationController
     end
 
     # Validate the amount against wallet balance for withdrawal and transfer
-    if ['withdrawal', 'transfer'].include?(@scheduled_transaction.transaction_type) && 
+    if [ "withdrawal", "transfer" ].include?(@scheduled_transaction.transaction_type) &&
        @scheduled_transaction.amount > @wallet.balance
       flash.now[:error] = "Amount exceeds your current balance"
       render :new
@@ -142,7 +142,7 @@ class ScheduledTransactionsController < ApplicationController
         wallet_id: "W#{SecureRandom.alphanumeric(12).upcase}",
         status: :active,
         balance: 0,
-        currency: 'GHS',
+        currency: "GHS",
         daily_limit: 1000
       )
     end
@@ -161,8 +161,8 @@ class ScheduledTransactionsController < ApplicationController
 
   def scheduled_transaction_params
     params.require(:scheduled_transaction).permit(
-      :transaction_type, :amount, :frequency, :next_occurrence, 
-      :occurrences_limit, :description, :payment_method, 
+      :transaction_type, :amount, :frequency, :next_occurrence,
+      :occurrences_limit, :description, :payment_method,
       :payment_provider, :payment_destination
     )
   end

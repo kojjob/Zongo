@@ -19,6 +19,6 @@ class CreateUserSettings < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :user_settings, [:user_id, :created_at]
+    add_index :user_settings, [ :user_id, :created_at ]
   end
 end

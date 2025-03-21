@@ -1,6 +1,6 @@
 class ScheduledTransaction < ApplicationRecord
-  belongs_to :source_wallet, class_name: 'Wallet', foreign_key: 'source_wallet_id'
-  belongs_to :destination_wallet, class_name: 'Wallet', foreign_key: 'destination_wallet_id', optional: true
+  belongs_to :source_wallet, class_name: "Wallet", foreign_key: "source_wallet_id"
+  belongs_to :destination_wallet, class_name: "Wallet", foreign_key: "destination_wallet_id", optional: true
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
@@ -34,27 +34,27 @@ class ScheduledTransaction < ApplicationRecord
   }, default: :active, prefix: true
 
   # Scopes
-  scope :upcoming, -> { where(status: :active).where('next_occurrence <= ?', 7.days.from_now) }
-  scope :due_today, -> { where(status: :active).where('next_occurrence <= ?', Date.current.end_of_day) }
+  scope :upcoming, -> { where(status: :active).where("next_occurrence <= ?", 7.days.from_now) }
+  scope :due_today, -> { where(status: :active).where("next_occurrence <= ?", Date.current.end_of_day) }
   scope :owned_by, ->(user_id) { joins(:source_wallet).where(wallets: { user_id: user_id }) }
 
   # Methods
   def transaction_type_description
     case transaction_type
-    when 'transfer' then 'Transfer'
-    when 'deposit' then 'Deposit'
-    when 'withdrawal' then 'Withdrawal'
-    when 'payment' then 'Payment'
+    when "transfer" then "Transfer"
+    when "deposit" then "Deposit"
+    when "withdrawal" then "Withdrawal"
+    when "payment" then "Payment"
     end
   end
 
   def frequency_description
     case frequency
-    when 'daily' then 'Daily'
-    when 'weekly' then 'Weekly'
-    when 'biweekly' then 'Bi-weekly'
-    when 'monthly' then 'Monthly'
-    when 'quarterly' then 'Quarterly'
+    when "daily" then "Daily"
+    when "weekly" then "Weekly"
+    when "biweekly" then "Bi-weekly"
+    when "monthly" then "Monthly"
+    when "quarterly" then "Quarterly"
     end
   end
 
@@ -64,9 +64,9 @@ class ScheduledTransaction < ApplicationRecord
   end
 
   def recipient_name
-    return payment_destination if transaction_type == 'payment'
-    return 'Self' if transaction_type == 'deposit' || transaction_type == 'withdrawal'
-    recipient&.display_name || 'Unknown'
+    return payment_destination if transaction_type == "payment"
+    return "Self" if transaction_type == "deposit" || transaction_type == "withdrawal"
+    recipient&.display_name || "Unknown"
   end
 
   def formatted_amount
@@ -75,15 +75,15 @@ class ScheduledTransaction < ApplicationRecord
 
   def calculate_next_occurrence
     case frequency
-    when 'daily'
+    when "daily"
       next_occurrence + 1.day
-    when 'weekly'
+    when "weekly"
       next_occurrence + 1.week
-    when 'biweekly'
+    when "biweekly"
       next_occurrence + 2.weeks
-    when 'monthly'
+    when "monthly"
       next_occurrence + 1.month
-    when 'quarterly'
+    when "quarterly"
       next_occurrence + 3.months
     end
   end
@@ -95,7 +95,7 @@ class ScheduledTransaction < ApplicationRecord
     transaction = nil
 
     case transaction_type
-    when 'transfer'
+    when "transfer"
       transaction = Transaction.create_transfer(
         source_wallet: source_wallet,
         destination_wallet: destination_wallet,
@@ -107,7 +107,7 @@ class ScheduledTransaction < ApplicationRecord
           recipient_name: recipient_name
         }
       )
-    when 'deposit'
+    when "deposit"
       transaction = Transaction.create_deposit(
         wallet: source_wallet,
         amount: amount,
@@ -118,7 +118,7 @@ class ScheduledTransaction < ApplicationRecord
           description: description || "Scheduled deposit"
         }
       )
-    when 'withdrawal'
+    when "withdrawal"
       transaction = Transaction.create_withdrawal(
         wallet: source_wallet,
         amount: amount,
@@ -129,7 +129,7 @@ class ScheduledTransaction < ApplicationRecord
           description: description || "Scheduled withdrawal"
         }
       )
-    when 'payment'
+    when "payment"
       transaction = Transaction.create_payment(
         wallet: source_wallet,
         amount: amount,
@@ -143,17 +143,17 @@ class ScheduledTransaction < ApplicationRecord
 
     if transaction&.persisted?
       transaction.complete!
-      
+
       # Update scheduled transaction
       self.occurrences_count += 1
-      
+
       if occurrences_limit.present? && occurrences_count >= occurrences_limit
         self.status = :completed
       else
         self.last_occurrence = next_occurrence
         self.next_occurrence = calculate_next_occurrence
       end
-      
+
       save
       true
     else

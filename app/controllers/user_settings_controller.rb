@@ -38,7 +38,7 @@ class UserSettingsController < ApplicationController
     # Template will be automatically rendered from app/views/user_settings/support.html.erb
   end
 
-  # Update profile information
+    # Update profile information
     def update_profile
         # Add additional error handling
         begin
@@ -70,15 +70,15 @@ class UserSettingsController < ApplicationController
           redirect_to user_settings_security_path
         else
           flash.now[:error] = "Failed to update password: #{@user.errors.full_messages.join(', ')}"
-          render 'security'
+          render "security"
         end
       else
         flash.now[:error] = "New password cannot be blank"
-        render 'security'
+        render "security"
       end
     else
       flash.now[:error] = "Current password is incorrect"
-      render 'security'
+      render "security"
     end
   end
 
@@ -86,13 +86,13 @@ class UserSettingsController < ApplicationController
   def update_notifications
     # Ensure setting exists
     @user.create_setting if @user.setting.nil?
-    
+
     if @user.setting.update(notification_params)
       flash[:success] = "Notification preferences updated"
       redirect_to user_settings_notifications_path
     else
       flash.now[:error] = "Failed to update notification preferences"
-      render 'notifications'
+      render "notifications"
     end
   end
 
@@ -100,12 +100,12 @@ class UserSettingsController < ApplicationController
   def update_appearance
     # Ensure user has settings
     @user.create_setting if @user.setting.nil?
-    
+
     # Get theme preference from params
     theme_preference = params[:user][:settings][:theme_preference] if params[:user][:settings].present?
     language = params[:user][:settings][:language] if params[:user][:settings].present?
     currency_display = params[:user][:settings][:currency_display] if params[:user][:settings].present?
-    
+
     # Update settings
     if @user.setting.update(
         theme_preference: theme_preference,
@@ -116,7 +116,7 @@ class UserSettingsController < ApplicationController
       redirect_to user_settings_appearance_path
     else
       flash.now[:error] = "Failed to update appearance settings"
-      render 'appearance'
+      render "appearance"
     end
   end
 
@@ -124,9 +124,9 @@ class UserSettingsController < ApplicationController
   def toggle_setting
     setting_name = params[:setting_name]
     current_value = @user.settings[setting_name]
-    
+
     @user.settings[setting_name] = !current_value
-    
+
     if @user.save
       render json: { success: true, value: !current_value }
     else
@@ -138,7 +138,7 @@ class UserSettingsController < ApplicationController
 
   def set_user
     @user = current_user
-    
+
     # Ensure user has a setting record
     @user.create_setting if @user.setting.nil?
   end
@@ -167,14 +167,14 @@ class UserSettingsController < ApplicationController
       )
     end
 
-    # We're not using this since we now directly update the settings
-    # def appearance_params
-    #     params.require(:user).permit(
-    #     settings: [
-    #         :theme_preference,
-    #         :language,
-    #         :currency_display
-    #     ]
-    #     )
-    # end
+  # We're not using this since we now directly update the settings
+  # def appearance_params
+  #     params.require(:user).permit(
+  #     settings: [
+  #         :theme_preference,
+  #         :language,
+  #         :currency_display
+  #     ]
+  #     )
+  # end
 end

@@ -1,8 +1,8 @@
 class Wallet < ApplicationRecord
   # Relationships
   belongs_to :user
-  has_many :outgoing_transactions, class_name: 'Transaction', foreign_key: 'source_wallet_id', dependent: :restrict_with_error
-  has_many :incoming_transactions, class_name: 'Transaction', foreign_key: 'destination_wallet_id', dependent: :restrict_with_error
+  has_many :outgoing_transactions, class_name: "Transaction", foreign_key: "source_wallet_id", dependent: :restrict_with_error
+  has_many :incoming_transactions, class_name: "Transaction", foreign_key: "destination_wallet_id", dependent: :restrict_with_error
 
   # Enums
   enum :status, { active: 0, suspended: 1, locked: 2, closed: 3 }
@@ -14,12 +14,12 @@ class Wallet < ApplicationRecord
   # Validations
   validates :wallet_id, presence: true, uniqueness: true
   validates :balance, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  validates :currency, presence: true, inclusion: { in: ['GHS', 'USD', 'EUR', 'GBP', 'NGN'] }
+  validates :currency, presence: true, inclusion: { in: [ "GHS", "USD", "EUR", "GBP", "NGN" ] }
   validates :daily_limit, presence: true, numericality: { greater_than: 0 }
 
   # Scopes
   scope :active_wallets, -> { where(status: :active) }
-  scope :with_positive_balance, -> { where('balance > 0') }
+  scope :with_positive_balance, -> { where("balance > 0") }
 
   # Instance methods
 
@@ -91,13 +91,13 @@ class Wallet < ApplicationRecord
   # @return [Boolean] True if the transaction would exceed the limit, false otherwise
   def daily_limit_exceeded?(amount)
     return false unless amount.positive?
-    
+
     # Calculate total debits for the current day
     todays_total = outgoing_transactions
-                    .where('created_at >= ?', Time.current.beginning_of_day)
+                    .where("created_at >= ?", Time.current.beginning_of_day)
                     .where(status: :completed)
                     .sum(:amount)
-    
+
     # Check if the new amount would exceed the daily limit
     (todays_total + amount) > daily_limit
   end
@@ -106,7 +106,7 @@ class Wallet < ApplicationRecord
   # @param limit [Integer] Maximum number of transactions to return
   # @return [Array<Transaction>] Array of recent transactions
   def recent_transactions(limit = 10)
-    Transaction.where('source_wallet_id = ? OR destination_wallet_id = ?', id, id)
+    Transaction.where("source_wallet_id = ? OR destination_wallet_id = ?", id, id)
                .order(created_at: :desc)
                .limit(limit)
   end
@@ -116,7 +116,7 @@ class Wallet < ApplicationRecord
   # @param end_date [Date] The end date of the period
   # @return [Array<Transaction>] Array of transactions within the specified period
   def transaction_history(start_date:, end_date:)
-    Transaction.where('(source_wallet_id = ? OR destination_wallet_id = ?) AND created_at BETWEEN ? AND ?', 
+    Transaction.where("(source_wallet_id = ? OR destination_wallet_id = ?) AND created_at BETWEEN ? AND ?",
                      id, id, start_date.beginning_of_day, end_date.end_of_day)
                .order(created_at: :desc)
   end
@@ -128,7 +128,7 @@ class Wallet < ApplicationRecord
   def total_incoming(start_date:, end_date:)
     incoming_transactions
       .where(status: :completed)
-      .where('created_at BETWEEN ? AND ?', start_date.beginning_of_day, end_date.end_of_day)
+      .where("created_at BETWEEN ? AND ?", start_date.beginning_of_day, end_date.end_of_day)
       .sum(:amount)
   end
 
@@ -139,7 +139,7 @@ class Wallet < ApplicationRecord
   def total_outgoing(start_date:, end_date:)
     outgoing_transactions
       .where(status: :completed)
-      .where('created_at BETWEEN ? AND ?', start_date.beginning_of_day, end_date.end_of_day)
+      .where("created_at BETWEEN ? AND ?", start_date.beginning_of_day, end_date.end_of_day)
       .sum(:amount)
   end
 
@@ -153,12 +153,12 @@ class Wallet < ApplicationRecord
   # @return [String] Currency symbol
   def currency_symbol
     case currency
-    when 'GHS' then '₵'
-    when 'USD' then '$'
-    when 'EUR' then '€'
-    when 'GBP' then '£'
-    when 'NGN' then '₦'
-    else '?'
+    when "GHS" then "₵"
+    when "USD" then "$"
+    when "EUR" then "€"
+    when "GBP" then "£"
+    when "NGN" then "₦"
+    else "?"
     end
   end
 
@@ -167,7 +167,7 @@ class Wallet < ApplicationRecord
   # Generate a unique wallet ID if not provided
   def generate_wallet_id
     return if wallet_id.present?
-    
+
     # Generate a unique ID with 'W' prefix followed by 12 alphanumeric characters
     loop do
       self.wallet_id = "W#{SecureRandom.alphanumeric(12).upcase}"

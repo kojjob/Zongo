@@ -1,20 +1,20 @@
 class PagesController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:check_avatar]
+  skip_before_action :verify_authenticity_token, only: [ :check_avatar ]
    def home
    end
 
    def theme_test
      # Just render the view
    end
-   
+
    def check_avatar
      if current_user&.avatar&.attached?
        begin
          # Get the URL for the avatar
          avatar_url = rails_blob_url(current_user.avatar)
          # Try to get variant
-         variant_url = url_for(current_user.avatar.variant(resize_to_fill: [100, 100]).processed)
-         
+         variant_url = url_for(current_user.avatar.variant(resize_to_fill: [ 100, 100 ]).processed)
+
          render json: {
            success: true,
            avatar_attached: true,
@@ -26,7 +26,7 @@ class PagesController < ApplicationController
          }
        rescue => e
          render json: {
-           success: false, 
+           success: false,
            avatar_attached: true,
            error: e.message,
            backtrace: e.backtrace.first(5)

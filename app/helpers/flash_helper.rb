@@ -24,8 +24,8 @@ module FlashHelper
     flash_type = flash_type.to_sym
     css_class = FLASH_CLASSES[flash_type] || FLASH_CLASSES[:notice]
     icon_name = FLASH_ICONS[flash_type] || "info"
-    
-    content_tag :div, class: "mb-4 p-4 rounded-md border #{css_class} animate-fade-in", 
+
+    content_tag :div, class: "mb-4 p-4 rounded-md border #{css_class} animate-fade-in",
                 data: { controller: "auto-dismiss", "auto-dismiss-target": "flash", "auto-dismiss-timeout": 5000 } do
       content_tag :div, class: "flex items-start" do
         concat(
@@ -33,18 +33,18 @@ module FlashHelper
             icon(icon_name, class: "h-5 w-5")
           end
         )
-        
+
         concat(
           content_tag(:div, class: "ml-3 w-full") do
             content_tag(:p, message, class: "text-sm")
           end
         )
-        
+
         concat(
           content_tag(:div, class: "ml-auto pl-3") do
             content_tag(:div, class: "-mx-1.5 -my-1.5") do
-              button_tag type: "button", 
-                        class: "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-opacity-50", 
+              button_tag type: "button",
+                        class: "inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-opacity-50",
                         data: { action: "click->auto-dismiss#dismiss" } do
                 icon("close", class: "h-4 w-4")
               end

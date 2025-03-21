@@ -2,10 +2,10 @@ class ContactController < ApplicationController
   def index
     # Render the contact form page
   end
-  
+
   def submit
     @contact = ContactSubmission.new(contact_params)
-    
+
     if @contact.save
       # Success response
       flash[:notice] = "Thank you for your message! We'll respond shortly."
@@ -16,9 +16,9 @@ class ContactController < ApplicationController
       render :index
     end
   end
-  
+
   private
-  
+
   def contact_params
     params.permit(:name, :email, :phone, :subject, :read, :message, :terms)
   end

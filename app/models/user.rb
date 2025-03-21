@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   # has_one :profile, dependent: :destroy
   has_one :wallet, dependent: :destroy
-  has_one :setting, class_name: 'UserSetting', dependent: :destroy
+  has_one :setting, class_name: "UserSetting", dependent: :destroy
 
   # has_many :devices, dependent: :destroy
   # has_many :verification_attempts, dependent: :destroy

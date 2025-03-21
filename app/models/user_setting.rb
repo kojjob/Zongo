@@ -5,15 +5,15 @@ class UserSetting < ApplicationRecord
   enum :theme_preference, { auto: 0, light: 1, dark: 2 }, default: :auto
   enum :language, { en: 0, fr: 1, es: 2, de: 3, pt: 4 }, default: :en
   enum :currency_display, { ghs: 0, usd: 1, eur: 2, gbp: 3, ngn: 4 }, default: :ghs
-  
+
   # Validations
   validates :user_id, presence: true, uniqueness: true
-  
+
   # Default settings
   after_initialize :set_defaults, if: :new_record?
-  
+
   private
-  
+
   def set_defaults
     self.theme_preference    ||= :auto
     self.language            ||= :en
