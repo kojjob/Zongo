@@ -1,0 +1,63 @@
+<!-- Direct Dropdown (no Stimulus dependency) -->
+<div class="relative inline-block dropdown">
+  <button class="dropdown-toggle p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+    <%= yield :trigger %>
+  </button>
+  
+  <div class="dropdown-menu absolute right-0 mt-2 w-64 rounded-xl shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 border border-gray-100 dark:border-gray-700 hidden overflow-hidden z-50">
+    <%= yield %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find all dropdowns
+    const dropdowns = document.querySelectorAll('.dropdown');
+    
+    dropdowns.forEach(dropdown => {
+      const toggle = dropdown.querySelector('.dropdown-toggle');
+      const menu = dropdown.querySelector('.dropdown-menu');
+      
+      if (toggle && menu) {
+        // Toggle the dropdown when clicking the toggle button
+        toggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          // Close all other dropdowns first
+          document.querySelectorAll('.dropdown-menu').forEach(otherMenu => {
+            if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
+              otherMenu.classList.add('hidden');
+            }
+          });
+          
+          // Toggle this menu
+          menu.classList.toggle('hidden');
+        });
+      }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        if (!menu.classList.contains('hidden')) {
+          const dropdown = menu.closest('.dropdown');
+          
+          if (dropdown && !dropdown.contains(e.target)) {
+            menu.classList.add('hidden');
+          }
+        }
+      });
+    });
+    
+    // Close dropdowns on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+          if (!menu.classList.contains('hidden')) {
+            menu.classList.add('hidden');
+          }
+        });
+      }
+    });
+  });
+</script>

@@ -1,0 +1,61 @@
+<turbo-stream action="replace" target="recentTransactions">
+  <template>
+    <% if @recent_transactions.empty? %>
+      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+        <div class="flex flex-col items-center justify-center">
+          <%= icon "empty-wallet", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
+          <p>No transactions yet</p>
+          <p class="mt-1 text-sm">Your transaction history will appear here</p>
+        </div>
+      </div>
+    <% else %>
+      <div class="space-y-3">
+        <% @recent_transactions.each do |transaction| %>
+          <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+            <div class="flex items-center">
+              <% 
+                icon_name = case transaction.transaction_type
+                            when 'deposit' then 'money-in'
+                            when 'withdrawal' then 'money-out'
+                            when 'transfer' then 'transfer'
+                            when 'payment' then 'shopping'
+                            end
+                            
+                icon_color = case transaction.transaction_type
+                            when 'deposit' then 'text-green-500'
+                            when 'withdrawal' then 'text-red-500'
+                            when 'transfer' then 'text-blue-500'
+                            when 'payment' then 'text-purple-500'
+                            end
+              %>
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center <%= icon_color %>">
+                <%= icon icon_name, class: "h-5 w-5" %>
+              </div>
+              <div class="ml-3">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                  <% if transaction.description.present? %>
+                    <%= transaction.description %>
+                  <% else %>
+                    <%= transaction.transaction_type_description %>
+                  <% end %>
+                </div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <%= transaction.created_at.strftime("%b %d, %Y • %I:%M %p") %>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <% amount_class = transaction.direction_for_user(current_user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
+              <div class="text-sm font-medium <%= amount_class %>">
+                <%= transaction.signed_amount_for_user(current_user.id) %>
+              </div>
+              <a href="<%= wallet_transaction_path(transaction) %>" class="ml-4 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+                <%= icon "chevron-right", class: "h-5 w-5" %>
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </template>
+</turbo-stream>

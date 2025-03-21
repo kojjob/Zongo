@@ -1,0 +1,130 @@
+<%# Payment Methods Index %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center">
+      <a href="<%= wallet_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+        <%= icon "arrow-left", class: "w-5 h-5" %>
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Payment Methods</h1>
+    </div>
+    
+    <%= link_to new_payment_method_path, class: "btn btn-primary" do %>
+      <%= icon "plus", class: "w-4 h-4 mr-1" %>
+      Add Payment Method
+    <% end %>
+  </div>
+
+  <% if @payment_methods.empty? %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center">
+      <div class="flex flex-col items-center justify-center">
+        <%= icon "credit-card", class: "w-16 h-16 mb-4 text-gray-300 dark:text-gray-600" %>
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">No payment methods yet</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          Add a payment method to easily deposit and withdraw funds from your wallet.
+        </p>
+        <%= link_to new_payment_method_path, class: "btn btn-primary" do %>
+          <%= icon "plus", class: "w-4 h-4 mr-1" %>
+          Add Your First Payment Method
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Your Payment Methods</h2>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Manage your payment methods for deposits and withdrawals
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        <% @payment_methods.each do |method| %>
+          <div class="payment-method-card <%= method.default? ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10' : 'border-gray-200 dark:border-gray-700' %>">
+            <% if method.default? %>
+              <div class="payment-method-default-badge">
+                Default
+              </div>
+            <% end %>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
+                <%= icon method.icon_name, class: "h-6 w-6" %>
+              </div>
+              
+              <div class="ml-4 flex-1">
+                <h3 class="font-medium text-gray-900 dark:text-white"><%= method.description %></h3>
+                
+                <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:items-center text-sm text-gray-500 dark:text-gray-400">
+                  <div class="flex items-center mr-4">
+                    <%= icon "bank", class: "h-4 w-4 mr-1" %>
+                    <%= method.provider || method.method_type.titleize %>
+                  </div>
+                  
+                  <div class="flex items-center mr-4">
+                    <%= icon "credit-card", class: "h-4 w-4 mr-1" %>
+                    <%= method.masked_account_number %>
+                  </div>
+                  
+                  <% if method.expiry_date.present? %>
+                    <div class="flex items-center">
+                      <%= icon "calendar", class: "h-4 w-4 mr-1" %>
+                      Expires: <%= method.expiry_date.strftime("%m/%y") %>
+                    </div>
+                  <% end %>
+                </div>
+                
+                <div class="mt-2 flex items-center">
+                  <% if method.verified? %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                      <%= icon "check", class: "h-3 w-3 mr-1" %>
+                      Verified
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                      <%= icon "clock", class: "h-3 w-3 mr-1" %>
+                      Pending Verification
+                    </span>
+                    
+                    <%= button_to verify_payment_method_path(method), method: :post, class: "ml-2 text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300" do %>
+                      Verify Now
+                    <% end %>
+                  <% end %>
+                  
+                  <% if method.last_used_at.present? %>
+                    <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                      Last used <%= time_ago_in_words(method.last_used_at) %> ago
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 flex justify-end space-x-2">
+              <% unless method.default? %>
+                <%= button_to set_default_payment_method_path(method), method: :post, class: "text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600" do %>
+                  Make Default
+                <% end %>
+              <% end %>
+              
+              <%= link_to edit_payment_method_path(method), class: "text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600" do %>
+                Edit
+              <% end %>
+              
+              <%= button_to payment_method_path(method), 
+                         method: :delete, 
+                         form: { data: { turbo_confirm: "Are you sure you want to remove this payment method?" } },
+                         class: "text-xs px-2 py-1 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-900/40" do %>
+                Remove
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        
+        <%= link_to new_payment_method_path, class: "payment-method-card border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-750 transition" do %>
+          <%= icon "plus-circle", class: "w-10 h-10 mb-2" %>
+          <span class="text-sm font-medium">Add New Payment Method</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

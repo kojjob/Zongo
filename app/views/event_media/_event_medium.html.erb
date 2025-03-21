@@ -1,0 +1,30 @@
+<div id="<%= dom_id event_medium %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Event:</strong>
+    <%= event_medium.event_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= event_medium.user_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Media type:</strong>
+    <%= event_medium.media_type %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Title:</strong>
+    <%= event_medium.title %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Description:</strong>
+    <%= event_medium.description %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Is featured:</strong>
+    <%= event_medium.is_featured? ? "Yes" : "No" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Display order:</strong>
+    <%= event_medium.display_order %>
+  </div>
+</div>

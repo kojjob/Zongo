@@ -1,0 +1,99 @@
+<!-- Using our fixed navbar with inline controls -->
+<%= render 'shared/fixed_navbar' %>
+
+<div class="container mx-auto p-4 pt-8">
+  <h1 class="text-2xl font-bold mb-4">Controller Testing Page</h1>
+  
+  <!-- Test Controller -->
+  <div class="p-4 mb-8 bg-white dark:bg-gray-800 rounded-lg" data-controller="test">
+    <h2 class="text-xl font-semibold mb-2">Test Controller</h2>
+    <p>This element should have a green border if the test controller is working.</p>
+  </div>
+  
+  <!-- Theme Toggle Test with SIMPLIFIED controller -->
+  <div class="p-4 mb-8 bg-white dark:bg-gray-800 rounded-lg">
+    <h2 class="text-xl font-semibold mb-2">Theme Toggle Test (Simplified Controller)</h2>
+    <div data-controller="theme-simple">
+      <p class="mb-4">Current theme: <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+        <span class="dark:hidden">light</span>
+        <span class="hidden dark:inline">dark</span>
+      </span></p>
+      
+      <button class="px-4 py-2 bg-primary-500 text-white rounded-lg" data-action="theme-simple#toggle">
+        Toggle Theme
+        <svg data-theme-simple-target="darkIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        <svg data-theme-simple-target="lightIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline ml-1 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Dropdown Test with SIMPLIFIED controller -->
+  <div class="p-4 mb-8 bg-white dark:bg-gray-800 rounded-lg">
+    <h2 class="text-xl font-semibold mb-2">Dropdown Test (Simplified Controller)</h2>
+    <div data-controller="dropdown-simple">
+      <button class="px-4 py-2 bg-secondary-500 text-white rounded-lg" data-action="dropdown-simple#toggle">
+        Toggle Dropdown
+      </button>
+      
+      <div class="mt-2 p-4 bg-white dark:bg-gray-700 rounded-lg shadow-lg hidden" data-dropdown-simple-target="menu">
+        <p>This is dropdown content.</p>
+        <ul class="mt-2 space-y-2">
+          <li><a href="#" class="text-primary-500 hover:underline">Option 1</a></li>
+          <li><a href="#" class="text-primary-500 hover:underline">Option 2</a></li>
+          <li><a href="#" class="text-primary-500 hover:underline">Option 3</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Button to Force JavaScript Reload -->
+  <div class="mt-8">
+    <button onclick="window.location.reload(true)" class="px-4 py-2 bg-red-500 text-white rounded-lg">
+      Force Reload Page (Clear Cache)
+    </button>
+  </div>
+</div>
+
+<script>
+  console.log("Test page loaded");
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM fully loaded");
+    
+    // List all registered controllers
+    console.log("Controllers registered:", Object.keys(window.Stimulus.controllers).join(", "));
+    
+    // List all controller elements on the page
+    const controllerElements = document.querySelectorAll('[data-controller]');
+    console.log(`Found ${controllerElements.length} controller elements on the page:`);
+    controllerElements.forEach(el => {
+      console.log(`- ${el.dataset.controller} controller on:`, el);
+    });
+    
+    // Log theme state
+    console.log('Current theme class:', 
+      document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    console.log('localStorage theme setting:', localStorage.getItem('theme'));
+    
+    // Force update theme to match localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const shouldBeDark = savedTheme === 'dark' || 
+                       (savedTheme !== 'light' && systemPrefersDark);
+    
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+    }
+    
+    console.log('Theme after correction:', 
+      document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+  });
+</script>

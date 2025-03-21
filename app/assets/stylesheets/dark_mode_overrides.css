@@ -1,0 +1,160 @@
+/**
+ * Dark Mode Overrides - Critical CSS for proper dark theme application
+ * These styles ensure that dark mode is properly applied throughout the application
+ */
+
+/* Force dark mode background and text colors */
+.dark {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* Smooth transitions for theme changes */
+:root {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+html, body, section, div, header, footer {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Override default body styles */
+.dark body {
+  background-color: #111827 !important;
+  color: #f9fafb !important;
+}
+
+/* Common component overrides */
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: #374151 !important;
+}
+
+/* Text color overrides */
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+.dark .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+/* Border colors */
+.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+/* Simple section gap fix */
+.dark section {
+  position: relative !important;
+}
+
+/* Critical element visibility classes */
+.dark .dark\:block {
+  display: block !important;
+}
+
+.dark .dark\:hidden {
+  display: none !important;
+}
+
+html:not(.dark) .dark\:block {
+  display: none !important;
+}
+
+html:not(.dark) .dark\:hidden {
+  display: block !important;
+}
+
+/* Ensure theme toggle icons display correctly */
+.dark [data-theme-target="lightIcon"] {
+  display: block !important;
+}
+
+.dark [data-theme-target="darkIcon"] {
+  display: none !important;
+}
+
+html:not(.dark) [data-theme-target="lightIcon"] {
+  display: none !important;
+}
+
+html:not(.dark) [data-theme-target="darkIcon"] {
+  display: block !important;
+}
+
+/* Force dark theme colors for cards and backgrounds */
+.dark .from-white,
+.dark .to-gray-50,
+.dark .bg-white {
+  background-color: #1f2937 !important;
+}
+
+.dark .dark\:from-gray-800,
+.dark .dark\:to-gray-900,
+.dark .dark\:bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+/* Adjust testimonial cards */
+.dark .bg-gradient-to-br.from-white.to-gray-50 {
+  background-image: linear-gradient(to bottom right, #1f2937, #111827) !important;
+}
+
+/* Fix white cards in dark mode */
+.dark .bg-white.dark\:bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+.dark section.bg-white {
+  background-color: #111827 !important;
+}
+
+/* Phone mockup overrides */
+.dark .bg-white.dark\:bg-gray-900 {
+  background-color: #1f2937 !important;
+}
+
+.dark .text-gray-800.dark\:text-gray-200 {
+  color: #e5e7eb !important;
+}
+
+.dark .bg-gray-50.dark\:bg-gray-800 {
+  background-color: #374151 !important;
+}
+
+/* Avatar specific styles */
+.dark .text-primary-800.dark\:text-primary-100 {
+  color: #dcfce7 !important;
+}
+
+.dark .from-primary-100.dark\:from-primary-900 {
+  --tw-gradient-from: #14532d !important;
+}
+
+.dark .to-primary-300.dark\:to-primary-700 {
+  --tw-gradient-to: #15803d !important;
+}
+
+.dark .border-white.dark\:border-gray-800 {
+  border-color: #1f2937 !important;
+}

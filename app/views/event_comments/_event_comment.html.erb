@@ -1,0 +1,26 @@
+<div id="<%= dom_id event_comment %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Event:</strong>
+    <%= event_comment.event_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= event_comment.user_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Parent comment:</strong>
+    <%= event_comment.parent_comment_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Content:</strong>
+    <%= event_comment.content %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Is hidden:</strong>
+    <%= event_comment.is_hidden? ? "Yes" : "No" %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Likes count:</strong>
+    <%= event_comment.likes_count %>
+  </div>
+</div>

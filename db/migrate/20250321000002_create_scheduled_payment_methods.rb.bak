@@ -1,0 +1,23 @@
+class CreateScheduledPaymentMethods < ActiveRecord::Migration[8.0]
+  def change
+    create_table :payment_methods do |t|
+      t.references :user, null: false, foreign_key: true
+      t.string :method_type, null: false
+      t.string :provider
+      t.string :account_number, null: false
+      t.string :account_name
+      t.date :expiry_date
+      t.string :description, null: false
+      t.integer :status, default: 0
+      t.datetime :verified_at
+      t.datetime :last_used_at
+      t.boolean :default, default: false
+      t.string :icon_name
+      t.jsonb :metadata, default: {}
+
+      t.timestamps
+    end
+    add_index :payment_methods, [:user_id, :default]
+    add_index :payment_methods, :status
+  end
+end

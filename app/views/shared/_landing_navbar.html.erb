@@ -1,0 +1,106 @@
+<header class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800" data-controller="landing-navbar">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-20">
+      <!-- Logo and brand -->
+      <div class="flex items-center">
+        <a href="/" class="flex items-center">
+          <div class="h-12 w-12 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-2xl shadow-md">
+            SG
+          </div>
+          <div class="ml-3">
+            <span class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-500">
+              Super Ghana
+            </span>
+            <p class="text-xs text-gray-600 dark:text-gray-400 mt-0.5">Your Complete Financial Solution</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Desktop navigation -->
+      <div class="hidden md:flex md:items-center md:space-x-6">
+        <%= link_to "About Us", about_path, class: "text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition" %>
+        <a href="#features" class="text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Features</a>
+        <a href="#how-it-works" class="text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">How It Works</a>
+        <a href="#pricing" class="text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Pricing</a>
+        <a href="#testimonials" class="text-base font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition">Testimonials</a>
+        
+        <!-- Theme toggle -->
+        <div data-controller="theme">
+          <button class="p-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-full focus:outline-none transition-transform hover:scale-110" 
+                  data-action="theme#toggle"
+                  aria-label="Toggle theme">
+            <svg data-theme-target="darkIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <svg data-theme-target="lightIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Authentication links with gradient effect -->
+        <% if user_signed_in? %>
+          <%= link_to "Dashboard", dashboard_path, class: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+        <% else %>
+          <%= link_to "Log In", new_user_session_path, class: "px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
+          <%= link_to "Sign Up", new_user_registration_path, class: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+        <% end %>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="flex items-center md:hidden">
+        <!-- Theme toggle for mobile -->
+        <div class="mr-2" data-controller="theme">
+          <button class="p-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-full focus:outline-none" 
+                  data-action="theme#toggle"
+                  aria-label="Toggle theme">
+            <svg data-theme-target="darkIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <svg data-theme-target="lightIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </button>
+        </div>
+        
+        <button type="button" 
+                class="p-2 rounded-md text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" 
+                data-action="landing-navbar#toggleMenu">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="md:hidden hidden bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 pb-3" data-landing-navbar-target="menu">
+    <div class="px-4 pt-2 pb-3 space-y-1">
+      <%= link_to "About Us", about_path, class: "block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400" %>
+      <a href="#features" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400">
+        Features
+      </a>
+      <a href="#how-it-works" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400">
+        How It Works
+      </a>
+      <a href="#pricing" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400">
+        Pricing
+      </a>
+      <a href="#testimonials" class="block px-3 py-2 rounded-lg text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary-600 dark:hover:text-primary-400">
+        Testimonials
+      </a>
+      
+      <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700 mt-3">
+        <% if user_signed_in? %>
+          <%= link_to "Dashboard", dashboard_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+        <% else %>
+          <div class="flex flex-col space-y-2">
+            <%= link_to "Log In", new_user_session_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>

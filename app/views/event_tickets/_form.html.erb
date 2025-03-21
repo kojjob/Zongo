@@ -1,0 +1,72 @@
+<%= form_with(model: event_ticket, class: "contents") do |form| %>
+  <% if event_ticket.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(event_ticket.errors.count, "error") %> prohibited this event_ticket from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% event_ticket.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:user_id].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :event_id %>
+    <%= form.text_field :event_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:event_id].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:event_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :ticket_type_id %>
+    <%= form.text_field :ticket_type_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:ticket_type_id].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:ticket_type_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :attendance_id %>
+    <%= form.text_field :attendance_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:attendance_id].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:attendance_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :ticket_code %>
+    <%= form.text_field :ticket_code, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:ticket_code].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:ticket_code].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.number_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:status].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :amount %>
+    <%= form.text_field :amount, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:amount].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:amount].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :used_at %>
+    <%= form.datetime_field :used_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:used_at].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:used_at].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :refunded_at %>
+    <%= form.datetime_field :refunded_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:refunded_at].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:refunded_at].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :payment_reference %>
+    <%= form.text_field :payment_reference, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:payment_reference].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:payment_reference].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :transaction_id %>
+    <%= form.text_field :transaction_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": event_ticket.errors[:transaction_id].none?, "border-red-400 focus:outline-red-600": event_ticket.errors[:transaction_id].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

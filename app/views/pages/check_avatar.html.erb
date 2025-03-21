@@ -1,0 +1,140 @@
+<div class="mx-auto max-w-3xl p-8">
+  <h1 class="text-3xl font-bold mb-6">Avatar Diagnostic Page</h1>
+  
+  <% if current_user %>
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4">User Information</h2>
+      <p><strong>ID:</strong> <%= current_user.id %></p>
+      <p><strong>Email:</strong> <%= current_user.email %></p>
+      <p><strong>Username:</strong> <%= current_user.username %></p>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md mb-6">
+      <h2 class="text-xl font-semibold mb-4">Avatar Status</h2>
+      <% if current_user.avatar.attached? %>
+        <div class="p-3 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded mb-4">
+          Avatar is attached!
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-lg font-medium mb-2">Avatar Information</h3>
+            <p><strong>Content Type:</strong> <%= current_user.avatar.content_type %></p>
+            <p><strong>Size:</strong> <%= number_to_human_size(current_user.avatar.byte_size) %></p>
+            <p><strong>Created:</strong> <%= current_user.avatar.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+            <p><strong>Filename:</strong> <%= current_user.avatar.filename %></p>
+          </div>
+          
+          <div class="border-t md:border-t-0 md:border-l border-gray-200 dark:border-gray-700 pt-4 md:pt-0 md:pl-6">
+            <h3 class="text-lg font-medium mb-2">Test Methods</h3>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center">
+                <p class="text-sm mb-2">Direct Blob Path</p>
+                <% begin %>
+                  <img src="<%= rails_blob_path(current_user.avatar) %>" class="h-24 w-24 object-cover rounded-full mx-auto border-2 border-green-500" />
+                <% rescue => e %>
+                  <div class="h-24 w-24 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                    Error: <%= e.message.truncate(50) %>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="text-center">
+                <p class="text-sm mb-2">Direct Blob URL</p>
+                <% begin %>
+                  <img src="<%= rails_blob_url(current_user.avatar) %>" class="h-24 w-24 object-cover rounded-full mx-auto border-2 border-blue-500" />
+                <% rescue => e %>
+                  <div class="h-24 w-24 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                    Error: <%= e.message.truncate(50) %>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="text-center">
+                <p class="text-sm mb-2">With Variant</p>
+                <% begin %>
+                  <img src="<%= url_for(current_user.avatar.variant(resize_to_fill: [96, 96])) %>" class="h-24 w-24 object-cover rounded-full mx-auto border-2 border-purple-500" />
+                <% rescue => e %>
+                  <div class="h-24 w-24 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                    Error: <%= e.message.truncate(50) %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium mb-2">Try Different Methods</h3>
+          
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="text-center">
+              <p class="text-sm mb-2">image_tag with direct blob_path</p>
+              <% begin %>
+                <%= image_tag rails_blob_path(current_user.avatar), class: "h-16 w-16 object-cover rounded-full mx-auto border-2 border-green-500" %>
+              <% rescue => e %>
+                <div class="h-16 w-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                  <%= e.message.truncate(30) %>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-sm mb-2">image_tag with blob_url</p>
+              <% begin %>
+                <%= image_tag rails_blob_url(current_user.avatar), class: "h-16 w-16 object-cover rounded-full mx-auto border-2 border-blue-500" %>
+              <% rescue => e %>
+                <div class="h-16 w-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                  <%= e.message.truncate(30) %>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-sm mb-2">image_tag with variant & url_for</p>
+              <% begin %>
+                <%= image_tag url_for(current_user.avatar.variant(resize_to_fill: [60, 60])), class: "h-16 w-16 object-cover rounded-full mx-auto border-2 border-purple-500" %>
+              <% rescue => e %>
+                <div class="h-16 w-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                  <%= e.message.truncate(30) %>
+                </div>
+              <% end %>
+            </div>
+            
+            <div class="text-center">
+              <p class="text-sm mb-2">image_tag with just variant</p>
+              <% begin %>
+                <%= image_tag current_user.avatar.variant(resize_to_fill: [60, 60]), class: "h-16 w-16 object-cover rounded-full mx-auto border-2 border-yellow-500" %>
+              <% rescue => e %>
+                <div class="h-16 w-16 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto text-xs p-2">
+                  <%= e.message.truncate(30) %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+      <% else %>
+        <div class="p-3 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded mb-4">
+          No avatar is attached to your user account.
+        </div>
+        
+        <p class="text-gray-600 dark:text-gray-400 mb-4">You can add an avatar by visiting your profile settings.</p>
+        
+        <%= link_to "Go to Profile Settings", edit_user_registration_path, class: "inline-block px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded" %>
+      <% end %>
+    </div>
+    
+  <% else %>
+    <div class="p-6 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded">
+      <p class="font-medium">You need to be logged in to check your avatar.</p>
+      <div class="mt-4">
+        <%= link_to "Login", new_user_session_path, class: "inline-block px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded" %>
+      </div>
+    </div>
+  <% end %>
+  
+  <div class="mt-6">
+    <%= link_to "← Back to Dashboard", dashboard_path, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+  </div>
+</div>

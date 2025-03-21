@@ -1,0 +1,837 @@
+<%# About Page for Super Ghana App %>
+<div class="bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden py-20 md:py-32">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 z-0 opacity-10 dark:opacity-5 pointer-events-none">
+      <div class="absolute inset-0 bg-repeat" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNDB2NDBoLTQweiIvPjxjaXJjbGUgZmlsbD0iIzE2YTM0YSIgY3g9IjIwIiBjeT0iMjAiIHI9IjEiLz48L2c+PC9zdmc+')"></div>
+    </div>
+
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-block mb-4">
+          <div class="h-16 w-16 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-2xl mx-auto">
+            SG
+          </div>
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-500">
+          Ghana's All-in-One Super App
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+          Super Ghana brings essential services together in one seamless platform, transforming how Ghanaians manage their daily lives and connecting communities across the nation.
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a href="/signup" class="px-8 py-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-lg transition-colors shadow-lg shadow-primary-600/20 hover:shadow-primary-700/30">
+            Join Super Ghana
+          </a>
+          <a href="#learn-more" class="px-8 py-4 rounded-xl bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 font-medium text-lg transition-colors">
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="max-w-6xl mx-auto mt-16 px-4 sm:px-6 lg:px-8">
+      <div class="relative rounded-2xl overflow-hidden shadow-2xl">
+        <%= image_tag "hero_ghana.jpg", alt: "People using Super Ghana App in Accra", class: "w-full h-auto object-cover", onerror: "this.src='https://via.placeholder.com/1200x600/16a34a/ffffff?text=Super+Ghana';this.onerror=null;" %>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-6 md:p-10 text-white">
+          <p class="text-xl md:text-2xl font-medium max-w-lg">
+            Bringing together essential services to empower communities and transform everyday experiences
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="learn-more" class="py-20 bg-white dark:bg-gray-900">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 mb-4">
+            Our Mission
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+            Unifying Essential Services for Ghana
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">
+            Founded in 2023, Super Ghana is creating an all-in-one digital platform that seamlessly integrates diverse services into one accessible app. Our goal is to simplify daily life and empower communities across Ghana and eventually throughout West Africa.
+          </p>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 flex items-center justify-center mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p class="ml-3 text-gray-600 dark:text-gray-300">
+                <span class="font-medium text-gray-900 dark:text-white">Digital Inclusion:</span> Bringing essential services to all Ghanaians through an intuitive, accessible mobile platform.
+              </p>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 flex items-center justify-center mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p class="ml-3 text-gray-600 dark:text-gray-300">
+                <span class="font-medium text-gray-900 dark:text-white">Community Empowerment:</span> Supporting individuals, farmers, and businesses with tools that enhance productivity and create opportunities.
+              </p>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 flex items-center justify-center mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p class="ml-3 text-gray-600 dark:text-gray-300">
+                <span class="font-medium text-gray-900 dark:text-white">Technological Integration:</span> Uniting multiple services in one platform to create a seamless experience that addresses Ghana's unique needs.
+              </p>
+            </div>
+          </div>
+          
+          <div class="flex items-center text-primary-600 dark:text-primary-400 font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <a href="#our-story" class="hover:underline">Read our full story</a>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="rounded-2xl overflow-hidden shadow-lg h-64 md:h-80">
+            <%= image_tag "market_ghana.jpg", alt: "Local market in Ghana", class: "w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/600x800/16a34a/ffffff?text=Market';this.onerror=null;" %>
+          </div>
+          <div class="grid grid-rows-2 gap-4">
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+              <%= image_tag "mobile_payment.jpg", alt: "Mobile payment in action", class: "w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/600x400/16a34a/ffffff?text=Mobile+Payment';this.onerror=null;" %>
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white p-6">
+              <div class="text-center">
+                <div class="text-4xl font-bold mb-2">1M+</div>
+                <div class="text-sm font-medium">Active users across Ghana</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16 bg-gray-50 dark:bg-gray-800">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">95%</div>
+          <div class="text-gray-600 dark:text-gray-300">Service satisfaction rate</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">₵80M+</div>
+          <div class="text-gray-600 dark:text-gray-300">Monthly transaction volume</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">12K+</div>
+          <div class="text-gray-600 dark:text-gray-300">Partner businesses</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-600 dark:text-primary-400 mb-2">16</div>
+          <div class="text-gray-600 dark:text-gray-300">Regions served</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Our Services -->
+  <section class="py-20 bg-white dark:bg-gray-900">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 mb-4">
+          Our Services
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Our Integrated Service Ecosystem
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          Super Ghana is not just a financial app - it's a comprehensive super app that brings together essential services across all sectors of daily life in Ghana - from financial services to transportation, shopping, agriculture, healthcare, and community building.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Financial Services -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-primary-500 to-primary-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Financial Services</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Complete financial solutions for personal and business needs.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 dark:text-primary-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Micro-loans & Savings
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 dark:text-primary-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Insurance & Investment
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 dark:text-primary-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Financial Tracking
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Mobile Money & Payments -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-green-500 to-green-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Mobile Money & Payments</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Fast, secure money transfers and payment solutions.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Instant Money Transfers
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Bill Payments
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600 dark:text-green-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Merchant Payment Solutions
+              </li>
+            </ul>
+          </div>
+        </div>    
+        <!-- Agricultural Services -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-amber-500 to-amber-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Agricultural Services</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Supporting farmers with tools for better productivity and market access.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Market Prices & Weather Forecasts
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Buyer-Seller Marketplace
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Agricultural Advisory
+              </li>
+            </ul>
+          </div>
+        </div>   
+        <!-- Shopping & Marketplace -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-pink-500 to-pink-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Shopping & Marketplace</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Convenient online shopping and digital marketplace solutions.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pink-600 dark:text-pink-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                E-commerce Platform
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pink-600 dark:text-pink-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Product & Service Listings
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pink-600 dark:text-pink-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Safe & Secure Transactions
+              </li>
+            </ul>
+          </div>
+        </div>   
+        <!-- Community & Social -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Community & Social</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Connect with your community and access vital social services.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Community Forums & Groups
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Event Organization
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Community Resource Sharing
+              </li>
+            </ul>
+          </div>
+        </div>
+        <!-- Transportation & Travel -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+          <div class="h-48 bg-gradient-to-r from-purple-500 to-purple-700 flex items-center justify-center">
+            <div class="h-24 w-24 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
+              </svg>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Transportation & Travel</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">
+              Reliable transportation solutions for everyday commuting and travel.
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Ride Booking Services
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Bus & Transit Tickets
+              </li>
+              <li class="flex items-center text-gray-600 dark:text-gray-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600 dark:text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Travel Planning & Booking
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Team Section -->
+  <section id="our-team" class="py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 mb-4">
+          Our Team
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          Meet the Super Ghana Team
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          Our diverse team combines technology innovation with deep industry expertise to build Ghana's leading super app platform.
+        </p>
+      </div> 
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <!-- Team Member 1 -->
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+          <div class="aspect-square relative overflow-hidden">
+            <%= image_tag "ceo.jpg", alt: "Kwame Mensah, CEO", class: "w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/400x400/16a34a/ffffff?text=CEO';this.onerror=null;" %>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Kwame Mensah</h3>
+            <p class="text-primary-600 dark:text-primary-400 mb-3">Founder & CEO</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Former tech executive with 15+ years experience in developing digital platforms across Africa.
+            </p>
+            <div class="flex space-x-3">
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="LinkedIn profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="Twitter profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Team Member 2 -->
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+          <div class="aspect-square relative overflow-hidden">
+            <%= image_tag "cto.jpg", alt: "Akosua Owusu, CTO", class: "w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/400x400/16a34a/ffffff?text=CTO';this.onerror=null;" %>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Akosua Owusu</h3>
+            <p class="text-primary-600 dark:text-primary-400 mb-3">Chief Technology Officer</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Tech leader with experience building scalable super app platforms across Africa.
+            </p>
+            <div class="flex space-x-3">
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="LinkedIn profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="Twitter profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Team Member 3 -->
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+          <div class="aspect-square relative overflow-hidden">
+            <%= image_tag "cfo.png", alt: "Daniel Adu, CFO", class: "w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/400x400/16a34a/ffffff?text=CFO';this.onerror=null;" %>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Daniel Adu</h3>
+            <p class="text-primary-600 dark:text-primary-400 mb-3">Chief Financial Officer</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Financial strategist with expertise across multiple service industries.
+            </p>
+            <div class="flex space-x-3">
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="LinkedIn profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="Twitter profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Team Member 4 -->
+        <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+          <div class="aspect-square relative overflow-hidden">
+            <%= image_tag "coo.png", alt: "Esi Ampah, COO", class:"w-full h-full object-cover", onerror: "this.src='https://via.placeholder.com/400x400/16a34a/ffffff?text=COO';this.onerror=null;" %>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Esi Ampah</h3>
+            <p class="text-primary-600 dark:text-primary-400 mb-3">Chief Operations Officer</p>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Operations expert with experience scaling multi-service platforms across West Africa.
+            </p>
+            <div class="flex space-x-3">
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="LinkedIn profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-primary-600 dark:hover:text-primary-400" aria-label="Twitter profile">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-20 bg-white dark:bg-gray-900">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 mb-4">
+          Testimonials
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+          What Our Users Say
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          Hear from individuals and businesses who have transformed their daily lives with Super Ghana's diverse services.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8">
+          <div class="flex items-center mb-4">
+            <div class="text-primary-600 dark:text-primary-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"/>
+              </svg>
+            </div>
+          </div>
+          <blockquote class="text-gray-600 dark:text-gray-300 mb-6">
+            Super Ghana has completely changed how I run my market stall. I no longer worry about carrying cash, and the app helps me find suppliers at the best prices and connect with new customers.
+          </blockquote>
+          <div class="flex items-center">
+            <div class="h-12 w-12 rounded-full overflow-hidden mr-4">
+              <%= image_tag "user1.png", alt: "Abena Koranteng", class: "h-full w-full object-cover", onerror: "this.src='https://via.placeholder.com/100x100/16a34a/ffffff?text=AK';this.onerror=null;" %>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Abena Koranteng</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Market Vendor, Kumasi</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Testimonial 2 -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8">
+          <div class="flex items-center mb-4">
+            <div class="text-primary-600 dark:text-primary-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"/>
+              </svg>
+            </div>
+          </div>
+          <blockquote class="text-gray-600 dark:text-gray-300 mb-6">
+            The agricultural features in Super Ghana have transformed my farming business. I check market prices daily, connect with buyers directly, and even arrange transport for my produce—all from one app.
+          </blockquote>
+          <div class="flex items-center">
+            <div class="h-12 w-12 rounded-full overflow-hidden mr-4">
+              <%= image_tag "user2.png", alt: "Kwesi Boateng", class: "h-full w-full object-cover", onerror: "this.src='https://via.placeholder.com/100x100/16a34a/ffffff?text=KB';this.onerror=null;" %>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Kwesi Boateng</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Farmer, Eastern Region</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Testimonial 3 -->
+        <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8">
+          <div class="flex items-center mb-4">
+            <div class="text-primary-600 dark:text-primary-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 14.725c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275zm-13 0c0-5.141 3.892-10.519 10-11.725l.984 2.126c-2.215.835-4.163 3.742-4.38 5.746 2.491.392 4.396 2.547 4.396 5.149 0 3.182-2.584 4.979-5.199 4.979-3.015 0-5.801-2.305-5.801-6.275z"/>
+              </svg>
+            </div>
+          </div>
+          <blockquote class="text-gray-600 dark:text-gray-300 mb-6">
+            Super Ghana is essential for campus life! I book rides to class, split costs with roommates, join study groups, and even order food—all without switching between multiple apps.
+          </blockquote>
+          <div class="flex items-center">
+            <div class="h-12 w-12 rounded-full overflow-hidden mr-4">
+              <%= image_tag "user3.png", alt: "Efua Mensah", class: "h-full w-full object-cover", onerror: "this.src='https://via.placeholder.com/100x100/16a34a/ffffff?text=EM';this.onerror=null;" %>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Efua Mensah</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Student, University of Ghana</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story / History Section -->
+  <section id="our-story" class="py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 mb-4">
+            Our Story
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+            From Vision to Reality
+          </h2>
+          <div class="prose prose-lg dark:prose-invert">
+            <p>
+              Super Ghana was founded in 2023 by Kwame Mensah, a veteran of the African technology sector who saw an opportunity to create a truly integrated service ecosystem for Ghana.
+            </p>
+            <p>
+              After observing the fragmentation of digital services across dozens of apps, Kwame envisioned building something revolutionary - a comprehensive super app that would bring together all the services Ghanaians need in their daily lives.
+            </p>
+            <p>
+              Starting with a small team of 5 people working from a co-working space in Accra, Super Ghana launched its first mobile wallet features in early 2023. The response was overwhelming, with 100,000 users joining the platform in the first month alone.
+            </p>
+            <p>
+              By mid-2023, the company had secured its first round of funding and expanded to 30 employees. The vision grew beyond financial services to incorporate transportation, shopping, agricultural services, community features, and more - creating Ghana's first true super app.
+            </p>
+            <p>
+              Today, Super Ghana is Ghana's leading super app, with over 1 million active users across diverse service categories, partnerships with major businesses and service providers, and a growing presence in neighboring countries.
+            </p>
+            <p>
+              Our journey continues as we work toward our vision of creating a single digital platform that simplifies and enhances daily life for all Ghanaians and eventually, all West Africans.
+            </p>
+          </div>
+        </div>
+        
+        <div class="space-y-6">
+          <!-- Timeline -->
+          <div class="relative">
+            <!-- Timeline line -->
+            <div class="absolute left-5 top-5 bottom-0 w-px bg-primary-200 dark:bg-primary-800"></div>
+            
+            <!-- 2023 -->
+            <div class="relative pl-14 pb-8">
+              <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-primary-600 text-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">2023 - Founded</h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Super Ghana is established with a vision to create Ghana's first comprehensive super app.
+              </p>
+            </div>
+            
+            <!-- 2023 Q2 -->
+            <div class="relative pl-14 pb-8">
+              <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-primary-600 text-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">2023 Q2 - First Funding</h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Secured $2.5M seed funding to expand service offerings and develop new features.
+              </p>
+            </div>
+            
+            <!-- 2023 Q3 -->
+            <div class="relative pl-14 pb-8">
+              <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-primary-600 text-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">2023 Q3 - Service Expansion</h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Launched transportation, shopping, and community features to create a true super app experience.
+              </p>
+            </div>
+            
+            <!-- 2023 Q4 -->
+            <div class="relative pl-14">
+              <div class="absolute left-0 top-0 h-10 w-10 rounded-full bg-primary-600 text-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">2023 Q4 - 1 Million Users</h3>
+              <p class="text-gray-600 dark:text-gray-300">
+                Reached 1 million active users across multiple service categories, becoming Ghana's leading super app.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-br from-primary-600 to-secondary-600 text-white">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold mb-6">Ready to Transform Your Daily Life in Ghana?</h2>
+      <p class="text-xl max-w-2xl mx-auto mb-8">
+        Join over 1 million Ghanaians who are already enjoying the benefits of Super Ghana's all-in-one platform for payments, transportation, shopping, community connections, and more.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="/signup" class="px-8 py-4 rounded-xl bg-white text-primary-600 hover:bg-gray-100 font-medium text-lg transition-colors shadow-lg shadow-primary-700/20">
+          Create an Account
+        </a>
+        <a href="/download" class="px-8 py-4 rounded-xl bg-primary-700 bg-opacity-30 hover:bg-opacity-40 text-white font-medium text-lg transition-colors border border-white/20">
+          Download the App
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Info Section -->
+  <section class="py-20 bg-white dark:bg-gray-900">
+    <div class="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Office Locations -->
+        <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl">
+          <div class="text-primary-600 dark:text-primary-400 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Our Offices</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Accra (Headquarters)</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                14 Independence Avenue<br>
+                Accra, Ghana
+              </p>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Kumasi</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                5 Prempeh Street<br>
+                Kumasi, Ghana
+              </p>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Tamale</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                8 Bolgatanga Road<br>
+                Tamale, Ghana
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contact Information -->
+        <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl">
+          <div class="text-primary-600 dark:text-primary-400 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Customer Support</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                support@superghana.com<br>
+                +233 30 XXX XXXX
+              </p>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Business Inquiries</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                business@superghana.com<br>
+                +233 30 XXX XXXX
+              </p>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white">Press & Media</div>
+              <p class="text-gray-600 dark:text-gray-300">
+                media@superghana.com<br>
+                +233 30 XXX XXXX
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Social Media & App Downloads -->
+        <div class="bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl">
+          <div class="text-primary-600 dark:text-primary-400 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Connect With Us</h3>
+          <div class="space-y-6">
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white mb-3">Social Media</div>
+              <div class="flex space-x-4">
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                  </svg>
+                </a>
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/>
+                  </svg>
+                </a>
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+                <a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div>
+              <div class="font-medium text-gray-900 dark:text-white mb-3">Download Our App</div>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <a href="#" class="bg-black text-white px-4 py-3 rounded-xl inline-flex items-center">
+                  <svg class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.6 17.4c-.4.8-.8 1.4-1.4 1.8-.3.2-.6.4-1.1.5-.4.1-.9.1-1.4.1-.5 0-1-.1-1.4-.2-.4-.1-.9-.4-1.4-.8-.9-.8-1.6-1.9-2.1-3.3-.5-1.4-.8-2.9-.8-4.5s.3-3.1.8-4.5c.5-1.4 1.2-2.5 2.1-3.3.5-.4.9-.7 1.4-.8.4-.1.9-.2 1.4-.2.5 0 1 0 1.4.1.4.1.7.3 1.1.5.6.4 1 1 1.4 1.8.3.8.5 1.7.5 2.6 0 .9-.2 1.8-.5 2.6h-5.8v-1.5h4.6c0-.4-.1-.7-.2-1.1-.1-.3-.3-.6-.5-.9-.2-.3-.5-.5-.8-.6-.3-.2-.7-.2-1.1-.2-.5 0-1 .1-1.4.4-.4.3-.8.6-1.1 1.1-.3.5-.5 1-.7 1.7-.2.7-.2 1.3-.2 2.1 0 .7.1 1.4.2 2.1.2.6.4 1.2.7 1.7.3.5.7.8 1.1 1.1.4.3.9.4 1.4.4.4 0 .8-.1 1.1-.2.3-.1.6-.3.8-.6.2-.2.4-.5.5-.8.1-.3.2-.7.3-1h1.6c-.1.5-.2 1.1-.4 1.6zM12 24c-6.6 0-12-5.4-12-12s5.4-12 12-12 12 5.4 12 12-5.4 12-12 12z"/>
+                  </svg>
+                  <span>Play Store</span>
+                </a>
+                <a href="#" class="bg-black text-white px-4 py-3 rounded-xl inline-flex items-center">
+                  <svg class="h-6 w-6 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22 17.6c-.1.5-.3 1.1-.7 1.7-.4.6-.8 1-1.4 1.4-.2.1-.4.2-.6.3-.2.1-.4.1-.6.2-.3.1-.5.1-.8.1-.3 0-.6 0-.9-.1-.3-.1-.6-.2-.9-.4-.3-.2-.6-.3-.9-.5-.3-.2-.6-.3-.9-.5-.6-.3-1.3-.4-1.9-.4-.6 0-1.3.1-1.9.4-.3.1-.6.3-.9.5-.3.2-.6.4-.9.5-.3.2-.6.3-.9.4-.3.1-.6.1-.9.1-.3 0-.5 0-.8-.1-.2 0-.4-.1-.6-.2-.2-.1-.4-.2-.6-.3-.6-.3-1.1-.8-1.4-1.4-.3-.6-.6-1.2-.7-1.7-.1-.6-.2-1.3-.2-2 0-.8.1-1.6.3-2.2.2-.7.5-1.3.9-1.9.4-.6.9-1.1 1.4-1.4.6-.4 1.2-.7 1.9-.9h.1c-.1-.3-.2-.7-.2-1 0-.4.1-.7.3-1.1.2-.4.4-.7.7-1 .3-.3.6-.5 1-.7.4-.2.8-.3 1.2-.3.4 0 .8.1 1.2.3.4.2.7.4 1 .7.3.3.5.6.7 1 .2.4.3.7.3 1.1 0 .4-.1.7-.2 1h.1c.7.2 1.3.5 1.9.9.6.4 1.1.9 1.4 1.4.4.6.7 1.2.9 1.9.2.7.3 1.4.3 2.2.1.8 0 1.4-.1 2zm-9.5-7.6c.9.4 1.8.6 2.8.6 1 0 1.9-.2 2.8-.6.9-.4 1.7-1 2.4-1.7.7-.7 1.2-1.5 1.6-2.5.4-.9.6-1.9.6-3 0-1-.2-2-.6-2.9-.4-.9-.9-1.7-1.6-2.4-.7-.7-1.5-1.3-2.4-1.7-.9-.4-1.9-.6-2.8-.6-1 0-1.9.2-2.8.6-.9.4-1.7 1-2.4 1.7-.7.7-1.2 1.5-1.6 2.4-.4.9-.6 1.9-.6 2.9 0 1 .2 2 .6 3 .4.9.9 1.8 1.6 2.5.7.7 1.5 1.3 2.4 1.7z"/>
+                  </svg>
+                  <span>App Store</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,275 @@
+<%# Support Settings %>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Support & Help</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get help and support for your account</p>
+  </div>
+
+  <%# Tabs Navigation %>
+  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex flex-wrap -mb-px">
+      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
+        Overview
+      <% end %>
+      
+      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
+        Profile
+      <% end %>
+      
+      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
+        Security
+      <% end %>
+      
+      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
+        Notifications
+      <% end %>
+      
+      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
+        Appearance
+      <% end %>
+      
+      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
+        Payment
+      <% end %>
+      
+      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
+        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
+        Support
+      <% end %>
+    </div>
+  </div>
+
+  <%# Contact Support Section %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Contact Support</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-3">
+            <%= icon "chat", class: "h-6 w-6" %>
+          </div>
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Live Chat</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Chat with our support team in real-time.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Available: 8am - 8pm GMT</p>
+          <button type="button" class="btn btn-primary-outline w-full">Start Chat</button>
+        </div>
+        
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3">
+            <%= icon "mail", class: "h-6 w-6" %>
+          </div>
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Email Support</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Send us an email and we'll get back to you.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Response time: Within 24 hours</p>
+          <a href="mailto:support@superghana.app" class="btn btn-primary-outline w-full">Send Email</a>
+        </div>
+        
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mb-3">
+            <%= icon "phone", class: "h-6 w-6" %>
+          </div>
+          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Phone Support</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Call us directly for immediate assistance.</p>
+          <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Available: 8am - 8pm GMT</p>
+          <a href="tel:+233302123456" class="btn btn-primary-outline w-full">Call Support</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# FAQs Section %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h2>
+      
+      <div class="space-y-4" data-controller="accordion">
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item1">
+            <span>How do I add money to my wallet?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+          </button>
+          <div id="item1" class="p-4 hidden">
+            <p class="text-gray-500 dark:text-gray-400">
+              You can add money to your wallet through various methods:
+            </p>
+            <ul class="list-disc list-inside text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+              <li>Mobile Money (MTN, Vodafone, AirtelTigo)</li>
+              <li>Bank Transfer</li>
+              <li>Card Payment</li>
+            </ul>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+              To add money, go to your wallet dashboard and click on "Add Money", then follow the instructions for your preferred payment method.
+            </p>
+          </div>
+        </div>
+        
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item2">
+            <span>How do I send money to someone?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+          </button>
+          <div id="item2" class="p-4 hidden">
+            <p class="text-gray-500 dark:text-gray-400">
+              Sending money is easy:
+            </p>
+            <ol class="list-decimal list-inside text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+              <li>Go to your wallet dashboard</li>
+              <li>Click on "Send Money"</li>
+              <li>Enter the recipient's phone number or username</li>
+              <li>Enter the amount you want to send</li>
+              <li>Add a note (optional)</li>
+              <li>Confirm the transaction with your PIN</li>
+            </ol>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+              The recipient will receive a notification when the money is sent.
+            </p>
+          </div>
+        </div>
+        
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item3">
+            <span>How do I change my PIN?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+          </button>
+          <div id="item3" class="p-4 hidden">
+            <p class="text-gray-500 dark:text-gray-400">
+              To change your PIN:
+            </p>
+            <ol class="list-decimal list-inside text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+              <li>Go to Settings > Security</li>
+              <li>Click on "Manage PIN"</li>
+              <li>Enter your current PIN</li>
+              <li>Enter your new PIN</li>
+              <li>Confirm your new PIN</li>
+            </ol>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+              Your PIN will be updated immediately. Remember to keep your PIN secure and never share it with anyone.
+            </p>
+          </div>
+        </div>
+        
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item4">
+            <span>What happens if I forget my PIN?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+          </button>
+          <div id="item4" class="p-4 hidden">
+            <p class="text-gray-500 dark:text-gray-400">
+              If you forget your PIN:
+            </p>
+            <ol class="list-decimal list-inside text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+              <li>Go to Settings > Security</li>
+              <li>Click on "Forgot PIN"</li>
+              <li>Verify your identity through SMS verification</li>
+              <li>Create a new PIN</li>
+            </ol>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+              For security reasons, you might be required to wait 24 hours before completing certain transactions after resetting your PIN.
+            </p>
+          </div>
+        </div>
+        
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+          <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item5">
+            <span>How do I withdraw money from my wallet?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+          </button>
+          <div id="item5" class="p-4 hidden">
+            <p class="text-gray-500 dark:text-gray-400">
+              To withdraw money:
+            </p>
+            <ol class="list-decimal list-inside text-gray-500 dark:text-gray-400 mt-2 space-y-1">
+              <li>Go to your wallet dashboard</li>
+              <li>Click on "Withdraw"</li>
+              <li>Select your withdrawal method (Mobile Money, Bank)</li>
+              <li>Enter the amount</li>
+              <li>Confirm with your PIN</li>
+            </ol>
+            <p class="text-gray-500 dark:text-gray-400 mt-2">
+              Withdrawals to Mobile Money accounts are usually processed instantly, while bank transfers may take 1-3 business days.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# Help Resources %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Help Resources</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
+          <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-4">
+            <%= icon "book-open", class: "h-5 w-5" %>
+          </div>
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">User Guide</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Complete guide to using all features of Super Ghana App</p>
+          </div>
+        </a>
+        
+        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
+          <div class="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-4">
+            <%= icon "video", class: "h-5 w-5" %>
+          </div>
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">Video Tutorials</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Step-by-step video guides for common tasks</p>
+          </div>
+        </a>
+        
+        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
+          <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-4">
+            <%= icon "information-circle", class: "h-5 w-5" %>
+          </div>
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">Knowledge Base</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Browse articles on specific topics and features</p>
+          </div>
+        </a>
+        
+        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
+          <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-4">
+            <%= icon "community", class: "h-5 w-5" %>
+          </div>
+          <div>
+            <h3 class="text-base font-medium text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition">Community Forum</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Connect with other users and share experiences</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Accordion Controller
+  import { Controller } from "@hotwired/stimulus"
+
+  export default class extends Controller {
+    static targets = ["item1", "item2", "item3", "item4", "item5"]
+    
+    toggle(event) {
+      const target = event.currentTarget.getAttribute('data-accordion-target')
+      const content = document.getElementById(target)
+      const arrow = event.currentTarget.querySelector('svg')
+      
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden')
+        arrow.classList.add('rotate-180')
+      } else {
+        content.classList.add('hidden')
+        arrow.classList.remove('rotate-180')
+      }
+    }
+  }
+</script>

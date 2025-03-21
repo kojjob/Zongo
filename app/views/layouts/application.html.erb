@@ -1,35 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title><%= content_for(:title) || "Zongo" %></title>
+    <title>Super Ghana App</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#6366F1" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    
+    <meta name="theme-color" content="#16a34a" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#064e3b" media="(prefers-color-scheme: dark)">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%# Theme initialization happens via theme/init.js - imported at the top of application.js %>
+    <script>
+      // Add class to prevent flash during initial load
+      document.documentElement.classList.add('theme-initializing');
+      
+      // Remove initializing class when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          document.documentElement.classList.remove('theme-initializing');
+        }, 50); // Small delay to ensure transitions work
+      });
+    </script>
+    
+    <style>
+      /* Block rendering until the theme is applied to prevent flash */
+      .theme-initializing { 
+        visibility: hidden; 
+      }
+      
+      /* Add smooth transitions for theme changes */
+      html {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Ensure basic theme classes are applied immediately */
+      html.dark {
+        background-color: #111827;
+        color: #ffffff;
+      }
+      
+      html {
+        background-color: #ffffff;
+        color: #111827;
+      }
+    </style>
+
+    <%# Important: theme.css must be loaded first to establish base CSS variables %>
+    <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dark_mode_overrides", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "light_mode_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "section_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    
+    <!-- Direct fix for theme and dropdowns - no dependencies -->
+    <%= render 'layouts/direct_fix' %>
   </head>
 
-  <body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white" data-controller="theme">
-    <main>
+  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col" data-controller="debug">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-md">Skip to main content</a>
+    <!-- Debug nav - visible in development only -->
+    <% if Rails.env.development? %>
+      <div class="bg-yellow-400 dark:bg-yellow-600 px-4 py-1 text-black dark:text-white text-sm font-medium">
+        <div class="container mx-auto flex justify-between items-center">
+          <span>Development Mode</span>
+          <div class="flex space-x-4">
+            <a href="/test" class="underline hover:no-underline">Test Page</a>
+            <a href="/test/theme" class="underline hover:no-underline">Theme Test</a>
+            <a href="/test/dropdown" class="underline hover:no-underline">Dropdown Test</a>
+            <a href="/test/main" class="underline hover:no-underline">Main App Test</a>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="hidden">Current theme: <span id="theme-indicator" class="text-black dark:text-white">light</span></div>
+    
+    <!-- Theme initialization is now handled by the theme controller -->
+    <!-- Theme indicator for debugging purposes -->
+    <script>
+      // Only update theme indicator on DOMContentLoaded to avoid duplication
+      document.addEventListener('DOMContentLoaded', function() {
+        const themeIndicator = document.getElementById('theme-indicator');
+        if (themeIndicator) {
+          const isDark = document.documentElement.classList.contains('dark');
+          themeIndicator.textContent = isDark ? 'dark' : 'light';
+        }
+      });
+    </script>
+    <%= render 'shared/icons' %>
+
+    <% if content_for?(:navbar) %>
+      <%= yield :navbar %>
+    <% elsif user_signed_in? %>
+      <%= render 'shared/navbar' %>
+    <% else %>
+      <%= render 'shared/landing_navbar' %>
+    <% end %>
+
+    <main id="main-content" class="flex-grow" tabindex="-1">
+      <%= render 'shared/flash' if flash.any? %>
       <%= yield %>
     </main>
+    
+    <%= render 'shared/footer' %>
+    <%= render 'shared/toast_template' %>
+    
+    <%= render 'shared/offline_indicator' %>
   </body>
 </html>
