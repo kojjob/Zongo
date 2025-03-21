@@ -73,7 +73,7 @@ gem "wkhtmltopdf-binary"
 gem "devise", "~> 4.9"
 
 # Pagination
-gem "pagy", "~> 7.0"
+gem "pagy", "~> 9.3"
 
 # PDF generation
 gem "wicked_pdf"
