@@ -123,7 +123,7 @@ log("Creating venues")
 venues = []
 
 venue_data = [
-  { 
+  {
     name: 'Accra International Conference Centre',
     description: 'A premier conference venue in Accra',
     address: 'Castle Rd',
@@ -134,15 +134,15 @@ venue_data = [
     latitude: 5.559364,
     longitude: -0.178359,
     capacity: 1500,
-    facilities: { 
-      parking: true, 
-      wifi: true, 
-      accessibility: true, 
+    facilities: {
+      parking: true,
+      wifi: true,
+      accessibility: true,
       air_conditioning: true,
       catering: true
     }
   },
-  { 
+  {
     name: 'National Theatre of Ghana',
     description: 'Home to the national dance company, drama company, and symphony orchestra',
     address: 'South Liberation Rd',
@@ -153,15 +153,15 @@ venue_data = [
     latitude: 5.550901,
     longitude: -0.199655,
     capacity: 1500,
-    facilities: { 
-      parking: true, 
-      wifi: true, 
-      accessibility: true, 
+    facilities: {
+      parking: true,
+      wifi: true,
+      accessibility: true,
       air_conditioning: true,
       stage_equipment: true
     }
   },
-  { 
+  {
     name: 'Labadi Beach Hotel',
     description: 'Luxury hotel with event facilities',
     address: 'No. 1 La Bypass',
@@ -172,15 +172,15 @@ venue_data = [
     latitude: 5.564188,
     longitude: -0.150164,
     capacity: 500,
-    facilities: { 
-      parking: true, 
-      wifi: true, 
-      accommodation: true, 
+    facilities: {
+      parking: true,
+      wifi: true,
+      accommodation: true,
       catering: true,
       pool: true
     }
   },
-  { 
+  {
     name: 'Kumasi Cultural Centre',
     description: 'Cultural venue for events in Kumasi',
     address: 'Premper III St',
@@ -191,13 +191,13 @@ venue_data = [
     latitude: 6.694397,
     longitude: -1.623462,
     capacity: 800,
-    facilities: { 
-      parking: true, 
-      cultural_exhibits: true, 
+    facilities: {
+      parking: true,
+      cultural_exhibits: true,
       outdoor_space: true
     }
   },
-  { 
+  {
     name: 'Cape Coast Castle',
     description: 'Historic venue for special events',
     address: 'Cape Coast Castle Rd',
@@ -208,9 +208,9 @@ venue_data = [
     latitude: 5.106031,
     longitude: -1.244072,
     capacity: 300,
-    facilities: { 
-      historic_site: true, 
-      outdoor_space: true, 
+    facilities: {
+      historic_site: true,
+      outdoor_space: true,
       guided_tours: true
     }
   }
@@ -416,21 +416,21 @@ event_data.each do |e_data|
   # Find category
   category = if e_data[:category].present?
                EventCategory.find_by(name: e_data[:category]) || categories.sample
-             else
+  else
                categories.sample
-             end
-  
+  end
+
   # Find venue
   venue = if e_data[:venue].present?
             Venue.find_by(name: e_data[:venue]) || venues.sample
-          else
+  else
             venues.sample
-          end
-  
+  end
+
   # Calculate end time
   start_time = e_data[:start_time]
   end_time = start_time + e_data[:duration_hours].hours
-  
+
   # Create event
   event = Event.find_or_initialize_by(title: e_data[:title])
   if event.new_record?
@@ -463,7 +463,7 @@ ticket_types = []
 events.each do |event|
   # Skip if it's a past event or already has ticket types
   next if event.ended? || event.ticket_types.exists?
-  
+
   # VIP Ticket
   vip_price = rand(200..500)
   vip_ticket = TicketType.create!(
@@ -478,7 +478,7 @@ events.each do |event|
     transferable: true
   )
   ticket_types << vip_ticket
-  
+
   # Standard Ticket
   standard_price = rand(50..150)
   standard_ticket = TicketType.create!(
@@ -493,7 +493,7 @@ events.each do |event|
     transferable: true
   )
   ticket_types << standard_ticket
-  
+
   # Early Bird Ticket (if event is more than 14 days away)
   if !event.ended? && event.start_time > Time.current + 14.days
     early_bird_price = standard_price * 0.7 # 30% discount
@@ -524,36 +524,36 @@ future_events = events.select { |e| e.start_time > Time.current }
 future_events.each do |event|
   # Decide how many users will attend (10-50% of capacity)
   attendance_count = rand((event.capacity * 0.1)..(event.capacity * 0.5)).to_i
-  
+
   # Get the ticket types for this event
   event_ticket_types = event.ticket_types.to_a
   next if event_ticket_types.empty?
-  
+
   # Get all available users who haven't registered for this event yet
   available_users = users.reject do |user|
     Attendance.exists?(user: user, event: event)
   end
-  
+
   # Randomly select users to attend (but no more than we have available)
-  attending_users = available_users.sample([attendance_count, available_users.size].min)
-  
+  attending_users = available_users.sample([ attendance_count, available_users.size ].min)
+
   attending_users.each do |user|
     # Create attendance record
     attendance = Attendance.create!(
       user: user,
       event: event,
-      status: [:registered, :confirmed, :checked_in].sample,
+      status: [ :registered, :confirmed, :checked_in ].sample,
       additional_info: { notes: "Automatically created via seed" }
     )
     attendances << attendance
-    
+
     # Decide how many tickets this user buys (1-4)
     ticket_count = rand(1..4)
-    
+
     ticket_count.times do
       # Randomly select a ticket type
       ticket_type = event_ticket_types.sample
-      
+
       # Create a ticket
       ticket = EventTicket.create!(
         user: user,
@@ -561,7 +561,7 @@ future_events.each do |event|
         ticket_type: ticket_type,
         attendance: attendance,
         ticket_code: "SEED-#{SecureRandom.hex(6).upcase}",
-        status: [:pending, :confirmed].sample,
+        status: [ :pending, :confirmed ].sample,
         amount: ticket_type.price
       )
       event_tickets << ticket
@@ -576,10 +576,10 @@ comments = []
 events.each do |event|
   # Skip if it's a future event (no comments yet)
   next if event.start_time > Time.current
-  
+
   # Decide how many comments (0-20)
   comment_count = rand(0..20)
-  
+
   comment_count.times do
     user = users.sample
     content = [
@@ -594,19 +594,19 @@ events.each do |event|
       "Will the event be recorded?",
       "Last year's event was fantastic, hoping this will be even better!"
     ].sample
-    
+
     comment = EventComment.create!(
       event: event,
       user: user,
       content: content,
       likes_count: rand(0..15),
-      is_hidden: [true, false, false, false, false].sample # 20% chance of being hidden
+      is_hidden: [ true, false, false, false, false ].sample # 20% chance of being hidden
     )
     comments << comment
-    
+
     # Maybe add replies (0-3)
     reply_count = rand(0..3)
-    
+
     reply_count.times do
       reply_user = users.sample
       reply_content = [
@@ -618,14 +618,14 @@ events.each do |event|
         "No, I don't think that's the case.",
         "Great question, I'd like to know too."
       ].sample
-      
+
       reply = EventComment.create!(
         event: event,
         user: reply_user,
         parent_comment: comment,
         content: reply_content,
         likes_count: rand(0..5),
-        is_hidden: [true, false, false, false, false].sample # 20% chance of being hidden
+        is_hidden: [ true, false, false, false, false ].sample # 20% chance of being hidden
       )
       comments << reply
     end
@@ -639,10 +639,10 @@ favorites = []
 events.each do |event|
   # Decide how many users favorite this event (0-50)
   favorite_count = rand(0..50)
-  
+
   # Randomly select users to favorite (but no more than we have)
-  favoriting_users = users.sample([favorite_count, users.size].min)
-  
+  favoriting_users = users.sample([ favorite_count, users.size ].min)
+
   favoriting_users.each do |user|
     favorite = EventFavorite.find_or_initialize_by(event: event, user: user)
     if favorite.new_record?
@@ -658,7 +658,7 @@ event_media = []
 
 # Helper methods for creating media attachments
 def create_dummy_image(filename = "image.jpg")
-  file = Tempfile.new([File.basename(filename, ".*"), File.extname(filename)])
+  file = Tempfile.new([ File.basename(filename, ".*"), File.extname(filename) ])
   file.binmode
   # Create a simple colored rectangle as a valid JPEG
   require 'mini_magick'
@@ -671,7 +671,7 @@ def create_dummy_image(filename = "image.jpg")
 end
 
 def create_dummy_audio(filename = "audio.mp3")
-  file = Tempfile.new([File.basename(filename, ".*"), File.extname(filename)])
+  file = Tempfile.new([ File.basename(filename, ".*"), File.extname(filename) ])
   file.binmode
   # Simply create a file with MP3 header bytes
   file.write("ID3\x03\x00\x00\x00\x00\x00\x1F")
@@ -680,7 +680,7 @@ def create_dummy_audio(filename = "audio.mp3")
 end
 
 def create_dummy_video(filename = "video.mp4")
-  file = Tempfile.new([File.basename(filename, ".*"), File.extname(filename)])
+  file = Tempfile.new([ File.basename(filename, ".*"), File.extname(filename) ])
   file.binmode
   # Add simple MP4 file header bytes
   file.write("\x00\x00\x00\x18ftypmp42\x00\x00\x00\x00mp42isom\x00\x00\x00\x01mdat")
@@ -689,7 +689,7 @@ def create_dummy_video(filename = "video.mp4")
 end
 
 def create_dummy_document(filename = "document.pdf")
-  file = Tempfile.new([File.basename(filename, ".*"), File.extname(filename)])
+  file = Tempfile.new([ File.basename(filename, ".*"), File.extname(filename) ])
   file.binmode
   # Add PDF header
   file.write("%PDF-1.5\n%âãÏÓ\n")
@@ -701,38 +701,38 @@ end
 events.each do |event|
   # Randomly decide if this event gets media (80% chance)
   next unless rand < 0.8
-  
+
   # Add 1-5 media items for this event
   media_count = rand(1..5)
-  
+
   media_count.times do |i|
     # Decide media type (70% image, 15% video, 10% audio, 5% document)
     media_type_rand = rand
     media_type = if media_type_rand < 0.7
                    :image
-                 elsif media_type_rand < 0.85
+    elsif media_type_rand < 0.85
                    :video
-                 elsif media_type_rand < 0.95
+    elsif media_type_rand < 0.95
                    :audio
-                 else
+    else
                    :document
-                 end
-    
+    end
+
     # Create title and description
     title = case media_type
-            when :image
-              ["Event Photo", "Venue Setup", "Speaker", "Audience", "Stage"].sample
-            when :video
-              ["Event Promo", "Speaker Interview", "Highlight Reel", "Teaser"].sample
-            when :audio
-              ["Speaker Introduction", "Event Theme Song", "Audio Announcement"].sample
-            when :document
-              ["Event Schedule", "Speaker Bio", "Registration Form", "Sponsorship Packet"].sample
-            end
-    
+    when :image
+              [ "Event Photo", "Venue Setup", "Speaker", "Audience", "Stage" ].sample
+    when :video
+              [ "Event Promo", "Speaker Interview", "Highlight Reel", "Teaser" ].sample
+    when :audio
+              [ "Speaker Introduction", "Event Theme Song", "Audio Announcement" ].sample
+    when :document
+              [ "Event Schedule", "Speaker Bio", "Registration Form", "Sponsorship Packet" ].sample
+    end
+
     title = "#{title} #{i+1}" if i > 0
     description = "#{media_type.to_s.capitalize} for #{event.title}"
-    
+
     # Create the media record
     medium = EventMedium.new(
       event: event,
@@ -743,7 +743,7 @@ events.each do |event|
       is_featured: i == 0, # First media item is featured
       display_order: i
     )
-    
+
     # Attach the appropriate dummy file
     case media_type
     when :image
@@ -775,7 +775,7 @@ events.each do |event|
         content_type: 'application/pdf'
       )
     end
-    
+
     # Save the media
     medium.save!
     event_media << medium

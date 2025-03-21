@@ -13,7 +13,7 @@ class User < ApplicationRecord
   # Events
   has_many :event_favorites, dependent: :destroy
   has_many :favorited_events, through: :event_favorites, source: :event
-  has_many :organized_events, class_name: 'Event', foreign_key: 'organizer_id', dependent: :nullify
+  has_many :organized_events, class_name: "Event", foreign_key: "organizer_id", dependent: :nullify
   has_many :event_comments, dependent: :destroy
   has_many :attendances, dependent: :destroy
   has_many :attended_events, through: :attendances, source: :event

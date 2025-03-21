@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # User favorites
-  get 'my/favorites', to: 'event_favorites#index', as: 'my_favorites'
-  
+  get "my/favorites", to: "event_favorites#index", as: "my_favorites"
+
   resources :event_favorites
   resources :event_comments
   resources :event_media
@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :ticket_types
   resources :events do
     member do
-      post 'toggle_favorite'
+      post "toggle_favorite"
     end
   end
   resources :venues
