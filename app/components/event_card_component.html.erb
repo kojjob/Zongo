@@ -1,0 +1,59 @@
+<div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-300">
+  <div class="relative">
+    <img src="<%= image_url %>" alt="<%= event.title %>" class="w-full h-48 object-cover">
+    <div class="absolute bottom-3 left-3 flex space-x-2">
+      <% if current_user %>
+        <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors" data-controller="attendance" data-attendance-event-id="<%= event.id %>">
+          <% if attending? %>
+            <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          <% else %>
+            <svg class="h-5 w-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          <% end %>
+        </button>
+        <button class="bg-white rounded-full p-2 shadow hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors" data-controller="favorite" data-favorite-event-id="<%= event.id %>">
+          <svg class="h-5 w-5 <%= favorited? ? 'text-red-500 fill-current' : 'text-gray-500 dark:text-gray-300' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+        </button>
+      <% end %>
+    </div>
+  </div>
+  <div class="p-4">
+    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+      <svg class="h-4 w-4 mr-1 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      <%= short_date %>, <%= short_time %>
+    </div>
+    <h3 class="text-lg font-semibold mb-1 text-gray-900 dark:text-white"><%= event.title %></h3>
+    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3"><%= attendee_count %> attending · <%= location_text %></p>
+    <div class="flex items-center">
+      <div class="flex -space-x-2 mr-2">
+        <% event.attendances.limit(3).includes(:user).each do |attendance| %>
+          <div class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold">
+            <%= attendance.user.initials %>
+          </div>
+        <% end %>
+      </div>
+      <% if attendee_count > 0 %>
+        <span class="text-xs text-gray-500 dark:text-gray-400">
+          <% if attendee_count <= 3 %>
+            <%= attendee_count %> <%= attendee_count == 1 ? 'person' : 'people' %> attending
+          <% else %>
+            <%= attendee_count - 3 %> more attending
+          <% end %>
+        </span>
+      <% else %>
+        <span class="text-xs text-gray-500 dark:text-gray-400">Be the first to attend!</span>
+      <% end %>
+      
+      <div class="ml-auto">
+        <%= price_tag %>
+      </div>
+    </div>
+  </div>
+</div>

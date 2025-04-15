@@ -1,55 +1,266 @@
-<% content_for :title, "Edit Event - #{@event.title}" %>
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <% if notice.present? %>
-    <div class="mb-6">
-      <%= render 'shared/flash_message', message: notice, type: 'success' %>
-    </div>
-  <% end %>
-
-  <!-- Breadcrumbs -->
-  <nav class="mb-6">
-    <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-      <li>
-        <%= link_to "Home", root_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
-      </li>
-      <li class="flex items-center">
-        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-        </svg>
-      </li>
-      <li>
-        <%= link_to "Events", events_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
-      </li>
-      <li class="flex items-center">
-        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-        </svg>
-      </li>
-      <li>
-        <%= link_to @event.title, @event, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
-      </li>
-      <li class="flex items-center">
-        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-        </svg>
-      </li>
-      <li class="font-medium text-gray-700 dark:text-gray-300">
-        Edit
-      </li>
-    </ol>
-  </nav>
-
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Edit Event</h1>
-    
-    <div class="mt-4 md:mt-0">
-      <%= link_to @event, class: "btn btn-outline" do %>
-        <%= icon "eye", class: "w-5 h-5 mr-2" %>
-        View Event
-      <% end %>
+<!-- Event Create/Edit Form -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <!-- Form Container -->
+  <div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+      <!-- Form Header -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4">
+        <h1 class="text-xl font-bold text-white">Create New Event</h1>
+        <p class="text-blue-100">Share your event with the community</p>
+      </div>
+      
+      <!-- Form Content -->
+      <form class="p-6 space-y-8">
+        <!-- Basic Event Information -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Event Information</h2>
+          
+          <div>
+            <label for="event_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Title *</label>
+            <input type="text" id="event_title" name="event[title]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Give your event a descriptive title" required>
+          </div>
+          
+          <div>
+            <label for="event_short_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Short Description *</label>
+            <input type="text" id="event_short_description" name="event[short_description]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Brief summary of your event (1-2 sentences)" required>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">This will be displayed in event cards and previews</p>
+          </div>
+          
+          <div>
+            <label for="event_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Description *</label>
+            <textarea id="event_description" name="event[description]" rows="6" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Provide all the details about your event" required></textarea>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You can use basic HTML for formatting</p>
+          </div>
+          
+          <div>
+            <label for="event_category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category *</label>
+            <select id="event_category_id" name="event[category_id]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+              <option value="">Select a category</option>
+              <option value="1">Music & Art</option>
+              <option value="2">Sports</option>
+              <option value="3">Food & Drink</option>
+              <option value="4">Technology</option>
+              <option value="5">Business</option>
+              <option value="6">Education</option>
+              <option value="7">Community</option>
+              <option value="8">Health & Wellness</option>
+            </select>
+          </div>
+        </section>
+        
+        <!-- Date & Time -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Date & Time</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="event_start_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date & Time *</label>
+              <input type="datetime-local" id="event_start_time" name="event[start_time]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+            </div>
+            
+            <div>
+              <label for="event_end_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date & Time *</label>
+              <input type="datetime-local" id="event_end_time" name="event[end_time]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Location -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Location</h2>
+          
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <label for="event_venue_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Venue *</label>
+              <select id="event_venue_id" name="event[venue_id]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+                <option value="">Select a venue</option>
+                <option value="1">National Theater</option>
+                <option value="2">Accra Sports Stadium</option>
+                <option value="3">Trade Fair Centre</option>
+                <option value="4">Coconut Grove Regency Hotel</option>
+                <option value="5">Alliance Française Accra</option>
+                <option value="new">+ Add New Venue</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- New Venue Form (initially hidden) -->
+          <div id="new_venue_form" class="hidden border rounded-lg p-4 bg-gray-50 dark:bg-gray-700 space-y-4">
+            <h3 class="text-md font-medium text-gray-800 dark:text-white">Add New Venue</h3>
+            
+            <div>
+              <label for="venue_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Venue Name *</label>
+              <input type="text" id="venue_name" name="venue[name]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Enter venue name">
+            </div>
+            
+            <div>
+              <label for="venue_address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address *</label>
+              <input type="text" id="venue_address" name="venue[address]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Full address">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="venue_city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City *</label>
+                <input type="text" id="venue_city" name="venue[city]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" value="Accra">
+              </div>
+              
+              <div>
+                <label for="venue_region" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Region</label>
+                <input type="text" id="venue_region" name="venue[region]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Greater Accra">
+              </div>
+            </div>
+            
+            <div>
+              <label for="venue_capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacity</label>
+              <input type="number" id="venue_capacity" name="venue[capacity]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Maximum capacity">
+            </div>
+            
+            <div class="flex justify-end">
+              <button type="button" id="cancel_venue" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 mr-2">Cancel</button>
+              <button type="button" id="save_venue" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Venue</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Images -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Event Images</h2>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Main Event Image *</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-lg">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                  <label for="file-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 focus-within:outline-none">
+                    <span>Upload a file</span>
+                    <input id="file-upload" name="event[images][]" type="file" class="sr-only" accept="image/*" required>
+                  </label>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  PNG, JPG, GIF up to 10MB
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Additional Images</label>
+            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-lg">
+              <div class="space-y-1 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                  <label for="additional-files-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 focus-within:outline-none">
+                    <span>Upload files</span>
+                    <input id="additional-files-upload" name="event[images][]" type="file" class="sr-only" multiple accept="image/*">
+                  </label>
+                  <p class="pl-1">or drag and drop</p>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Up to 5 additional images
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Tickets & Capacity -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Tickets & Capacity</h2>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <input type="radio" name="event[is_free]" value="1" class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
+                <span class="ml-2">Free Event</span>
+              </label>
+              <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                <input type="radio" name="event[is_free]" value="0" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                <span class="ml-2">Paid Event</span>
+              </label>
+            </div>
+            
+            <div id="price_field" class="hidden">
+              <label for="event_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price (GHS) *</label>
+              <div class="relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₵</span>
+                </div>
+                <input type="number" step="0.01" min="0" id="event_price" name="event[price]" class="w-full pl-7 pr-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="0.00">
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="event_capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Capacity</label>
+              <input type="number" min="1" id="event_capacity" name="event[capacity]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Maximum number of attendees">
+              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave blank for unlimited capacity</p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Form Actions -->
+        <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+          <button type="button" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+            Save as Draft
+          </button>
+          
+          <div class="space-x-2">
+            <button type="button" class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              Preview
+            </button>
+            <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Publish Event
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-
-  <%= render "form", event: @event %>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // New venue form toggle
+    const venueSelect = document.getElementById('event_venue_id');
+    const newVenueForm = document.getElementById('new_venue_form');
+    
+    venueSelect.addEventListener('change', function() {
+      if (this.value === 'new') {
+        newVenueForm.classList.remove('hidden');
+      } else {
+        newVenueForm.classList.add('hidden');
+      }
+    });
+    
+    document.getElementById('cancel_venue').addEventListener('click', function() {
+      newVenueForm.classList.add('hidden');
+      venueSelect.value = '';
+    });
+    
+    // Free/Paid event toggle
+    const freeRadios = document.querySelectorAll('input[name="event[is_free]"]');
+    const priceField = document.getElementById('price_field');
+    
+    freeRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === '0') {
+          priceField.classList.remove('hidden');
+          document.getElementById('event_price').required = true;
+        } else {
+          priceField.classList.add('hidden');
+          document.getElementById('event_price').required = false;
+        }
+      });
+    });
+    
+    // Image preview functionality would go here
+    // For brevity, we'll implement this in the next phase
+  });
+</script>

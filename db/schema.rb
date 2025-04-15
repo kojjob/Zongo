@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,10 +62,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.jsonb "form_responses", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ticket_code"
+    t.text "notes"
     t.index ["event_id"], name: "index_attendances_on_event_id"
     t.index ["status"], name: "index_attendances_on_status"
     t.index ["user_id", "event_id"], name: "index_attendances_on_user_id_and_event_id", unique: true
     t.index ["user_id"], name: "index_attendances_on_user_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "icon"
+    t.string "color_code"
+    t.integer "display_order", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_categories_on_name", unique: true
   end
 
   create_table "contact_submissions", force: :cascade do |t|
@@ -92,6 +105,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.bigint "parent_category_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "color_code"
+    t.integer "display_order", default: 0
     t.index ["parent_category_id", "name"], name: "index_event_categories_on_parent_category_id_and_name", unique: true
     t.index ["parent_category_id"], name: "index_event_categories_on_parent_category_id"
   end
@@ -105,6 +120,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.integer "likes_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_approved", default: true
     t.index ["event_id"], name: "index_event_comments_on_event_id"
     t.index ["parent_comment_id"], name: "index_event_comments_on_parent_comment_id"
     t.index ["user_id"], name: "index_event_comments_on_user_id"
@@ -130,6 +146,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.integer "display_order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "url"
+    t.text "caption"
     t.index ["event_id", "media_type"], name: "index_event_media_on_event_id_and_media_type"
     t.index ["event_id"], name: "index_event_media_on_event_id"
     t.index ["user_id"], name: "index_event_media_on_user_id"
@@ -157,6 +175,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.index ["user_id"], name: "index_event_tickets_on_user_id"
   end
 
+  create_table "event_views", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "user_id"
+    t.string "ip_address", null: false
+    t.string "user_agent"
+    t.string "referer"
+    t.string "referrer"
+    t.datetime "viewed_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "ip_address", "created_at"], name: "index_event_views_on_event_id_and_ip_address_and_created_at"
+    t.index ["event_id"], name: "index_event_views_on_event_id"
+    t.index ["user_id"], name: "index_event_views_on_user_id"
+  end
+
   create_table "events", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
@@ -181,6 +214,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_free", default: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0"
+    t.string "event_type"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_events_on_category_id"
     t.index ["event_category_id"], name: "index_events_on_event_category_id"
     t.index ["is_featured"], name: "index_events_on_is_featured"
     t.index ["organizer_id"], name: "index_events_on_organizer_id"
@@ -189,6 +226,32 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.index ["start_time"], name: "index_events_on_start_time"
     t.index ["status"], name: "index_events_on_status"
     t.index ["venue_id"], name: "index_events_on_venue_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "favoritable_type", null: false
+    t.bigint "favoritable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["favoritable_type", "favoritable_id"], name: "index_favorites_on_favoritable"
+    t.index ["user_id", "favoritable_type", "favoritable_id"], name: "index_favorites_on_user_and_favoritable", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "navigation_items", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "path"
+    t.string "icon"
+    t.integer "position", default: 0
+    t.boolean "active", default: true
+    t.integer "required_role"
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_navigation_items_on_active"
+    t.index ["parent_id"], name: "index_navigation_items_on_parent_id"
+    t.index ["position"], name: "index_navigation_items_on_position"
   end
 
   create_table "payment_methods", force: :cascade do |t|
@@ -342,6 +405,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
+    t.boolean "admin", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
@@ -365,8 +429,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "website"
+    t.string "phone"
+    t.string "state"
     t.index ["city"], name: "index_venues_on_city"
     t.index ["latitude", "longitude"], name: "index_venues_on_latitude_and_longitude"
+    t.index ["name"], name: "index_venues_on_name"
     t.index ["user_id"], name: "index_venues_on_user_id"
   end
 
@@ -401,10 +469,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_123456) do
   add_foreign_key "event_tickets", "events"
   add_foreign_key "event_tickets", "ticket_types"
   add_foreign_key "event_tickets", "users"
+  add_foreign_key "event_views", "events"
+  add_foreign_key "event_views", "users"
+  add_foreign_key "events", "categories"
   add_foreign_key "events", "event_categories"
   add_foreign_key "events", "events", column: "parent_event_id"
   add_foreign_key "events", "users", column: "organizer_id"
   add_foreign_key "events", "venues"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "navigation_items", "navigation_items", column: "parent_id"
   add_foreign_key "payment_methods", "users"
   add_foreign_key "scheduled_transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "scheduled_transactions", "wallets", column: "source_wallet_id"

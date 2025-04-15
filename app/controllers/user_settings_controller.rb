@@ -1,4 +1,14 @@
 class UserSettingsController < ApplicationController
+  # Handle authentication errors
+  def authenticate_user!
+    begin
+      super
+    rescue => e
+      logger.error "Error in UserSettingsController authenticate_user!: #{e.message}"
+      redirect_to new_user_session_path, alert: "Please sign in to access your settings"
+    end
+  end
+
   before_action :authenticate_user!
   before_action :set_user
 
@@ -137,10 +147,22 @@ class UserSettingsController < ApplicationController
   private
 
   def set_user
-    @user = current_user
+    begin
+      @user = current_user
 
-    # Ensure user has a setting record
-    @user.create_setting if @user.setting.nil?
+      # Handle case where current_user is nil
+      unless @user
+        logger.error "Current user is nil in UserSettingsController"
+        redirect_to new_user_session_path, alert: "Please sign in to access your settings"
+        return
+      end
+
+      # Ensure user has a setting record
+      @user.create_setting if @user.setting.nil?
+    rescue => e
+      logger.error "Error in set_user: #{e.message}"
+      redirect_to new_user_session_path, alert: "An error occurred. Please sign in again."
+    end
   end
 
   def profile_params

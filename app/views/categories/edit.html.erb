@@ -1,0 +1,141 @@
+<!-- Edit Category Page with modern design matching the app style -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Page header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Edit Category</h1>
+      <p class="mt-2 text-gray-600 dark:text-gray-400">Update the details for "<%= @category.name %>" category.</p>
+    </div>
+    
+    <!-- Form Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <!-- Form Header with category color -->
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center" style="background-color: <%= @category.color_code || '#3B82F6' %>20;">
+        <!-- Category Icon -->
+        <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3" 
+             style="background-color: <%= @category.color_code || '#3B82F6' %>40;">
+          <% icon_name = @category.icon || "tag" %>
+          <svg class="w-5 h-5" fill="none" stroke="<%= @category.color_code || '#3B82F6' %>" viewBox="0 0 24 24">
+            <% case icon_name %>
+            <% when "music" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+            <% when "activity" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            <% when "utensils" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            <% when "code" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+            <% when "briefcase" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            <% when "book-open" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+            <% when "users" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            <% when "heart" %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            <% else %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            <% end %>
+          </svg>
+        </div>
+        <h2 class="text-lg font-medium text-gray-900 dark:text-white">Category Details</h2>
+      </div>
+      
+      <!-- Form Content -->
+      <div class="p-6">
+        <%= form_with(model: @category, local: true, class: "space-y-6") do |form| %>
+          <% if @category.errors.any? %>
+            <div class="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 p-4 rounded-lg mb-6">
+              <h3 class="text-sm font-medium"><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h3>
+              <ul class="mt-2 list-disc list-inside text-sm">
+                <% @category.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          
+          <!-- Name Field -->
+          <div>
+            <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.text_field :name, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+          </div>
+          
+          <!-- Icon Field -->
+          <div>
+            <%= form.label :icon, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.select :icon, 
+                options_for_select([
+                  ["Music", "music"],
+                  ["Activity/Sports", "activity"],
+                  ["Food & Drink", "utensils"],
+                  ["Technology", "code"],
+                  ["Business", "briefcase"],
+                  ["Education", "book-open"],
+                  ["Community", "users"],
+                  ["Health & Wellness", "heart"],
+                  ["Tag (Default)", "tag"]
+                ], @category.icon),
+                { include_blank: "Select an icon" },
+                { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" } %>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Choose an icon that best represents this category.</p>
+          </div>
+          
+          <!-- Color Code Field -->
+          <div>
+            <%= form.label :color_code, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="flex items-center">
+              <%= form.color_field :color_code, class: "h-10 w-20 rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 mr-3" %>
+              <%= form.text_field :color_code, class: "w-40 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500", placeholder: "#3B82F6" %>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Choose a color for this category (HEX format).</p>
+          </div>
+          
+          <!-- Description Field -->
+          <div>
+            <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.text_area :description, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">A brief description of what types of events belong in this category.</p>
+          </div>
+          
+          <!-- Display Order Field -->
+          <div>
+            <%= form.label :display_order, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.number_field :display_order, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Order in which this category appears in lists (lower numbers appear first).</p>
+          </div>
+          
+          <!-- Stats -->
+          <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">Category Statistics</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">This category has <%= pluralize(@category.events.count, 'event') %></p>
+            </div>
+            <a href="<%= events_path(category_id: @category.id) %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+              View Events
+            </a>
+          </div>
+          
+          <!-- Form Actions -->
+          <div class="flex items-center justify-end space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <%= link_to "Cancel", category_path(@category), class: "px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white" %>
+            <%= form.submit "Update Category", class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Danger Zone -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div class="px-6 py-4 bg-red-50 dark:bg-red-900/20 border-b border-red-100 dark:border-red-900/30">
+        <h2 class="text-lg font-medium text-red-800 dark:text-red-300">Danger Zone</h2>
+      </div>
+      <div class="p-6">
+        <p class="text-gray-600 dark:text-gray-400 mb-4">Deleting this category will remove it from all associated events. This action cannot be undone.</p>
+        <%= button_to category_path(@category), method: :delete, data: { confirm: "Are you sure you want to delete this category? This will remove the category from all associated events." }, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" do %>
+          Delete Category
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

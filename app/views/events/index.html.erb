@@ -1,277 +1,481 @@
-<% content_for :title, "Events" %>
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
 
-<% if notice.present? %>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 mb-6">
-    <%= render 'shared/flash_message', message: notice, type: 'success' %>
-  </div>
-<% end %>
-
-<% unless defined?(current_user) && current_user %>
-  <!-- For development: Show a message when not signed in -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-    <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-xl shadow-sm border border-blue-200 dark:border-blue-700">
-      <div class="flex items-center space-x-3">
-        <div class="flex-shrink-0 text-blue-500 dark:text-blue-400">
-          <%= icon "information-circle", class: "w-5 h-5" %>
+  <!-- Hero Section - Improved with more modern design -->
+  <% if @featured_event.present? %>
+  <section class="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700">
+    <!-- Background pattern with overlay -->
+    <div class="absolute inset-0 opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+    </div>
+    
+    <!-- Event image overlay -->
+    <% if @featured_event.event_media.present? %>
+      <div class="absolute inset-0 opacity-20" 
+           style="background-image: url('<%= @featured_event.event_media.first.url %>'); 
+                  background-size: cover; background-position: center;">
+      </div>
+    <% end %>
+    
+    <!-- Gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"></div>
+    
+    <div class="relative max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8 z-10">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+        <div class="space-y-6">
+          <!-- Event badge with pulsing animation -->
+          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white border border-white/30 shadow-sm relative">
+            Featured Event
+            <span class="absolute right-0 top-0 -mr-1 -mt-1 flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+            </span>
+          </div>
+          
+          <!-- Event title with better typography -->
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none text-white">
+            <%= @featured_event.title %>
+          </h1>
+          
+          <!-- Event description -->
+          <p class="text-xl max-w-2xl text-gray-100 leading-relaxed">
+            <%= @featured_event.short_description %>
+          </p>
+          
+          <!-- Action buttons with hover effects -->
+          <div class="flex flex-wrap gap-4 pt-4">
+            <%= link_to "Get Tickets", @featured_event, class: "px-8 py-4 bg-white hover:bg-gray-50 text-blue-700 hover:text-blue-800 font-medium rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600" %>
+            
+            <%= link_to "Learn More", @featured_event, class: "px-8 py-4 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white font-medium rounded-xl border border-white/30 hover:border-white/50 transition-all transform hover:-translate-y-1 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600" %>
+          </div>
+          
+          <!-- Event Details with improved visual style -->
+          <div class="flex flex-wrap gap-x-8 gap-y-4 mt-8 bg-black/20 backdrop-blur-sm p-6 rounded-xl max-w-xl border border-white/10">
+            <div class="flex items-center">
+              <div class="bg-white/20 p-2 rounded-lg mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Date</p>
+                <p class="font-bold text-white"><%= @featured_event.start_time.strftime("%A, %B %d, %Y") %></p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="bg-white/20 p-2 rounded-lg mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Time</p>
+                <p class="font-bold text-white"><%= @featured_event.start_time.strftime("%I:%M %p") %> - <%= @featured_event.end_time.strftime("%I:%M %p") %></p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <div class="bg-white/20 p-2 rounded-lg mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Location</p>
+                <p class="font-bold text-white"><%= @featured_event.venue&.name || 'Venue TBA' %></p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="flex-1">
-          <p class="text-sm text-blue-700 dark:text-blue-300">Sign in to see admin controls. To show admin panel for development, set <code>ENV['SHOW_ADMIN_TO_ALL']='true'</code>.</p>
+        
+        <!-- Featured image with artistic elements -->
+        <div class="hidden lg:flex items-center justify-center mt-10 lg:mt-0">
+          <div class="relative w-full max-w-md">
+            <!-- Decorative elements -->
+            <div class="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-60 blur-2xl"></div>
+            <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full opacity-60 blur-2xl"></div>
+            
+            <!-- Featured image -->
+            <div class="relative bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg p-1 rounded-2xl border border-white/20 shadow-2xl overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
+              <% if @featured_event.event_media.present? %>
+                <img 
+                  src="<%= @featured_event.event_media.first.url %>" 
+                  alt="<%= @featured_event.title %>" 
+                  class="w-full h-80 object-cover rounded-xl"
+                >
+              <% else %>
+                <div class="w-full h-80 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center">
+                  <svg class="w-24 h-24 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m-5-2a7 7 0 110-14 7 7 0 010 14z" />
+                  </svg>
+                </div>
+              <% end %>
+              
+              <!-- Badge with glass morphism effect -->
+              <div class="absolute top-4 right-4 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-gray-900 dark:text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
+                <% if @featured_event.attendances.count > 0 %>
+                  <%= @featured_event.attendances.count %> attending
+                <% else %>
+                  Be the first to join!
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-<% end %>
+  </section>
+  <% else %>
+  <!-- Fallback Banner with modern design -->
+  <section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white relative overflow-hidden">
+    <!-- Pattern background -->
+    <div class="absolute inset-0 opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+    </div>
+    
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="lg:flex lg:items-center lg:justify-between">
+        <div class="lg:max-w-2xl">
+          <h2 class="text-3xl font-extrabold mb-2 sm:text-4xl lg:text-5xl tracking-tight">
+            Discover Events Near You
+          </h2>
+          <p class="text-xl mb-6 text-gray-100 max-w-2xl">Find the best events happening around you and connect with like-minded individuals in your community.</p>
+          <div class="flex gap-4 flex-wrap">
+            <a href="/events/new" class="px-6 py-3 bg-white hover:bg-gray-50 text-blue-700 hover:text-blue-800 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+              Create an Event
+            </a>
+            <a href="#" class="px-6 py-3 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white rounded-xl font-medium border border-white/30 hover:border-white/50 transition-all transform hover:-translate-y-1">
+              Explore Categories
+            </a>
+          </div>
+        </div>
+        <div class="mt-10 lg:mt-0 lg:max-w-md">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= Event.upcoming.count rescue "300+" %></span>
+              <span class="text-sm opacity-80">Upcoming Events</span>
+            </div>
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= @categories.count rescue "20+" %></span>
+              <span class="text-sm opacity-80">Categories</span>
+            </div>
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= User.count rescue "5K+" %></span>
+              <span class="text-sm opacity-80">Active Users</span>
+            </div>
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= Venue.count rescue "100+" %></span>
+              <span class="text-sm opacity-80">Venues</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% end %>
 
-<%# Admin check - modify this condition to match your user roles system %>
-<%# For development, you can set SHOW_ADMIN_TO_ALL=true to make admin panel visible to all users %>
-<% if defined?(current_user) && (
-       current_user.try(:admin?) || 
-       current_user.try(:is_admin) || 
-       current_user.try(:role) == 'admin' || 
-       current_user.try(:admin) == true ||
-       ENV['SHOW_ADMIN_TO_ALL'] == 'true' # Remove this in production!
-     ) %>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-    <div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-      <div class="flex items-center justify-between">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white">
-          <% if !(current_user.try(:admin?) || current_user.try(:is_admin) || current_user.try(:role) == 'admin' || current_user.try(:admin) == true) && ENV['SHOW_ADMIN_TO_ALL'] == 'true' %>
-            <span class="text-yellow-500 dark:text-yellow-400">[DEV MODE]</span>
-          <% end %> 
-          Admin Controls
-        </h3>
-        <button type="button" id="toggleAdminPanel" class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-          <%= icon "chevron-down", class: "w-5 h-5" %>
+  <!-- Main content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <!-- Tab navigation with modern styling -->
+    <div class="border-b border-gray-200 dark:border-gray-800 mb-8">
+      <div class="flex flex-wrap -mb-px">
+        <a href="/groups" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 font-medium">
+          Groups
+        </a>
+        <a href="/events" class="px-6 py-3 text-blue-600 dark:text-blue-400 font-medium border-b-2 border-blue-600 dark:border-blue-500">
+          Events
+        </a>
+        <a href="/chats" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 font-medium">
+          Chats
+        </a>
+      </div>
+    </div>
+
+    <!-- Main grid layout with improved spacing -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Sidebar with filters - Upgraded design -->
+      <div class="hidden lg:block lg:col-span-1 space-y-6">
+        <%= render "filters" %>
+        
+        <% if @popular_events.present? %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+            <svg class="w-5 h-5 mr-2 text-orange-500 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+            </svg>
+            Popular Events
+          </h3>
+          <div class="space-y-3">
+            <% @popular_events.take(5).each do |event| %>
+              <%= link_to event, class: "flex items-start p-2.5 -mx-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group" do %>
+                <div class="h-12 w-12 rounded-md bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
+                  <% if event.event_media.present? %>
+                    <img src="<%= event.event_media.first.url %>" alt="<%= event.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                  <% end %>
+                </div>
+                <div class="ml-3 flex-1 min-w-0">
+                  <p class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                    <%= event.title %>
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center mt-1">
+                    <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <%= pluralize(event.attendances.count, 'attendee') %>
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center mt-1">
+                    <svg class="h-3 w-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <%= event.start_time.strftime("%a, %b %d") %>
+                  </p>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <% end %>
+      </div>
+      
+      <!-- Main content area with improved layout -->
+      <div class="lg:col-span-3">
+        <!-- Search Form with improved design -->
+        <%= render 'search_form' %>
+
+        <!-- Turbo frame for the events list -->
+        <%= turbo_frame_tag "events_results", loading: "lazy" do %>
+          <!-- All Upcoming Events section - Enhanced design -->
+          <section class="mb-10">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+                <svg class="h-6 w-6 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <%= params[:category_id].present? ? @categories.find(params[:category_id]).name : "Events" %>
+                <% if params[:date_range].present? && params[:date_range] != "upcoming" %>
+                  <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400 px-2.5 py-1 bg-gray-100 dark:bg-gray-700 rounded-full">
+                    <%= params[:date_range].humanize %>
+                  </span>
+                <% end %>
+              </h2>
+            </div>
+            
+            <!-- Event List with enhanced design -->
+            <%= render 'event_list', events: @upcoming_events, pagy: @pagy %>
+          </section>
+        <% end %>
+
+        <!-- This weekend section - Enhanced cards -->
+        <% if @weekend_events.present? && params[:date_range] != "weekend" %>
+        <section class="mb-10">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+              <svg class="h-6 w-6 mr-2 text-purple-500 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path>
+              </svg>
+              This Weekend
+            </h2>
+            <a href="<%= events_path(date_range: 'weekend') %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center">
+              View all
+              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Contained Event Card Container with glass morphism effect -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% @weekend_events.each do |event| %>
+                <%= render partial: 'event_card', locals: { event: event } %>
+              <% end %>
+            </div>
+          </div>
+        </section>
+        <% end %>
+
+        <!-- Music & Art section - Enhanced cards -->
+        <% if @music_events.present? && (params[:category_id].blank? || params[:category_id] != music_category&.id.to_s) %>
+        <section class="mb-10">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+              <svg class="h-6 w-6 mr-2 text-pink-500 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+              </svg>
+              Music & Art
+            </h2>
+            <a href="<%= events_path(category_id: music_category&.id) %>" class="text-pink-600 dark:text-pink-400 text-sm font-medium hover:text-pink-800 dark:hover:text-pink-300 transition-colors flex items-center">
+              View all
+              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Visually enhanced container -->
+          <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-xl shadow-sm p-6 border border-pink-100 dark:border-pink-900/20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% @music_events.each do |event| %>
+                <%= render partial: 'event_card', locals: { event: event } %>
+              <% end %>
+            </div>
+          </div>
+        </section>
+        <% end %>
+
+        <!-- Sports section - Enhanced cards -->
+        <% if @sports_events.present? && (params[:category_id].blank? || params[:category_id] != sports_category&.id.to_s) %>
+        <section class="mb-10">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+              <svg class="h-6 w-6 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
+              </svg>
+              Sports
+            </h2>
+            <a href="<%= events_path(category_id: sports_category&.id) %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center">
+              View all
+              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Visually enhanced container -->
+          <div class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 rounded-xl shadow-sm p-6 border border-blue-100 dark:border-blue-900/20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% @sports_events.each do |event| %>
+                <%= render partial: 'event_card', locals: { event: event } %>
+              <% end %>
+            </div>
+          </div>
+        </section>
+        <% end %>
+
+        <!-- Food & Drink section - Enhanced cards -->
+        <% if @food_events.present? && (params[:category_id].blank? || params[:category_id] != food_category&.id.to_s) %>
+        <section class="mb-10">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+              <svg class="h-6 w-6 mr-2 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path>
+              </svg>
+              Food & Drink
+            </h2>
+            <a href="<%= events_path(category_id: food_category&.id) %>" class="text-amber-600 dark:text-amber-400 text-sm font-medium hover:text-amber-800 dark:hover:text-amber-300 transition-colors flex items-center">
+              View all
+              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Visually enhanced container -->
+          <div class="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 rounded-xl shadow-sm p-6 border border-amber-100 dark:border-amber-900/20">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% @food_events.each do |event| %>
+                <%= render partial: 'event_card', locals: { event: event } %>
+              <% end %>
+            </div>
+          </div>
+        </section>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Filter Toggle Button - Fixed at bottom of screen -->
+  <div class="fixed bottom-4 right-4 md:hidden z-30">
+    <button 
+      class="bg-blue-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
+      data-action="mobile-filters#show"
+    >
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Mobile Filters Controller -->
+  <div data-controller="mobile-filters">
+    <!-- Mobile Filters Overlay - Enhanced for better UX -->
+    <div 
+      data-mobile-filters-target="overlay"
+      class="fixed inset-0 bg-black/50 z-40 hidden md:hidden backdrop-blur-sm" 
+      data-action="click->mobile-filters#clickOutside"
+    ></div>
+    
+    <!-- Mobile Filters Sidebar - Enhanced design -->
+    <div 
+      data-mobile-filters-target="sidebar"
+      class="fixed inset-y-0 left-0 w-full max-w-sm bg-white dark:bg-gray-900 shadow-xl z-50 transition transform -translate-x-full duration-300 ease-in-out md:hidden overflow-y-auto pb-20"
+    >
+      <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-900 z-10">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
+        <button 
+          class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+          data-action="mobile-filters#hide">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </button>
       </div>
       
-      <div id="adminPanelContent" class="mt-4 hidden">
-        <% if defined?(Setting) %>
-          <%= form_with url: update_hero_banner_path, method: :patch, multipart: true, class: "space-y-4" do |f| %>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload Hero Banner</label>
-              <div class="flex items-center space-x-3">
-                <%= f.file_field :hero_banner, class: "file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 dark:file:bg-primary-900 dark:file:text-primary-300 dark:hover:file:bg-primary-800" %>
-                <%= f.submit "Update Banner", class: "px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md text-sm font-medium" %>
-              </div>
-              <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Recommended size: 1600x600px. Max file size: 5MB.</p>
-            </div>
-            
-            <% if defined?(@hero_banner) && @hero_banner.present? %>
-              <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-900 rounded-md">
-                <div class="flex items-center">
-                  <div class="w-16 h-12 bg-cover bg-center rounded mr-3" style="background-image: url('<%= url_for(@hero_banner) %>');"></div>
-                  <span class="text-sm text-gray-700 dark:text-gray-300">Current Banner</span>
-                </div>
-                <%= link_to "Remove", remove_hero_banner_path, method: :delete, class: "text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300", data: { turbo_confirm: "Are you sure you want to remove the current banner?" } %>
-              </div>
-            <% end %>
-          <% end %>
-        <% else %>
-          <div class="bg-yellow-50 dark:bg-yellow-900 p-3 rounded-md text-yellow-800 dark:text-yellow-200 text-sm">
-            <p>The Setting model is not available. Please run <code>rails db:migrate</code> to create the settings table.</p>
-          </div>
-        <% end %>
-      </div>
-      
-      <script>
-        document.getElementById('toggleAdminPanel').addEventListener('click', function() {
-          const content = document.getElementById('adminPanelContent');
-          content.classList.toggle('hidden');
-          this.innerHTML = content.classList.contains('hidden') ? 
-            '<%= icon "chevron-down", class: "w-5 h-5" %>' : 
-            '<%= icon "chevron-up", class: "w-5 h-5" %>';
-        });
-      </script>
-    </div>
-  </div>
-<% end %>
-
-  <!-- Hero Section - with user-uploadable banner -->
-  <div class="relative mb-24 overflow-hidden w-full">
-    <div class="hero-slider relative h-[500px] bg-gradient-to-r from-gray-900 to-primary-900 w-full">
-      <!-- Hero Background Image -->
-      <div class="absolute inset-0 bg-cover bg-center" 
-        <% if defined?(@hero_banner) && @hero_banner.present? %>
-          style="background-image: url('<%= url_for(@hero_banner) %>'); opacity: 0.8;"
-        <% elsif defined?(@featured_event) && @featured_event&.event_media&.first.present? %>
-          style="background-image: url('<%= url_for(@featured_event.event_media.first) %>'); opacity: 0.8;"
-        <% elsif File.exist?(Rails.root.join('app/assets/images/default-hero-background.jpg')) %>
-          style="background-image: url('<%= asset_path("default-hero-background.jpg") %>'); opacity: 0.7;"
-        <% else %>
-          style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); opacity: 0.9;"
-        <% end %>
-      ></div>
-      
-      <div class="relative z-10 flex items-center h-full px-8 md:px-12">
-        <div class="max-w-2xl">
-          <div class="flex items-center mb-2">
-            <div class="h-2 w-12 bg-primary-500 rounded-full mr-3"></div>
-            <p class="text-white text-sm font-medium uppercase tracking-wider">Find Your Next Experience</p>
-          </div>
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            Discover<br> Amazing<br> Events
-          </h1>
-          <p class="text-gray-200 mb-8 text-lg max-w-lg">Join thousands of people who've found their perfect event. From workshops to concerts, conferences to meetups - your next adventure awaits.</p>
-          <%= link_to new_event_path, class: "btn btn-primary px-8 py-4 text-lg rounded-lg shadow-lg hover:shadow-xl transition-all" do %>
-            <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
-            Create Event
-          <% end %>
-        </div>
-      </div>
-      
-      <!-- Photo credit -->
-      <div class="absolute bottom-4 right-8 text-white text-xs opacity-70">
-        Photos by Event Photographers
-      </div>
-      
-      <!-- Navigation Arrows -->
-      <button class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black bg-opacity-30 hover:bg-opacity-50 rounded-full flex items-center justify-center text-white transition">
-        <%= icon "chevron-left", class: "w-6 h-6" %>
-      </button>
-      <button class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black bg-opacity-30 hover:bg-opacity-50 rounded-full flex items-center justify-center text-white transition">
-        <%= icon "chevron-right", class: "w-6 h-6" %>
-      </button>
-    </div>
-    
-    <!-- Search and Filter Bar - inspired by the mockup -->
-    <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-11/12 max-w-5xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 z-10">
-      <%= form_with url: events_path, method: :get do |f| %>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <!-- Looking for -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Looking for</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <%= icon "search", class: "h-5 w-5 text-gray-400" %>
-            </div>
-            <%= f.text_field :query, class: "search-field block w-full h-12 pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500", placeholder: "Workshops, concerts, etc." %>
-          </div>
-        </div>
-        
-        <!-- Where -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Where</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <%= icon "location-marker", class: "h-5 w-5 text-gray-400" %>
-            </div>
-            <%= f.select :location, ["Any location", "New York", "Los Angeles", "Chicago", "San Francisco"], {}, { class: "search-field block w-full h-12 pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 appearance-none" } %>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <%= icon "chevron-down", class: "h-5 w-5 text-gray-400" %>
-            </div>
-          </div>
-        </div>
-        
-        <!-- When -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">When</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <%= icon "calendar", class: "h-5 w-5 text-gray-400" %>
-            </div>
-            <%= f.select :date, ["Any date", "Today", "Tomorrow", "This Weekend", "This Week", "This Month"], {}, { class: "search-field block w-full h-12 pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-primary-500 focus:border-primary-500 appearance-none" } %>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <%= icon "chevron-down", class: "h-5 w-5 text-gray-400" %>
-            </div>
-          </div>
-        </div>
-        </div>
-      
-        <!-- Search Button -->
-        <div class="mt-6 flex justify-center sm:justify-end">
-          <button type="submit" class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all flex items-center">
-            <%= icon "search", class: "h-5 w-5 mr-2" %>
-            Find Events
-          </button>
-        </div>
-      <% end %>
-    </div>
-  </div>
-  
-  <!-- Upcoming Events Section -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-36 mb-12">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-0">Upcoming Events</h2>
-      
-      <div class="flex space-x-3">
-        <div class="filter-dropdown relative" data-controller="dropdown">
-          <button data-action="dropdown#toggle" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center">
-            <span>Weekdays</span>
-            <%= icon "chevron-down", class: "h-4 w-4 ml-2" %>
-          </button>
-          <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48 mt-1">
-            <a href="#" class="dropdown-item">All Days</a>
-            <a href="#" class="dropdown-item">Weekdays</a>
-            <a href="#" class="dropdown-item">Weekends</a>
-          </div>
-        </div>
-        
-        <div class="filter-dropdown relative" data-controller="dropdown">
-          <button data-action="dropdown#toggle" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center">
-            <span>Event Type</span>
-            <%= icon "chevron-down", class: "h-4 w-4 ml-2" %>
-          </button>
-          <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48 mt-1">
-            <a href="#" class="dropdown-item">All Types</a>
-            <a href="#" class="dropdown-item">Workshops</a>
-            <a href="#" class="dropdown-item">Conferences</a>
-            <a href="#" class="dropdown-item">Meetups</a>
-            <a href="#" class="dropdown-item">Concerts</a>
-          </div>
-        </div>
-        
-        <div class="filter-dropdown relative" data-controller="dropdown">
-          <button data-action="dropdown#toggle" class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg flex items-center">
-            <span>Any Category</span>
-            <%= icon "chevron-down", class: "h-4 w-4 ml-2" %>
-          </button>
-          <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48 mt-1">
-            <a href="#" class="dropdown-item">All Categories</a>
-            <!-- Loop through categories here -->
-          </div>
-        </div>
+      <div class="p-4">
+        <%= render 'filters' %>
       </div>
     </div>
-  
-    <!-- Events Grid - inspired by the mockup -->
-    <div id="events" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% if @events.any? %>
-        <% @events.each do |event| %>
-          <%= render partial: 'event_card', locals: { event: event } %>
-        <% end %>
-      <% else %>
-        <div class="col-span-3 bg-white dark:bg-gray-800 rounded-xl p-8 text-center shadow-md">
-          <div class="flex flex-col items-center justify-center">
-            <%= icon "calendar-x", class: "w-16 h-16 mb-4 text-gray-300 dark:text-gray-600" %>
-            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No events found</h3>
-            <p class="text-gray-500 dark:text-gray-400 mb-6">Start by creating your first event</p>
-            <%= link_to new_event_path, class: "btn btn-primary" do %>
-              <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
-              Create Event
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-    
-    <!-- Pagination -->
-    <% if @events.any? %>
-      <div class="mt-10 flex justify-center">
-        <nav class="flex items-center space-x-2">
-          <a href="#" class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
-            <%= icon "chevron-left", class: "h-5 w-5" %>
-          </a>
-          <a href="#" class="px-3 py-1 rounded-md bg-primary-600 text-white">1</a>
-          <a href="#" class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">2</a>
-          <a href="#" class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">3</a>
-          <span class="px-2 text-gray-500">...</span>
-          <a href="#" class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">12</a>
-          <a href="#" class="px-3 py-1 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600">
-            <%= icon "chevron-right", class: "h-5 w-5" %>
-          </a>
-        </nav>
-      </div>
-    <% end %>
   </div>
 </div>
+
+<!-- Theme Toggle JavaScript - Enhanced for better compatibility -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check for saved theme preference or respect OS setting
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      document.getElementById('theme-toggle-light-icon')?.classList.remove('hidden');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.getElementById('theme-toggle-dark-icon')?.classList.remove('hidden');
+    }
+    
+    // Toggle theme button
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    
+    if (themeToggleBtn && themeToggleDarkIcon && themeToggleLightIcon) {
+      themeToggleBtn.addEventListener('click', function() {
+        // Toggle icons
+        themeToggleDarkIcon.classList.toggle('hidden');
+        themeToggleLightIcon.classList.toggle('hidden');
+        
+        // Toggle dark class on html element
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('color-theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('color-theme', 'dark');
+        }
+      });
+    }
+  });
+</script>

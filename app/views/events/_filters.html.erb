@@ -1,0 +1,251 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl p-5 mb-6 shadow-sm border border-gray-100 dark:border-gray-700">
+  <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+    <svg class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+    </svg>
+    My Events
+  </h3>
+  
+  <% if current_user %>
+    <nav class="space-y-1">
+      <a href="<%= events_path %>" class="flex items-center justify-between p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <%= !params[:filter].present? ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : '' %>">
+        <span class="flex items-center">
+          <svg class="h-5 w-5 mr-3 <%= !params[:filter].present? ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+          </svg>
+          All Events
+        </span>
+        <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+          <%= Event.upcoming.count %>
+        </span>
+      </a>
+      
+      <a href="<%= events_path(filter: 'favorites') %>" class="flex items-center justify-between p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <%= params[:filter] == 'favorites' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : '' %>">
+        <span class="flex items-center">
+          <svg class="h-5 w-5 mr-3 <%= params[:filter] == 'favorites' ? 'text-red-500 dark:text-red-400' : 'text-gray-500 dark:text-gray-400' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+          My Favorites
+        </span>
+        <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+          <%= current_user.favorites.count rescue 0 %>
+        </span>
+      </a>
+      
+      <a href="<%= events_path(filter: 'attending') %>" class="flex items-center justify-between p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <%= params[:filter] == 'attending' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : '' %>">
+        <span class="flex items-center">
+          <svg class="h-5 w-5 mr-3 <%= params[:filter] == 'attending' ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          I'm Attending
+        </span>
+        <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+          <%= current_user.attendances.count rescue 0 %>
+        </span>
+      </a>
+      
+      <a href="<%= events_path(filter: 'created') %>" class="flex items-center justify-between p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors <%= params[:filter] == 'created' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : '' %>">
+        <span class="flex items-center">
+          <svg class="h-5 w-5 mr-3 <%= params[:filter] == 'created' ? 'text-purple-500 dark:text-purple-400' : 'text-gray-500 dark:text-gray-400' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+          </svg>
+          My Events
+        </span>
+        <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+          <%= current_user.events.count rescue 0 %>
+        </span>
+      </a>
+    </nav>
+  <% else %>
+    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-4">
+      <p class="text-gray-700 dark:text-gray-300 text-sm mb-4">Sign in to track your favorite events and see events you're attending</p>
+      <a href="/users/sign_in" class="inline-block w-full px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition-colors font-medium">Sign In</a>
+    </div>
+  <% end %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl p-5 mb-6 shadow-sm border border-gray-100 dark:border-gray-700">
+  <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+    <svg class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+    </svg>
+    Date
+  </h3>
+  
+  <nav class="space-y-1">
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range].blank? ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range].blank? ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+        Any Date
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "today")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range] == 'today' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range] == 'today' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        Today
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "tomorrow")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range] == 'tomorrow' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range] == 'tomorrow' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Tomorrow
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "weekend")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range] == 'weekend' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range] == 'weekend' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z"></path>
+        </svg>
+        This weekend
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "week")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range] == 'week' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range] == 'week' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        This week
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :free_only, :sort, :filter).merge(date_range: "month")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:date_range] == 'month' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:date_range] == 'month' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+        This month
+      </span>
+    <% end %>
+  </nav>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl p-5 mb-6 shadow-sm border border-gray-100 dark:border-gray-700">
+  <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+    <svg class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    Price
+  </h3>
+  
+  <nav class="space-y-1">
+    <%= link_to events_path(params.permit(:query, :category_id, :date_range, :sort, :filter).merge(free_only: "0")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:free_only] != '1' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:free_only] != '1' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+        All Events
+      </span>
+    <% end %>
+    
+    <%= link_to events_path(params.permit(:query, :category_id, :date_range, :sort, :filter).merge(free_only: "1")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:free_only] == '1' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:free_only] == '1' ? 'text-green-500 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Free Only
+      </span>
+    <% end %>
+  </nav>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl p-5 mb-6 shadow-sm border border-gray-100 dark:border-gray-700">
+  <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
+    <svg class="w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+    </svg>
+    Categories
+  </h3>
+  
+  <div class="relative">
+    <input type="text" placeholder="Search categories..." class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg mb-3 text-sm text-gray-700 dark:text-gray-300">
+  </div>
+  
+  <nav class="space-y-1 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
+    <%= link_to events_path(params.permit(:query, :date_range, :free_only, :sort, :filter).merge(category_id: "")), 
+        class: "flex items-center justify-between p-3 rounded-lg #{params[:category_id].blank? ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+        data: { turbo_frame: "events_results" } do %>
+      <span class="flex items-center">
+        <svg class="h-5 w-5 mr-3 #{params[:category_id].blank? ? 'text-blue-500 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+        All Categories
+      </span>
+    <% end %>
+    
+    <% @categories.each do |category| %>
+      <%= link_to events_path(params.permit(:query, :date_range, :free_only, :sort, :filter).merge(category_id: category.id)), 
+          class: "flex items-center justify-between p-3 rounded-lg #{params[:category_id].to_i == category.id ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'} transition-colors",
+          data: { turbo_frame: "events_results" } do %>
+        <div class="flex items-center truncate">
+          <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mr-3" style="background-color: <%= category.color_code || '#3B82F6' %>20;">
+            <svg class="h-4 w-4" style="color: <%= category.color_code || '#3B82F6' %>;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= category.try(:icon) || 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01' %>"></path>
+            </svg>
+          </div>
+          <span class="truncate"><%= category.name %></span>
+        </div>
+        <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 flex-shrink-0 ml-2">
+          <%= Event.by_category(category.id).upcoming.count %>
+        </span>
+      <% end %>
+    <% end %>
+  </nav>
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+</style>

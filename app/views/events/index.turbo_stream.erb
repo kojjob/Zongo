@@ -1,0 +1,26 @@
+<%= turbo_stream.replace "events_results" do %>
+  <div id="events_results">
+    <section class="mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="flex items-center text-xl font-semibold text-gray-900 dark:text-white">
+          <svg class="h-6 w-6 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <%= params[:category_id].present? ? @categories.find(params[:category_id]).name : "Search Results" %>
+          <% if params[:date_range].present? && params[:date_range] != "upcoming" %>
+            <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+              (<%= params[:date_range].humanize %>)
+            </span>
+          <% end %>
+          <% if params[:query].present? %>
+            <span class="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">
+              for "<%= params[:query] %>"
+            </span>
+          <% end %>
+        </h2>
+      </div>
+      
+      <%= render 'event_list', events: @upcoming_events, pagy: @pagy %>
+    </section>
+  </div>
+<% end %>

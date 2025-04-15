@@ -11,6 +11,9 @@ class CreateEventComments < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :event_comments, :parent_comment_id, if_not_exists: true
+    # We'll check if the index exists before adding it
+    unless index_exists?(:event_comments, :parent_comment_id)
+      add_index :event_comments, :parent_comment_id
+    end
   end
 end

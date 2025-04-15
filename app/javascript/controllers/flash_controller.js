@@ -1,34 +1,33 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["message"]
-  
+  static values = {
+    delay: { type: Number, default: 3000 }
+  }
+
   connect() {
-    // Auto-dismiss flash messages after a delay
-    this.messageTargets.forEach(message => {
-      setTimeout(() => {
-        this.dismissMessage(message)
-      }, 5000) // 5 seconds
-    })
+    // Set a timeout to auto-dismiss the flash message
+    if (this.delayValue > 0) {
+      this.dismissTimer = setTimeout(() => {
+        this.dismiss()
+      }, this.delayValue)
+    }
   }
-  
-  closeMessage(event) {
-    const message = event.target.closest("[data-flash-target='message']")
-    this.dismissMessage(message)
+
+  disconnect() {
+    // Clean up timer if element is removed from DOM
+    if (this.dismissTimer) {
+      clearTimeout(this.dismissTimer)
+    }
   }
-  
-  dismissMessage(message) {
-    // Only dismiss if the message still exists
-    if (!message || !message.parentElement) return
-    
-    // Add exit animation class
-    message.classList.add('opacity-0', '-translate-y-2')
-    
-    // Remove after animation completes
+
+  dismiss() {
+    // Animate the dismissal
+    this.element.classList.add("opacity-0", "transition-opacity", "duration-300")
+
+    // Remove from DOM after animation
     setTimeout(() => {
-      if (message.parentElement) {
-        message.remove()
-      }
+      this.element.remove()
     }, 300)
   }
 }
