@@ -1,73 +1,44 @@
 class Attendance < ApplicationRecord
-  belongs_to :user
   belongs_to :event
-  has_many :event_tickets, dependent: :restrict_with_error
+  belongs_to :user
 
-  # Statuses
-  enum :status, {
-    registered: 0,
-    confirmed: 1,
-    checked_in: 2,
-    cancelled: 3,
-    no_show: 4
-  }, default: :registered, scope: :event
+  validates :user_id, uniqueness: { scope: :event_id, message: "is already attending this event" }
 
-  # Validations
-  validates :user_id, uniqueness: { scope: :event_id, message: "is already registered for this event" }
-
-  # Callbacks
-  before_save :set_checked_in_time, if: -> { status_changed? && checked_in? }
-  before_save :set_cancelled_time, if: -> { status_changed? && cancelled? }
+  before_create :generate_ticket_code
 
   # Scopes
-  scope :active, -> { where.not(status: [ :cancelled, :no_show ]) }
-  scope :confirmed_or_checked_in, -> { where(status: [ :confirmed, :checked_in ]) }
+  scope :confirmed, -> { where(status: "confirmed") }
+  scope :checked_in, -> { where.not(checked_in_at: nil) }
+  scope :pending, -> { where(status: "pending") }
+  scope :cancelled, -> { where(status: "cancelled") }
 
-  # Methods
-  def active?
-    !cancelled? && !no_show?
+  def confirmed?
+    status == "confirmed"
   end
 
-  def ticket_count
-    event_tickets.count
+  def pending?
+    status == "pending"
   end
 
-  def total_amount
-    event_tickets.sum(:amount)
+  def cancelled?
+    status == "cancelled"
+  end
+
+  def checked_in?
+    checked_in_at.present?
   end
 
   def check_in!
-    update(status: :checked_in)
+    update(checked_in_at: Time.current)
   end
 
   def cancel!
-    update(status: :cancelled)
-  end
-
-  def friendly_status
-    case status
-    when "registered"
-      "Registered"
-    when "confirmed"
-      "Confirmed"
-    when "checked_in"
-      "Checked In"
-    when "cancelled"
-      "Cancelled"
-    when "no_show"
-      "No Show"
-    else
-      status.to_s.humanize
-    end
+    update(status: "cancelled")
   end
 
   private
 
-  def set_checked_in_time
-    self.checked_in_at = Time.current if checked_in_at.nil?
-  end
-
-  def set_cancelled_time
-    self.cancelled_at = Time.current if cancelled_at.nil?
+  def generate_ticket_code
+    self.ticket_code ||= SecureRandom.alphanumeric(8).upcase
   end
 end

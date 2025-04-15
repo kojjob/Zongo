@@ -16,8 +16,24 @@
     <%= venue.city %>
   </div>
   <div>
-    <strong class="block font-medium mb-1">Region:</strong>
-    <%= venue.region %>
+    <strong class="block font-medium mb-1">Phone:</strong>
+    <% if venue.phone.present? %>
+      <a href="tel:<%= venue.phone %>" class="text-blue-600 hover:underline"><%= venue.formatted_phone %></a>
+    <% else %>
+      <span class="text-gray-500">Not provided</span>
+    <% end %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Website:</strong>
+    <% if venue.website.present? %>
+      <a href="<%= venue.website %>" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline"><%= venue.website %></a>
+    <% else %>
+      <span class="text-gray-500">Not provided</span>
+    <% end %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">State:</strong>
+    <%= venue.state || venue.region %>
   </div>
   <div>
     <strong class="block font-medium mb-1">Postal code:</strong>

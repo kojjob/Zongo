@@ -1,0 +1,83 @@
+<!-- Categories Index Page with modern design matching the app style -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white relative overflow-hidden">
+    <!-- Pattern background -->
+    <div class="absolute inset-0 opacity-10">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="lg:flex lg:items-center lg:justify-between">
+        <div class="lg:max-w-2xl">
+          <h2 class="text-3xl font-extrabold mb-2 sm:text-4xl lg:text-5xl tracking-tight">
+            Event Categories
+          </h2>
+          <p class="text-xl mb-6 text-gray-100 max-w-2xl">Browse events by category to find exactly what you're looking for. From music and sports to food and technology, we've got you covered.</p>
+          <div class="flex gap-4 flex-wrap">
+            <a href="/events/new" class="px-6 py-3 bg-white hover:bg-gray-50 text-blue-700 hover:text-blue-800 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+              Create an Event
+            </a>
+            <a href="/events" class="px-6 py-3 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white rounded-xl font-medium border border-white/30 hover:border-white/50 transition-all transform hover:-translate-y-1">
+              View All Events
+            </a>
+          </div>
+        </div>
+        <div class="mt-10 lg:mt-0 lg:max-w-md">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= @categories.count %></span>
+              <span class="text-sm opacity-80">Categories</span>
+            </div>
+            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
+              <span class="text-3xl font-bold mb-1"><%= Event.count rescue "300+" %></span>
+              <span class="text-sm opacity-80">Total Events</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <!-- Tab navigation with modern styling -->
+    <div class="border-b border-gray-200 dark:border-gray-800 mb-8">
+      <div class="flex flex-wrap -mb-px">
+        <a href="/groups" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 font-medium">
+          Groups
+        </a>
+        <a href="/events" class="px-6 py-3 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 font-medium">
+          Events
+        </a>
+        <a href="/categories" class="px-6 py-3 text-blue-600 dark:text-blue-400 font-medium border-b-2 border-blue-600 dark:border-blue-500">
+          Categories
+        </a>
+      </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <% @categories.each do |category| %>
+        <%= render partial: 'category_card', locals: { category: category } %>
+      <% end %>
+    </div>
+
+    <!-- Admin Actions (if user is admin) -->
+    <% if defined?(current_user) && current_user && current_user.respond_to?(:admin?) && current_user.admin? %>
+      <div class="mt-12 bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white">Admin Actions</h3>
+        <div class="flex flex-wrap gap-4">
+          <%= link_to "Create New Category", new_category_path, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

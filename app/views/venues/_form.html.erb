@@ -37,6 +37,24 @@
   </div>
 
   <div class="my-5">
+    <%= form.label :state %>
+    <%= form.text_field :state, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": venue.errors[:state].none?, "border-red-400 focus:outline-red-600": venue.errors[:state].any?}] %>
+    <p class="text-gray-500 text-xs mt-1">If region is not applicable, enter state instead.</p>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :phone %>
+    <%= form.telephone_field :phone, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": venue.errors[:phone].none?, "border-red-400 focus:outline-red-600": venue.errors[:phone].any?}] %>
+    <p class="text-gray-500 text-xs mt-1">Format: +233 XX XXX XXXX or 0XX XXX XXXX</p>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :website %>
+    <%= form.url_field :website, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": venue.errors[:website].none?, "border-red-400 focus:outline-red-600": venue.errors[:website].any?}] %>
+    <p class="text-gray-500 text-xs mt-1">Enter full URL including https://</p>
+  </div>
+
+  <div class="my-5">
     <%= form.label :postal_code %>
     <%= form.text_field :postal_code, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": venue.errors[:postal_code].none?, "border-red-400 focus:outline-red-600": venue.errors[:postal_code].any?}] %>
   </div>

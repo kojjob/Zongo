@@ -1,0 +1,38 @@
+<div class="col-span-full py-16 px-6 text-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+  <div class="max-w-md mx-auto">
+    <div class="mb-6 inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700">
+      <% if local_assigns[:icon] == 'filter' %>
+        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+        </svg>
+      <% elsif local_assigns[:icon] == 'calendar' %>
+        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+      <% else %>
+        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1M19 20a2 2 0 002-2V8a2 2 0 00-2-2h-5.586a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 0010.586 3H8a2 2 0 00-2 2v1"></path>
+        </svg>
+      <% end %>
+    </div>
+    
+    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+      <%= local_assigns[:title] || "No events found" %>
+    </h3>
+    
+    <p class="text-gray-600 dark:text-gray-400 text-lg mb-6">
+      <%= local_assigns[:message] || "We couldn't find any events matching your search criteria. Try adjusting your filters or check back later." %>
+    </p>
+    
+    <% if local_assigns[:action_path] && local_assigns[:action_text] %>
+      <%= link_to local_assigns[:action_text], local_assigns[:action_path], class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-colors" %>
+    <% else %>
+      <%= link_to "Clear Filters", events_path, class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-colors" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Clear Filters
+      <% end %>
+    <% end %>
+  </div>
+</div>

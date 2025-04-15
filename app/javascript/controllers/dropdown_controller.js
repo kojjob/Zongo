@@ -1,97 +1,67 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="dropdown"
-export default class extends Controller {
+export default class DropdownController extends Controller {
   static targets = ["menu"]
   
   connect() {
-    console.log("Dropdown controller connected")
-    // Close dropdown when clicking outside
-    document.addEventListener('click', this.closeIfClickedOutside.bind(this))
-    
-    // Close dropdown when pressing escape
-    document.addEventListener('keydown', this.handleKeyDown.bind(this))
-    
-    // Close on navigation
-    document.addEventListener('turbo:visit', this.closeAllMenus.bind(this))
-    
-    // Initial state ensuring the menu is hidden
+    console.log("Dropdown controller connected", this.element);
+    // Make sure dropdowns start hidden
     if (this.hasMenuTarget) {
-      this.menuTarget.classList.add('hidden')
+      this.hideMenu();
     }
   }
   
   disconnect() {
-    document.removeEventListener('click', this.closeIfClickedOutside.bind(this))
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this))
-    document.removeEventListener('turbo:visit', this.closeAllMenus.bind(this))
+    // Clean up any event listeners if needed
   }
   
   toggle(event) {
-    event.stopPropagation()
+    // Prevent default behavior
+    event.preventDefault();
+    console.log("Dropdown toggle called", this.element);
     
     if (!this.hasMenuTarget) {
-      console.warn('No menu target found for dropdown controller')
-      return
+      console.error("Menu target not found for", this.element);
+      return;
     }
     
-    // Close all other dropdowns
-    this.closeOtherDropdowns()
+    const isHidden = this.menuTarget.classList.contains('hidden');
     
-    // Toggle this dropdown
-    this.menuTarget.classList.toggle('hidden')
-    
-    // Set focus to the first focusable element when opened
-    if (!this.menuTarget.classList.contains('hidden')) {
-      // Add a slight delay to ensure the menu is visible first
-      setTimeout(() => {
-        const focusableElements = this.menuTarget.querySelectorAll(
-          'a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
-        )
-        if (focusableElements.length > 0) {
-          focusableElements[0].focus()
-        }
-      }, 50)
+    if (isHidden) {
+      this.showMenu();
+    } else {
+      this.hideMenu();
     }
   }
   
-  // Close dropdown when clicking outside
-  closeIfClickedOutside(event) {
-    if (!this.hasMenuTarget) return
-    
-    if (!this.element.contains(event.target) && !this.menuTarget.classList.contains('hidden')) {
-      this.menuTarget.classList.add('hidden')
+  hide(event) {
+    // Hide dropdown when clicking outside
+    if (this.hasMenuTarget && !this.element.contains(event.target)) {
+      this.hideMenu();
     }
   }
   
-  // Close dropdown on escape key
-  handleKeyDown(event) {
-    if (!this.hasMenuTarget) return
-    
-    if (event.key === 'Escape' && !this.menuTarget.classList.contains('hidden')) {
-      this.menuTarget.classList.add('hidden')
-      // Restore focus to the toggle button
-      this.element.querySelector('[data-action*="dropdown#toggle"]')?.focus()
-    }
+  // Helper to show menu with animation
+  showMenu() {
+    this.menuTarget.classList.remove('hidden');
+    // Use setTimeout to ensure the transition happens after the display change
+    setTimeout(() => {
+      this.menuTarget.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+      this.menuTarget.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+    }, 10);
   }
   
-  // Close all dropdowns except this one
-  closeOtherDropdowns() {
-    const allDropdowns = document.querySelectorAll('[data-controller="dropdown"]')
-    allDropdowns.forEach(dropdown => {
-      if (dropdown !== this.element) {
-        const menuElement = dropdown.querySelector('[data-dropdown-target="menu"]')
-        if (menuElement && !menuElement.classList.contains('hidden')) {
-          menuElement.classList.add('hidden')
-        }
-      }
-    })
-  }
-  
-  // Close all menus
-  closeAllMenus() {
+  // Helper to hide menu with animation
+  hideMenu() {
     if (this.hasMenuTarget) {
-      this.menuTarget.classList.add('hidden')
+      this.menuTarget.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      this.menuTarget.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+      
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        this.menuTarget.classList.add('hidden');
+      }, 150);
     }
   }
 }

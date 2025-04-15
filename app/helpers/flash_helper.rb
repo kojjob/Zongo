@@ -26,7 +26,7 @@ module FlashHelper
     icon_name = FLASH_ICONS[flash_type] || "info"
 
     content_tag :div, class: "mb-4 p-4 rounded-md border #{css_class} animate-fade-in",
-                data: { controller: "auto-dismiss", "auto-dismiss-target": "flash", "auto-dismiss-timeout": 5000 } do
+                data: { controller: "auto-dismiss", "auto-dismiss-target": "flash", "auto-dismiss-timeout": 3000 } do
       content_tag :div, class: "flex items-start" do
         concat(
           content_tag(:div, class: "flex-shrink-0") do

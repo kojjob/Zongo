@@ -1,0 +1,548 @@
+<!-- Event Analytics Dashboard -->
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+  <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Analytics for <%= @event.title %></h1>
+          <p class="text-gray-600 dark:text-gray-400 mt-1">
+            Event data and insights
+          </p>
+        </div>
+        <div>
+          <%= link_to event_path(@event), class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" do %>
+            <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to event
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key metrics summary -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6">
+      <!-- Total Views -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-blue-500 dark:bg-blue-600 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  Total Views
+                </dt>
+                <dd>
+                  <div class="text-lg font-bold text-gray-900 dark:text-white">
+                    <%= number_with_delimiter(@total_views) %>
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div class="text-sm">
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-gray-900 dark:text-white">Today: <%= @views_today %></span>
+              <% if @day_over_day_change > 0 %>
+                <span class="text-green-600 dark:text-green-400 font-medium flex items-center">
+                  <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                  </svg>
+                  <%= @day_over_day_change %>%
+                </span>
+              <% elsif @day_over_day_change < 0 %>
+                <span class="text-red-600 dark:text-red-400 font-medium flex items-center">
+                  <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                  <%= @day_over_day_change.abs %>%
+                </span>
+              <% else %>
+                <span class="text-gray-600 dark:text-gray-400 font-medium">No change</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unique Visitors -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-purple-500 dark:bg-purple-600 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  Unique Visitors
+                </dt>
+                <dd>
+                  <div class="text-lg font-bold text-gray-900 dark:text-white">
+                    <%= number_with_delimiter(@unique_viewers) %>
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div class="text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-900 dark:text-white font-medium">Return Rate</span>
+              <span class="font-medium">
+                <% if @total_views > 0 %>
+                  <%= number_to_percentage(100 - (@unique_viewers.to_f / @total_views * 100), precision: 1) %>
+                <% else %>
+                  0%
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversion Rate -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-green-500 dark:bg-green-600 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  Conversion Rate
+                </dt>
+                <dd>
+                  <div class="text-lg font-bold text-gray-900 dark:text-white">
+                    <%= number_to_percentage(@conversion_rate, precision: 1) %>
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div class="text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-900 dark:text-white font-medium">Views to Attendees</span>
+              <span class="font-medium"><%= @attendances_count %> attendees</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Capacity -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0 bg-yellow-500 dark:bg-yellow-600 rounded-md p-3">
+              <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  Capacity Filled
+                </dt>
+                <dd>
+                  <div class="text-lg font-bold text-gray-900 dark:text-white">
+                    <%= number_to_percentage(@capacity_percentage, precision: 1) %>
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div class="text-sm">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-900 dark:text-white font-medium">
+                <%= pluralize(@event.attendances.count, 'attendee') %>
+              </span>
+              <span class="font-medium">
+                <% if @event.capacity.present? %>
+                  of <%= @event.capacity %> capacity
+                <% else %>
+                  No capacity limit
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-2 mb-6">
+      <!-- Views Over Time Chart -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Views Over Time</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Last 30 days of event views</p>
+          <div class="h-80" id="views-chart"></div>
+        </div>
+      </div>
+
+      <!-- Attendance Growth Chart -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Attendance Growth</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Cumulative attendee registrations</p>
+          <div class="h-80" id="attendance-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 lg:grid-cols-3 mb-6">
+      <!-- Popular Times -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Popular Viewing Hours</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">When visitors view your event</p>
+          <div class="h-64" id="hours-chart"></div>
+        </div>
+      </div>
+
+      <!-- Device Breakdown -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Device Breakdown</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Devices used to view your event</p>
+          <div class="h-64" id="devices-chart"></div>
+        </div>
+      </div>
+
+      <!-- Traffic Sources -->
+      <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700">
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Traffic Sources</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Where your visitors come from</p>
+          <div class="h-64" id="sources-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular Events -->
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
+      <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Your Most Popular Events</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Based on views and attendance</p>
+      </div>
+      <div class="p-5">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead>
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Event
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Date
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Views
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Attendees
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Conversion
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+              <% current_user.organized_events.order(views_count: :desc).limit(5).each do |event| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10 rounded-md bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                        <% if event.event_media.present? %>
+                          <img src="<%= event.event_media.first.url %>" alt="Event image" class="h-full w-full object-cover">
+                        <% end %>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                          <%= link_to event.title, event_path(event), class: "hover:text-blue-600 dark:hover:text-blue-400" %>
+                        </div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                          <%= event.venue&.name %>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 dark:text-white"><%= event.start_time.strftime("%b %d, %Y") %></div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400"><%= event.start_time.strftime("%I:%M %p") %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <%= number_with_delimiter(event.views_count) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <%= number_with_delimiter(event.attendances.count) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% conversion = event.views_count > 0 ? (event.attendances.count.to_f / event.views_count * 100).round(1) : 0 %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <%= conversion >= 10 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                        (conversion >= 5 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300') %>">
+                      <%= number_to_percentage(conversion, precision: 1) %>
+                    </span>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Charts initialization -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = document.documentElement.classList.contains('dark');
+    const textColor = isDarkMode ? '#9ca3af' : '#4b5563';
+    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+    
+    // Common chart options
+    Chart.defaults.color = textColor;
+    Chart.defaults.borderColor = gridColor;
+    
+    // Views chart
+    const viewsCanvas = document.getElementById('views-chart');
+    if (viewsCanvas) {
+      const viewsData = <%= raw @views_by_date.to_json %>;
+      const dates = Object.keys(viewsData).sort();
+      const viewCounts = dates.map(date => viewsData[date] || 0);
+      
+      new Chart(viewsCanvas, {
+        type: 'line',
+        data: {
+          labels: dates,
+          datasets: [{
+            label: 'Page Views',
+            data: viewCounts,
+            borderColor: '#3b82f6',
+            backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.1)',
+            tension: 0.3,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grace: '5%'
+            }
+          }
+        }
+      });
+    }
+    
+    // Attendance chart
+    const attendanceCanvas = document.getElementById('attendance-chart');
+    if (attendanceCanvas) {
+      const attendanceData = <%= raw @attendance_by_date.to_json %>;
+      const attendanceDates = Object.keys(attendanceData).sort();
+      
+      // Calculate cumulative attendance
+      let cumulative = 0;
+      const cumulativeData = attendanceDates.map(date => {
+        cumulative += attendanceData[date] || 0;
+        return cumulative;
+      });
+      
+      new Chart(attendanceCanvas, {
+        type: 'line',
+        data: {
+          labels: attendanceDates,
+          datasets: [{
+            label: 'Total Attendees',
+            data: cumulativeData,
+            borderColor: '#10b981',
+            backgroundColor: isDarkMode ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grace: '5%'
+            }
+          }
+        }
+      });
+    }
+    
+    // Popular hours chart
+    const hoursCanvas = document.getElementById('hours-chart');
+    if (hoursCanvas) {
+      const hoursData = <%= raw @popular_hours.to_json %>;
+      const hours = Array.from({ length: 24 }, (_, i) => i);
+      const hourCounts = hours.map(hour => hoursData[hour] || 0);
+      
+      new Chart(hoursCanvas, {
+        type: 'bar',
+        data: {
+          labels: hours.map(hour => {
+            const ampm = hour < 12 ? 'AM' : 'PM';
+            const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+            return `${displayHour}${ampm}`;
+          }),
+          datasets: [{
+            label: 'Views',
+            data: hourCounts,
+            backgroundColor: isDarkMode ? 'rgba(124, 58, 237, 0.7)' : 'rgba(124, 58, 237, 0.5)',
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+    
+    // Devices chart
+    const devicesCanvas = document.getElementById('devices-chart');
+    if (devicesCanvas) {
+      const deviceData = <%= raw @device_breakdown.to_json %>;
+      const deviceLabels = Object.keys(deviceData);
+      const deviceCounts = deviceLabels.map(label => deviceData[label]);
+      
+      new Chart(devicesCanvas, {
+        type: 'doughnut',
+        data: {
+          labels: deviceLabels.map(label => label.charAt(0).toUpperCase() + label.slice(1)),
+          datasets: [{
+            data: deviceCounts,
+            backgroundColor: [
+              '#3b82f6',
+              '#10b981',
+              '#f59e0b',
+              '#6366f1'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          cutout: '60%'
+        }
+      });
+    }
+    
+    // Sources chart
+    const sourcesCanvas = document.getElementById('sources-chart');
+    if (sourcesCanvas) {
+      const sourceData = <%= raw @traffic_sources.to_json %>;
+      const sourceLabels = Object.keys(sourceData);
+      const sourceCounts = sourceLabels.map(label => sourceData[label]);
+      
+      new Chart(sourcesCanvas, {
+        type: 'pie',
+        data: {
+          labels: sourceLabels.map(label => label.charAt(0).toUpperCase() + label.slice(1)),
+          datasets: [{
+            data: sourceCounts,
+            backgroundColor: [
+              '#ef4444',
+              '#3b82f6',
+              '#10b981',
+              '#f59e0b',
+              '#6366f1',
+              '#8b5cf6',
+              '#ec4899'
+            ],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12
+              }
+            }
+          }
+        }
+      });
+    }
+  });
+</script>

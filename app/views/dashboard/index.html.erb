@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
     <div>
       <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Welcome back, <%= current_user.username %></p>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Welcome back, <%= current_user.respond_to?(:username) ? current_user.username : (current_user[:username] || current_user[:name] || 'User') %></p>
     </div>
     <div class="mt-6 md:mt-0 flex flex-col sm:flex-row gap-3 sm:gap-4">
       <div data-controller="dropdown" class="dropdown">
@@ -240,9 +240,10 @@
                   </div>
                 </div>
                 <div class="flex items-center">
-                  <% amount_class = transaction.direction_for_user(current_user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
+                  <% user_id = current_user.respond_to?(:id) ? current_user.id : current_user[:id] %>
+                  <% amount_class = transaction.direction_for_user(user_id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>
                   <div class="text-sm font-medium <%= amount_class %>">
-                    <%= transaction.signed_amount_for_user(current_user.id) %>
+                    <%= transaction.signed_amount_for_user(user_id) %>
                   </div>
                   <a href="<%= wallet_transaction_path(transaction) %>" class="ml-4 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
                     <%= icon "chevron-right", class: "h-5 w-5" %>

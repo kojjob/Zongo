@@ -2,31 +2,31 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["message"]
-  
+
   connect() {
     // Make the toast template available to the controller
     this.template = document.getElementById('toast-template')
-    
+
     // Register for custom toast events
     document.addEventListener('toast:show', this.showToast.bind(this))
   }
-  
+
   disconnect() {
     document.removeEventListener('toast:show', this.showToast)
   }
-  
+
   showToast(event) {
     const { type, message, duration } = event.detail
-    
+
     // Create toast from template
     const toastNode = this.template.content.cloneNode(true).firstElementChild
-    
+
     // Set toast content
     toastNode.querySelector('.toast-content').textContent = message
-    
+
     // Set toast icon based on type
     const iconContainer = toastNode.querySelector('.toast-icon')
-    
+
     switch (type) {
       case 'success':
         toastNode.classList.add('text-green-500', 'dark:text-green-400')
@@ -54,22 +54,22 @@ export default class extends Controller {
         iconContainer.parentElement.classList.add('bg-blue-100', 'dark:bg-blue-800')
         iconContainer.innerHTML = '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'
     }
-    
+
     // Add to DOM
     this.element.appendChild(toastNode)
-    
+
     // Schedule removal
     setTimeout(() => {
       this.closeToast({ target: toastNode.querySelector('[data-action="click->toast#closeToast"]') })
-    }, duration || 5000)
+    }, duration || 3000)
   }
-  
+
   closeToast(event) {
     const toastElement = event.target.closest('[data-toast-target="message"]')
-    
+
     // Add exit animation
     toastElement.classList.add('opacity-0')
-    
+
     // Remove after animation completes
     setTimeout(() => {
       if (toastElement.parentElement) {

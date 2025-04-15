@@ -42,8 +42,8 @@
         <% if user_signed_in? %>
           <%= link_to "Dashboard", dashboard_path, class: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
         <% else %>
-          <%= link_to "Log In", new_user_session_path, class: "px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
-          <%= link_to "Sign Up", new_user_registration_path, class: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+          <%= link_to "Log In", defined?(new_user_session_path) ? new_user_session_path : "/users/sign_in", class: "px-4 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
+          <%= link_to "Sign Up", defined?(new_user_registration_path) ? new_user_registration_path : "/users/sign_up", class: "px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
         <% end %>
       </div>
 
@@ -96,8 +96,8 @@
           <%= link_to "Dashboard", dashboard_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
         <% else %>
           <div class="flex flex-col space-y-2">
-            <%= link_to "Log In", new_user_session_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
-            <%= link_to "Sign Up", new_user_registration_path, class: "block w-full text-center px-4 py-2 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
+            <%= link_to "Log In", defined?(new_user_session_path) ? new_user_session_path : "/users/sign_in", class: "block w-full text-center px-4 py-2 text-base font-medium text-primary-600 dark:text-primary-400 border border-primary-600 dark:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition" %>
+            <%= link_to "Sign Up", defined?(new_user_registration_path) ? new_user_registration_path : "/users/sign_up", class: "block w-full text-center px-4 py-2 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 rounded-lg shadow transition" %>
           </div>
         <% end %>
       </div>

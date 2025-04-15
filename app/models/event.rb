@@ -1,180 +1,190 @@
 class Event < ApplicationRecord
-  belongs_to :organizer, class_name: "User", optional: true
-  belongs_to :event_category, optional: true
+  # Associations
+  belongs_to :organizer, class_name: "User"
   belongs_to :venue, optional: true
-  belongs_to :parent_event, optional: true, class_name: "Event"
+  belongs_to :category, optional: true
 
-  # Associations with dependent models
-  has_many :ticket_types, dependent: :destroy
-  has_many :event_tickets, dependent: :restrict_with_error
   has_many :attendances, dependent: :destroy
-  has_many :event_favorites, dependent: :destroy
+  has_many :attendees, through: :attendances, source: :user
   has_many :event_comments, dependent: :destroy
   has_many :event_media, dependent: :destroy
-  has_many :child_events, class_name: "Event", foreign_key: "parent_event_id", dependent: :nullify
-
-  # Users who favorited this event
-  has_many :favorited_by_users, through: :event_favorites, source: :user
+  has_many :event_views, dependent: :destroy
+  has_many :event_favorites, dependent: :destroy
+  has_many :favorites, as: :favoritable, dependent: :destroy
 
   # Validations
-  validates :title, presence: true
-  validates :short_description, presence: true
+  validates :title, presence: true, length: { minimum: 5, maximum: 255 }
+  validates :description, presence: true
+  validates :short_description, length: { maximum: 500 }
   validates :start_time, presence: true
   validates :end_time, presence: true
-  validates :capacity, numericality: { greater_than_or_equal_to: 0 }
+  validates :price, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :capacity, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
   validate :end_time_after_start_time
-
-  # Status enum
-  enum :status, {
-    draft: 0,
-    published: 1,
-    cancelled: 2,
-    postponed: 3,
-    completed: 4
-  }
-
-  # Scopes
-  scope :published, -> { where(status: :published) }
-  scope :upcoming, -> { where("start_time > ?", Time.current).published }
-  scope :past, -> { where("end_time < ?", Time.current).published }
-  scope :ongoing, -> { where("start_time <= ? AND end_time >= ?", Time.current, Time.current).published }
-  scope :featured, -> { where(is_featured: true) }
-  scope :public_events, -> { where(is_private: false) }
-  scope :by_category, ->(category_id) { where(event_category_id: category_id) }
-  scope :by_organizer, ->(organizer_id) { where(organizer_id: organizer_id) }
-  scope :by_venue, ->(venue_id) { where(venue_id: venue_id) }
+  validate :start_time_not_in_past, on: :create
+  validates :slug, presence: true, uniqueness: true
 
   # Callbacks
-  before_validation :generate_slug, if: -> { slug.blank? }
-  before_save :update_status_based_on_time, if: -> { published? }
+  before_validation :set_slug, if: -> { slug.blank? }
+  before_validation :ensure_short_description
+  scope :upcoming, -> { where("start_time > ?", Time.current).order(start_time: :asc) }
+  scope :past, -> { where("end_time < ?", Time.current).order(start_time: :desc) }
+  scope :ongoing, -> { where("start_time <= ? AND end_time >= ?", Time.current, Time.current) }
+  scope :this_weekend, -> {
+    where(start_time: (Time.current.end_of_week - 2.days)..Time.current.end_of_week)
+    .order(start_time: :asc)
+  }
+  scope :featured, -> { where(is_featured: true) }
+  scope :by_category, ->(category_id) { category_id.present? ? where(category_id: category_id) : none }
+  scope :free, -> { where("price <= 0 OR price IS NULL") }
+  scope :paid, -> { where("price > 0") }
 
-  # Methods
-
-  # Get all media attached to this event
-  def event_media_items
-    event_media.ordered
+  # Value object for price
+  def ticket_price
+    price.present? ? "₵#{sprintf('%.2f', price)}" : "Free"
   end
 
-  # Get featured images
-  def featured_images
-    event_media.images.featured
+  def free?
+    price.nil? || price <= 0
   end
 
-  # Get the first image for display
-  def primary_image
-    featured_images.first || event_media.images.first
+  # Domain logic
+  def sold_out?
+    capacity.present? && attendances.count >= capacity
   end
 
-  # Check if the event has started
-  def started?
-    start_time <= Time.current
+  def upcoming?
+    start_time > Time.current
   end
 
-  # Check if the event has ended
-  def ended?
+  def ongoing?
+    start_time <= Time.current && end_time >= Time.current
+  end
+
+  def past?
     end_time < Time.current
   end
 
-  # Check if the event is ongoing
-  def ongoing?
-    started? && !ended?
+  def can_attend?(user)
+    return false unless user
+    upcoming? && !sold_out? && !attendees.include?(user)
   end
 
-  # Get the event duration in hours
-  def duration_hours
-    ((end_time - start_time) / 1.hour).round(1)
+  def attending?(user)
+    return false unless user
+    attendances.exists?(user_id: user.id)
   end
 
-  # Check if the event is sold out
-  def sold_out?
-    return false if capacity.nil? || capacity.zero?
-    attendances.confirmed_or_checked_in.count >= capacity
-  end
-
-  # Get the number of available spots
-  def available_spots
-    return nil if capacity.nil?
-    [ capacity - attendances.confirmed_or_checked_in.count, 0 ].max
-  end
-
-  # Get registration percentage
-  def registration_percentage
-    return 0 if capacity.nil? || capacity.zero?
-    [ (attendances.confirmed_or_checked_in.count.to_f / capacity) * 100, 100 ].min.round
-  end
-
-  # Format date and time for display
-  def formatted_date
-    start_time.strftime("%B %d, %Y")
-  end
-
-  def formatted_time_range
-    same_day = start_time.to_date == end_time.to_date
-
-    if same_day
-      "#{start_time.strftime("%I:%M %p")} - #{end_time.strftime("%I:%M %p")}"
-    else
-      "#{start_time.strftime("%b %d, %I:%M %p")} - #{end_time.strftime("%b %d, %I:%M %p")}"
+  def favorited_by?(user)
+    return false unless user
+    
+    # Handle the case where favorites table might not exist yet
+    begin
+      favorites.exists?(user_id: user.id)
+    rescue ActiveRecord::StatementInvalid => e
+      if e.message.include?('relation "favorites" does not exist')
+        # Check if we can find an event_favorite record instead
+        return event_favorites.exists?(user_id: user.id) if defined?(EventFavorite) && respond_to?(:event_favorites)
+        false
+      else
+        raise e
+      end
     end
   end
 
-  # Add a view to the counter
-  def increment_view_count!
-    increment!(:views_count)
+  # Display helpers
+  def status_badge
+    if upcoming?
+      "Upcoming"
+    elsif ongoing?
+      "Happening Now"
+    else
+      "Past"
+    end
   end
 
-  # Add a comment
-  def add_comment(user, content, parent_comment_id = nil)
-    event_comments.create(
-      user: user,
-      content: content,
-      parent_comment_id: parent_comment_id
-    )
+  def status_color
+    if upcoming?
+      "blue"
+    elsif ongoing?
+      "green"
+    else
+      "gray"
+    end
   end
 
-  # Find related events
-  def related_events(limit = 3)
-    Event.published
-         .where.not(id: id)
-         .where(event_category_id: event_category_id)
-         .order(start_time: :asc)
-         .limit(limit)
+  def featured_image
+    event_media.find_by(is_featured: true) || event_media.first
   end
 
   private
 
   def end_time_after_start_time
-    return if start_time.nil? || end_time.nil?
+    return if end_time.blank? || start_time.blank?
 
     if end_time <= start_time
       errors.add(:end_time, "must be after start time")
     end
   end
+  
+  def start_time_not_in_past
+    return if start_time.blank?
 
-  def generate_slug
-    base_slug = title.parameterize
+    if start_time < Time.current
+      errors.add(:start_time, "can't be in the past")
+    end
+  end
+  
+  def set_slug
+    base_slug = title.to_s.parameterize
     unique_slug = base_slug
     counter = 2
-
-    while Event.exists?(slug: unique_slug)
+    
+    # Generate a unique slug
+    while Event.where(slug: unique_slug).exists?
       unique_slug = "#{base_slug}-#{counter}"
       counter += 1
     end
-
+    
     self.slug = unique_slug
   end
-
-  def update_status_based_on_time
-    if end_time < Time.current
-      self.status = :completed
+  
+  def ensure_short_description
+    return if short_description.present?
+    
+    # Generate a short description from the full description
+    if description.present?
+      self.short_description = description.truncate(200, separator: ' ', omission: '...')
     end
   end
-
-  def set_defaults
-    self.views_count ||= 0
-    self.favorites_count ||= 0
-    self.status ||= :draft # Default to draft status
-    self.is_featured ||= false
-    self.is_private ||= false
+  
+  # Calendar integration helpers
+  
+  # Returns the URL for the event
+  def event_url_for_calendar
+    Rails.application.routes.url_helpers.event_url(self, host: Rails.application.config.action_mailer.default_url_options&.fetch(:host) || 'zongo.app')
+  end
+  
+  # Returns the event formatted for calendar exports
+  def to_ical
+    calendar = Icalendar::Calendar.new
+    calendar.prodid = '-//Zongo//Events Calendar//EN'
+    
+    event = Icalendar::Event.new
+    event.dtstart = Icalendar::Values::DateTime.new(start_time.utc, tzid: 'UTC')
+    event.dtend = Icalendar::Values::DateTime.new(end_time.utc, tzid: 'UTC')
+    event.summary = title
+    event.description = "#{short_description}\n\n#{event_url_for_calendar}"
+    event.location = [venue&.name, venue&.address].compact.join(', ')
+    event.url = event_url_for_calendar
+    event.uid = "#{id}@zongo.app"
+    
+    calendar.add_event(event)
+    calendar.to_ical
+  end
+  
+  # Returns formatted location for calendar services
+  def formatted_location
+    [venue&.name, venue&.address].compact.join(', ')
   end
 end

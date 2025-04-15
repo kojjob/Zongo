@@ -1,6 +1,6 @@
-<%# Flash messages partial %>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-4 space-y-3">
+<div class="fixed top-4 right-4 left-4 sm:top-5 sm:right-5 sm:left-auto sm:max-w-md z-50 flex flex-col gap-3">
   <% flash.each do |type, message| %>
-    <%= render_flash(type, message) %>
+    <% next if message.blank? %>
+    <%= render 'shared/flash_message', message: message, type: type %>
   <% end %>
 </div>

@@ -1,13 +1,15 @@
 class VenuesController < ApplicationController
-  before_action :set_venue, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :set_venue, only: [ :show, :edit, :update, :destroy ]
 
-  # GET /venues or /venues.json
+  # GET /venues
   def index
-    @venues = Venue.all
+    @venues = Venue.all.order(:name)
   end
 
-  # GET /venues/1 or /venues/1.json
+  # GET /venues/:id
   def show
+    @upcoming_events = @venue.events.upcoming.order(start_time: :asc).limit(5)
   end
 
   # GET /venues/new
@@ -15,56 +17,47 @@ class VenuesController < ApplicationController
     @venue = Venue.new
   end
 
-  # GET /venues/1/edit
-  def edit
-  end
-
-  # POST /venues or /venues.json
+  # POST /venues
   def create
     @venue = Venue.new(venue_params)
 
-    respond_to do |format|
-      if @venue.save
-        format.html { redirect_to @venue, notice: "Venue was successfully created." }
-        format.json { render :show, status: :created, location: @venue }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @venue.errors, status: :unprocessable_entity }
-      end
+    if @venue.save
+      redirect_to @venue, notice: "Venue created successfully!"
+    else
+      render :new
     end
   end
 
-  # PATCH/PUT /venues/1 or /venues/1.json
+  # GET /venues/:id/edit
+  def edit
+  end
+
+  # PATCH/PUT /venues/:id
   def update
-    respond_to do |format|
-      if @venue.update(venue_params)
-        format.html { redirect_to @venue, notice: "Venue was successfully updated." }
-        format.json { render :show, status: :ok, location: @venue }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @venue.errors, status: :unprocessable_entity }
-      end
+    if @venue.update(venue_params)
+      redirect_to @venue, notice: "Venue updated successfully!"
+    else
+      render :edit
     end
   end
 
-  # DELETE /venues/1 or /venues/1.json
+  # DELETE /venues/:id
   def destroy
-    @venue.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to venues_path, status: :see_other, notice: "Venue was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    @venue.destroy
+    redirect_to venues_path, notice: "Venue deleted successfully!"
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_venue
-      @venue = Venue.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def venue_params
-      params.expect(venue: [ :name, :description, :address, :city, :region, :postal_code, :country, :latitude, :longitude, :capacity, :user_id, :facilities ])
-    end
+  def set_venue
+    @venue = Venue.find(params[:id])
+  end
+
+  def venue_params
+    params.require(:venue).permit(
+      :name, :address, :city, :region, :state, :country, :postal_code,
+      :latitude, :longitude, :description, :website, :phone, :capacity,
+      :user_id, facilities: {}
+    )
+  end
 end
