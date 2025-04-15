@@ -2,7 +2,7 @@
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
     <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Create Your Account</h2>
     
-    <%= form_with model: @user, url: user_registration_path do |f| %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <div class="mb-5">
         <%= f.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
         <div class="relative">
@@ -14,17 +14,11 @@
         <p class="mt-1 text-xs text-gray-500">We'll send a verification code to this number</p>
       </div>
       <div class="relative group w-32 h-32 rounded-full overflow-hidden mb-4" data-controller="avatar-preview">
-        <% if current_user && current_user.avatar.present? %>
-          <%= image_tag current_user.avatar.variant(resize_to_fill: [128, 128]), 
-                        class: "w-full h-full object-cover group-hover:opacity-80 transition-opacity",
-                        data: { avatar_preview_target: "preview" } %>
-        <% else %>
-          <div class="w-full h-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 text-4xl font-bold initials-placeholder">
-            <!-- Generic placeholder instead of trying to use initials -->
-            <span>ZG</span> <!-- For "Zongo" perhaps, or whatever makes sense for your app -->
-          </div>
-          <img src="" class="w-full h-full object-cover hidden" data-avatar-preview-target="preview">
-        <% end %>
+        <div class="w-full h-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 text-4xl font-bold initials-placeholder">
+          <!-- Generic placeholder instead of trying to use initials -->
+          <span>ZG</span> <!-- For "Zongo" perhaps, or whatever makes sense for your app -->
+        </div>
+        <img src="" class="w-full h-full object-cover hidden" data-avatar-preview-target="preview">
         
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
           <label for="user_avatar" class="cursor-pointer text-white text-sm font-medium">

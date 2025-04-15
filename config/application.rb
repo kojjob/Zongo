@@ -16,6 +16,17 @@ module Zongo
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Load middleware from lib directory
+    config.autoload_paths += %W(#{config.root}/lib)
+    require_relative "../lib/middleware/user_session_debugger"
+    config.middleware.use ::UserSessionDebugger
+
+    # Load the placeholder strategy in an initializer instead
+    config.after_initialize do
+      require_relative "../lib/strategies/some_external_strategy"
+    end
+
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

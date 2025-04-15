@@ -1,0 +1,134 @@
+<%# Calendar dropdown component 
+  Expects: event (Event object)
+%>
+
+<div class="relative" data-controller="calendar-dropdown">
+  <button 
+    type="button" 
+    data-action="calendar-dropdown#toggle click@window->calendar-dropdown#hide"
+    class="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center shadow-sm"
+    aria-label="Add to calendar"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <svg class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+    </svg>
+    Add to Calendar
+  </button>
+  
+  <div 
+    data-calendar-dropdown-target="menu"
+    class="absolute z-50 mt-2 w-64 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right"
+    role="menu"
+    aria-orientation="vertical"
+    aria-labelledby="calendar-menu-button"
+  >
+    <div class="py-1" role="none">
+      <%# Google Calendar %>
+      <a 
+        href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=<%= CGI.escape(event.title) %>&dates=<%= event.start_time.utc.strftime('%Y%m%dT%H%M%SZ') %>/<%= event.end_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&details=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&location=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+        data-action="calendar-dropdown#selected"
+        data-calendar-service="Google Calendar"
+        role="menuitem"
+      >
+        <div class="h-8 w-8 mr-3 flex items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.5 16V9c0-1.1-.9-2-2-2H12V5c0-.55-.45-1-1-1s-1 .45-1 1v2H6.5c-1.1 0-2 .9-2 2v7c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2zM12 17.5c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-medium">Google Calendar</span>
+          <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Most popular calendar service</span>
+        </div>
+      </a>
+      
+      <%# ICS File (works with Apple Calendar, Outlook desktop, etc.) %>
+      <a 
+        href="<%= calendar_event_path(event) %>"
+        download="<%= event.title.parameterize %>-event.ics"
+        class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+        data-action="calendar-dropdown#selected"
+        data-calendar-service="Apple Calendar"
+        role="menuitem"
+      >
+        <div class="h-8 w-8 mr-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-200">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.1 0-1.99.9-1.99 2L3 19a2 2 0 002 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-medium">Apple Calendar</span>
+          <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Download .ics file</span>
+        </div>
+      </a>
+      
+      <%# Outlook %>
+      <a 
+        href="https://outlook.office.com/calendar/0/deeplink/compose?subject=<%= CGI.escape(event.title) %>&body=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&startdt=<%= event.start_time.iso8601 %>&enddt=<%= event.end_time.iso8601 %>&location=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
+        target="_blank"
+        rel="noopener noreferrer" 
+        class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+        data-action="calendar-dropdown#selected"
+        data-calendar-service="Outlook"
+        role="menuitem"
+      >
+        <div class="h-8 w-8 mr-3 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14h-2V9h-3V7h8v2h-3v10z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-medium">Outlook</span>
+          <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Microsoft's calendar service</span>
+        </div>
+      </a>
+      
+      <%# Yahoo Calendar %>
+      <a 
+        href="https://calendar.yahoo.com/?v=60&title=<%= CGI.escape(event.title) %>&st=<%= event.start_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&et=<%= event.end_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&desc=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&in_loc=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
+        target="_blank"
+        rel="noopener noreferrer" 
+        class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+        data-action="calendar-dropdown#selected"
+        data-calendar-service="Yahoo Calendar"
+        role="menuitem"
+      >
+        <div class="h-8 w-8 mr-3 flex items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10zm0-18c4.41 0 8 3.59 8 8s-3.59 8-8 8-8-3.59-8-8 3.59-8 8-8zm4 5h-3v5.41l2.3 2.3-1.42 1.41-2.88-2.88V9h-2V7h7v2z" />
+          </svg>
+        </div>
+        <div>
+          <span class="font-medium">Yahoo Calendar</span>
+          <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Add to your Yahoo account</span>
+        </div>
+      </a>
+    </div>
+  </div>
+  
+  <%# Success notification %>
+  <div 
+    data-calendar-dropdown-target="notification"
+    class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right z-50 border border-green-200 dark:border-green-900"
+  >
+    <div class="p-4 flex items-start">
+      <div class="flex-shrink-0 mr-3">
+        <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+          <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-900 dark:text-white">Calendar opened</h3>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400" data-calendar-dropdown-target="notificationMessage">
+          Event details sent to calendar
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

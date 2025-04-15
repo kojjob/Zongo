@@ -1,0 +1,52 @@
+<%= form_with(model: attendance, class: "contents") do |form| %>
+  <% if attendance.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% attendance.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:user_id].none?, "border-red-400 focus:outline-red-600": attendance.errors[:user_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :event_id %>
+    <%= form.text_field :event_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:event_id].none?, "border-red-400 focus:outline-red-600": attendance.errors[:event_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.number_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:status].none?, "border-red-400 focus:outline-red-600": attendance.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :checked_in_at %>
+    <%= form.datetime_field :checked_in_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:checked_in_at].none?, "border-red-400 focus:outline-red-600": attendance.errors[:checked_in_at].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :cancelled_at %>
+    <%= form.datetime_field :cancelled_at, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:cancelled_at].none?, "border-red-400 focus:outline-red-600": attendance.errors[:cancelled_at].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :additional_info %>
+    <%= form.textarea :additional_info, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:additional_info].none?, "border-red-400 focus:outline-red-600": attendance.errors[:additional_info].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :form_responses %>
+    <%= form.text_field :form_responses, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": attendance.errors[:form_responses].none?, "border-red-400 focus:outline-red-600": attendance.errors[:form_responses].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

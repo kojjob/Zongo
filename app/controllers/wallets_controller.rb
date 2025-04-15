@@ -53,8 +53,8 @@ class WalletsController < ApplicationController
   end
   # Include Pagy for pagination
   before_action :authenticate_user!
-  before_action :set_wallet, only: [ :show, :edit, :update ]
-  before_action :ensure_wallet_ownership, only: [ :show, :edit, :update ]
+  before_action :set_wallet, only: [:show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions]
+  before_action :ensure_wallet_ownership, only: [:show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions]
 
   # Dashboard page showing wallet overview
   def show
@@ -79,7 +79,8 @@ class WalletsController < ApplicationController
 
   # New transaction form
   def new_transaction
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
+    
     @transaction_type = params[:type] || "deposit"
     @payment_methods = current_user.payment_methods.active_methods.verified_methods
 
@@ -102,7 +103,7 @@ class WalletsController < ApplicationController
 
   # Process a deposit
   def deposit
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     amount = params[:amount].to_f
     payment_method_id = params[:payment_method_id]
     description = params[:description]
@@ -163,7 +164,7 @@ class WalletsController < ApplicationController
 
   # Process a withdrawal
   def withdraw
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     amount = params[:amount].to_f
     payment_method_id = params[:payment_method_id]
     description = params[:description]
@@ -237,7 +238,7 @@ class WalletsController < ApplicationController
 
   # Process a transfer
   def transfer
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     amount = params[:amount].to_f
     recipient_identifier = params[:recipient]
     description = params[:description]
@@ -324,7 +325,7 @@ class WalletsController < ApplicationController
 
   # Transaction history with filtering
   def transactions
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
 
     # Apply filters
     @filter_type = params[:type]
@@ -383,7 +384,7 @@ class WalletsController < ApplicationController
 
   # Show details for a specific transaction
   def transaction_details
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     @transaction = Transaction.find_by(id: params[:id])
 
     # Ensure user can only view their own transactions
@@ -396,7 +397,7 @@ class WalletsController < ApplicationController
 
   # AJAX endpoint to refresh wallet balance
   def refresh_balance
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
 
     respond_to do |format|
       format.json { render json: { balance: @wallet.balance, formatted_balance: @wallet.formatted_balance } }
@@ -405,7 +406,7 @@ class WalletsController < ApplicationController
 
   # AJAX endpoint to get recent transactions
   def recent_transactions
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     @recent_transactions = @wallet.recent_transactions(10)
 
     respond_to do |format|
@@ -414,11 +415,11 @@ class WalletsController < ApplicationController
   end
 
   def edit
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
   end
 
   def update
-    @wallet = current_user.wallet
+    # @wallet is now set by the set_wallet before_action
     if @wallet.update(wallet_params)
       flash[:success] = "Wallet updated successfully"
       redirect_to wallet_path

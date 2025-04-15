@@ -1,0 +1,291 @@
+<% content_for :title, @event_category.name %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <% if notice.present? %>
+    <div class="mb-6">
+      <%= render 'shared/flash_message', message: notice, type: 'success' %>
+    </div>
+  <% end %>
+
+  <!-- Breadcrumbs -->
+  <nav class="mb-6">
+    <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+      <li>
+        <%= link_to "Home", root_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+      </li>
+      <li class="flex items-center">
+        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <li>
+        <%= link_to "Event Categories", event_categories_path, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+      </li>
+      <li class="flex items-center">
+        <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+        </svg>
+      </li>
+      <% @event_category.ancestry.each do |ancestor| %>
+        <li>
+          <%= link_to ancestor.name, ancestor, class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+        </li>
+        <li class="flex items-center">
+          <svg class="h-4 w-4 mx-1" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+          </svg>
+        </li>
+      <% end %>
+      <li class="font-medium text-gray-700 dark:text-gray-300">
+        <%= @event_category.name %>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- Action Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white"><%= @event_category.name %></h1>
+    
+    <div class="flex flex-wrap gap-3">
+      <%= link_to edit_event_category_path(@event_category), class: "btn btn-secondary" do %>
+        <%= icon "pencil", class: "w-5 h-5 mr-2" %>
+        Edit
+      <% end %>
+      
+      <%= link_to new_event_category_path(parent_category_id: @event_category.id), class: "btn btn-primary" do %>
+        <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+        Add Subcategory
+      <% end %>
+      
+      <%= button_to @event_category, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure you want to delete this category? This action cannot be undone." } do %>
+        <%= icon "trash", class: "w-5 h-5 mr-2" %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Category Details -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Category Info -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-6 flex items-start gap-6">
+          <div class="flex-shrink-0 w-16 h-16 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+            <%= icon @event_category.icon.presence || "folder", class: "w-8 h-8" %>
+          </div>
+          
+          <div class="flex-grow">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white"><%= @event_category.name %></h2>
+            
+            <% if @event_category.parent_category %>
+              <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                Parent Category: <%= link_to @event_category.parent_category.name, @event_category.parent_category, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+              </div>
+            <% end %>
+            
+            <% if @event_category.description.present? %>
+              <div class="mt-4 prose dark:prose-invert max-w-none">
+                <%= @event_category.description %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subcategories -->
+      <% if @event_category.subcategories.any? %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Subcategories</h3>
+              <%= link_to new_event_category_path(parent_category_id: @event_category.id), class: "text-primary-600 dark:text-primary-400 hover:underline text-sm font-medium" do %>
+                <%= icon "plus", class: "w-4 h-4 inline-block mr-1" %>
+                Add Subcategory
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <% @event_category.subcategories.each do |subcategory| %>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 w-10 h-10 rounded bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                      <%= icon subcategory.icon.presence || "folder", class: "w-5 h-5" %>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white"><%= subcategory.name %></div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400"><%= pluralize(subcategory.events.count, 'event') %></div>
+                    </div>
+                  </div>
+                  
+                  <div class="flex space-x-2">
+                    <%= link_to subcategory, class: "text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400", title: "View" do %>
+                      <%= icon "eye", class: "w-5 h-5" %>
+                    <% end %>
+                    
+                    <%= link_to edit_event_category_path(subcategory), class: "text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400", title: "Edit" do %>
+                      <%= icon "pencil", class: "w-5 h-5" %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Events in this Category -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Events in this Category</h3>
+            <%= link_to new_event_path(event_category_id: @event_category.id), class: "text-primary-600 dark:text-primary-400 hover:underline text-sm font-medium" do %>
+              <%= icon "plus", class: "w-4 h-4 inline-block mr-1" %>
+              Create Event
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="p-6">
+          <% if @event_category.events.any? %>
+            <div class="space-y-4">
+              <% @event_category.events.each do |event| %>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 w-12 h-12 rounded bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-300">
+                        <%= icon "calendar-event", class: "w-6 h-6" %>
+                      </div>
+                      <div class="ml-3">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white"><%= event.title %></div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">
+                          <%= event.start_time.strftime("%b %d, %Y") %> • <%= event.venue&.name || "Venue ##{event.venue_id}" %>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <%= link_to event, class: "text-primary-600 dark:text-primary-400 hover:underline text-sm flex items-center" do %>
+                      View
+                      <%= icon "chevron-right", class: "w-4 h-4 ml-1" %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="flex flex-col items-center justify-center py-8">
+              <%= icon "calendar-event", class: "w-12 h-12 text-gray-300 dark:text-gray-600 mb-3" %>
+              <p class="text-gray-500 dark:text-gray-400 text-center">No events in this category yet</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Quick Stats -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Stats</h3>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <%= icon "folder", class: "w-5 h-5 text-gray-400 mr-2" %>
+                <span class="text-gray-700 dark:text-gray-300">Subcategories</span>
+              </div>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @event_category.subcategories.count %></span>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <%= icon "calendar-event", class: "w-5 h-5 text-gray-400 mr-2" %>
+                <span class="text-gray-700 dark:text-gray-300">Events</span>
+              </div>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @event_category.events.count %></span>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <div class="flex items-center">
+                <%= icon "calendar", class: "w-5 h-5 text-gray-400 mr-2" %>
+                <span class="text-gray-700 dark:text-gray-300">Latest Event</span>
+              </div>
+              <% if latest_event = @event_category.events.order(created_at: :desc).first %>
+                <span class="text-gray-900 dark:text-white font-medium"><%= latest_event.start_time.strftime("%b %d, %Y") %></span>
+              <% else %>
+                <span class="text-gray-500 dark:text-gray-400">None</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Category Tree -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Category Tree</h3>
+          
+          <% if @event_category.ancestry.present? %>
+            <div class="mb-4">
+              <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Parent Categories:</div>
+              <ol class="space-y-2">
+                <% @event_category.ancestry.each_with_index do |ancestor, index| %>
+                  <li class="flex items-center">
+                    <div class="mr-2 text-gray-500 dark:text-gray-400 text-xs"><%= index + 1 %>.</div>
+                    <%= link_to ancestor.name, ancestor, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+                  </li>
+                <% end %>
+              </ol>
+            </div>
+          <% end %>
+          
+          <% if @event_category.subcategories.any? %>
+            <div>
+              <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subcategories:</div>
+              <div class="space-y-2">
+                <% @event_category.subcategories.each do |subcategory| %>
+                  <div class="flex items-center">
+                    <div class="mr-2 text-gray-500 dark:text-gray-400">
+                      <%= icon "chevron-right", class: "w-4 h-4" %>
+                    </div>
+                    <%= link_to subcategory.name, subcategory, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Actions</h3>
+          <div class="space-y-3">
+            <%= link_to edit_event_category_path(@event_category), class: "btn btn-secondary w-full" do %>
+              <%= icon "pencil", class: "w-5 h-5 mr-2" %>
+              Edit Category
+            <% end %>
+            
+            <%= link_to new_event_category_path(parent_category_id: @event_category.id), class: "btn btn-primary w-full" do %>
+              <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+              Add Subcategory
+            <% end %>
+            
+            <%= link_to new_event_path(event_category_id: @event_category.id), class: "btn btn-outline w-full" do %>
+              <%= icon "calendar-plus", class: "w-5 h-5 mr-2" %>
+              Create Event
+            <% end %>
+            
+            <%= button_to @event_category, method: :delete, class: "btn btn-danger w-full", data: { turbo_confirm: "Are you sure you want to delete this category?" } do %>
+              <%= icon "trash", class: "w-5 h-5 mr-2" %>
+              Delete Category
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div id="<%= dom_id event_category %>" class="w-full bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 my-4">
+  <div class="flex items-start gap-4">
+    <!-- Icon -->
+    <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
+      <%= icon event_category.icon.presence || "folder", class: "w-6 h-6" %>
+    </div>
+    
+    <!-- Content -->
+    <div class="flex-grow">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <%= event_category.name %>
+        </h3>
+        
+        <% if event_category.subcategories.any? %>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+            <%= pluralize(event_category.subcategories.count, 'subcategory') %>
+          </span>
+        <% end %>
+      </div>
+      
+      <% if event_category.parent_category %>
+        <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Parent: <%= link_to event_category.parent_category.name, event_category.parent_category, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+        </div>
+      <% end %>
+      
+      <% if event_category.description.present? %>
+        <div class="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          <%= event_category.description %>
+        </div>
+      <% end %>
+      
+      <div class="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex items-center">
+          <%= icon "calendar-event", class: "w-4 h-4 mr-1" %>
+          <span><%= pluralize(event_category.events.count, 'event') %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

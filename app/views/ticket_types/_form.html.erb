@@ -1,0 +1,67 @@
+<%= form_with(model: ticket_type, class: "contents") do |form| %>
+  <% if ticket_type.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(ticket_type.errors.count, "error") %> prohibited this ticket_type from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% ticket_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :event_id %>
+    <%= form.text_field :event_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:event_id].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:event_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:name].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:name].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :description %>
+    <%= form.textarea :description, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:description].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:description].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :price %>
+    <%= form.text_field :price, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:price].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:price].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:quantity].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:quantity].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sales_start_time %>
+    <%= form.datetime_field :sales_start_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:sales_start_time].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:sales_start_time].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sales_end_time %>
+    <%= form.datetime_field :sales_end_time, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:sales_end_time].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:sales_end_time].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :sold_count %>
+    <%= form.number_field :sold_count, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:sold_count].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:sold_count].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :max_per_user %>
+    <%= form.number_field :max_per_user, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:max_per_user].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:max_per_user].any?}] %>
+  </div>
+
+  <div class="my-5 flex items-center gap-2">
+    <%= form.label :transferable %>
+    <%= form.checkbox :transferable, class: ["block shadow-sm rounded-md border order-first h-5 w-5", {"border-gray-400 focus:outline-blue-600": ticket_type.errors[:transferable].none?, "border-red-400 focus:outline-red-600": ticket_type.errors[:transferable].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

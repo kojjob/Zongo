@@ -1,0 +1,81 @@
+<%# SEO Tags for events pages %>
+<% if @event.present? %>
+  <%# Meta tags for single event %>
+  <title><%= @event.title %> | Zongo Events</title>
+  <meta name="description" content="<%= @event.short_description.truncate(160) %>">
+  
+  <%# Open Graph tags for social sharing %>
+  <meta property="og:title" content="<%= @event.title %>">
+  <meta property="og:description" content="<%= @event.short_description.truncate(160) %>">
+  <meta property="og:url" content="<%= event_url(@event) %>">
+  <meta property="og:type" content="website">
+  <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
+    <meta property="og:image" content="<%= @event.event_media.first.url %>">
+  <% end %>
+  
+  <%# Twitter Card tags %>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= @event.title %>">
+  <meta name="twitter:description" content="<%= @event.short_description.truncate(160) %>">
+  <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
+    <meta name="twitter:image" content="<%= @event.event_media.first.url %>">
+  <% end %>
+  
+  <%# Structured data for SEO %>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "<%= @event.title %>",
+      "description": "<%= @event.short_description %>",
+      "startDate": "<%= @event.start_time.iso8601 %>",
+      "endDate": "<%= @event.end_time.iso8601 %>",
+      <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
+      "image": "<%= @event.event_media.first.url %>",
+      <% end %>
+      <% if @event.venue.present? %>
+      "location": {
+        "@type": "Place",
+        "name": "<%= @event.venue.name %>",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "<%= @event.venue.address %>",
+          "addressLocality": "<%= @event.venue.city %>",
+          "addressRegion": "<%= @event.venue.state %>",
+          "postalCode": "<%= @event.venue.zip %>",
+          "addressCountry": "<%= @event.venue.country || 'Ghana' %>"
+        }
+      },
+      <% end %>
+      "organizer": {
+        "@type": "Person",
+        "name": "<%= @event.organizer.respond_to?(:full_name) ? @event.organizer.full_name : 'Event Organizer' %>"
+      },
+      <% if @event.respond_to?(:ticket_price) && !@event.free? %>
+      "offers": {
+        "@type": "Offer",
+        "price": "<%= @event.respond_to?(:price) ? @event.price : 0 %>",
+        "priceCurrency": "GHS",
+        "availability": "<%= @event.sold_out? ? 'SoldOut' : 'InStock' %>",
+        "url": "<%= event_url(@event) %>"
+      },
+      <% end %>
+      "eventStatus": "EventScheduled"
+    }
+  </script>
+<% else %>
+  <%# Meta tags for events index page %>
+  <title>Events | Zongo - Discover Events Near You</title>
+  <meta name="description" content="Discover the best events in your area. Find concerts, workshops, meetups, and more on Zongo Events.">
+  
+  <%# Open Graph tags %>
+  <meta property="og:title" content="Events | Zongo - Discover Events Near You">
+  <meta property="og:description" content="Discover the best events in your area. Find concerts, workshops, meetups, and more on Zongo Events.">
+  <meta property="og:url" content="<%= events_url %>">
+  <meta property="og:type" content="website">
+  
+  <%# Twitter Card tags %>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Events | Zongo - Discover Events Near You">
+  <meta name="twitter:description" content="Discover the best events in your area. Find concerts, workshops, meetups, and more on Zongo Events.">
+<% end %>

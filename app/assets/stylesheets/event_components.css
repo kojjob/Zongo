@@ -1,0 +1,138 @@
+/* Event Card Components */
+
+/* Event Card Hover Effect */
+.event-card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Event Card Overlay */
+.event-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.event-card-hover:hover .event-card-overlay {
+  opacity: 0.9;
+}
+
+/* Date Badge */
+.date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.date-badge-month {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 2px 0;
+}
+
+.date-badge-day {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background-color: white;
+  color: #111827;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  padding: 2px 0;
+}
+
+.dark .date-badge-day {
+  background-color: #1f2937;
+  color: white;
+}
+
+/* Price Tag */
+.price-tag {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+  display: inline-block;
+}
+
+/* Share Button */
+.share-button {
+  background-color: white;
+  color: #4b5563;
+  border-radius: 9999px;
+  padding: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.share-button:hover {
+  background-color: #f3f4f6;
+}
+
+.dark .share-button {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .share-button:hover {
+  background-color: #4b5563;
+}
+
+/* Favorite Button */
+.favorite-button {
+  background-color: white;
+  color: #4b5563;
+  border-radius: 9999px;
+  padding: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.favorite-button:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.favorite-button.active {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+.dark .favorite-button {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+.dark .favorite-button:hover {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .favorite-button.active {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}

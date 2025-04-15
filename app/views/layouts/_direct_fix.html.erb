@@ -1,22 +1,79 @@
 <!-- Direct Fix for Theme and Dropdowns - No Dependencies -->
+<style>
+  /* Improved mobile dropdown styles */
+  @media (max-width: 640px) {
+    [data-dropdown-target="menu"] {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-top: 0.5rem !important;
+      border-radius: 0.75rem 0.75rem 0 0 !important;
+      max-height: 80vh !important;
+      overflow-y: auto !important;
+      z-index: 50 !important;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+      transform-origin: bottom center !important;
+    }
+
+    /* Special positioning for user dropdown */
+    .user-dropdown [data-dropdown-target="menu"] {
+      top: auto !important;
+      bottom: 0 !important;
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    /* Make dropdown links easier to tap on mobile */
+    [data-dropdown-target="menu"] a,
+    [data-dropdown-target="menu"] button {
+      padding-top: 0.75rem !important;
+      padding-bottom: 0.75rem !important;
+      display: block !important;
+      width: 100% !important;
+    }
+
+    /* Add active state for touch feedback */
+    [data-dropdown-target="menu"] a:active,
+    [data-dropdown-target="menu"] button:active {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .dark [data-dropdown-target="menu"] a:active,
+    .dark [data-dropdown-target="menu"] button:active {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Active tap state for mobile */
+    [data-dropdown-target="menu"] .active-tap {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .dark [data-dropdown-target="menu"] .active-tap {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+</style>
 <script>
   (function() {
     console.log('⚡️ Direct fix script running...');
-    
+
     // 1. THEME FIX
     // ------------------
-    
+
     // Function to determine if dark mode should be active
     function shouldUseDarkMode() {
       const savedTheme = localStorage.getItem('theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       return savedTheme === 'dark' || (savedTheme !== 'light' && systemPrefersDark);
     }
-    
+
     // Function to apply theme immediately
     function applyTheme() {
       const isDark = shouldUseDarkMode();
-      
+
       if (isDark) {
         document.documentElement.classList.add('dark');
         document.documentElement.classList.remove('light');
@@ -24,14 +81,14 @@
         document.documentElement.classList.remove('dark');
         document.documentElement.classList.add('light');
       }
-      
+
       console.log('Theme applied:', isDark ? 'dark' : 'light');
       return isDark;
     }
-    
+
     // Apply theme immediately
     const isDarkMode = applyTheme();
-    
+
     // Setup global theme toggling function
     window.toggleTheme = function() {
       const isDark = document.documentElement.classList.contains('dark');
@@ -44,67 +101,67 @@
         document.documentElement.classList.remove('light');
         localStorage.setItem('theme', 'dark');
       }
-      
+
       updateThemeIcons();
       console.log('Theme toggled to:', !isDark ? 'dark' : 'light');
     };
-    
+
     // 2. ICON UPDATES
     // ------------------
-    
+
     // Function to update all theme icons
     function updateThemeIcons() {
       const isDark = document.documentElement.classList.contains('dark');
-      
+
       // Update any light/dark icons
       document.querySelectorAll('[data-theme-icon="dark"]').forEach(icon => {
         icon.classList.toggle('hidden', isDark);
       });
-      
+
       document.querySelectorAll('[data-theme-icon="light"]').forEach(icon => {
         icon.classList.toggle('hidden', !isDark);
       });
-      
+
       // Old format icons (data-theme-target)
       document.querySelectorAll('[data-theme-target="darkIcon"]').forEach(icon => {
         icon.classList.toggle('hidden', isDark);
       });
-      
+
       document.querySelectorAll('[data-theme-target="lightIcon"]').forEach(icon => {
         icon.classList.toggle('hidden', !isDark);
       });
-      
+
       // Simplified icon IDs
       const darkIcon = document.getElementById('dark-icon');
       const lightIcon = document.getElementById('light-icon');
-      
+
       if (darkIcon) darkIcon.classList.toggle('hidden', isDark);
       if (lightIcon) lightIcon.classList.toggle('hidden', !isDark);
-      
+
       // Update theme indicator if exists
       const indicator = document.getElementById('theme-indicator');
       if (indicator) indicator.textContent = isDark ? 'dark' : 'light';
     }
-    
+
     // 3. DROPDOWN FIX
     // ------------------
-    
+
     // Wait for DOM to be ready to fix dropdowns
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🔄 Applying direct fixes...');
-      
+
       // Fix theme icons
       updateThemeIcons();
-      
+
       // Fix dropdowns
       setupDropdowns();
-      
+
       // Add an event listener to the toggle theme button(s) if not using our toggleTheme function
       document.querySelectorAll('[data-action*="theme#toggle"]').forEach(button => {
         // Remove the original event listener if possible
         const clone = button.cloneNode(true);
         button.parentNode.replaceChild(clone, button);
-        
+
         // Add our direct toggle function
         clone.addEventListener('click', function(e) {
           e.preventDefault();
@@ -112,65 +169,258 @@
           window.toggleTheme();
         });
       });
-      
+
+      // Fix mobile menu toggle buttons
+      setupMobileMenuToggle();
+
       console.log('✅ Direct fixes applied successfully');
     });
-    
+
     // Function to set up all dropdowns
     function setupDropdowns() {
       // Find all dropdown controllers
       const dropdownElements = document.querySelectorAll('[data-controller*="dropdown"]');
-      
+
       dropdownElements.forEach(dropdown => {
         // Find toggle button and menu
         const toggle = dropdown.querySelector('[data-action*="dropdown#toggle"]');
         const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
-        
+
         if (toggle && menu) {
           // Remove the original event listener if possible
           const toggleClone = toggle.cloneNode(true);
           toggle.parentNode.replaceChild(toggleClone, toggle);
-          
-          // Add our direct toggle function
+
+          // Add our direct toggle function with improved responsive behavior
           toggleClone.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Close all other dropdowns
             document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
               if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
-                otherMenu.classList.add('hidden');
+                hideDropdownMenu(otherMenu);
               }
             });
-            
-            // Toggle this menu
-            menu.classList.toggle('hidden');
+
+            // Toggle this menu with animation
+            if (menu.classList.contains('hidden')) {
+              showDropdownMenu(menu);
+            } else {
+              hideDropdownMenu(menu);
+            }
           });
-          
-          console.log('Fixed dropdown:', toggle);
+
+          // Add touch events for better mobile support
+          toggleClone.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Close all other dropdowns
+            document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
+              if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
+                hideDropdownMenu(otherMenu);
+              }
+            });
+
+            // Toggle this menu with animation
+            if (menu.classList.contains('hidden')) {
+              showDropdownMenu(menu);
+            } else {
+              hideDropdownMenu(menu);
+            }
+          });
+
+          // Make all links in the dropdown responsive to touch
+          menu.querySelectorAll('a, button').forEach(element => {
+            // Clone to remove existing listeners
+            const elementClone = element.cloneNode(true);
+            element.parentNode.replaceChild(elementClone, element);
+
+            // Add touch event listener
+            elementClone.addEventListener('touchend', function(e) {
+              e.stopPropagation();
+              // Don't prevent default to allow navigation
+
+              // For mobile: add a slight delay to ensure the tap is registered
+              if (window.innerWidth <= 640) {
+                const href = elementClone.getAttribute('href');
+                const isButton = elementClone.tagName.toLowerCase() === 'button';
+
+                if (href || isButton) {
+                  // Add active state visual feedback
+                  elementClone.classList.add('active-tap');
+
+                  // Remove active state after a short delay
+                  setTimeout(() => {
+                    elementClone.classList.remove('active-tap');
+
+                    // If it's a link with href, navigate to it
+                    if (href) {
+                      window.location.href = href;
+                    }
+
+                    // If it's a button, trigger a click
+                    if (isButton) {
+                      elementClone.click();
+                    }
+
+                    // Hide the dropdown after navigation
+                    hideDropdownMenu(menu);
+                  }, 150);
+                }
+              }
+            });
+          });
+
+          console.log('Fixed dropdown with responsive behavior:', toggle);
         }
       });
-      
+
+      // Helper function to show dropdown menu with animation
+      function showDropdownMenu(menu) {
+        menu.classList.remove('hidden');
+        // Use setTimeout to ensure the transition happens after the display change
+        setTimeout(() => {
+          menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+          menu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+        }, 10);
+      }
+
+      // Helper function to hide dropdown menu with animation
+      function hideDropdownMenu(menu) {
+        menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+        menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+
+        // Wait for animation to complete before hiding
+        setTimeout(() => {
+          menu.classList.add('hidden');
+        }, 150);
+      }
+
       // Close dropdowns when clicking outside
       document.addEventListener('click', function(e) {
         document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
           if (!menu.classList.contains('hidden')) {
             const dropdown = menu.closest('[data-controller*="dropdown"]');
-            
+
             if (dropdown && !dropdown.contains(e.target)) {
-              menu.classList.add('hidden');
+              hideDropdownMenu(menu);
             }
           }
         });
       });
-      
+
+      // Add touch event for mobile devices
+      document.addEventListener('touchend', function(e) {
+        document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+          if (!menu.classList.contains('hidden')) {
+            const dropdown = menu.closest('[data-controller*="dropdown"]');
+
+            if (dropdown && !dropdown.contains(e.target)) {
+              hideDropdownMenu(menu);
+            }
+          }
+        });
+      });
+
       // Close dropdowns when pressing Escape
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
           document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
-            menu.classList.add('hidden');
+            hideDropdownMenu(menu);
           });
         }
+      });
+    }
+
+    // Function to fix mobile menu toggle buttons
+    function setupMobileMenuToggle() {
+      // Find all mobile menu toggle buttons
+      const mobileMenuToggles = document.querySelectorAll('[data-action*="navbar#toggleMobileMenu"]');
+
+      mobileMenuToggles.forEach(toggle => {
+        console.log('Found mobile menu toggle:', toggle);
+
+        // Clone to remove existing listeners
+        const toggleClone = toggle.cloneNode(true);
+        toggle.parentNode.replaceChild(toggleClone, toggle);
+
+        // Add our direct toggle function
+        toggleClone.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Find the mobile menu
+          const mobileMenu = document.querySelector('[data-navbar-target="mobileMenu"]');
+
+          if (mobileMenu) {
+            console.log('Toggling mobile menu');
+
+            // Check if menu is hidden
+            const isHidden = mobileMenu.classList.contains('translate-x-full');
+
+            if (isHidden) {
+              // Show the menu
+              mobileMenu.classList.remove('translate-x-full');
+              // Prevent scrolling on the body
+              document.body.style.overflow = 'hidden';
+
+              // Set up the overlay click handler
+              const overlay = mobileMenu.querySelector('.fixed.inset-0.bg-black.bg-opacity-50');
+              if (overlay) {
+                overlay.addEventListener('click', function() {
+                  mobileMenu.classList.add('translate-x-full');
+                  document.body.style.overflow = '';
+                });
+
+                overlay.addEventListener('touchend', function(e) {
+                  e.preventDefault();
+                  mobileMenu.classList.add('translate-x-full');
+                  document.body.style.overflow = '';
+                });
+              }
+
+              // Set up the close button inside the mobile menu
+              const closeButton = mobileMenu.querySelector('button[data-action="navbar#toggleMobileMenu"]');
+              if (closeButton) {
+                // Clone to remove existing listeners
+                const closeClone = closeButton.cloneNode(true);
+                closeButton.parentNode.replaceChild(closeClone, closeButton);
+
+                closeClone.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  mobileMenu.classList.add('translate-x-full');
+                  document.body.style.overflow = '';
+                });
+
+                closeClone.addEventListener('touchend', function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  mobileMenu.classList.add('translate-x-full');
+                  document.body.style.overflow = '';
+                });
+              }
+            } else {
+              // Hide the menu
+              mobileMenu.classList.add('translate-x-full');
+              // Allow scrolling again
+              document.body.style.overflow = '';
+            }
+          } else {
+            console.error('Mobile menu not found');
+          }
+        });
+
+        // Add touch event for mobile
+        toggleClone.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Trigger click event
+          toggleClone.click();
+        });
       });
     }
   })();

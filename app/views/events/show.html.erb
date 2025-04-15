@@ -1,0 +1,950 @@
+<!-- Print-only content -->
+<div class="print-only hidden">
+  <div class="p-8">
+    <h1 class="text-3xl font-bold mb-4"><%= @event.title %></h1>
+    <p class="mb-4"><%= @event.short_description %></p>
+    
+    <div class="mb-4">
+      <h2 class="text-xl font-bold mb-2">Event Details</h2>
+      <p><strong>Date:</strong> <%= @event.start_time.strftime("%A, %B %d, %Y") %></p>
+      <p><strong>Time:</strong> <%= @event.start_time.strftime("%I:%M %p") %> - <%= @event.end_time.strftime("%I:%M %p") %></p>
+      <p><strong>Location:</strong> <%= @event.venue&.name %>, <%= @event.venue&.address %></p>
+      <% if @event.price.present? && !@event.free? %>
+        <p><strong>Price:</strong> <%= @event.respond_to?(:ticket_price) ? @event.ticket_price : "₵#{@event.price}" %></p>
+      <% else %>
+        <p><strong>Price:</strong> Free</p>
+      <% end %>
+    </div>
+    
+    <div class="mb-4">
+      <h2 class="text-xl font-bold mb-2">About this Event</h2>
+      <div><%= @event.description.html_safe %></div>
+    </div>
+    
+    <div class="mb-4">
+      <h2 class="text-xl font-bold mb-2">Organizer</h2>
+      <p><%= @event.organizer.full_name rescue "Event Organizer" %></p>
+    </div>
+    
+    <p class="text-sm mt-8">Printed from <%= event_url(@event) %></p>
+  </div>
+</div><!-- SEO Enhancements -->
+<% content_for :head do %>
+  <meta property="og:title" content="<%= @event.title %>" />
+  <meta property="og:description" content="<%= @event.short_description %>" />
+  <% if @event.event_media.present? %>
+    <meta property="og:image" content="<%= @event.event_media.first.url %>" />
+  <% end %>
+  <meta property="og:url" content="<%= event_url(@event) %>" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Structured data for events -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "<%= @event.title %>",
+      "description": "<%= @event.short_description %>",
+      "startDate": "<%= @event.start_time.iso8601 %>",
+      "endDate": "<%= @event.end_time.iso8601 %>",
+      "location": {
+        "@type": "Place",
+        "name": "<%= @event.venue&.name %>",
+        "address": "<%= @event.venue&.address %>"
+      },
+      <% if @event.event_media.present? %>
+      "image": "<%= @event.event_media.first.url %>",
+      <% end %>
+      "organizer": {
+        "@type": "Person",
+        "name": "<%= @event.organizer.full_name rescue 'Event Organizer' %>"
+      }
+    }
+  </script>
+<% end %>
+
+<!-- Print-Friendly Styles -->
+<style media="print">
+  nav, footer, .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: white; color: black; }
+  .event-details { page-break-inside: avoid; }
+  @page { margin: 2cm; }
+</style>
+
+<!-- Event Detail Page with enhanced design -->
+<div class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+  <!-- Top navigation bar -->
+  <nav class="border-b border-gray-200 dark:border-gray-800 px-4 py-3 bg-white dark:bg-gray-900 sticky top-0 z-30 transition-colors duration-200 shadow-sm">
+    <div class="flex items-center justify-between max-w-7xl mx-auto">
+      <!-- Back button -->
+      <a href="<%= events_path %>" class="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
+        <svg class="h-5 w-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        <span class="text-sm font-medium">Back to Events</span>
+      </a>
+      
+      <!-- Middle section: Logo or title -->
+      <div class="flex-grow max-w-md mx-auto text-center">
+        <h1 class="text-lg font-bold text-gray-900 dark:text-white hidden md:block truncate">
+          <%= @event.title %>
+        </h1>
+      </div>
+      
+      <!-- Right section: User actions -->
+      <div class="flex items-center space-x-4">
+        <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors relative p-2">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full shadow-sm">2</span>
+        </button>
+        
+        <a href="/profile" class="flex items-center">
+          <div class="h-8 w-8 rounded-full border-2 border-blue-500 dark:border-blue-400 hover:scale-110 transition-transform duration-200 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 shadow-sm">
+            <%= current_user&.initials || "U" %>
+          </div>
+        </a>
+        
+        <!-- Dark/Light Theme Toggle -->
+        <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none rounded-full text-sm p-2 transition-colors">
+          <!-- Dark Icon (shows in light mode) -->
+          <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+          </svg>
+          <!-- Light icon (shows in dark mode) -->
+          <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Event Hero Section -->
+  <div class="relative bg-gradient-to-b from-blue-600 to-indigo-900 text-white">
+    <!-- Event Cover Image -->
+    <div class="h-[30vh] md:h-[50vh] w-full overflow-hidden relative">
+      <% if @event.event_media.present? %>
+        <div class="absolute inset-0 opacity-30 bg-center bg-cover transform hover:scale-105 transition-transform duration-7000" style="background-image: url('<%= @event.event_media.first.url %>');"></div>
+      <% end %>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+      
+      <!-- Event badges and actions -->
+      <div class="absolute top-4 left-4 z-10 flex space-x-2">
+        <!-- Event type badge -->
+        <div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-500/90 backdrop-blur-sm text-white shadow-sm">
+          <% if @event.category.present? %>
+            <%= @event.category.name %>
+          <% else %>
+            Event
+          <% end %>
+        </div>
+        
+        <!-- Price badge -->
+        <% if @event.respond_to?(:free?) && @event.free? %>
+          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-green-500/90 backdrop-blur-sm text-white shadow-sm">
+            Free
+          </div>
+        <% else %>
+          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-purple-500/90 backdrop-blur-sm text-white shadow-sm">
+            <%= @event.respond_to?(:ticket_price) ? @event.ticket_price : "₵#{@event.price}" %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Action buttons -->
+      <div class="absolute top-4 right-4 z-10 flex space-x-2">
+        <!-- Share button -->
+        <%= render 'shared/share_button', resource: @event, icon_only: true, btn_class: "bg-white/90 dark:bg-black/80 text-gray-800 dark:text-white p-2.5 rounded-full hover:bg-white dark:hover:bg-black transition-colors shadow-sm backdrop-blur-sm" %>
+        
+        <!-- Favorite button -->
+        <% if current_user %>
+          <% favorited = false %>
+          <% if current_user.respond_to?(:favorited?) %>
+            <% begin %>
+              <% favorited = current_user.favorited?(@event) %>
+            <% rescue => e %>
+              <% Rails.logger.error("Error checking favorite status: #{e.message}") %>
+            <% end %>
+          <% end %>
+          <button 
+            data-controller="favorite" 
+            data-favorite-url-value="<%= toggle_favorite_event_path(@event) %>"
+            data-favorite-favorited-value="<%= favorited ? 'true' : 'false' %>"
+            data-favorite-count-value="<%= @event.favorites.count rescue 0 %>"
+            data-action="favorite#toggle"
+            class="bg-white/90 dark:bg-black/80 text-gray-800 dark:text-white p-2.5 rounded-full hover:bg-white dark:hover:bg-black transition-colors shadow-sm backdrop-blur-sm"
+          >
+            <span data-favorite-target="icon">
+              <% if favorited %>
+                <svg class="h-5 w-5 text-red-500" fill="currentColor" stroke="none" viewBox="0 0 24 24">
+                  <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              <% else %>
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              <% end %>
+            </span>
+          </button>
+        <% else %>
+          <%= link_to new_user_session_path, class: "bg-white/90 dark:bg-black/80 text-gray-800 dark:text-white p-2.5 rounded-full hover:bg-white dark:hover:bg-black transition-colors shadow-sm backdrop-blur-sm" do %>
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          <% end %>
+        <% end %>
+        
+        <!-- Options button -->
+        <div class="relative" data-controller="dropdown">
+          <button 
+            data-action="dropdown#toggle click@window->dropdown#hide"
+            class="bg-white/90 dark:bg-black/80 text-gray-800 dark:text-white p-2.5 rounded-full hover:bg-white dark:hover:bg-black transition-colors shadow-sm backdrop-blur-sm">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+          </button>
+          
+          <!-- Dropdown menu -->
+          <div 
+            data-dropdown-target="menu"
+            class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden z-20 transform scale-95 opacity-0 pointer-events-none transition-all duration-100 origin-top-right">
+            
+            <% if current_user && current_user == @event.organizer %>
+              <%= link_to edit_event_path(@event), class: "flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" do %>
+                <svg class="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Edit Event
+              <% end %>
+              
+              <%= link_to event_analytics_path(@event), class: "flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" do %>
+                <svg class="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                Analytics
+              <% end %>
+              
+              <div class="border-t border-gray-200 dark:border-gray-700"></div>
+            <% end %>
+            
+            <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <svg class="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"></path>
+              </svg>
+              Report Event
+            </a>
+            
+            <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+              <svg class="h-5 w-5 mr-3 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Help & Support
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Event Basic Info Box -->
+    <div class="bg-white dark:bg-gray-800 rounded-t-3xl -mt-6 relative z-10 border-t border-gray-100 dark:border-gray-700 shadow-xl">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
+        <!-- Countdown timer if event is in the future -->
+        <% if @event.start_time > Time.now %>
+          <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl mb-6 p-4 flex items-center justify-between" data-controller="countdown" data-countdown-target-value="<%= @event.start_time.to_i %>">
+            <div class="flex items-center">
+              <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="text-blue-700 dark:text-blue-300 font-medium">This event starts in</span>
+            </div>
+            <div class="text-blue-700 dark:text-blue-300 font-mono font-bold" data-countdown-target="timer">
+              --:--:--:--
+            </div>
+          </div>
+        <% end %>
+        
+        <!-- Event title -->
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight"><%= @event.title %></h1>
+        
+        <!-- Hosted by -->
+        <div class="flex items-center mb-6">
+          <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mr-2 text-xs font-bold">
+            <%= @event.organizer.initials rescue "O" %>
+          </div>
+          <div>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">Hosted by <span class="font-medium text-gray-900 dark:text-white"><%= @event.organizer.full_name rescue "Event Organizer" %></span></p>
+          </div>
+        </div>
+        
+        <!-- Event description -->
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-3xl"><%= @event.short_description %></p>
+        
+        <!-- Event Key Details Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <!-- Date & Time -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 flex">
+            <div class="min-w-max mr-4">
+              <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Date & Time</h3>
+              <p class="font-medium text-gray-900 dark:text-white">
+                <%= @event.start_time.strftime("%A, %B %d, %Y") %>
+              </p>
+              <p class="text-gray-700 dark:text-gray-300">
+                <%= @event.start_time.strftime("%I:%M %p") %> - <%= @event.end_time.strftime("%I:%M %p") %>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Location -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 flex">
+            <div class="min-w-max mr-4">
+              <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Location</h3>
+              <p class="font-medium text-gray-900 dark:text-white">
+                <%= @event.venue&.name || 'Venue TBA' %>
+              </p>
+              <p class="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">
+                <%= @event.venue&.address || 'Address will be announced soon' %>
+              </p>
+            </div>
+          </div>
+          
+          <!-- Attendees -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 flex">
+            <div class="min-w-max mr-4">
+              <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Attendees</h3>
+              <p class="font-medium text-gray-900 dark:text-white">
+                <%= pluralize(@event.attendances.count, 'person') %> attending
+              </p>
+              
+              <% if @event.capacity.present? %>
+                <div class="mt-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                  <div class="h-1.5 rounded-full <%= @event.attendances.count >= (@event.capacity * 0.8).to_i ? 'bg-yellow-500' : 'bg-green-500' %>" 
+                       style="width: <%= [(@event.attendances.count.to_f / @event.capacity) * 100, 100].min %>%"></div>
+                </div>
+                <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <%= @event.attendances.count %>/<%= @event.capacity %> spots filled
+                </p>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Price -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-4 flex">
+            <div class="min-w-max mr-4">
+              <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Price</h3>
+              <% if @event.respond_to?(:free?) && @event.free? %>
+                <p class="font-medium text-green-600 dark:text-green-400">
+                  Free
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 text-sm">
+                  No ticket required
+                </p>
+              <% else %>
+                <p class="font-medium text-gray-900 dark:text-white">
+                  <%= @event.respond_to?(:ticket_price) ? @event.ticket_price : "₵#{@event.price}" %>
+                </p>
+                <p class="text-gray-700 dark:text-gray-300 text-sm">
+                  Per person
+                </p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Event Actions -->
+        <div class="flex flex-wrap items-center gap-4">
+          <% if current_user %>
+            <% if current_user.attending?(@event) %>
+              <%= button_to cancel_attendance_event_path(@event), method: :delete, 
+                  class: "px-6 py-3 bg-green-600 text-white font-medium rounded-xl shadow-md hover:bg-green-700 transition-colors flex items-center",
+                  data: { controller: "confirm", action: "confirm#show", 
+                      confirm_title_value: "Cancel Attendance", 
+                      confirm_body_value: "Are you sure you want to cancel your attendance to this event?", 
+                      confirm_confirm_value: "Yes, cancel", 
+                      confirm_cancel_value: "No, keep it",
+                      confirm_method_value: "delete" } do %>
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                You're Attending
+              <% end %>
+            <% elsif @event.sold_out? %>
+              <button disabled class="px-6 py-3 bg-gray-400 text-white font-medium rounded-xl shadow-md cursor-not-allowed">
+                <span class="flex items-center">
+                  <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Sold Out
+                </span>
+              </button>
+            <% elsif @event.past? %>
+              <button disabled class="px-6 py-3 bg-gray-400 text-white font-medium rounded-xl shadow-md cursor-not-allowed">
+                <span class="flex items-center">
+                  <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Event Ended
+                </span>
+              </button>
+            <% else %>
+              <%= button_to attend_event_path(@event), method: :post, 
+                  class: "px-6 py-3 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition-colors flex items-center" do %>
+                <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                </svg>
+                Attend Event
+              <% end %>
+            <% end %>
+          <% else %>
+            <%= link_to new_user_session_path, class: "px-6 py-3 bg-blue-600 text-white font-medium rounded-xl shadow-md hover:bg-blue-700 transition-colors flex items-center" do %>
+              <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+              </svg>
+              Sign in to Attend
+            <% end %>
+          <% end %>
+          
+                    <!-- Calendar dropdown component -->
+          <%= render 'shared/calendar_dropdown', event: @event %>
+          
+          <!-- Print button -->
+          <button 
+            onclick="window.print()" 
+            class="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center shadow-sm"
+          >
+            <svg class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Print
+          </button>
+          
+          <!-- Invite friends -->
+          <button class="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center shadow-sm">
+            <svg class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+            Invite Friends
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content with tabs -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Tabs navigation -->
+    <div class="border-b border-gray-200 dark:border-gray-700 mb-8">
+      <div class="flex space-x-8">
+        <button class="pb-4 border-b-2 border-blue-500 dark:border-blue-400 text-blue-600 dark:text-blue-400 font-medium">
+          Details
+        </button>
+        <button class="pb-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
+          Attendees (<%= @event.attendances.count %>)
+        </button>
+        <button class="pb-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
+          Discussion
+        </button>
+        <button class="pb-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium">
+          Photos
+        </button>
+      </div>
+    </div>
+    
+    <!-- Details tab content -->
+    <div class="grid grid-cols-3 gap-8">
+      <!-- Left column: Event details -->
+      <div class="col-span-3 lg:col-span-2 space-y-8">
+        <!-- About the event section -->
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">About this event</h2>
+          <div class="prose prose-blue dark:prose-invert max-w-none">
+            <%= @event.description.html_safe %>
+          </div>
+        </section>
+        
+        <!-- Photos section -->
+        <% if @event.event_media.count > 1 %>
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Photos</h2>
+            <button class="text-blue-600 dark:text-blue-400 text-sm font-medium flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              View all
+            </button>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <% @event.event_media.take(8).each_with_index do |media, index| %>
+              <div class="<%= index == 0 ? 'col-span-2 row-span-2' : '' %> relative overflow-hidden rounded-lg group">
+                <img src="<%= media.url %>" alt="Event photo" class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openLightbox(this.src)">
+                <div class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <button class="p-2 bg-white/90 rounded-full text-gray-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </section>
+        
+        <!-- Lightbox modal -->
+        <div id="lightbox" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center">
+          <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white p-2 rounded-full hover:bg-white/10 transition-colors">
+            <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+          <img id="lightbox-img" src="" alt="Lightbox image" class="max-h-[90vh] max-w-[90vw] object-contain">
+        </div>
+        <% end %>
+        
+        <!-- Comments section -->
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Discussion</h2>
+          
+          <!-- Comment form -->
+          <div class="mb-6">
+            <div class="space-y-4">
+              <div class="flex">
+                <div class="flex-shrink-0 mr-3">
+                  <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
+                    <%= current_user&.initials || "U" %>
+                  </div>
+                </div>
+                <div class="flex-grow">
+                  <textarea placeholder="Share your thoughts about this event..." class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" rows="3"></textarea>
+                  <div class="flex justify-end mt-2">
+                    <button class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 transition-colors">
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Example comments -->
+          <div class="space-y-6">
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
+              <div class="flex">
+                <div class="flex-shrink-0 mr-3">
+                  <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
+                    JD
+                  </div>
+                </div>
+                <div class="flex-grow">
+                  <div class="flex items-center mb-1">
+                    <h4 class="font-medium text-gray-900 dark:text-white">John Doe</h4>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">2 days ago</span>
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300">This event looks amazing! I can't wait to attend. Does anyone know if there will be food vendors at the event?</p>
+                  
+                  <div class="flex items-center mt-3 space-x-4 text-sm">
+                    <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                      </svg>
+                      Like
+                    </button>
+                    <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                      </svg>
+                      Reply
+                    </button>
+                  </div>
+                  
+                  <!-- Comment reply -->
+                  <div class="mt-4 ml-6 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+                    <div class="flex">
+                      <div class="flex-shrink-0 mr-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-xs font-bold text-blue-600 dark:text-blue-400">
+                          OG
+                        </div>
+                      </div>
+                      <div class="flex-grow">
+                        <div class="flex items-center mb-1">
+                          <h4 class="font-medium text-gray-900 dark:text-white">Organizer</h4>
+                          <span class="text-xs text-blue-600 dark:text-blue-400 font-medium ml-2">Host</span>
+                          <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">1 day ago</span>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">Yes, we'll have several food vendors at the event. You can find more details in the event description!</p>
+                        
+                        <div class="flex items-center mt-2 space-x-4 text-sm">
+                          <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center">
+                            <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                            </svg>
+                            Like
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
+              <div class="flex">
+                <div class="flex-shrink-0 mr-3">
+                  <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
+                    SM
+                  </div>
+                </div>
+                <div class="flex-grow">
+                  <div class="flex items-center mb-1">
+                    <h4 class="font-medium text-gray-900 dark:text-white">Sarah Miller</h4>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">Just now</span>
+                  </div>
+                  <p class="text-gray-700 dark:text-gray-300">Is this event appropriate for children? I'd like to bring my 10-year-old daughter with me.</p>
+                  
+                  <div class="flex items-center mt-3 space-x-4 text-sm">
+                    <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+                      </svg>
+                      Like
+                    </button>
+                    <button class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex items-center">
+                      <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                      </svg>
+                      Reply
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-6 text-center">
+            <button class="text-blue-600 dark:text-blue-400 font-medium hover:underline">
+              View all comments
+            </button>
+          </div>
+        </section>
+      </div>
+      
+      <!-- Right column: Sidebar items -->
+      <div class="col-span-3 lg:col-span-1 space-y-6">
+        <!-- Organizer info -->
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Organizer</h2>
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 rounded-full mr-4 border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-lg font-bold shadow-sm">
+              <%= @event.organizer.initials rescue "O" %>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-900 dark:text-white"><%= @event.organizer.full_name rescue "Event Organizer" %></h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Event Host</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-col space-y-3">
+            <% if @event.organizer.email.present? %>
+              <a href="mailto:<%= @event.organizer.email %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline flex items-center">
+                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                Contact organizer
+              </a>
+            <% end %>
+            
+            <a href="#" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline flex items-center">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              View profile
+            </a>
+            
+            <a href="#" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline flex items-center">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+              </svg>
+              Other events by this organizer
+            </a>
+          </div>
+        </section>
+        
+        <!-- Location map -->
+        <% if @event.venue&.latitude.present? && @event.venue&.longitude.present? %>
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+          <div class="h-48 bg-gray-200 dark:bg-gray-700 relative">
+            <!-- Map would be embedded here using Google Maps or another service -->
+            <div id="map" class="w-full h-full" data-lat="<%= @event.venue.latitude %>" data-lng="<%= @event.venue.longitude %>"></div>
+            <div class="absolute inset-0 flex items-center justify-center bg-gray-900/30 opacity-0 hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+              <div class="bg-white/90 dark:bg-black/80 text-gray-800 dark:text-white py-2 px-4 rounded-lg font-medium shadow-lg backdrop-blur-sm">
+                View larger map
+              </div>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium text-gray-900 dark:text-white mb-1"><%= @event.venue.name %></h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-2"><%= @event.venue.address %></p>
+            <a href="https://maps.google.com/?q=<%= @event.venue.latitude %>,<%= @event.venue.longitude %>" target="_blank" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline flex items-center">
+              <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              Get directions
+            </a>
+          </div>
+        </section>
+        <% end %>
+        
+        <!-- Attendees preview -->
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Attendees</h2>
+            <a href="#" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">See all</a>
+          </div>
+          
+          <% if @event.attendances.exists? %>
+            <div class="space-y-3 mb-4">
+              <% @event.attendances.includes(:user).limit(5).each do |attendance| %>
+                <div class="flex items-center">
+                  <% begin %>
+                    <% if attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
+                      <img 
+                        src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>" 
+                        alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>" 
+                        class="w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 shadow-sm object-cover"
+                      >
+                    <% else %>
+                      <div class="w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold shadow-sm">
+                        <%= attendance.user.respond_to?(:initials) ? (attendance.user.initials rescue "U") : "U" %>
+                      </div>
+                    <% end %>
+                    <div>
+                      <h3 class="font-medium text-gray-900 dark:text-white"><%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : (attendance.user.email.split('@').first rescue "Anonymous") %></h3>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <% if attendance.user == @event.organizer %>
+                          <span class="text-blue-600 dark:text-blue-400 font-medium">Organizer</span>
+                        <% else %>
+                          Attending
+                        <% end %>
+                      </p>
+                    </div>
+                  <% rescue => e %>
+                    <% Rails.logger.error("Error displaying attendee: #{e.message}") %>
+                    <div class="w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold shadow-sm">U</div>
+                    <div>
+                      <h3 class="font-medium text-gray-900 dark:text-white">Anonymous User</h3>
+                      <p class="text-xs text-gray-500 dark:text-gray-400">Attending</p>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            
+            <% if @event.attendances.count > 5 %>
+              <a href="#" class="block text-center py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm transition-colors">
+                View all <%= @event.attendances.count %> attendees
+              </a>
+            <% end %>
+          <% else %>
+            <div class="text-center py-6">
+              <svg class="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">No attendees yet. Be the first to join!</p>
+            </div>
+          <% end %>
+        </section>
+        
+        <!-- More events section -->
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Similar events</h2>
+          <div class="space-y-4">
+            <% if @similar_events.present? %>
+              <% @similar_events.limit(3).each do |event| %>
+                <a href="<%= event_path(event) %>" class="flex group border-b border-gray-200 dark:border-gray-700 pb-4 last:border-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 -mx-2 px-2 py-1 rounded-lg transition-colors">
+                  <div class="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700">
+                    <% if event.event_media.present? %>
+                      <img src="<%= event.event_media.first.url %>" alt="<%= event.title %>" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <% end %>
+                  </div>
+                  <div class="ml-3 flex-1 min-w-0">
+                    <h3 class="font-medium text-gray-900 dark:text-white mb-1 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"><%= event.title %></h3>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                      <%= event.start_time.strftime("%b %d, %Y") %>
+                    </p>
+                  </div>
+                </a>
+              <% end %>
+            <% else %>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">No similar events found at this time.</p>
+            <% end %>
+          </div>
+          
+          <div class="mt-6 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <a href="<%= events_path %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline flex items-center justify-center">
+              <svg class="h-4 w-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+              </svg>
+              Browse all events
+            </a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Countdown timer script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Register Stimulus controller for countdown
+    if (window.Stimulus) {
+      application.register("countdown", class extends Stimulus.Controller {
+        static targets = ["timer"]
+        static values = { target: Number }
+        
+        connect() {
+          this.updateCountdown();
+          this.interval = setInterval(() => this.updateCountdown(), 1000);
+        }
+        
+        disconnect() {
+          clearInterval(this.interval);
+        }
+        
+        updateCountdown() {
+          const now = Math.floor(Date.now() / 1000);
+          const targetTime = this.targetValue;
+          const timeLeft = targetTime - now;
+          
+          if (timeLeft <= 0) {
+            this.timerTarget.textContent = "Event has started!";
+            clearInterval(this.interval);
+            return;
+          }
+          
+          const days = Math.floor(timeLeft / 86400);
+          const hours = Math.floor((timeLeft % 86400) / 3600);
+          const minutes = Math.floor((timeLeft % 3600) / 60);
+          const seconds = timeLeft % 60;
+          
+          this.timerTarget.textContent = `${days.toString().padStart(2, '0')}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+      });
+    }
+    
+    // Register dropdown controller
+    if (window.Stimulus) {
+      application.register("dropdown", class extends Stimulus.Controller {
+        static targets = ["menu"]
+        
+        toggle() {
+          this.menuTarget.classList.toggle("opacity-0");
+          this.menuTarget.classList.toggle("scale-95");
+          this.menuTarget.classList.toggle("pointer-events-none");
+        }
+        
+        hide(event) {
+          if (!this.element.contains(event.target)) {
+            this.menuTarget.classList.add("opacity-0", "scale-95", "pointer-events-none");
+          }
+        }
+      });
+    }
+    
+    // Theme Toggle
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    
+    // Check for saved theme preference or respect OS setting
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      themeToggleLightIcon.classList.remove('hidden');
+    } else {
+      document.documentElement.classList.remove('dark');
+      themeToggleDarkIcon.classList.remove('hidden');
+    }
+    
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function() {
+        // Toggle icons
+        themeToggleDarkIcon.classList.toggle('hidden');
+        themeToggleLightIcon.classList.toggle('hidden');
+        
+        // Toggle dark class on html element
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('color-theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('color-theme', 'dark');
+        }
+      });
+    }
+  });
+  
+  // Lightbox functionality
+  function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    
+    if (lightbox && lightboxImg) {
+      lightboxImg.src = imageSrc;
+      lightbox.classList.remove('hidden');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling while lightbox is open
+    }
+  }
+  
+  function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    
+    if (lightbox) {
+      lightbox.classList.add('hidden');
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+  }
+  
+  // Close modals on escape key press
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      closeLightbox();
+    }
+  });
+</script>

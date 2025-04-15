@@ -1,0 +1,66 @@
+<div id="<%= dom_id venue %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Name:</strong>
+    <%= venue.name %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Description:</strong>
+    <%= venue.description %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Address:</strong>
+    <%= venue.address %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">City:</strong>
+    <%= venue.city %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Phone:</strong>
+    <% if venue.phone.present? %>
+      <a href="tel:<%= venue.phone %>" class="text-blue-600 hover:underline"><%= venue.formatted_phone %></a>
+    <% else %>
+      <span class="text-gray-500">Not provided</span>
+    <% end %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Website:</strong>
+    <% if venue.website.present? %>
+      <a href="<%= venue.website %>" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline"><%= venue.website %></a>
+    <% else %>
+      <span class="text-gray-500">Not provided</span>
+    <% end %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">State:</strong>
+    <%= venue.state || venue.region %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Postal code:</strong>
+    <%= venue.postal_code %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Country:</strong>
+    <%= venue.country %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Latitude:</strong>
+    <%= venue.latitude %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Longitude:</strong>
+    <%= venue.longitude %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Capacity:</strong>
+    <%= venue.capacity %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">User:</strong>
+    <%= venue.user_id %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Facilities:</strong>
+    <%= venue.facilities %>
+  </div>
+</div>

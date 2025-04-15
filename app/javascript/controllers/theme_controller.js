@@ -1,76 +1,73 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="theme"
+
 export default class extends Controller {
   static targets = ["lightIcon", "darkIcon"]
-
+  
   connect() {
-    console.log("Theme controller connected")
-    // Force immediate update with a slight delay to ensure targets are accessible
-    setTimeout(() => {
-      this.updateTheme()
-    }, 50)
+    // Initialize theme based on localStorage or system preference
+    this.initializeTheme()
     
-    // Listen for system preference changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (localStorage.getItem("theme") === "system" || !localStorage.getItem("theme")) {
-        this.updateTheme()
-      }
-    })
-    
-    // Update when theme changes elsewhere in the app
-    document.addEventListener('theme-changed', () => this.updateTheme())
-  }
-
-  setMode(event) {
-    const mode = event.currentTarget.dataset.themeParam
-    localStorage.setItem("theme", mode)
-    this.updateTheme()
+    // Update icon visibility
+    this.updateIcons()
   }
   
-  toggle() {
-    const isDark = document.documentElement.classList.contains("dark")
-    const newTheme = isDark ? "light" : "dark"
-    localStorage.setItem("theme", newTheme)
-    this.updateTheme()
+  /**
+   * Set the initial theme based on localStorage or system preference
+   */
+  initializeTheme() {
+    // Check if theme is stored in localStorage
+    const storedTheme = localStorage.getItem('theme')
     
-    // Dispatch event for other components to respond to
-    document.dispatchEvent(new CustomEvent('theme-changed', { 
-      detail: { theme: newTheme },
-      bubbles: true
-    }))
-  }
-  
-  updateTheme() {
-    const savedTheme = localStorage.getItem("theme")
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    
-    // Determine if dark mode should be active
-    const isDark = savedTheme === "dark" || 
-                 (savedTheme === "system" && systemPrefersDark) || 
-                 (!savedTheme && systemPrefersDark)
-    
-    // Apply theme based on preference or system default
-    if (isDark) {
-      document.documentElement.classList.add("dark")
-      document.documentElement.classList.remove("light")
+    if (storedTheme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else if (storedTheme === 'light') {
+      document.documentElement.classList.remove('dark')
     } else {
-      document.documentElement.classList.remove("dark")
-      document.documentElement.classList.add("light")
+      // If no theme is stored, check system preference
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
+    }
+  }
+  
+  /**
+   * Toggle between light and dark mode
+   */
+  toggle() {
+    const isDark = document.documentElement.classList.contains('dark')
+    
+    if (isDark) {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    } else {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
     }
     
-    // Update any UI indicators if they exist
-    if (this.hasLightIconTarget && this.hasDarkIconTarget) {
-      this.lightIconTarget.classList.toggle("hidden", !isDark)
-      this.darkIconTarget.classList.toggle("hidden", isDark)
+    this.updateIcons()
+  }
+  
+  /**
+   * Update the visibility of theme icons based on current theme
+   */
+  updateIcons() {
+    if (!this.hasLightIconTarget || !this.hasDarkIconTarget) {
+      return
     }
     
-    // Update theme indicator if it exists
-    const themeIndicator = document.getElementById('theme-indicator')
-    if (themeIndicator) {
-      themeIndicator.textContent = isDark ? 'dark' : 'light'
-    }
+    const isDark = document.documentElement.classList.contains('dark')
     
-    console.log('Theme updated:', isDark ? 'dark' : 'light')
+    if (isDark) {
+      this.lightIconTarget.classList.remove('hidden')
+      this.darkIconTarget.classList.add('hidden')
+    } else {
+      this.lightIconTarget.classList.add('hidden')
+      this.darkIconTarget.classList.remove('hidden')
+    }
   }
 }

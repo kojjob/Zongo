@@ -62,45 +62,14 @@
     <%= render 'layouts/direct_fix' %>
   </head>
 
-  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col" data-controller="debug">
-    <!-- Skip to main content link for accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-600 focus:text-white focus:rounded-md">Skip to main content</a>
-    <!-- Debug nav - visible in development only -->
-    <% if Rails.env.development? %>
-      <div class="bg-yellow-400 dark:bg-yellow-600 px-4 py-1 text-black dark:text-white text-sm font-medium">
-        <div class="container mx-auto flex justify-between items-center">
-          <span>Development Mode</span>
-          <div class="flex space-x-4">
-            <a href="/test" class="underline hover:no-underline">Test Page</a>
-            <a href="/test/theme" class="underline hover:no-underline">Theme Test</a>
-            <a href="/test/dropdown" class="underline hover:no-underline">Dropdown Test</a>
-            <a href="/test/main" class="underline hover:no-underline">Main App Test</a>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="hidden">Current theme: <span id="theme-indicator" class="text-black dark:text-white">light</span></div>
-    
-    <!-- Theme initialization is now handled by the theme controller -->
-    <!-- Theme indicator for debugging purposes -->
-    <script>
-      // Only update theme indicator on DOMContentLoaded to avoid duplication
-      document.addEventListener('DOMContentLoaded', function() {
-        const themeIndicator = document.getElementById('theme-indicator');
-        if (themeIndicator) {
-          const isDark = document.documentElement.classList.contains('dark');
-          themeIndicator.textContent = isDark ? 'dark' : 'light';
-        }
-      });
-    </script>
+  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col mt-16" data-controller="debug">
+
     <%= render 'shared/icons' %>
 
     <% if content_for?(:navbar) %>
       <%= yield :navbar %>
-    <% elsif user_signed_in? %>
-      <%= render 'shared/navbar' %>
     <% else %>
-      <%= render 'shared/landing_navbar' %>
+      <%= render 'shared/navbar_enhanced' %>
     <% end %>
 
     <main id="main-content" class="flex-grow" tabindex="-1">

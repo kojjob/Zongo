@@ -7,7 +7,19 @@ Rails.application.routes.draw do
   direct :rails_representation do |representation, options = {}|
     route_for(:rails_service_blob_representation, representation.blob.signed_id, representation.variation_key, representation.blob.filename, options)
   end
-  devise_for :users, sign_out_via: [ :get, :delete ]
+
+  # Devise routes with proper configuration
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    sessions: 'users/sessions'
+  }, sign_out_via: [:get, :delete], path_names: {
+    sign_in: 'sign_in',
+    sign_out: 'sign_out',
+    password: 'password',
+    confirmation: 'confirmation',
+    registration: 'sign_up',
+    sign_up: ''
+  }
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
@@ -22,9 +34,28 @@ Rails.application.routes.draw do
   get "/test/dropdown", to: "test#dropdown_test"
   get "/test/main", to: "test#main_app_test"
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  # Event routes
+  resources :events do
+    member do
+      post 'attend'
+      delete 'cancel_attendance'
+      post 'toggle_favorite'
+      get 'calendar', to: 'events#download_ics', as: 'calendar'
+    end
+    collection do
+      get 'upcoming'
+      get 'past'
+      get 'featured'
+    end
+    resources :event_comments, only: [:create, :destroy]
+    resources :event_media, only: [:create, :destroy, :index]
+    resource :analytics, only: [:show], controller: 'event_analytics'
+  end
+  
+  # Event-related resources
+  resources :venues
+  resources :categories
+  resources :attendances, only: [:create, :destroy, :index]
 
   # Wallet routes
   resource :wallet, only: [ :show, :edit, :update ] do

@@ -1,0 +1,202 @@
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col relative group">
+  <!-- Image Container with Overlay Effect -->
+  <div class="relative overflow-hidden">
+    <% if event.event_media.present? && event.event_media.first&.url.present? %>
+      <img src="<%= event.event_media.first.url %>" alt="<%= event.title %>" class="w-full h-52 object-cover transform group-hover:scale-105 transition-transform duration-500">
+    <% else %>
+      <div class="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700 flex items-center justify-center">
+        <svg class="w-16 h-16 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+    <% end %>
+    
+    <!-- Overlay Gradient -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    
+    <!-- Category Badge -->
+    <% if event.category.present? %>
+      <div class="absolute top-3 left-3 z-10">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
+              <%= category_color_class(event.category) %>">
+          <%= event.category.name %>
+        </span>
+      </div>
+    <% end %>
+    
+    <!-- Price Badge -->
+    <div class="absolute top-3 right-3 z-10">
+      <% if event.respond_to?(:free?) && event.free? %>
+        <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 text-xs font-bold px-2.5 py-1 rounded shadow-sm">
+          Free
+        </span>
+      <% else %>
+        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 text-xs font-bold px-2.5 py-1 rounded shadow-sm">
+          <%= event.respond_to?(:ticket_price) ? event.ticket_price : "₵#{event.price}" %>
+        </span>
+      <% end %>
+    </div>
+    
+    <!-- Date badge in bottom left -->
+    <div class="absolute bottom-3 left-3 z-10">
+      <div class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-gray-800 dark:text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-sm flex items-center">
+        <svg class="h-3.5 w-3.5 mr-1 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <%= event.start_time.strftime("%a, %b %d") %>
+      </div>
+    </div>
+    
+    <!-- Action buttons (right-aligned) -->
+    <div class="absolute bottom-3 right-3 z-10 flex space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <% if defined?(current_user) && current_user %>
+        <% attending = false %>
+        <% begin %>
+          <% attending = current_user.respond_to?(:attending?) && current_user.attending?(event) %>
+        <% rescue => e %>
+          <% Rails.logger.error("Error checking attendance: #{e.message}") %>
+        <% end %>
+        
+        <% if attending %>
+          <%= button_to cancel_attendance_event_path(event), method: :delete, class: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition" do %>
+            <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          <% end %>
+        <% else %>
+          <%= button_to attend_event_path(event), method: :post, class: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition" do %>
+            <svg class="h-4 w-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          <% end %>
+        <% end %>
+        
+        <% favorited = false %>
+        <% begin %>
+          <% favorited = current_user.respond_to?(:favorited?) && current_user.favorited?(event) %>
+        <% rescue => e %>
+          <% Rails.logger.error("Error checking favorites: #{e.message}") %>
+        <% end %>
+
+        <button 
+          data-controller="favorite" 
+          data-favorite-url-value="<%= toggle_favorite_event_path(event) %>"
+          data-favorite-favorited-value="<%= favorited ? 'true' : 'false' %>"
+          data-favorite-count-value="<%= event.favorites.count rescue 0 %>"
+          data-action="favorite#toggle"
+          class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition"
+        >
+          <span data-favorite-target="icon">
+            <% if favorited %>
+              <svg class="h-4 w-4 text-red-500" fill="currentColor" stroke="none" viewBox="0 0 24 24">
+                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            <% else %>
+              <svg class="h-4 w-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            <% end %>
+          </span>
+        </button>
+        
+        <!-- Share button -->
+        <%= render 'share_button', resource: event, icon_only: true, size: "small" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="p-5 flex-grow flex flex-col">
+    <!-- Time -->
+    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+      <span class="flex items-center">
+        <svg class="h-4 w-4 mr-1 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <%= event.start_time.strftime("%I:%M %p") %> - <%= event.end_time.strftime("%I:%M %p") %>
+      </span>
+    </p>
+    
+    <!-- Event title -->
+    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white leading-tight line-clamp-2">
+      <%= link_to event.title, event, class: "hover:text-blue-600 dark:hover:text-blue-400 transition" %>
+    </h3>
+    
+    <!-- Location -->
+    <% if event.venue %>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-start">
+        <svg class="h-4 w-4 mr-1 mt-0.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <span class="line-clamp-1"><%= event.venue.name %></span>
+      </p>
+    <% end %>
+    
+    <!-- Stats -->
+    <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-4 mt-1">
+      <span class="flex items-center">
+        <svg class="h-3.5 w-3.5 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <%= pluralize(event.attendances.try(:count) || 0, 'attendee') %>
+      </span>
+      
+      <span class="flex items-center">
+        <svg class="h-3.5 w-3.5 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+        <% view_count = event.respond_to?(:views_count) && event.views_count ? event.views_count : 
+                      (event.respond_to?(:event_views_count) ? event.event_views_count : 0) %>
+        <%= number_with_delimiter(view_count) %> views
+      </span>
+    </div>
+    
+    <!-- Attendees preview -->
+    <% if event.attendances.exists? %>
+      <div class="flex items-center mt-auto pt-4">
+        <div class="flex -space-x-2 mr-2">
+          <% event.attendances.includes(:user).limit(3).each do |attendance| %>
+            <% begin %>
+              <% if attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
+                <img 
+                  src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>" 
+                  alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>" 
+                  class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"
+                >
+              <% else %>
+                <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 shadow-sm">
+                  <%= attendance.user.respond_to?(:initials) ? (attendance.user.initials rescue "U") : "U" %>
+                </div>
+              <% end %>
+            <% rescue => e %>
+              <% Rails.logger.error("Error displaying attendee: #{e.message}") %>
+              <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-gray-300 dark:bg-gray-600 shadow-sm"></div>
+            <% end %>
+          <% end %>
+          
+          <% if event.attendances.count > 3 %>
+            <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+              +<%= event.attendances.count - 3 %>
+            </div>
+          <% end %>
+        </div>
+        
+        <% if defined?(current_user) && current_user && event.attendances.exists?(user_id: current_user.id) %>
+          <span class="text-xs text-green-600 dark:text-green-400 font-medium">You're attending</span>
+        <% elsif defined?(current_user) && current_user && current_user.respond_to?(:friends) && event.attendances.joins(:user).where(user: { id: current_user.friends.pluck(:id) }).exists? %>
+          <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
+            <%= event.attendances.joins(:user).where(user: { id: current_user.friends.pluck(:id) }).count %> friends are going
+          </span>
+        <% else %>
+          <span class="text-xs text-gray-500 dark:text-gray-400">
+            Join this event
+          </span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Full clickable link overlay -->
+  <%= link_to "", event_path(event), class: "absolute inset-0 z-10", "aria-hidden": true %>
+</div>
