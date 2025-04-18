@@ -12,32 +12,32 @@
         <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
         Overview
       <% end %>
-      
+
       <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
         Profile
       <% end %>
-      
+
       <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
         Security
       <% end %>
-      
+
       <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
         Notifications
       <% end %>
-      
+
       <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
         Appearance
       <% end %>
-      
+
       <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
         Payment
       <% end %>
-      
+
       <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
         Support
@@ -49,8 +49,8 @@
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Personal Information</h2>
-      
-      <%= form_with url: user_settings_update_profile_path, method: :patch, local: true, class: "space-y-6" do |form| %>
+
+      <%= form_with url: update_profile_path, method: :patch, local: true, class: "space-y-6" do |form| %>
         <div class="flex flex-col md:flex-row md:space-x-6">
           <%# Avatar Upload %>
           <div class="md:w-1/3 mb-6 md:mb-0">
@@ -62,16 +62,16 @@
                   <%= current_user.initials %>
                 </div>
               <% end %>
-              
+
               <div class="mt-4 flex items-center">
                 <label for="avatar-upload" class="btn btn-sm btn-outline-primary cursor-pointer">
                   <%= icon "upload", class: "h-4 w-4 mr-1" %>
                   Upload Photo
                 </label>
                 <input id="avatar-upload" name="user[avatar]" type="file" accept="image/jpeg,image/png" class="hidden" />
-                
+
                 <% if current_user.avatar.attached? %>
-                  <%= link_to remove_avatar_path, method: :delete, data: { confirm: "Are you sure you want to remove your profile photo?" }, class: "btn btn-sm btn-outline-error ml-2" do %>
+                  <%= link_to remove_avatar_path, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove your profile photo?" }, class: "btn btn-sm btn-outline-error ml-2" do %>
                     <%= icon "trash", class: "h-4 w-4 mr-1" %>
                     Remove
                   <% end %>
@@ -82,47 +82,106 @@
               </p>
             </div>
           </div>
-          
+
           <%# Profile Form Fields %>
           <div class="md:w-2/3">
-            <div class="grid grid-cols-1 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="col-span-1">
                 <%= form.label :username, "Username", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :username, value: current_user.username, class: "form-input w-full rounded-lg", placeholder: "Enter a username" %>
+                <%= form.text_field :user_username, name: "user[username]", value: current_user.username, class: "form-input w-full rounded-lg", placeholder: "Enter a username" %>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   Your username will be visible to other users. Only letters, numbers, dots and underscore allowed.
                 </p>
               </div>
-              
+
               <div class="col-span-1">
                 <%= form.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.email_field :email, value: current_user.email, class: "form-input w-full rounded-lg", placeholder: "Your email address" %>
+                <%= form.email_field :user_email, name: "user[email]", value: current_user.email, class: "form-input w-full rounded-lg", placeholder: "Your email address" %>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   This email will be used for account notifications and recovery.
                 </p>
               </div>
-              
+
               <div class="col-span-1">
-                <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.label :first_name, "First Name", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_first_name, name: "user[first_name]", value: current_user.first_name, class: "form-input w-full rounded-lg", placeholder: "Your first name" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :last_name, "Last Name", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_last_name, name: "user[last_name]", value: current_user.last_name, class: "form-input w-full rounded-lg", placeholder: "Your last name" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :phone_number, "Phone Number", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <span class="text-gray-500 dark:text-gray-400">+233</span>
                   </div>
-                  <%= form.telephone_field :phone, value: current_user.phone&.gsub(/^\+233/, ''), class: "form-input w-full rounded-lg pl-12", placeholder: "Your phone number" %>
+                  <%= form.telephone_field :user_phone_number, name: "user[phone_number]", value: current_user.phone_number&.gsub(/^\+233/, ''), class: "form-input w-full rounded-lg pl-12", placeholder: "Your phone number" %>
                 </div>
                 <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                   Your phone number is used for mobile money transactions and verification.
                 </p>
               </div>
-              
+
               <div class="col-span-1">
+                <%= form.label :date_of_birth, "Date of Birth", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.date_field :user_date_of_birth, name: "user[date_of_birth]", value: current_user.date_of_birth, class: "form-input w-full rounded-lg", placeholder: "YYYY-MM-DD" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :gender, "Gender", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.select :user_gender, name: "user[gender]", options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other'], ['Prefer not to say', 'prefer_not_to_say']], current_user.gender), { include_blank: 'Select gender' }, { class: "form-select w-full rounded-lg" } %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :occupation, "Occupation", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_occupation, name: "user[occupation]", value: current_user.occupation, class: "form-input w-full rounded-lg", placeholder: "Your occupation" %>
+              </div>
+
+              <div class="col-span-2">
                 <%= form.label :bio, "About Me (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_area :bio, rows: 3, class: "form-textarea w-full rounded-lg", placeholder: "Tell us a little about yourself" %>
+                <%= form.text_area :user_bio, name: "user[bio]", value: current_user.bio, rows: 3, class: "form-textarea w-full rounded-lg", placeholder: "Tell us a little about yourself" %>
+              </div>
+
+              <div class="col-span-2 border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Contact Information</h3>
+              </div>
+
+              <div class="col-span-2">
+                <%= form.label :address, "Address", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_address, name: "user[address]", value: current_user.address, class: "form-input w-full rounded-lg", placeholder: "Street address" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :city, "City", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_city, name: "user[city]", value: current_user.city, class: "form-input w-full rounded-lg", placeholder: "City" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :state, "State/Region", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_state, name: "user[state]", value: current_user.state, class: "form-input w-full rounded-lg", placeholder: "State or region" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :postal_code, "Postal Code", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_postal_code, name: "user[postal_code]", value: current_user.postal_code, class: "form-input w-full rounded-lg", placeholder: "Postal code" %>
+              </div>
+
+              <div class="col-span-1">
+                <%= form.label :country, "Country", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.text_field :user_country, name: "user[country]", value: current_user.country || "Ghana", class: "form-input w-full rounded-lg", placeholder: "Country" %>
+              </div>
+
+              <div class="col-span-2">
+                <%= form.label :website, "Website (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                <%= form.url_field :user_website, name: "user[website]", value: current_user.website, class: "form-input w-full rounded-lg", placeholder: "https://example.com" %>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="flex justify-end">
           <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
           <%= form.submit "Save Changes", class: "btn btn-primary" %>
@@ -130,12 +189,12 @@
       <% end %>
     </div>
   </div>
-  
+
   <%# Additional Settings %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Account Preferences</h2>
-      
+
       <div class="space-y-4">
         <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
           <div>
@@ -150,7 +209,7 @@
             </select>
           </div>
         </div>
-        
+
         <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
           <div>
             <h3 class="text-base font-medium text-gray-900 dark:text-white">Currency Display</h3>
@@ -165,7 +224,7 @@
             </select>
           </div>
         </div>
-        
+
         <div class="flex items-center justify-between py-3">
           <div>
             <h3 class="text-base font-medium text-gray-900 dark:text-white">Delete Account</h3>

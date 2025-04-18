@@ -2,20 +2,30 @@ require 'rails_helper'
 
 RSpec.describe "event_categories/index", type: :view do
   before(:each) do
-    assign(:event_categories, [
-      EventCategory.create!(
-        name: "Name",
-        description: "MyText",
-        icon: "Icon",
-        parent_category: nil
-      ),
-      EventCategory.create!(
-        name: "Name",
-        description: "MyText",
-        icon: "Icon",
-        parent_category: nil
-      )
-    ])
+    # Create some root categories
+    root_category1 = EventCategory.create!(
+      name: "Root Category 1 #{rand(1000)}",
+      description: "MyText",
+      icon: "Icon",
+      parent_category: nil
+    )
+    root_category2 = EventCategory.create!(
+      name: "Root Category 2 #{rand(1000)}",
+      description: "MyText",
+      icon: "Icon",
+      parent_category: nil
+    )
+    # Create a subcategory (optional, but good for testing hierarchy if needed)
+    # sub_category = EventCategory.create!(
+    #   name: "Sub Category #{rand(1000)}",
+    #   description: "MyText",
+    #   icon: "Icon",
+    #   parent_category: root_category1
+    # )
+
+    # Assign instance variables needed by the view
+    assign(:event_categories, [root_category1, root_category2]) # Assign all categories if needed elsewhere
+    assign(:root_categories, [root_category1, root_category2]) # Assign the root categories specifically
   end
 
   it "renders a list of event_categories" do

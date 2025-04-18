@@ -2,9 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "title", "slug", "startTime", "endTime", "freeTicket", "paidTicket", 
+    "title", "slug", "startTime", "endTime", "freeTicket", "paidTicket",
     "priceField", "priceInput", "privateCheck", "accessCodeField", "accessCodeInput",
-    "venueSelect", "venueForm", "venueName", "venueAddress", "venueCity", "venueRegion", 
+    "venueSelect", "venueForm", "venueName", "venueAddress", "venueCity", "venueRegion",
     "venuePhone", "venueCapacity", "recurrenceType", "recurrencePatternField",
     "imageInput", "imagePreview", "mainImageDropzone"
   ]
@@ -12,10 +12,10 @@ export default class extends Controller {
   connect() {
     // Initialize drag and drop for image upload
     this.initializeDragAndDrop()
-    
+
     // Initialize datepickers if needed
     this.initializeStartTime()
-    
+
     // Initialize form validation
     this.addFormValidation()
   }
@@ -25,11 +25,11 @@ export default class extends Controller {
     if (this.startTimeTarget.value === "") {
       const today = new Date()
       today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
-      
+
       // Format for datetime-local input
       const formattedDate = today.toISOString().slice(0, 16)
       this.startTimeTarget.value = formattedDate
-      
+
       // Set end time to 2 hours after start time
       const endTime = new Date(today)
       endTime.setHours(endTime.getHours() + 2)
@@ -40,7 +40,7 @@ export default class extends Controller {
   validateDates() {
     const startDate = new Date(this.startTimeTarget.value)
     const endDate = new Date(this.endTimeTarget.value)
-    
+
     if (endDate <= startDate) {
       this.endTimeTarget.setCustomValidity("End time must be after start time")
       this.endTimeTarget.reportValidity()
@@ -117,13 +117,13 @@ export default class extends Controller {
 
   createVenue(event) {
     event.preventDefault()
-    
+
     // Validate required fields
     if (!this.venueNameTarget.value || !this.venueAddressTarget.value || !this.venueCityTarget.value) {
       alert("Please fill in all required venue fields")
       return
     }
-    
+
     // You would normally submit this via fetch/AJAX
     // For this implementation, we'll create an option in the select dropdown
     const newOption = document.createElement("option")
@@ -131,18 +131,18 @@ export default class extends Controller {
     newOption.value = `new_venue_${Date.now()}` // Temporary ID
     this.venueSelectTarget.add(newOption, 0)
     this.venueSelectTarget.selectedIndex = 0
-    
+
     // Hide the venue form
     this.venueFormTarget.classList.add("hidden")
-    
+
     // Show confirmation message
     const confirmationDiv = document.createElement("div")
     confirmationDiv.className = "mt-2 p-2 bg-green-50 dark:bg-green-900 text-green-700 dark:text-green-300 text-sm rounded"
     confirmationDiv.textContent = `New venue "${this.venueNameTarget.value}" will be created when you save the event`
-    
+
     const parentElement = this.venueSelectTarget.parentElement
     parentElement.appendChild(confirmationDiv)
-    
+
     // Remove the confirmation after 5 seconds
     setTimeout(() => {
       if (parentElement.contains(confirmationDiv)) {
@@ -153,33 +153,36 @@ export default class extends Controller {
 
   previewImages() {
     const files = this.imageInputTarget.files
-    
-    if (files.length === 0) return
-    
+
+    if (!files || files.length === 0) return
+
     // Clear previous previews
     this.imagePreviewTarget.innerHTML = ""
-    
+
     // Create container
     const previewContainer = document.createElement("div")
     previewContainer.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
-    
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
-      
-      // Skip non-image files
-      if (!file.type.startsWith("image/")) continue
-      
+
+      // Skip non-image files or invalid files
+      if (!file || !file.type || !file.type.startsWith("image/")) {
+        console.warn("Skipping invalid file:", file)
+        continue
+      }
+
       const reader = new FileReader()
-      
+
       reader.onload = (e) => {
         const preview = document.createElement("div")
         preview.className = "relative group"
-        
+
         const img = document.createElement("img")
         img.src = e.target.result
         img.alt = "Image preview"
         img.className = "h-32 w-full object-cover rounded-md"
-        
+
         const removeButton = document.createElement("div")
         removeButton.className = "absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
         removeButton.innerHTML = `
@@ -189,7 +192,7 @@ export default class extends Controller {
             </svg>
           </button>
         `
-        
+
         // Add "featured" label if it's the first image
         if (i === 0) {
           const featuredBadge = document.createElement("div")
@@ -197,22 +200,22 @@ export default class extends Controller {
           featuredBadge.textContent = "Featured"
           preview.appendChild(featuredBadge)
         }
-        
+
         preview.appendChild(img)
         preview.appendChild(removeButton)
-        
+
         previewContainer.appendChild(preview)
-        
+
         // Add click handler for remove button
         removeButton.querySelector("button").addEventListener("click", (evt) => {
           const index = parseInt(evt.currentTarget.dataset.index)
           this.removeImagePreview(index)
         })
       }
-      
+
       reader.readAsDataURL(file)
     }
-    
+
     this.imagePreviewTarget.appendChild(previewContainer)
   }
 
@@ -220,22 +223,22 @@ export default class extends Controller {
     // We can't directly remove a file from the FileList, so we need to create a new input
     const currentFiles = this.imageInputTarget.files
     const newFileList = new DataTransfer()
-    
+
     for (let i = 0; i < currentFiles.length; i++) {
       if (i !== index) {
         newFileList.items.add(currentFiles[i])
       }
     }
-    
+
     this.imageInputTarget.files = newFileList.files
-    
+
     // Refresh the preview
     this.previewImages()
   }
 
   initializeDragAndDrop() {
     const dropzone = this.mainImageDropzoneTarget
-    
+
     // Prevent default behavior for these events
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       dropzone.addEventListener(eventName, (e) => {
@@ -243,42 +246,45 @@ export default class extends Controller {
         e.stopPropagation()
       }, false)
     })
-    
+
     // Add visual feedback
     dropzone.addEventListener('dragenter', () => {
       dropzone.classList.add('bg-blue-50', 'dark:bg-blue-900/30')
     }, false)
-    
+
     dropzone.addEventListener('dragleave', () => {
       dropzone.classList.remove('bg-blue-50', 'dark:bg-blue-900/30')
     }, false)
-    
+
     // Handle the drop
     dropzone.addEventListener('drop', (e) => {
       dropzone.classList.remove('bg-blue-50', 'dark:bg-blue-900/30')
-      
+
       const dt = e.dataTransfer
       const files = dt.files
-      
+
       // Update the file input with the dropped files
       const newFileList = new DataTransfer()
-      
+
       // Add existing files
       if (this.imageInputTarget.files.length > 0) {
         for (let i = 0; i < this.imageInputTarget.files.length; i++) {
           newFileList.items.add(this.imageInputTarget.files[i])
         }
       }
-      
+
       // Add new files
       for (let i = 0; i < files.length; i++) {
-        if (files[i].type.startsWith('image/')) {
+        // Check if the file is valid and is an image
+        if (files[i] && files[i].type && files[i].type.startsWith('image/')) {
           newFileList.items.add(files[i])
+        } else {
+          console.warn("Skipping invalid file during drag and drop:", files[i])
         }
       }
-      
+
       this.imageInputTarget.files = newFileList.files
-      
+
       // Trigger preview update
       this.previewImages()
     }, false)
@@ -286,22 +292,22 @@ export default class extends Controller {
 
   addFormValidation() {
     const form = this.element.closest('form')
-    
+
     form.addEventListener('submit', (event) => {
       // Validate required fields
       let isValid = true
-      
+
       // Validate dates
       const startDate = new Date(this.startTimeTarget.value)
       const endDate = new Date(this.endTimeTarget.value)
-      
+
       if (endDate <= startDate) {
         this.endTimeTarget.setCustomValidity("End time must be after start time")
         isValid = false
       } else {
         this.endTimeTarget.setCustomValidity("")
       }
-      
+
       // Validate price for paid events
       if (this.paidTicketTarget.checked && (!this.priceInputTarget.value || parseFloat(this.priceInputTarget.value) <= 0)) {
         this.priceInputTarget.setCustomValidity("Please enter a valid price greater than 0")
@@ -309,7 +315,7 @@ export default class extends Controller {
       } else {
         this.priceInputTarget.setCustomValidity("")
       }
-      
+
       // Validate access code for private events
       if (this.privateCheckTarget.checked && !this.accessCodeInputTarget.value) {
         this.accessCodeInputTarget.setCustomValidity("Access code is required for private events")
@@ -317,11 +323,11 @@ export default class extends Controller {
       } else {
         this.accessCodeInputTarget.setCustomValidity("")
       }
-      
+
       // If any validations fail, prevent form submission
       if (!isValid) {
         event.preventDefault()
-        
+
         // Report the first invalid field
         const invalidField = form.querySelector(":invalid")
         if (invalidField) {

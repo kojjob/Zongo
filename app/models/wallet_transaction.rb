@@ -92,12 +92,16 @@ class WalletTransaction < ApplicationRecord
         }
       )
 
-      # Update wallet balance
+      # Update wallet balance using proper methods
       case transaction_type
       when "deposit", "transfer_in", "refund"
-        wallet.update!(balance_cents: wallet.balance_cents - amount_cents)
+        # Need to debit the wallet (reverse the deposit)
+        amount_in_wallet_currency = amount_cents / 100.0 # Convert cents to wallet currency
+        wallet.debit(amount_in_wallet_currency, transaction_id: "REV-#{reference}")
       when "withdrawal", "transfer_out", "payment"
-        wallet.update!(balance_cents: wallet.balance_cents + amount_cents)
+        # Need to credit the wallet (reverse the withdrawal)
+        amount_in_wallet_currency = amount_cents / 100.0 # Convert cents to wallet currency
+        wallet.credit(amount_in_wallet_currency, transaction_id: "REV-#{reference}")
       end
 
       # Mark this transaction as reversed

@@ -86,7 +86,7 @@
 }
 
 .dropdown-menu {
-  @apply origin-top absolute right-0 mt-2 rounded-xl shadow-lg py-2 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 border border-gray-100 dark:border-gray-700 z-50 hidden;
+  @apply origin-top absolute right-0 mt-2 rounded-xl shadow-lg py-2 bg-white dark:bg-gray-800 z-50 backdrop-blur-sm;
 }
 
 .dropdown-menu.left-0 {
@@ -110,7 +110,7 @@
 }
 
 .dropdown-item:not(:last-child) {
-  @apply border-b border-gray-100 dark:border-gray-700;
+  @apply border-b border-gray-100/50 dark:border-gray-700/50;
 }
 
 /* Alert Components */
@@ -281,15 +281,65 @@
 
 /* Payment method cards */
 .payment-method-card {
-  @apply relative border rounded-lg p-4 transition hover:border-primary-500 dark:hover:border-primary-500;
+  @apply relative border rounded-xl p-5 transition-all duration-300 hover:shadow-lg;
 }
 
 .payment-method-card.selected {
-  @apply border-primary-500 bg-primary-50 dark:bg-primary-900/10;
+  @apply border-2 shadow-md;
 }
 
+/* Method type colors */
+.method-type-blue {
+  --method-color: theme('colors.blue.500');
+  --method-color-light: theme('colors.blue.100');
+  --method-color-dark: theme('colors.blue.700');
+  --method-gradient: linear-gradient(135deg, theme('colors.blue.500'), theme('colors.indigo.600'));
+}
+
+.method-type-purple {
+  --method-color: theme('colors.purple.500');
+  --method-color-light: theme('colors.purple.100');
+  --method-color-dark: theme('colors.purple.700');
+  --method-gradient: linear-gradient(135deg, theme('colors.purple.500'), theme('colors.pink.600'));
+}
+
+.method-type-green {
+  --method-color: theme('colors.green.500');
+  --method-color-light: theme('colors.green.100');
+  --method-color-dark: theme('colors.green.700');
+  --method-gradient: linear-gradient(135deg, theme('colors.green.500'), theme('colors.emerald.600'));
+}
+
+.method-type-orange {
+  --method-color: theme('colors.orange.500');
+  --method-color-light: theme('colors.orange.100');
+  --method-color-dark: theme('colors.orange.700');
+  --method-gradient: linear-gradient(135deg, theme('colors.orange.500'), theme('colors.amber.600'));
+}
+
+/* Method type icon */
+.method-type-icon {
+  @apply w-16 h-16 rounded-full flex items-center justify-center text-white shadow-md transform transition-transform duration-300;
+  background: var(--method-gradient, linear-gradient(135deg, theme('colors.gray.500'), theme('colors.gray.600')));
+}
+
+.payment-method-card:hover .method-type-icon {
+  @apply scale-110;
+}
+
+/* Default badge with ribbon style */
 .payment-method-default-badge {
-  @apply absolute top-3 right-3 px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-xs font-medium rounded;
+  @apply absolute top-0 right-0 w-20 h-20 overflow-hidden;
+}
+
+.payment-method-default-badge::before {
+  content: '';
+  @apply absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 rotate-45 w-20 h-20;
+  background: var(--method-gradient, linear-gradient(135deg, theme('colors.primary.500'), theme('colors.primary.600')));
+}
+
+.payment-method-default-badge-text {
+  @apply absolute top-3 right-3 text-xs font-bold text-white transform rotate-45;
 }
 
 /* Transaction form styling */
@@ -345,24 +395,89 @@
   @apply bg-gray-500;
 }
 
+/* Modal Components */
+.modal {
+  @apply fixed inset-0 z-50 overflow-y-auto hidden;
+}
+
+.modal.flex {
+  @apply flex items-center justify-center;
+}
+
+.modal-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 transition-opacity;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.modal-container {
+  @apply relative bg-white dark:bg-gray-800 rounded-xl shadow-xl transform transition-all max-w-lg w-full mx-auto;
+}
+
+.modal-content {
+  @apply relative;
+}
+
+.modal-header {
+  @apply flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700;
+}
+
+.modal-title {
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.modal-close {
+  @apply text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 focus:outline-none;
+}
+
+.modal-body {
+  @apply p-6;
+}
+
+.modal-footer {
+  @apply px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-2;
+}
+
+/* Flash Message Components */
+.flash-message {
+  @apply transform transition-all duration-300 ease-in-out;
+  animation: fadeInDown 0.5s ease-out forwards;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Print styles for transaction receipts */
 @media print {
   .no-print {
     display: none !important;
   }
-  
+
   body {
     background-color: white !important;
     color: black !important;
   }
-  
+
   .transaction-receipt {
     background-color: white !important;
     color: black !important;
     border: 1px solid #e5e7eb !important;
     padding: 20px !important;
   }
-  
+
   .transaction-header {
     background-color: #f9fafb !important;
     color: black !important;

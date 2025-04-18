@@ -1,132 +1,192 @@
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
 
-  <!-- Hero Section - Improved with more modern design -->
+  <!-- Enhanced Hero Section with Immersive Design -->
   <% if @featured_event.present? %>
-  <section class="relative overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700">
-    <!-- Background pattern with overlay -->
-    <div class="absolute inset-0 opacity-10">
+  <section class="relative overflow-hidden min-h-[600px] flex items-center">
+    <!-- Full-screen background image with parallax effect -->
+    <% if @featured_event.event_media.present? %>
+      <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed transform scale-105"
+           style="background-image: url('<%= @featured_event.event_media.first.image_url %>');"
+           data-controller="parallax">
+      </div>
+    <% else %>
+      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
+    <% end %>
+
+    <!-- Animated pattern overlay -->
+    <div class="absolute inset-0 opacity-30 mix-blend-overlay">
       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         <defs>
           <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.8"/>
           </pattern>
         </defs>
         <rect width="100" height="100" fill="url(#grid)" />
       </svg>
     </div>
-    
-    <!-- Event image overlay -->
-    <% if @featured_event.event_media.present? %>
-      <div class="absolute inset-0 opacity-20" 
-           style="background-image: url('<%= @featured_event.event_media.first.url %>'); 
-                  background-size: cover; background-position: center;">
-      </div>
-    <% end %>
-    
-    <!-- Gradient overlay -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"></div>
-    
-    <div class="relative max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8 z-10">
-      <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
-        <div class="space-y-6">
-          <!-- Event badge with pulsing animation -->
-          <div class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-white/20 backdrop-blur-sm text-white border border-white/30 shadow-sm relative">
+
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+      <!-- Animated circles -->
+      <div class="absolute top-[10%] left-[5%] w-64 h-64 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl animate-pulse-slow"></div>
+      <div class="absolute bottom-[15%] right-[10%] w-80 h-80 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 blur-3xl animate-pulse-slow animation-delay-2000"></div>
+      <div class="absolute top-[40%] right-[20%] w-40 h-40 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 blur-3xl animate-pulse-slow animation-delay-1000"></div>
+    </div>
+
+    <!-- Enhanced gradient overlay with depth -->
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
+
+    <div class="relative max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:py-28 lg:px-8 z-10">
+      <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+        <div class="space-y-8">
+          <!-- Enhanced Event badge with 3D effect -->
+          <div class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-purple-500/80 to-pink-500/80 backdrop-blur-md text-white border border-white/30 shadow-lg relative transform hover:scale-105 transition-all">
+            <span class="mr-2">✦</span>
             Featured Event
             <span class="absolute right-0 top-0 -mr-1 -mt-1 flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
             </span>
           </div>
-          
-          <!-- Event title with better typography -->
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none text-white">
+
+          <!-- Event title with enhanced typography and animation -->
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white animate-text-shimmer">
             <%= @featured_event.title %>
           </h1>
-          
-          <!-- Event description -->
-          <p class="text-xl max-w-2xl text-gray-100 leading-relaxed">
+
+          <!-- Event description with enhanced styling -->
+          <p class="text-xl md:text-2xl max-w-2xl text-blue-50 leading-relaxed font-light drop-shadow-md">
             <%= @featured_event.short_description %>
           </p>
-          
-          <!-- Action buttons with hover effects -->
-          <div class="flex flex-wrap gap-4 pt-4">
-            <%= link_to "Get Tickets", @featured_event, class: "px-8 py-4 bg-white hover:bg-gray-50 text-blue-700 hover:text-blue-800 font-medium rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600" %>
-            
-            <%= link_to "Learn More", @featured_event, class: "px-8 py-4 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white font-medium rounded-xl border border-white/30 hover:border-white/50 transition-all transform hover:-translate-y-1 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600" %>
+
+          <!-- Enhanced Action buttons with 3D effects -->
+          <div class="flex flex-wrap gap-5 pt-6">
+            <%= link_to @featured_event, class: "group relative px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(219,39,119,0.3)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden" do %>
+              <span class="relative z-10 flex items-center">
+                <%= icon "ticket", class: "w-5 h-5 mr-2" %>
+                Get Tickets
+              </span>
+              <div class="absolute inset-0 -translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-purple-600 to-pink-600 transition-transform duration-300 ease-in-out"></div>
+            <% end %>
+
+            <%= link_to @featured_event, class: "group relative px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-xl border border-white/30 hover:border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.2)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden" do %>
+              <span class="relative z-10 flex items-center">
+                <%= icon "info", class: "w-5 h-5 mr-2" %>
+                Learn More
+              </span>
+              <div class="absolute inset-0 -translate-y-full group-hover:translate-y-0 bg-white/20 transition-transform duration-300 ease-in-out"></div>
+            <% end %>
           </div>
-          
-          <!-- Event Details with improved visual style -->
-          <div class="flex flex-wrap gap-x-8 gap-y-4 mt-8 bg-black/20 backdrop-blur-sm p-6 rounded-xl max-w-xl border border-white/10">
+
+          <!-- Enhanced Event Details with glassmorphism -->
+          <div class="flex flex-wrap gap-x-8 gap-y-6 mt-10 bg-black/30 backdrop-blur-xl p-8 rounded-2xl max-w-xl border border-white/20 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
             <div class="flex items-center">
-              <div class="bg-white/20 p-2 rounded-lg mr-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
+              <div class="bg-gradient-to-br from-blue-500/80 to-indigo-500/80 p-3 rounded-xl mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <%= icon "calendar", class: "w-6 h-6 text-white" %>
               </div>
               <div>
-                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Date</p>
-                <p class="font-bold text-white"><%= @featured_event.start_time.strftime("%A, %B %d, %Y") %></p>
+                <p class="text-xs text-blue-200 uppercase tracking-widest font-semibold">Date</p>
+                <p class="font-bold text-white text-lg"><%= @featured_event.start_time.strftime("%A, %B %d, %Y") %></p>
               </div>
             </div>
-            
+
             <div class="flex items-center">
-              <div class="bg-white/20 p-2 rounded-lg mr-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+              <div class="bg-gradient-to-br from-purple-500/80 to-pink-500/80 p-3 rounded-xl mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <%= icon "clock", class: "w-6 h-6 text-white" %>
               </div>
               <div>
-                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Time</p>
-                <p class="font-bold text-white"><%= @featured_event.start_time.strftime("%I:%M %p") %> - <%= @featured_event.end_time.strftime("%I:%M %p") %></p>
+                <p class="text-xs text-blue-200 uppercase tracking-widest font-semibold">Time</p>
+                <p class="font-bold text-white text-lg"><%= @featured_event.start_time.strftime("%I:%M %p") %> - <%= @featured_event.end_time.strftime("%I:%M %p") %></p>
               </div>
             </div>
-            
+
             <div class="flex items-center">
-              <div class="bg-white/20 p-2 rounded-lg mr-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
+              <div class="bg-gradient-to-br from-amber-500/80 to-orange-500/80 p-3 rounded-xl mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <%= icon "map-pin", class: "w-6 h-6 text-white" %>
               </div>
               <div>
-                <p class="text-xs text-gray-300 uppercase tracking-wide font-medium">Location</p>
-                <p class="font-bold text-white"><%= @featured_event.venue&.name || 'Venue TBA' %></p>
+                <p class="text-xs text-blue-200 uppercase tracking-widest font-semibold">Location</p>
+                <p class="font-bold text-white text-lg"><%= @featured_event.venue&.name || 'Venue TBA' %></p>
+              </div>
+            </div>
+
+            <!-- Added attendee count with animation -->
+            <div class="flex items-center">
+              <div class="bg-gradient-to-br from-green-500/80 to-emerald-500/80 p-3 rounded-xl mr-4 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                <%= icon "users", class: "w-6 h-6 text-white" %>
+              </div>
+              <div>
+                <p class="text-xs text-blue-200 uppercase tracking-widest font-semibold">Attendees</p>
+                <p class="font-bold text-white text-lg">
+                  <span class="inline-flex items-center">
+                    <%= @featured_event.attendances.count %>
+                    <span class="ml-2 px-2 py-1 text-xs bg-white/20 rounded-full animate-pulse">Join now!</span>
+                  </span>
+                </p>
               </div>
             </div>
           </div>
         </div>
-        
-        <!-- Featured image with artistic elements -->
+
+        <!-- Enhanced Featured image with 3D and artistic elements -->
         <div class="hidden lg:flex items-center justify-center mt-10 lg:mt-0">
           <div class="relative w-full max-w-md">
-            <!-- Decorative elements -->
-            <div class="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-60 blur-2xl"></div>
-            <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full opacity-60 blur-2xl"></div>
-            
-            <!-- Featured image -->
-            <div class="relative bg-white bg-opacity-5 backdrop-filter backdrop-blur-lg p-1 rounded-2xl border border-white/20 shadow-2xl overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
+            <!-- Enhanced decorative elements with animation -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full opacity-60 blur-2xl animate-pulse-slow"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full opacity-60 blur-2xl animate-pulse-slow animation-delay-1000"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full opacity-40 blur-3xl animate-pulse-slow animation-delay-2000"></div>
+
+            <!-- Floating elements -->
+            <div class="absolute -top-8 left-10 w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl opacity-80 shadow-xl transform rotate-12 animate-float"></div>
+            <div class="absolute -bottom-4 right-10 w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-full opacity-80 shadow-xl animate-float animation-delay-1000"></div>
+            <div class="absolute top-1/4 -right-6 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-lg opacity-80 shadow-xl transform -rotate-12 animate-float animation-delay-2000"></div>
+
+            <!-- Enhanced Featured image with 3D effect -->
+            <div class="relative bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/30 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden transform rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105">
               <% if @featured_event.event_media.present? %>
-                <img 
-                  src="<%= @featured_event.event_media.first.url %>" 
-                  alt="<%= @featured_event.title %>" 
-                  class="w-full h-80 object-cover rounded-xl"
+                <img
+                  src="<%= @featured_event.event_media.first.image_url %>"
+                  alt="<%= @featured_event.title %>"
+                  class="w-full h-96 object-cover rounded-xl shadow-inner"
                 >
               <% else %>
-                <div class="w-full h-80 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center">
-                  <svg class="w-24 h-24 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m-5-2a7 7 0 110-14 7 7 0 010 14z" />
-                  </svg>
+                <div class="w-full h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center">
+                  <%= icon "image", class: "w-24 h-24 text-white/70" %>
                 </div>
               <% end %>
-              
-              <!-- Badge with glass morphism effect -->
-              <div class="absolute top-4 right-4 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-gray-900 dark:text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-lg">
+
+              <!-- Enhanced Badge with 3D glass morphism effect -->
+              <div class="absolute top-4 right-4 bg-gradient-to-r from-white/80 to-white/60 dark:from-black/80 dark:to-black/60 backdrop-blur-md text-gray-900 dark:text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg border border-white/50 dark:border-white/10 transform hover:scale-105 transition-transform">
                 <% if @featured_event.attendances.count > 0 %>
-                  <%= @featured_event.attendances.count %> attending
+                  <span class="flex items-center">
+                    <%= icon "users", class: "w-4 h-4 mr-1.5 text-indigo-600 dark:text-indigo-400" %>
+                    <%= @featured_event.attendances.count %> attending
+                  </span>
                 <% else %>
-                  Be the first to join!
+                  <span class="flex items-center">
+                    <%= icon "user-plus", class: "w-4 h-4 mr-1.5 text-indigo-600 dark:text-indigo-400" %>
+                    Be the first to join!
+                  </span>
                 <% end %>
+              </div>
+
+              <!-- Category badge -->
+              <% if @featured_event.category.present? %>
+                <div class="absolute top-4 left-4 bg-gradient-to-r from-indigo-600/90 to-purple-600/90 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg border border-indigo-400/30 transform hover:scale-105 transition-transform">
+                  <span class="flex items-center">
+                    <%= icon "tag", class: "w-4 h-4 mr-1.5" %>
+                    <%= @featured_event.category.name %>
+                  </span>
+                </div>
+              <% end %>
+
+              <!-- Price badge -->
+              <div class="absolute bottom-4 left-4 bg-gradient-to-r <%= @featured_event.free? ? 'from-green-600/90 to-emerald-600/90' : 'from-blue-600/90 to-cyan-600/90' %> backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg border <%= @featured_event.free? ? 'border-green-400/30' : 'border-blue-400/30' %> transform hover:scale-105 transition-transform">
+                <span class="flex items-center">
+                  <%= icon @featured_event.free? ? "gift" : "credit-card", class: "w-4 h-4 mr-1.5" %>
+                  <%= @featured_event.free? ? "Free Event" : "₵#{@featured_event.price}" %>
+                </span>
               </div>
             </div>
           </div>
@@ -135,53 +195,111 @@
     </div>
   </section>
   <% else %>
-  <!-- Fallback Banner with modern design -->
-  <section class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white relative overflow-hidden">
-    <!-- Pattern background -->
-    <div class="absolute inset-0 opacity-10">
-      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-        <defs>
-          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/>
-          </pattern>
-        </defs>
-        <rect width="100" height="100" fill="url(#grid)" />
-      </svg>
+  <!-- Enhanced Fallback Banner with immersive design -->
+  <section class="relative overflow-hidden min-h-[500px] flex items-center">
+    <!-- Dynamic background with animated gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 animate-gradient-slow">
+      <!-- Animated pattern overlay with better visibility -->
+      <div class="absolute inset-0 opacity-30 mix-blend-overlay">
+        <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.8"/>
+            </pattern>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
+      </div>
     </div>
-    
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="lg:flex lg:items-center lg:justify-between">
+
+    <!-- Decorative elements -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+      <!-- Animated circles with different sizes and positions -->
+      <div class="absolute top-[15%] left-[10%] w-72 h-72 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl animate-pulse-slow"></div>
+      <div class="absolute bottom-[20%] right-[5%] w-96 h-96 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-500/20 blur-3xl animate-pulse-slow animation-delay-2000"></div>
+      <div class="absolute top-[40%] right-[25%] w-48 h-48 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 blur-3xl animate-pulse-slow animation-delay-1000"></div>
+
+      <!-- Floating geometric shapes -->
+      <div class="absolute top-[20%] right-[15%] w-16 h-16 bg-white/10 backdrop-blur-sm rounded-lg border border-white/30 shadow-xl transform rotate-12 animate-float"></div>
+      <div class="absolute bottom-[30%] left-[20%] w-20 h-20 bg-white/10 backdrop-blur-sm rounded-full border border-white/30 shadow-xl animate-float animation-delay-1000"></div>
+      <div class="absolute top-[60%] right-[30%] w-12 h-12 bg-white/10 backdrop-blur-sm rounded-lg border border-white/30 shadow-xl transform -rotate-12 animate-float animation-delay-2000"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="lg:flex lg:items-center lg:justify-between gap-16">
         <div class="lg:max-w-2xl">
-          <h2 class="text-3xl font-extrabold mb-2 sm:text-4xl lg:text-5xl tracking-tight">
-            Discover Events Near You
+          <!-- Enhanced heading with text effects -->
+          <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-4 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white animate-text-shimmer">
+            Discover Amazing Events Near You
           </h2>
-          <p class="text-xl mb-6 text-gray-100 max-w-2xl">Find the best events happening around you and connect with like-minded individuals in your community.</p>
-          <div class="flex gap-4 flex-wrap">
-            <a href="/events/new" class="px-6 py-3 bg-white hover:bg-gray-50 text-blue-700 hover:text-blue-800 rounded-xl font-medium shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
-              Create an Event
-            </a>
-            <a href="#" class="px-6 py-3 bg-black/20 hover:bg-black/30 backdrop-blur-sm text-white rounded-xl font-medium border border-white/30 hover:border-white/50 transition-all transform hover:-translate-y-1">
-              Explore Categories
+          <p class="text-xl md:text-2xl mb-8 text-blue-50 max-w-2xl font-light drop-shadow-md leading-relaxed">
+            Find the best events happening around you and connect with like-minded individuals in your community.
+          </p>
+
+          <!-- Enhanced action buttons with 3D effects -->
+          <div class="flex gap-5 flex-wrap">
+            <% if user_signed_in? %>
+              <a href="/events/new" class="group relative px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(219,39,119,0.3)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                <span class="relative z-10 flex items-center">
+                  <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+                  Create an Event
+                </span>
+                <div class="absolute inset-0 -translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-purple-600 to-pink-600 transition-transform duration-300 ease-in-out"></div>
+              </a>
+            <% else %>
+              <%= link_to new_user_session_path, class: "group relative px-8 py-4 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(219,39,119,0.3)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden tooltip-container" do %>
+                <span class="relative z-10 flex items-center">
+                  <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+                  Create an Event
+                </span>
+                <div class="absolute inset-0 -translate-y-full group-hover:translate-y-0 bg-gradient-to-r from-purple-600 to-pink-600 transition-transform duration-300 ease-in-out"></div>
+                <span class="tooltip tooltip-enhanced">Sign in to create an event</span>
+              <% end %>
+            <% end %>
+
+            <a href="#" class="group relative px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-xl border border-white/30 hover:border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.2)] transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+              <span class="relative z-10 flex items-center">
+                <%= icon "tag", class: "w-5 h-5 mr-2" %>
+                Explore Categories
+              </span>
+              <div class="absolute inset-0 -translate-y-full group-hover:translate-y-0 bg-white/20 transition-transform duration-300 ease-in-out"></div>
             </a>
           </div>
         </div>
-        <div class="mt-10 lg:mt-0 lg:max-w-md">
-          <div class="grid grid-cols-2 gap-4">
-            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
-              <span class="text-3xl font-bold mb-1"><%= Event.upcoming.count rescue "300+" %></span>
-              <span class="text-sm opacity-80">Upcoming Events</span>
+
+        <!-- Enhanced stats cards with 3D effects and animations -->
+        <div class="mt-12 lg:mt-0 lg:max-w-md">
+          <div class="grid grid-cols-2 gap-5">
+            <div class="rounded-xl p-5 bg-white/10 backdrop-blur-md border border-white/30 flex flex-col items-center justify-center text-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] transition-all duration-300 transform hover:-translate-y-1 group">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                <%= icon "calendar", class: "w-6 h-6 text-white" %>
+              </div>
+              <span class="text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-indigo-200"><%= Event.upcoming.count rescue "300+" %></span>
+              <span class="text-sm text-blue-100">Upcoming Events</span>
             </div>
-            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
-              <span class="text-3xl font-bold mb-1"><%= @categories.count rescue "20+" %></span>
-              <span class="text-sm opacity-80">Categories</span>
+
+            <div class="rounded-xl p-5 bg-white/10 backdrop-blur-md border border-white/30 flex flex-col items-center justify-center text-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] transition-all duration-300 transform hover:-translate-y-1 group">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                <%= icon "tag", class: "w-6 h-6 text-white" %>
+              </div>
+              <span class="text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-pink-200"><%= @categories.count rescue "20+" %></span>
+              <span class="text-sm text-blue-100">Categories</span>
             </div>
-            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
-              <span class="text-3xl font-bold mb-1"><%= User.count rescue "5K+" %></span>
-              <span class="text-sm opacity-80">Active Users</span>
+
+            <div class="rounded-xl p-5 bg-white/10 backdrop-blur-md border border-white/30 flex flex-col items-center justify-center text-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] transition-all duration-300 transform hover:-translate-y-1 group">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                <%= icon "users", class: "w-6 h-6 text-white" %>
+              </div>
+              <span class="text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-orange-200"><%= User.count rescue "5K+" %></span>
+              <span class="text-sm text-blue-100">Active Users</span>
             </div>
-            <div class="rounded-xl p-4 bg-white/10 backdrop-blur-sm border border-white/20 flex flex-col items-center justify-center text-center">
-              <span class="text-3xl font-bold mb-1"><%= Venue.count rescue "100+" %></span>
-              <span class="text-sm opacity-80">Venues</span>
+
+            <div class="rounded-xl p-5 bg-white/10 backdrop-blur-md border border-white/30 flex flex-col items-center justify-center text-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.1)] transition-all duration-300 transform hover:-translate-y-1 group">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mb-3 shadow-lg group-hover:scale-110 transition-transform">
+                <%= icon "map-pin", class: "w-6 h-6 text-white" %>
+              </div>
+              <span class="text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-green-200 to-emerald-200"><%= Venue.count rescue "100+" %></span>
+              <span class="text-sm text-blue-100">Venues</span>
             </div>
           </div>
         </div>
@@ -212,7 +330,7 @@
       <!-- Sidebar with filters - Upgraded design -->
       <div class="hidden lg:block lg:col-span-1 space-y-6">
         <%= render "filters" %>
-        
+
         <% if @popular_events.present? %>
         <div class="bg-white dark:bg-gray-800 rounded-xl p-5 shadow-sm border border-gray-200 dark:border-gray-700">
           <h3 class="text-lg font-bold mb-4 text-gray-900 dark:text-white flex items-center">
@@ -226,7 +344,7 @@
               <%= link_to event, class: "flex items-start p-2.5 -mx-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group" do %>
                 <div class="h-12 w-12 rounded-md bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
                   <% if event.event_media.present? %>
-                    <img src="<%= event.event_media.first.url %>" alt="<%= event.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <img src="<%= event.event_media.first.image_url %>" alt="<%= event.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                   <% end %>
                 </div>
                 <div class="ml-3 flex-1 min-w-0">
@@ -252,7 +370,7 @@
         </div>
         <% end %>
       </div>
-      
+
       <!-- Main content area with improved layout -->
       <div class="lg:col-span-3">
         <!-- Search Form with improved design -->
@@ -275,7 +393,7 @@
                 <% end %>
               </h2>
             </div>
-            
+
             <!-- Event List with enhanced design -->
             <%= render 'event_list', events: @upcoming_events, pagy: @pagy %>
           </section>
@@ -298,7 +416,7 @@
               </svg>
             </a>
           </div>
-          
+
           <!-- Contained Event Card Container with glass morphism effect -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -311,7 +429,7 @@
         <% end %>
 
         <!-- Music & Art section - Enhanced cards -->
-        <% if @music_events.present? && (params[:category_id].blank? || params[:category_id] != music_category&.id.to_s) %>
+        <% if @music_events.present? && (params[:category_id].blank? || params[:category_id] != @music_category&.id.to_s) %>
         <section class="mb-10">
           <div class="flex justify-between items-center mb-6">
             <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
@@ -320,14 +438,14 @@
               </svg>
               Music & Art
             </h2>
-            <a href="<%= events_path(category_id: music_category&.id) %>" class="text-pink-600 dark:text-pink-400 text-sm font-medium hover:text-pink-800 dark:hover:text-pink-300 transition-colors flex items-center">
+            <a href="<%= events_path(category_id: @music_category&.id) %>" class="text-pink-600 dark:text-pink-400 text-sm font-medium hover:text-pink-800 dark:hover:text-pink-300 transition-colors flex items-center">
               View all
               <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </a>
           </div>
-          
+
           <!-- Visually enhanced container -->
           <div class="bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-xl shadow-sm p-6 border border-pink-100 dark:border-pink-900/20">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -340,7 +458,7 @@
         <% end %>
 
         <!-- Sports section - Enhanced cards -->
-        <% if @sports_events.present? && (params[:category_id].blank? || params[:category_id] != sports_category&.id.to_s) %>
+        <% if @sports_events.present? && (params[:category_id].blank? || params[:category_id] != @sports_category&.id.to_s) %>
         <section class="mb-10">
           <div class="flex justify-between items-center mb-6">
             <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
@@ -349,14 +467,14 @@
               </svg>
               Sports
             </h2>
-            <a href="<%= events_path(category_id: sports_category&.id) %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center">
+            <a href="<%= events_path(category_id: @sports_category&.id) %>" class="text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors flex items-center">
               View all
               <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </a>
           </div>
-          
+
           <!-- Visually enhanced container -->
           <div class="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/10 dark:to-cyan-900/10 rounded-xl shadow-sm p-6 border border-blue-100 dark:border-blue-900/20">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -369,7 +487,7 @@
         <% end %>
 
         <!-- Food & Drink section - Enhanced cards -->
-        <% if @food_events.present? && (params[:category_id].blank? || params[:category_id] != food_category&.id.to_s) %>
+        <% if @food_events.present? && (params[:category_id].blank? || params[:category_id] != @food_category&.id.to_s) %>
         <section class="mb-10">
           <div class="flex justify-between items-center mb-6">
             <h2 class="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
@@ -378,14 +496,14 @@
               </svg>
               Food & Drink
             </h2>
-            <a href="<%= events_path(category_id: food_category&.id) %>" class="text-amber-600 dark:text-amber-400 text-sm font-medium hover:text-amber-800 dark:hover:text-amber-300 transition-colors flex items-center">
+            <a href="<%= events_path(category_id: @food_category&.id) %>" class="text-amber-600 dark:text-amber-400 text-sm font-medium hover:text-amber-800 dark:hover:text-amber-300 transition-colors flex items-center">
               View all
               <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </a>
           </div>
-          
+
           <!-- Visually enhanced container -->
           <div class="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 rounded-xl shadow-sm p-6 border border-amber-100 dark:border-amber-900/20">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -399,10 +517,10 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Mobile Filter Toggle Button - Fixed at bottom of screen -->
   <div class="fixed bottom-4 right-4 md:hidden z-30">
-    <button 
+    <button
       class="bg-blue-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
       data-action="mobile-filters#show"
     >
@@ -411,24 +529,24 @@
       </svg>
     </button>
   </div>
-  
+
   <!-- Mobile Filters Controller -->
   <div data-controller="mobile-filters">
     <!-- Mobile Filters Overlay - Enhanced for better UX -->
-    <div 
+    <div
       data-mobile-filters-target="overlay"
-      class="fixed inset-0 bg-black/50 z-40 hidden md:hidden backdrop-blur-sm" 
+      class="fixed inset-0 bg-black/50 z-40 hidden md:hidden backdrop-blur-sm"
       data-action="click->mobile-filters#clickOutside"
     ></div>
-    
+
     <!-- Mobile Filters Sidebar - Enhanced design -->
-    <div 
+    <div
       data-mobile-filters-target="sidebar"
       class="fixed inset-y-0 left-0 w-full max-w-sm bg-white dark:bg-gray-900 shadow-xl z-50 transition transform -translate-x-full duration-300 ease-in-out md:hidden overflow-y-auto pb-20"
     >
       <div class="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-900 z-10">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white">Filters</h2>
-        <button 
+        <button
           class="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
           data-action="mobile-filters#hide">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -436,7 +554,7 @@
           </svg>
         </button>
       </div>
-      
+
       <div class="p-4">
         <%= render 'filters' %>
       </div>
@@ -455,18 +573,18 @@
       document.documentElement.classList.remove('dark');
       document.getElementById('theme-toggle-dark-icon')?.classList.remove('hidden');
     }
-    
+
     // Toggle theme button
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
     const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-    
+
     if (themeToggleBtn && themeToggleDarkIcon && themeToggleLightIcon) {
       themeToggleBtn.addEventListener('click', function() {
         // Toggle icons
         themeToggleDarkIcon.classList.toggle('hidden');
         themeToggleLightIcon.classList.toggle('hidden');
-        
+
         // Toggle dark class on html element
         if (document.documentElement.classList.contains('dark')) {
           document.documentElement.classList.remove('dark');

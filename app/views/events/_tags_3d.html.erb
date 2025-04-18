@@ -1,0 +1,143 @@
+<%# 3D Event Tags Component with Advanced Effects %>
+<div class="tags-container">
+  <%
+    # Define color schemes
+    color_schemes = [
+      {
+        gradient: "from-indigo-500 to-purple-500",
+        bg: "from-indigo-50 to-purple-50 dark:from-indigo-900/40 dark:to-purple-900/40",
+        text: "text-indigo-700 dark:text-indigo-300",
+        border: "border-indigo-200 dark:border-indigo-800/40",
+        shadow: "shadow-indigo-500/20 dark:shadow-indigo-500/10",
+        icon: "sparkles"
+      },
+      {
+        gradient: "from-blue-500 to-cyan-500",
+        bg: "from-blue-50 to-cyan-50 dark:from-blue-900/40 dark:to-cyan-900/40",
+        text: "text-blue-700 dark:text-blue-300",
+        border: "border-blue-200 dark:border-blue-800/40",
+        shadow: "shadow-blue-500/20 dark:shadow-blue-500/10",
+        icon: "zap"
+      },
+      {
+        gradient: "from-green-500 to-emerald-500",
+        bg: "from-green-50 to-emerald-50 dark:from-green-900/40 dark:to-emerald-900/40",
+        text: "text-green-700 dark:text-green-300",
+        border: "border-green-200 dark:border-green-800/40",
+        shadow: "shadow-green-500/20 dark:shadow-green-500/10",
+        icon: "leaf"
+      },
+      {
+        gradient: "from-amber-500 to-orange-500",
+        bg: "from-amber-50 to-orange-50 dark:from-amber-900/40 dark:to-orange-900/40",
+        text: "text-amber-700 dark:text-amber-300",
+        border: "border-amber-200 dark:border-amber-800/40",
+        shadow: "shadow-amber-500/20 dark:shadow-amber-500/10",
+        icon: "flame"
+      },
+      {
+        gradient: "from-pink-500 to-rose-500",
+        bg: "from-pink-50 to-rose-50 dark:from-pink-900/40 dark:to-rose-900/40",
+        text: "text-pink-700 dark:text-pink-300",
+        border: "border-pink-200 dark:border-pink-800/40",
+        shadow: "shadow-pink-500/20 dark:shadow-pink-500/10",
+        icon: "heart"
+      }
+    ]
+
+    # Handle the case when tags are nil or empty
+    if !defined?(tags) || tags.nil? || tags.empty?
+      # Sample tags with different themes
+      sample_tags = [
+        { name: "Music", color: 0, count: rand(10..50) },
+        { name: "Festival", color: 0, count: rand(5..30) },
+        { name: "Weekend", color: 1, count: rand(15..40) },
+        { name: "Live", color: 1, count: rand(8..25) },
+        { name: "Entertainment", color: 2, count: rand(12..35) },
+        { name: "Family-friendly", color: 2, count: rand(7..20) },
+        { name: "Outdoor", color: 3, count: rand(10..30) },
+        { name: "Food", color: 3, count: rand(15..45) },
+        { name: "Art", color: 4, count: rand(5..25) },
+        { name: "Workshop", color: 4, count: rand(3..15) }
+      ]
+
+      # Create tag objects
+      tags = sample_tags.sample(6).map do |tag|
+        OpenStruct.new(name: tag[:name], color: tag[:color], count: tag[:count])
+      end
+    end
+  %>
+
+  <div class="flex flex-wrap gap-3">
+    <% tags.each_with_index do |tag, index| %>
+      <%
+        # Determine color scheme
+        color_index = tag.respond_to?(:color) ? tag.color : index % color_schemes.length
+        scheme = color_schemes[color_index % color_schemes.length]
+
+        # Animation delay based on index
+        animation_delay = "animation-delay-#{(index * 150) % 1500}"
+
+        # Get count
+        count = tag.respond_to?(:count) && tag.count.present? ? tag.count : rand(1..99)
+      %>
+
+      <%= link_to events_path(tag: tag.name), class: "tag-item group animate-float-up #{animation_delay}" do %>
+        <span class="relative inline-flex items-center px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r <%= scheme[:bg] %> <%= scheme[:text] %> border <%= scheme[:border] %> shadow-[0_4px_10px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_10px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.1)] dark:hover:shadow-[0_6px_20px_rgba(0,0,0,0.4)] <%= scheme[:shadow] %> transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 overflow-hidden">
+          <!-- Background glow effect -->
+          <div class="absolute inset-0 bg-gradient-to-r <%= scheme[:gradient] %> opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity duration-300"></div>
+
+          <!-- Icon -->
+          <span class="relative z-10 mr-2">
+            <%= icon scheme[:icon], class: "w-4 h-4 text-gradient bg-gradient-to-r #{scheme[:gradient]}" %>
+          </span>
+
+          <!-- Tag name -->
+          <span class="relative z-10"><%= tag.name %></span>
+
+          <!-- Count bubble -->
+          <span class="relative z-10 ml-2 flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-gradient-to-r <%= scheme[:gradient] %> text-white text-xs font-bold shadow-inner transform group-hover:scale-110 transition-transform duration-300"><%= count %></span>
+
+          <!-- Shine effect on hover -->
+          <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  @keyframes float-up {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-float-up {
+    animation: float-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
+
+  .animation-delay-0 { animation-delay: 0ms; }
+  .animation-delay-150 { animation-delay: 150ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-450 { animation-delay: 450ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-750 { animation-delay: 750ms; }
+  .animation-delay-900 { animation-delay: 900ms; }
+  .animation-delay-1050 { animation-delay: 1050ms; }
+  .animation-delay-1200 { animation-delay: 1200ms; }
+  .animation-delay-1350 { animation-delay: 1350ms; }
+
+  /* Text gradient support */
+  .text-gradient {
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    text-fill-color: transparent !important;
+  }
+</style>

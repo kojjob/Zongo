@@ -1,0 +1,251 @@
+<!-- Dropdown Fix - No Dependencies -->
+<style>
+  /* Improved mobile dropdown styles */
+  @media (max-width: 640px) {
+    [data-dropdown-target="menu"] {
+      position: fixed !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin-top: 0.5rem !important;
+      border-radius: 0.75rem 0.75rem 0 0 !important;
+      max-height: 80vh !important;
+      overflow-y: auto !important;
+      z-index: 50 !important;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+      transform-origin: bottom center !important;
+    }
+
+    /* Special positioning for user dropdown */
+    .user-dropdown [data-dropdown-target="menu"] {
+      top: auto !important;
+      bottom: 0 !important;
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    /* Make dropdown links easier to tap on mobile */
+    [data-dropdown-target="menu"] a,
+    [data-dropdown-target="menu"] button {
+      padding-top: 0.75rem !important;
+      padding-bottom: 0.75rem !important;
+      display: block !important;
+      width: 100% !important;
+    }
+
+    /* Add active state for touch feedback */
+    [data-dropdown-target="menu"] a:active,
+    [data-dropdown-target="menu"] button:active {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .dark [data-dropdown-target="menu"] a:active,
+    .dark [data-dropdown-target="menu"] button:active {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* Active tap state for mobile */
+    [data-dropdown-target="menu"] .active-tap {
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .dark [data-dropdown-target="menu"] .active-tap {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+</style>
+<script>
+  (function() {
+    console.log('🔄 Applying dropdown fix...');
+    
+    // Helper function to show dropdown menu with animation
+    function showDropdownMenu(menu) {
+      menu.classList.remove('hidden');
+      // Use setTimeout to ensure the transition happens after the display change
+      setTimeout(() => {
+        menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+        menu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+      }, 10);
+    }
+
+    // Helper function to hide dropdown menu with animation
+    function hideDropdownMenu(menu) {
+      menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+      menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        menu.classList.add('hidden');
+      }, 150);
+    }
+    
+    // Function to fix all dropdowns
+    function fixDropdowns() {
+      // Find all dropdown elements
+      const dropdowns = document.querySelectorAll('[data-controller*="dropdown"]');
+      console.log(`Found ${dropdowns.length} dropdowns to fix`);
+      
+      // Process each dropdown
+      dropdowns.forEach((dropdown, index) => {
+        // Find toggle button and menu
+        const toggle = dropdown.querySelector('[data-action*="dropdown#toggle"]');
+        const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
+        
+        if (!toggle || !menu) {
+          console.log('Skipping dropdown - missing toggle or menu');
+          return;
+        }
+        
+        // Generate a truly unique ID for this dropdown
+        const uniqueId = `dropdown-${index}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+        
+        // Remove existing event listeners by cloning the toggle
+        const toggleClone = toggle.cloneNode(true);
+        if (toggle.parentNode) {
+          toggle.parentNode.replaceChild(toggleClone, toggle);
+        }
+        
+        // Set unique IDs to track relationships
+        dropdown.dataset.dropdownId = uniqueId;
+        toggleClone.dataset.dropdownId = uniqueId;
+        menu.dataset.dropdownId = uniqueId;
+        
+        // Ensure menu is initially hidden
+        if (!menu.classList.contains('hidden')) {
+          menu.classList.add('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+          menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+        }
+        
+        // Add isolated click handler
+        toggleClone.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Close all other dropdowns first
+          document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
+            if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
+              const otherDropdownId = otherMenu.dataset.dropdownId;
+              if (otherDropdownId !== uniqueId) {
+                hideDropdownMenu(otherMenu);
+              }
+            }
+          });
+          
+          // Toggle only this specific dropdown
+          if (menu.classList.contains('hidden')) {
+            showDropdownMenu(menu);
+          } else {
+            hideDropdownMenu(menu);
+          }
+        });
+        
+        // Add touch event for better mobile support
+        toggleClone.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Close all other dropdowns first
+          document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
+            if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
+              const otherDropdownId = otherMenu.dataset.dropdownId;
+              if (otherDropdownId !== uniqueId) {
+                hideDropdownMenu(otherMenu);
+              }
+            }
+          });
+          
+          // Toggle only this specific dropdown
+          if (menu.classList.contains('hidden')) {
+            showDropdownMenu(menu);
+          } else {
+            hideDropdownMenu(menu);
+          }
+        });
+        
+        // Make all links in the dropdown responsive to touch
+        menu.querySelectorAll('a, button').forEach(element => {
+          // Clone to remove existing listeners
+          const elementClone = element.cloneNode(true);
+          element.parentNode.replaceChild(elementClone, element);
+
+          // Add touch event listener
+          elementClone.addEventListener('touchend', function(e) {
+            e.stopPropagation();
+            // Don't prevent default to allow navigation
+
+            // For mobile: add a slight delay to ensure the tap is registered
+            if (window.innerWidth <= 640) {
+              const href = elementClone.getAttribute('href');
+              const isButton = elementClone.tagName.toLowerCase() === 'button';
+
+              if (href || isButton) {
+                // Add active state visual feedback
+                elementClone.classList.add('active-tap');
+
+                // Remove active state after a short delay
+                setTimeout(() => {
+                  elementClone.classList.remove('active-tap');
+
+                  // If it's a link with href, navigate to it
+                  if (href) {
+                    window.location.href = href;
+                  }
+
+                  // If it's a button, trigger a click
+                  if (isButton) {
+                    elementClone.click();
+                  }
+
+                  // Hide the dropdown after navigation
+                  hideDropdownMenu(menu);
+                }, 150);
+              }
+            }
+          });
+        });
+      });
+    }
+    
+    // Run the fix
+    fixDropdowns();
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+        if (!menu.classList.contains('hidden')) {
+          const dropdown = menu.closest('[data-controller*="dropdown"]');
+
+          if (dropdown && !dropdown.contains(e.target)) {
+            hideDropdownMenu(menu);
+          }
+        }
+      });
+    });
+
+    // Add touch event for mobile devices
+    document.addEventListener('touchend', function(e) {
+      document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+        if (!menu.classList.contains('hidden')) {
+          const dropdown = menu.closest('[data-controller*="dropdown"]');
+
+          if (dropdown && !dropdown.contains(e.target)) {
+            hideDropdownMenu(menu);
+          }
+        }
+      });
+    });
+
+    // Close dropdowns when pressing Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
+          hideDropdownMenu(menu);
+        });
+      }
+    });
+
+    console.log('✅ Dropdown fix applied successfully');
+  })();
+</script>

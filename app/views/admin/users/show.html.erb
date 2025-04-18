@@ -1,0 +1,232 @@
+<% content_for :title, "User Details: #{@user.username}" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div class="flex items-center">
+      <%= link_to admin_users_path, class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-2" do %>
+        <%= icon "arrow-left", class: "w-5 h-5" %>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">User Details</h1>
+    </div>
+
+    <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+      <% if current_user.super_admin? || (!@user.admin? && !@user.super_admin?) %>
+        <%= link_to edit_admin_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+          <%= icon "pencil", class: "w-4 h-4 mr-2" %>
+          Edit User
+        <% end %>
+
+        <% if @user.status == 'active' %>
+          <%= button_to suspend_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } } do %>
+            <%= icon "ban", class: "w-4 h-4 mr-2" %>
+            Suspend User
+          <% end %>
+        <% elsif @user.status == 'suspended' %>
+          <%= button_to activate_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+            <%= icon "check-circle", class: "w-4 h-4 mr-2" %>
+            Activate User
+          <% end %>
+        <% end %>
+
+        <% if current_user.super_admin? && !@user.super_admin? %>
+          <% if !@user.admin? %>
+            <%= button_to promote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } } do %>
+              <%= icon "arrow-up", class: "w-4 h-4 mr-2" %>
+              Promote to Admin
+            <% end %>
+          <% else %>
+            <%= button_to demote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } } do %>
+              <%= icon "arrow-down", class: "w-4 h-4 mr-2" %>
+              Demote to Regular User
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- User Profile Card -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 h-20 w-20">
+            <% if @user.respond_to?(:avatar) && @user.avatar.attached? %>
+              <%= image_tag @user.avatar, class: "h-20 w-20 rounded-full", alt: "User avatar" %>
+            <% else %>
+              <div class="h-20 w-20 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold text-3xl">
+                <%= (@user.username.presence || @user.email[0]).first.upcase %>
+              </div>
+            <% end %>
+          </div>
+          <div class="ml-6">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white"><%= @user.username %></h2>
+            <div class="mt-1 flex items-center">
+              <% if @user.super_admin? %>
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                  Super Admin
+                </span>
+              <% elsif @user.admin? %>
+                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                  Admin
+                </span>
+              <% end %>
+
+              <% status_class = case @user.status
+                 when 'active' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                 when 'suspended' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                 when 'locked' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                 when 'closed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                 end %>
+              <span class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                <%= @user.status.capitalize %>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.email %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.phone || "Not provided" %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">KYC Level</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.kyc_level.capitalize %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Joined</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.created_at.strftime("%b %d, %Y") %></dd>
+            </div>
+            <div class="sm:col-span-2">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">User ID</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.id %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wallet Information -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Wallet Information</h3>
+      </div>
+      <div class="p-6">
+        <% if @user.wallet %>
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Balance</dt>
+              <dd class="mt-1 text-sm font-bold text-gray-900 dark:text-white"><%= @user.wallet.formatted_balance %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Currency</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.wallet.currency %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.wallet.transactions.count %></dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Transaction</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                <% if @user.wallet.transactions.any? %>
+                  <%= @user.wallet.transactions.order(created_at: :desc).first.created_at.strftime("%b %d, %Y") %>
+                <% else %>
+                  No transactions
+                <% end %>
+              </dd>
+            </div>
+          </dl>
+
+          <% if @recent_transactions.any? %>
+            <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Transactions</h4>
+              <div class="space-y-2">
+                <% @recent_transactions.each do |transaction| %>
+                  <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex items-center">
+                      <%
+                        icon_color = case transaction.transaction_type
+                                     when 'deposit' then 'text-green-500'
+                                     when 'withdrawal' then 'text-red-500'
+                                     when 'transfer' then 'text-blue-500'
+                                     when 'payment' then 'text-purple-500'
+                                     end
+
+                        icon_name = case transaction.transaction_type
+                                    when 'deposit' then 'money-in'
+                                    when 'withdrawal' then 'money-out'
+                                    when 'transfer' then 'transfer'
+                                    when 'payment' then 'shopping'
+                                    end
+                      %>
+                      <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center <%= icon_color %>">
+                        <%= icon icon_name, class: "h-4 w-4" %>
+                      </div>
+                      <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900 dark:text-white"><%= transaction.transaction_type_description %></p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.created_at.strftime("%b %d, %Y %H:%M") %></p>
+                      </div>
+                    </div>
+                    <div class="text-sm font-medium <%= transaction.direction_for_user(@user.id) == :incoming ? 'text-green-600' : 'text-red-600' %>">
+                      <%= transaction.signed_amount_for_user(@user.id) %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="mt-3 text-right">
+                <%= link_to admin_transactions_path(user_id: @user.id), class: "text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                  View all transactions
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No wallet information available</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Activity</h3>
+      </div>
+      <div class="p-6">
+        <% if @recent_logins.any? %>
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Logins</h4>
+          <div class="space-y-2">
+            <% @recent_logins.each do |log| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                    <%= icon "login", class: "h-4 w-4" %>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">Login</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400"><%= log.created_at.strftime("%b %d, %Y %H:%M") %></p>
+                  </div>
+                </div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  <%= log.details["ip_address"] if log.details && log.details["ip_address"] %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-4">
+            <p class="text-sm text-gray-500 dark:text-gray-400">No recent activity</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

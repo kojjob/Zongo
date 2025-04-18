@@ -42,6 +42,7 @@ class ScheduledTransactionsController < ApplicationController
 
   def create
     @scheduled_transaction = ScheduledTransaction.new(scheduled_transaction_params)
+    @scheduled_transaction.user = current_user
     @scheduled_transaction.source_wallet = @wallet
 
     # Set destination wallet for transfers

@@ -1,0 +1,430 @@
+<%# Enhanced Transfer Page %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="transaction-form pin-verification" data-pin-verification-required-value="false" data-pin-verification-amount-value="0">
+  <!-- Enhanced Header with Gradient Background -->
+  <div class="mb-8 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl shadow-lg overflow-hidden">
+    <div class="relative p-6 md:p-8">
+      <!-- Decorative elements -->
+      <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-32 -mr-32 blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -mb-24 -ml-24 blur-2xl"></div>
+      <div class="absolute top-10 right-10 text-white/20">
+        <%= icon("send", class: "w-24 h-24 transform rotate-12") %>
+      </div>
+
+      <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center mb-6 md:mb-0">
+          <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300 mr-4 shadow-md">
+            <%= icon("arrow-left", class: "w-5 h-5") %>
+          </a>
+
+          <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-white">Transfer Money</h1>
+            <p class="mt-2 text-white/80 max-w-md">
+              Send money instantly to friends, family, or businesses with zero fees
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick info for transfers -->
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-md self-start md:self-center">
+          <div class="flex items-center mb-2">
+            <%= icon("info", class: "w-4 h-4 mr-2 text-white/80") %>
+            <span class="text-sm font-medium text-white">Transfer Tips</span>
+          </div>
+          <ul class="text-xs text-white/80 space-y-1">
+            <li class="flex items-start">
+              <span class="inline-block w-3 h-3 rounded-full bg-white/20 mt-1 mr-2"></span>
+              Transfers are instant and secure
+            </li>
+            <li class="flex items-start">
+              <span class="inline-block w-3 h-3 rounded-full bg-white/20 mt-1 mr-2"></span>
+              No fees for transfers between users
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+    <div class="p-8">
+      <% if flash[:success].present? %>
+        <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <%= icon("check-circle", class: "h-5 w-5 text-green-500") %>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium text-green-800 dark:text-green-300"><%= flash[:success] %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Form header -->
+      <div class="flex items-center justify-between pb-6 border-b border-gray-200 dark:border-gray-700 mb-8">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
+            <%= icon("send", class: "w-5 h-5") %>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-900 dark:text-white">Money Transfer</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Send money to anyone securely</p>
+          </div>
+        </div>
+        <div class="hidden md:block">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+            <%= icon("shield-check", class: "w-3.5 h-3.5 mr-1") %>
+            Secure Transfer
+          </span>
+        </div>
+      </div>
+
+      <%= form_with url: transfers_path, method: :post, class: "space-y-8", data: { turbo: false, action: "transaction-form#validateForm", controller: "transaction-form", transaction_type: "transfer" } do |f| %>
+        <!-- Recipient Section -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="recipient" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Recipient</label>
+            <button type="button" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+              <%= icon("users", class: "w-3.5 h-3.5 mr-1") %>
+              View Contacts
+            </button>
+          </div>
+
+          <div class="relative rounded-xl shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "user", class: "h-5 w-5 text-blue-500" %>
+            </div>
+            <%= f.text_field :recipient, value: flash[:recipient_attempt], class: "form-input block w-full pl-10 py-3 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm", placeholder: "Phone number, email, or username", data: { transaction_form_target: "recipient", action: "input->transaction-form#validateForm" } %>
+          </div>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 flex items-center">
+            <%= icon("info", class: "w-3.5 h-3.5 mr-1 text-blue-500") %>
+            Enter the recipient's phone number, email, or username
+          </p>
+
+          <% if flash[:error] && flash[:error].include?("No user found") %>
+            <div class="mt-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <%= icon("alert-triangle", class: "h-5 w-5 text-amber-500") %>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-amber-800 dark:text-amber-300">Recipient Not Found</h3>
+                  <div class="mt-2 text-sm text-amber-700 dark:text-amber-400">
+                    <p><%= flash[:error] %></p>
+                  </div>
+                  <div class="mt-3 flex flex-col space-y-2">
+                    <a href="#" class="text-sm font-medium text-amber-800 dark:text-amber-300 hover:text-amber-600 dark:hover:text-amber-200 flex items-center">
+                      <%= icon("user-plus", class: "w-4 h-4 mr-1") %>
+                      Invite this person to join
+                    </a>
+
+                    <% if flash[:recipient_attempt] && flash[:recipient_attempt].include?('@') %>
+                      <a href="<%= new_transfer_path(create_test_user: flash[:recipient_attempt]) %>" class="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                        <%= icon("user-check", class: "w-4 h-4 mr-1") %>
+                        Create test user with this email (for demo)
+                      </a>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @recent_recipients.present? %>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Recent Recipients</label>
+              <button type="button" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                <%= icon("clock", class: "w-3.5 h-3.5 mr-1") %>
+                View All
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" data-transaction-form-target="recentRecipients">
+              <% @recent_recipients.each do |recipient| %>
+                <button type="button" class="flex flex-col items-center p-3 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" data-action="click->transaction-form#selectRecipient" data-recipient="<%= recipient.phone %>">
+                  <% if recipient.avatar.attached? %>
+                    <%= image_tag recipient.avatar.variant(resize_to_fill: [48, 48]), class: "h-12 w-12 rounded-full mb-2 border-2 border-white dark:border-gray-700 shadow-sm" %>
+                  <% else %>
+                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-2 shadow-sm">
+                      <span class="text-lg font-bold text-white"><%= recipient.display_name[0].upcase %></span>
+                    </div>
+                  <% end %>
+                  <span class="text-center truncate w-full"><%= recipient.display_name %></span>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 truncate w-full"><%= recipient.phone || recipient.email %></span>
+                </button>
+              <% end %>
+
+              <!-- Add New Recipient Button -->
+              <button type="button" class="flex flex-col items-center justify-center p-3 border border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-800 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 h-full">
+                <div class="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center mb-2">
+                  <%= icon("plus", class: "h-6 w-6 text-gray-500 dark:text-gray-400") %>
+                </div>
+                <span>Add New</span>
+              </button>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Amount Section -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="amount" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Amount</label>
+            <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+              <%= icon("wallet", class: "w-4 h-4 mr-1 text-blue-500") %>
+              Balance: <%= @wallet.formatted_balance %>
+            </span>
+          </div>
+
+          <div class="relative rounded-xl shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "dollar-sign", class: "h-5 w-5 text-blue-500" %>
+            </div>
+            <div class="absolute inset-y-0 left-9 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400">₵</span>
+            </div>
+            <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, class: "form-input block w-full pl-14 py-3 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm", placeholder: "0.00", data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal input->transaction-form#validateForm input->pin-verification#updateAmount" } %>
+          </div>
+
+          <!-- Quick Amount Buttons -->
+          <div class="mt-3 flex flex-wrap gap-2">
+            <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" data-amount="10">₵10</button>
+            <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" data-amount="50">₵50</button>
+            <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" data-amount="100">₵100</button>
+            <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" data-amount="200">₵200</button>
+            <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" data-amount="500">₵500</button>
+          </div>
+        </div>
+
+        <!-- Description Section -->
+        <div class="space-y-2">
+          <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Description (Optional)</label>
+          <div class="relative rounded-xl shadow-sm">
+            <div class="absolute top-3 left-3 flex items-start pointer-events-none">
+              <%= icon "message-square", class: "h-5 w-5 text-blue-500" %>
+            </div>
+            <%= f.text_area :description, rows: 3, class: "form-textarea block w-full pl-10 py-3 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm", placeholder: "What's this transfer for?" %>
+          </div>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 flex items-center">
+            <%= icon("info", class: "w-3.5 h-3.5 mr-1 text-blue-500") %>
+            The recipient will see this description
+          </p>
+        </div>
+
+        <!-- Payment Summary -->
+        <div class="bg-gray-50 dark:bg-gray-750 rounded-xl p-6 shadow-inner">
+          <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+            <%= icon("clipboard-list", class: "w-4 h-4 mr-2 text-blue-500") %>
+            Payment Summary
+          </h4>
+
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center">
+              <%= icon("credit-card", class: "w-4 h-4 mr-2 opacity-70") %>
+              Amount
+            </span>
+            <span class="text-sm font-bold text-gray-900 dark:text-gray-100" id="display-amount">₵0.00</span>
+          </div>
+
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center group relative">
+              <%= icon("plus", class: "w-4 h-4 mr-2 opacity-70") %>
+              Service Fee
+              <button type="button" class="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+                <%= icon("help-circle", class: "w-3.5 h-3.5") %>
+                <div class="absolute left-0 bottom-full mb-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 text-xs text-left transform scale-0 group-hover:scale-100 transition-transform origin-bottom-left z-10 border border-gray-200 dark:border-gray-700">
+                  <p class="font-semibold mb-1 text-gray-900 dark:text-white">Fee Structure:</p>
+                  <ul class="space-y-1 text-gray-600 dark:text-gray-400">
+                    <li>• No fee for transfers up to ₵200</li>
+                    <li>• 0.5% fee for transfers above ₵200</li>
+                    <li>• Minimum fee of ₵1 when applicable</li>
+                  </ul>
+                </div>
+              </button>
+            </span>
+            <span class="text-sm font-bold text-gray-900 dark:text-gray-100" id="fee-amount">₵0.00</span>
+          </div>
+
+          <div class="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
+            <span class="font-bold text-gray-900 dark:text-white flex items-center">
+              <%= icon("check-circle", class: "w-4 h-4 mr-2 text-green-500") %>
+              Total
+            </span>
+            <span class="font-bold text-lg text-gray-900 dark:text-white" id="total-amount">₵0.00</span>
+          </div>
+
+          <!-- Security Features -->
+          <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex items-center mb-2">
+              <div class="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 mr-2">
+                <%= icon("shield", class: "w-3 h-3") %>
+              </div>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Secure Transfer</span>
+            </div>
+            <div class="flex items-center mb-2">
+              <div class="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-2">
+                <%= icon("zap", class: "w-3 h-3") %>
+              </div>
+              <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Instant Processing</span>
+            </div>
+
+            <!-- PIN Verification Indicator (hidden by default, shown via JS) -->
+            <div id="pin-required-indicator" class="flex items-center mt-2 hidden">
+              <div class="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 mr-2">
+                <%= icon("lock", class: "w-3 h-3") %>
+              </div>
+              <span class="text-xs font-medium text-amber-700 dark:text-amber-300">PIN Verification Required</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN Verification Section (hidden by default) -->
+        <div class="hidden" data-pin-verification-target="pinContainer">
+          <div class="border border-blue-200 dark:border-blue-800/50 rounded-xl p-6 bg-blue-50 dark:bg-blue-900/20 shadow-inner">
+            <div class="flex items-center mb-3">
+              <%= icon("lock", class: "w-5 h-5 mr-2 text-blue-600 dark:text-blue-400") %>
+              <h3 class="text-base font-bold text-gray-900 dark:text-white">Security Verification</h3>
+            </div>
+
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Please enter your 4-digit PIN to authorize this transaction for security purposes.</p>
+
+            <div class="flex justify-center mb-4">
+              <div class="flex space-x-3">
+                <input type="password" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-blue-300 dark:border-blue-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" data-pin-verification-target="pinInput" data-action="input->pin-verification#handlePinInput keydown->pin-verification#handleKeyDown">
+                <input type="password" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-blue-300 dark:border-blue-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" data-pin-verification-target="pinInput" data-action="input->pin-verification#handlePinInput keydown->pin-verification#handleKeyDown">
+                <input type="password" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-blue-300 dark:border-blue-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" data-pin-verification-target="pinInput" data-action="input->pin-verification#handlePinInput keydown->pin-verification#handleKeyDown">
+                <input type="password" maxlength="1" class="w-12 h-12 text-center text-lg font-bold border border-blue-300 dark:border-blue-700 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" data-pin-verification-target="pinInput" data-action="input->pin-verification#handlePinInput keydown->pin-verification#handleKeyDown">
+              </div>
+            </div>
+
+            <div class="flex justify-center">
+              <button type="button" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center" data-action="pin-verification#resetPin">
+                <%= icon("refresh-cw", class: "w-3.5 h-3.5 mr-1") %>
+                Reset PIN
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button Section -->
+        <div class="pt-6">
+          <div class="flex flex-col md:flex-row gap-4">
+            <a href="<%= wallet_path %>" class="btn btn-outline w-full md:w-1/3 py-3 text-base flex items-center justify-center">
+              <%= icon("x", class: "w-5 h-5 mr-2") %>
+              Cancel
+            </a>
+            <%= f.button type: "submit", class: "w-full md:w-2/3 py-4 px-6 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500", data: { transaction_form_target: "submitButton", pin_verification_target: "submitButton" } do %>
+              <div class="flex items-center justify-center">
+                <%= icon("send", class: "w-5 h-5 mr-2") %>
+                Transfer Money
+              </div>
+            <% end %>
+          </div>
+          <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-4">
+            By clicking the button above, you agree to our <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</a>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize the form
+      const amountInput = document.getElementById('amount');
+      if (amountInput) {
+        amountInput.addEventListener('input', updateTotal);
+        updateTotal();
+      }
+
+      // Add event listeners to quick amount buttons
+      const quickAmountButtons = document.querySelectorAll('[data-amount]');
+      quickAmountButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Get amount from data attribute
+          const amount = this.getAttribute('data-amount');
+          if (amount) {
+            setAmount(parseInt(amount));
+          }
+        });
+      });
+    });
+
+    function setAmount(amount) {
+      const amountInput = document.getElementById('amount');
+      if (amountInput) {
+        amountInput.value = amount;
+        updateTotal();
+
+        // Trigger validation
+        const event = new Event('input', { bubbles: true });
+        amountInput.dispatchEvent(event);
+
+        // Add visual feedback
+        amountInput.classList.add('ring-2', 'ring-blue-500');
+        setTimeout(() => {
+          amountInput.classList.remove('ring-2', 'ring-blue-500');
+        }, 500);
+      }
+    }
+
+    function updateTotal() {
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+
+      // Calculate fee (0.5% of amount, minimum 1 GHS for amounts over 200)
+      let fee = 0;
+      if (amount > 0) {
+        // Fee is 0.5% of the amount with a minimum of 1 GHS for amounts over 200
+        fee = amount > 200 ? Math.max(1, amount * 0.005) : 0;
+      }
+
+      const total = amount + fee;
+
+      // Update display values
+      const displayAmount = document.getElementById('display-amount');
+      const feeElement = document.getElementById('fee-amount');
+      const displayTotal = document.getElementById('total-amount');
+
+      if (displayAmount) displayAmount.textContent = `₵${amount.toFixed(2)}`;
+      if (feeElement) feeElement.textContent = `₵${fee.toFixed(2)}`;
+      if (displayTotal) displayTotal.textContent = `₵${total.toFixed(2)}`;
+
+      // Check if amount is large enough to require PIN verification
+      const pinVerificationController = document.querySelector('[data-controller~="pin-verification"]');
+      if (pinVerificationController) {
+        const pinThreshold = 500; // Example threshold
+        const requirePin = amount >= pinThreshold;
+
+        // Show/hide PIN verification indicator
+        const pinIndicator = document.getElementById('pin-required-indicator');
+        if (pinIndicator) {
+          if (requirePin) {
+            pinIndicator.classList.remove('hidden');
+          } else {
+            pinIndicator.classList.add('hidden');
+          }
+        }
+
+        if (requirePin) {
+          pinVerificationController.setAttribute('data-pin-verification-required-value', 'true');
+          pinVerificationController.setAttribute('data-pin-verification-amount-value', amount.toString());
+
+          // Show PIN container if it exists
+          const pinContainer = document.querySelector('[data-pin-verification-target="pinContainer"]');
+          if (pinContainer) {
+            pinContainer.classList.remove('hidden');
+          }
+        } else {
+          // Hide PIN container if amount is below threshold
+          const pinContainer = document.querySelector('[data-pin-verification-target="pinContainer"]');
+          if (pinContainer) {
+            pinContainer.classList.add('hidden');
+          }
+        }
+      }
+    }
+  </script>
+<% end %>

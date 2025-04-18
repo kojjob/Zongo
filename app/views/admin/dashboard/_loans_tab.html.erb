@@ -1,0 +1,85 @@
+<!-- Loans Tab Panel -->
+<div class="admin-tab-panel hidden" data-id="loans">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-lg admin-gradient-secondary flex items-center justify-center mr-3 shadow-md">
+            <%= icon "credit-card", class: "w-5 h-5 text-white" %>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Loans Overview</h3>
+        </div>
+        <%= link_to admin_loans_path, class: "text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 bg-white dark:bg-gray-800 px-3 py-1 rounded-lg shadow-sm flex items-center" do %>
+          <span>Manage Loans</span>
+          <%= icon "arrow-right", class: "w-4 h-4 ml-1" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1">Total Loans</h4>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @total_loans || 0 %></p>
+        </div>
+        <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-green-800 dark:text-green-300 mb-1">Active Loans</h4>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @active_loans || 0 %></p>
+        </div>
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-yellow-800 dark:text-yellow-300 mb-1">Pending Approval</h4>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @pending_loans || 0 %></p>
+        </div>
+        <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-red-800 dark:text-red-300 mb-1">Defaulted</h4>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= @defaulted_loans || 0 %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-lg admin-gradient-secondary flex items-center justify-center mr-3 shadow-md">
+            <%= icon "document-text", class: "w-5 h-5 text-white" %>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Loan Applications</h3>
+        </div>
+      </div>
+    </div>
+    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% (@recent_loan_applications || []).each do |loan| %>
+        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="h-10 w-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400">
+                <%= icon "document-text", class: "h-5 w-5" %>
+              </div>
+            </div>
+            <div class="ml-4">
+              <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= loan.user.display_name %></h4>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                <%= loan.loan_type.titleize %> •
+                <%= number_to_currency(loan.amount, unit: "GHS ") %>
+              </p>
+            </div>
+            <div class="ml-auto text-right">
+              <span class="text-yellow-600 dark:text-yellow-400 text-xs">
+                Pending
+              </span>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                <%= time_ago_in_words(loan.created_at) %> ago
+              </p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% if (@recent_loan_applications || []).empty? %>
+        <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+          No pending loan applications
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -5,81 +5,41 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    
+
     <meta name="theme-color" content="#16a34a" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#064e3b" media="(prefers-color-scheme: dark)">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <%# Theme initialization happens via theme/init.js - imported at the top of application.js %>
-    <script>
-      // Add class to prevent flash during initial load
-      document.documentElement.classList.add('theme-initializing');
-      
-      // Remove initializing class when DOM is loaded
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          document.documentElement.classList.remove('theme-initializing');
-        }, 50); // Small delay to ensure transitions work
-      });
-    </script>
-    
-    <style>
-      /* Block rendering until the theme is applied to prevent flash */
-      .theme-initializing { 
-        visibility: hidden; 
-      }
-      
-      /* Add smooth transitions for theme changes */
-      html {
-        transition: background-color 0.3s ease, color 0.3s ease;
-      }
-      
-      /* Ensure basic theme classes are applied immediately */
-      html.dark {
-        background-color: #111827;
-        color: #ffffff;
-      }
-      
-      html {
-        background-color: #ffffff;
-        color: #111827;
-      }
-    </style>
-
     <%# Important: theme.css must be loaded first to establish base CSS variables %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "dark_mode_overrides", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "light_mode_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "section_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "animations", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "button_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    
-    <!-- Direct fix for theme and dropdowns - no dependencies -->
-    <%= render 'layouts/direct_fix' %>
   </head>
 
-  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col mt-16" data-controller="debug">
+  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col <%= controller_name %>-<%= action_name %>" data-controller="debug">
 
+    <%= render 'shared/header' %>
+    <%= render 'shared/toast_template' %>
     <%= render 'shared/icons' %>
+    <%= render 'shared/dropdown_fix' %>
 
-    <% if content_for?(:navbar) %>
-      <%= yield :navbar %>
-    <% else %>
-      <%= render 'shared/navbar_enhanced' %>
-    <% end %>
 
-    <main id="main-content" class="flex-grow" tabindex="-1">
+    <main id="main-content" class="" tabindex="-1">
       <%= render 'shared/flash' if flash.any? %>
       <%= yield %>
     </main>
-    
+
     <%= render 'shared/footer' %>
-    <%= render 'shared/toast_template' %>
-    
     <%= render 'shared/offline_indicator' %>
   </body>
 </html>

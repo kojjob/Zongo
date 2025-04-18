@@ -1,23 +1,55 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="accordion"
 export default class extends Controller {
-  static targets = ["item", "content", "icon"]
-  
+  static targets = [ "control", "content", "icon" ]
+
   connect() {
-    console.log("Accordion controller connected")
+    // Initialize the accordion in closed state
+    this.close();
   }
-  
+
   toggle(event) {
-    const content = event.currentTarget.nextElementSibling
-    const icon = event.currentTarget.querySelector('svg')
-    
-    if (content.classList.contains('hidden')) {
-      content.classList.remove('hidden')
-      icon.classList.add('rotate-180')
+    event.preventDefault();
+
+    if (!this.hasContentTarget) return;
+
+    // Check if the accordion is currently open
+    const isOpen = !this.contentTarget.classList.contains("hidden");
+
+    if (isOpen) {
+      this.close();
     } else {
-      content.classList.add('hidden')
-      icon.classList.remove('rotate-180')
+      this.open();
+    }
+  }
+
+  open() {
+    if (!this.hasContentTarget) return;
+
+    // Show the content
+    this.contentTarget.classList.remove("hidden");
+
+    // Rotate the icon if it exists
+    if (this.hasIconTarget) {
+      this.iconTarget.classList.add("rotate-180");
+    }
+
+    // Animate the height
+    setTimeout(() => {
+      this.contentTarget.style.maxHeight = this.contentTarget.scrollHeight + "px";
+    }, 10);
+  }
+
+  close() {
+    if (!this.hasContentTarget) return;
+
+    // Hide the content
+    this.contentTarget.classList.add("hidden");
+    this.contentTarget.style.maxHeight = "0";
+
+    // Reset the icon if it exists
+    if (this.hasIconTarget) {
+      this.iconTarget.classList.remove("rotate-180");
     }
   }
 }

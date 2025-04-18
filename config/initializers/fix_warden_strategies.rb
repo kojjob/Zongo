@@ -20,7 +20,7 @@ Rails.application.config.after_initialize do
       if defined?(Warden::Strategies) && Warden::Strategies.respond_to?(:[]) && !Warden::Strategies[:some_external_strategy]
         begin
           # Try to load our placeholder strategy
-          require_relative '../../lib/strategies/some_external_strategy'
+          require_relative "../../lib/strategies/some_external_strategy"
 
           # Register the strategy with Warden if the class is defined
           if defined?(Devise::Strategies::SomeExternalStrategy)
@@ -53,7 +53,7 @@ Rails.application.config.after_initialize do
             Warden::Manager.class_eval do
               alias_method :_original_run_strategies, :run_strategies
 
-              def run_strategies(scope, args={})
+              def run_strategies(scope, args = {})
                 begin
                   _original_run_strategies(scope, args)
                 rescue => e

@@ -1,0 +1,123 @@
+/* contact_fix.css - Fix for color visibility issues on the contact page */
+
+/* Fix for all primary color gradient headers */
+.bg-gradient-to-r.from-primary-600.to-primary-800 {
+  background: linear-gradient(to right, #16a34a, #15803d) !important;
+}
+.dark .bg-gradient-to-r.from-primary-600.to-primary-800 {
+  background: linear-gradient(to right, #22c55e, #15803d) !important;
+}
+
+/* Fix for all primary background colors */
+.bg-primary-100 {
+  background-color: #dcfce7 !important;
+}
+.dark .bg-primary-100 {
+  background-color: #14532d !important;
+}
+
+.bg-primary-600 {
+  background-color: #16a34a !important;
+}
+.bg-primary-600:hover {
+  background-color: #15803d !important;
+}
+.dark .bg-primary-600 {
+  background-color: #86efac !important;
+}
+.dark .bg-primary-600:hover {
+  background-color: #bbf7d0 !important;
+}
+
+.bg-primary-900 {
+  background-color: #14532d !important;
+}
+.dark .bg-primary-900 {
+  background-color: #f0fdf4 !important;
+}
+
+/* Fix for primary text colors */
+.text-primary-400 {
+  color: #4ade80 !important;
+}
+.dark .text-primary-400 {
+  color: #22c55e !important;
+}
+
+.text-primary-600 {
+  color: #16a34a !important;
+}
+.dark .text-primary-600 {
+  color: #86efac !important;
+}
+
+/* Fix for hover states */
+.hover\:text-primary-700:hover {
+  color: #15803d !important;
+}
+.dark .hover\:text-primary-700:hover {
+  color: #bbf7d0 !important;
+}
+
+.hover\:bg-primary-700:hover {
+  background-color: #15803d !important;
+}
+.dark .hover\:bg-primary-700:hover {
+  background-color: #bbf7d0 !important;
+}
+
+/* Fix for focus rings */
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: #22c55e !important;
+}
+.dark .focus\:ring-primary-500:focus {
+  --tw-ring-color: #4ade80 !important;
+}
+
+.focus\:border-primary-500:focus {
+  border-color: #22c55e !important;
+}
+.dark .focus\:border-primary-500:focus {
+  border-color: #4ade80 !important;
+}
+
+/* Fix for primary border colors */
+.border-primary-500 {
+  border-color: #22c55e !important;
+}
+.dark .border-primary-500 {
+  border-color: #4ade80 !important;
+}
+
+/* Additional fixes for related primary color shades if needed */
+.text-primary-300 {
+  color: #86efac !important;
+}
+.dark .text-primary-300 {
+  color: #16a34a !important;
+}
+
+.text-primary-700 {
+  color: #15803d !important;
+}
+.dark .text-primary-700 {
+  color: #bbf7d0 !important;
+}
+
+/* Fix for hover:bg-primary-100 */
+.hover\:bg-primary-100:hover {
+  background-color: #dcfce7 !important;
+}
+.dark .hover\:bg-primary-100:hover {
+  background-color: #14532d !important;
+}
+
+/* Fix for focus:ring-offset-2 focus:ring-primary-500 */
+.focus\:ring-offset-2.focus\:ring-primary-500:focus {
+  --tw-ring-offset-width: 2px;
+  --tw-ring-color: #22c55e !important;
+}
+.dark .focus\:ring-offset-2.focus\:ring-primary-500:focus {
+  --tw-ring-offset-width: 2px;
+  --tw-ring-color: #4ade80 !important;
+}

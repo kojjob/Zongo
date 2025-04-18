@@ -1,54 +1,111 @@
-<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 h-full flex flex-col relative group">
-  <!-- Image Container with Overlay Effect -->
-  <div class="relative overflow-hidden">
-    <% if event.event_media.present? && event.event_media.first&.url.present? %>
-      <img src="<%= event.event_media.first.url %>" alt="<%= event.title %>" class="w-full h-52 object-cover transform group-hover:scale-105 transition-transform duration-500">
-    <% else %>
-      <div class="w-full h-52 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-700 dark:via-purple-700 dark:to-pink-700 flex items-center justify-center">
-        <svg class="w-16 h-16 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      </div>
-    <% end %>
-    
-    <!-- Overlay Gradient -->
-    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-    
-    <!-- Category Badge -->
+<div class="relative group h-full">
+  <!-- Card with tilt effect and dynamic border -->
+  <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden h-full flex flex-col relative border border-transparent group-hover:border-indigo-200 dark:group-hover:border-indigo-800 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_10px_40px_-15px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_80px_-15px_rgba(79,70,229,0.25)] dark:group-hover:shadow-[0_20px_80px_-15px_rgba(79,70,229,0.15)] transition-all duration-500 transform group-hover:-translate-y-1 group-hover:rotate-1 z-10">
+    <!-- Image Container with Enhanced Effects -->
+    <div class="relative overflow-hidden">
+      <!-- Decorative elements -->
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+      <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
+
+      <% if event.event_media.present? %>
+        <!-- Enhanced image with multiple effects - shorter height -->
+        <div class="relative h-44 overflow-hidden">
+          <!-- Background blurred version for depth -->
+          <div class="absolute inset-0 blur-md transform scale-105" style="background-image: url('<%= event.event_media.first.image_url %>'); background-size: cover; background-position: center;"></div>
+
+          <!-- Main image -->
+          <img src="<%= event.event_media.first.image_url %>" alt="<%= event.title %>" class="relative z-10 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out">
+        </div>
+      <% else %>
+        <!-- Enhanced gradient background with animation - shorter height -->
+        <div class="w-full h-44 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800 animate-gradient-slow"></div>
+          <div class="absolute inset-0 opacity-20">
+            <svg width="100%" height="100%">
+              <defs>
+                <pattern id="grid-<%= event.id %>" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" stroke-width="0.5"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid-<%= event.id %>)" />
+            </svg>
+          </div>
+          <div class="relative z-10 h-full flex items-center justify-center">
+            <%= icon "image", class: "w-16 h-16 text-white/80" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Enhanced Overlay Gradient with multiple layers -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-60 group-hover:opacity-70 transition-opacity duration-500"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-black/50 to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+    <!-- Enhanced Category Badge with 3D effect -->
     <% if event.category.present? %>
-      <div class="absolute top-3 left-3 z-10">
-        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
-              <%= category_color_class(event.category) %>">
+      <div class="absolute top-4 left-4 z-20">
+        <%
+          # Generate a unique gradient for each category
+          category_id = event.category.id.to_i
+          hue1 = (category_id * 37) % 360
+          hue2 = (hue1 + 40) % 360
+
+          # Create gradient classes based on category
+          gradient_class = case event.category.name.downcase
+            when /music|concert|festival/
+              "from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600"
+            when /tech|workshop|seminar/
+              "from-blue-500 to-cyan-500 dark:from-blue-600 dark:to-cyan-600"
+            when /food|dining|culinary/
+              "from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600"
+            when /sport|fitness|health/
+              "from-green-500 to-emerald-500 dark:from-green-600 dark:to-emerald-600"
+            when /art|exhibition|gallery/
+              "from-rose-500 to-red-500 dark:from-rose-600 dark:to-red-600"
+            when /business|networking/
+              "from-indigo-500 to-blue-500 dark:from-indigo-600 dark:to-blue-600"
+            else
+              "from-violet-500 to-purple-500 dark:from-violet-600 dark:to-purple-600"
+          end
+        %>
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg bg-gradient-to-r <%= gradient_class %> border border-white/20 transform transition-all duration-300 group-hover:scale-105 group-hover:-rotate-2">
+          <%= icon "tag", class: "w-3.5 h-3.5 mr-1" %>
           <%= event.category.name %>
         </span>
       </div>
     <% end %>
-    
-    <!-- Price Badge -->
-    <div class="absolute top-3 right-3 z-10">
+
+    <!-- Enhanced Price Badge with glass effect -->
+    <div class="absolute top-4 right-4 z-20">
       <% if event.respond_to?(:free?) && event.free? %>
-        <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 text-xs font-bold px-2.5 py-1 rounded shadow-sm">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg bg-gradient-to-r from-green-500 to-emerald-500 dark:from-green-600 dark:to-emerald-600 border border-white/20 transform transition-all duration-300 group-hover:scale-105 group-hover:rotate-2">
+          <%= icon "gift", class: "w-3.5 h-3.5 mr-1" %>
           Free
         </span>
       <% else %>
-        <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 text-xs font-bold px-2.5 py-1 rounded shadow-sm">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold text-white shadow-lg bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-blue-600 dark:to-indigo-600 border border-white/20 transform transition-all duration-300 group-hover:scale-105 group-hover:rotate-2">
+          <%= icon "credit-card", class: "w-3.5 h-3.5 mr-1" %>
           <%= event.respond_to?(:ticket_price) ? event.ticket_price : "₵#{event.price}" %>
         </span>
       <% end %>
     </div>
-    
-    <!-- Date badge in bottom left -->
-    <div class="absolute bottom-3 left-3 z-10">
-      <div class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-gray-800 dark:text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-sm flex items-center">
-        <svg class="h-3.5 w-3.5 mr-1 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-        </svg>
-        <%= event.start_time.strftime("%a, %b %d") %>
+
+    <!-- Enhanced Date badge with calendar style -->
+    <div class="absolute bottom-4 left-4 z-20">
+      <div class="bg-white dark:bg-gray-900 backdrop-blur-md text-gray-800 dark:text-white text-xs font-bold rounded-lg shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transform transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1">
+        <!-- Month in colorful header -->
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-600 dark:to-purple-600 text-white px-3 py-1 text-center">
+          <%= event.start_time.strftime("%b").upcase %>
+        </div>
+        <!-- Day with larger font -->
+        <div class="px-3 py-1.5 text-center">
+          <span class="text-lg font-black"><%= event.start_time.strftime("%d") %></span>
+          <span class="ml-1 text-xs text-gray-500 dark:text-gray-400"><%= event.start_time.strftime("%a") %></span>
+        </div>
       </div>
     </div>
-    
-    <!-- Action buttons (right-aligned) -->
-    <div class="absolute bottom-3 right-3 z-10 flex space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+    <!-- Enhanced Action buttons with animated effects -->
+    <div class="absolute bottom-4 right-4 z-20 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
       <% if defined?(current_user) && current_user %>
         <% attending = false %>
         <% begin %>
@@ -56,21 +113,23 @@
         <% rescue => e %>
           <% Rails.logger.error("Error checking attendance: #{e.message}") %>
         <% end %>
-        
+
         <% if attending %>
-          <%= button_to cancel_attendance_event_path(event), method: :delete, class: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition" do %>
-            <svg class="h-4 w-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-            </svg>
+          <%= button_to cancel_attendance_event_path(event), method: :delete, class: "bg-white dark:bg-gray-900 backdrop-blur-md p-2.5 rounded-full shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 group/btn" do %>
+            <div class="relative">
+              <%= icon "check-circle", class: "h-5 w-5 text-green-500 group-hover/btn:scale-90 transition-transform" %>
+              <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+            </div>
           <% end %>
         <% else %>
-          <%= button_to attend_event_path(event), method: :post, class: "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition" do %>
-            <svg class="h-4 w-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
+          <%= button_to attend_event_path(event), method: :post, class: "bg-white dark:bg-gray-900 backdrop-blur-md p-2.5 rounded-full shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 group/btn" do %>
+            <%= icon "user-plus", class: "h-5 w-5 text-indigo-500 dark:text-indigo-400 group-hover/btn:scale-90 transition-transform" %>
           <% end %>
         <% end %>
-        
+
         <% favorited = false %>
         <% begin %>
           <% favorited = current_user.respond_to?(:favorited?) && current_user.favorited?(event) %>
@@ -78,125 +137,158 @@
           <% Rails.logger.error("Error checking favorites: #{e.message}") %>
         <% end %>
 
-        <button 
-          data-controller="favorite" 
+        <button
+          data-controller="favorite"
           data-favorite-url-value="<%= toggle_favorite_event_path(event) %>"
           data-favorite-favorited-value="<%= favorited ? 'true' : 'false' %>"
           data-favorite-count-value="<%= event.favorites.count rescue 0 %>"
           data-action="favorite#toggle"
-          class="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-white dark:hover:bg-gray-900 transition"
+          class="bg-white dark:bg-gray-900 backdrop-blur-md p-2.5 rounded-full shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 group/btn"
         >
-          <span data-favorite-target="icon">
+          <span data-favorite-target="icon" class="block group-hover/btn:scale-90 transition-transform">
             <% if favorited %>
-              <svg class="h-4 w-4 text-red-500" fill="currentColor" stroke="none" viewBox="0 0 24 24">
-                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-              </svg>
+              <%= icon "heart", class: "h-5 w-5 text-red-500 fill-current" %>
             <% else %>
-              <svg class="h-4 w-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-              </svg>
+              <%= icon "heart", class: "h-5 w-5 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-500 transition-colors" %>
             <% end %>
           </span>
         </button>
-        
-        <!-- Share button -->
-        <%= render 'share_button', resource: event, icon_only: true, size: "small" %>
+
+        <!-- Enhanced Share button -->
+        <button class="bg-white dark:bg-gray-900 backdrop-blur-md p-2.5 rounded-full shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 group/btn">
+          <%= icon "share-2", class: "h-5 w-5 text-blue-500 dark:text-blue-400 group-hover/btn:scale-90 transition-transform" %>
+        </button>
       <% end %>
     </div>
   </div>
-  
-  <div class="p-5 flex-grow flex flex-col">
-    <!-- Time -->
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-      <span class="flex items-center">
-        <svg class="h-4 w-4 mr-1 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <%= event.start_time.strftime("%I:%M %p") %> - <%= event.end_time.strftime("%I:%M %p") %>
-      </span>
-    </p>
-    
-    <!-- Event title -->
-    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white leading-tight line-clamp-2">
-      <%= link_to event.title, event, class: "hover:text-blue-600 dark:hover:text-blue-400 transition" %>
-    </h3>
-    
-    <!-- Location -->
-    <% if event.venue %>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-start">
-        <svg class="h-4 w-4 mr-1 mt-0.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-        <span class="line-clamp-1"><%= event.venue.name %></span>
-      </p>
+
+  <div class="p-5 flex-grow flex flex-col relative">
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-full -mt-16 -mr-16 dark:from-indigo-500/10 dark:to-purple-500/10"></div>
+
+    <!-- Two-column layout for wider cards -->
+    <div class="flex flex-col md:flex-row md:items-start md:space-x-4">
+      <div class="flex-1">
+        <!-- Enhanced Event title with gradient hover effect -->
+        <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-white leading-tight line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-500 group-hover:to-purple-500 transition-all duration-300">
+          <%= link_to event.title, event %>
+        </h3>
+
+        <!-- Enhanced Location with animated icon -->
+        <% if event.venue %>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-2 flex items-start">
+            <span class="flex-shrink-0 mr-1.5 p-1 bg-gray-100 dark:bg-gray-800 rounded-md group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/30 transition-colors duration-300">
+              <%= icon "map-pin", class: "h-3.5 w-3.5 text-indigo-500 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300" %>
+            </span>
+            <span class="line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300"><%= event.venue.name %></span>
+          </p>
+        <% end %>
+      </div>
+
+      <div class="flex flex-col space-y-2 md:w-1/3 md:flex-none">
+        <!-- Enhanced Time with gradient badge -->
+        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/30">
+          <%= icon "clock", class: "h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" %>
+          <%= event.start_time.strftime("%I:%M %p") %>
+        </span>
+
+        <!-- Duration badge if available -->
+        <% if event.respond_to?(:duration_in_hours) && event.duration_in_hours %>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+            <%= icon "clock", class: "h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400" %>
+            <%= pluralize(event.duration_in_hours.round, 'hour') %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Event description if available -->
+    <% if event.respond_to?(:short_description) && event.short_description.present? %>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 mb-3 line-clamp-2"><%= event.short_description %></p>
     <% end %>
-    
-    <!-- Stats -->
-    <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-4 mt-1">
-      <span class="flex items-center">
-        <svg class="h-3.5 w-3.5 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
+
+    <!-- Enhanced Stats with animated hover effects in a row -->
+    <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-4 mt-auto pt-3 border-t border-gray-100 dark:border-gray-800">
+      <span class="flex items-center group/stat hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <span class="p-1 bg-gray-100 dark:bg-gray-800 rounded-md mr-1.5 group-hover/stat:bg-indigo-100 dark:group-hover/stat:bg-indigo-900/30 transition-colors">
+          <%= icon "users", class: "h-3 w-3 text-gray-500 dark:text-gray-400 group-hover/stat:text-indigo-500 dark:group-hover/stat:text-indigo-400 transition-colors" %>
+        </span>
         <%= pluralize(event.attendances.try(:count) || 0, 'attendee') %>
       </span>
-      
-      <span class="flex items-center">
-        <svg class="h-3.5 w-3.5 mr-1 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-        <% view_count = event.respond_to?(:views_count) && event.views_count ? event.views_count : 
+
+      <span class="flex items-center group/stat hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        <span class="p-1 bg-gray-100 dark:bg-gray-800 rounded-md mr-1.5 group-hover/stat:bg-indigo-100 dark:group-hover/stat:bg-indigo-900/30 transition-colors">
+          <%= icon "eye", class: "h-3 w-3 text-gray-500 dark:text-gray-400 group-hover/stat:text-indigo-500 dark:group-hover/stat:text-indigo-400 transition-colors" %>
+        </span>
+        <% view_count = event.respond_to?(:views_count) && event.views_count ? event.views_count :
                       (event.respond_to?(:event_views_count) ? event.event_views_count : 0) %>
         <%= number_with_delimiter(view_count) %> views
       </span>
     </div>
-    
-    <!-- Attendees preview -->
+
+    <!-- Compact Attendees preview with animated avatars -->
     <% if event.attendances.exists? %>
-      <div class="flex items-center mt-auto pt-4">
-        <div class="flex -space-x-2 mr-2">
-          <% event.attendances.includes(:user).limit(3).each do |attendance| %>
+      <div class="flex items-center justify-between mt-3 pt-2">
+        <div class="flex -space-x-2 group-hover:translate-x-1 transition-transform duration-500">
+          <% event.attendances.includes(:user).limit(3).each_with_index do |attendance, index| %>
             <% begin %>
               <% if attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
-                <img 
-                  src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>" 
-                  alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>" 
-                  class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 shadow-sm"
-                >
+                <div class="relative transform transition-all duration-300 hover:scale-110 hover:z-10" style="transition-delay: <%= index * 50 %>ms">
+                  <img
+                    src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>"
+                    alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>"
+                    class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm object-cover"
+                  >
+                </div>
               <% else %>
-                <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 shadow-sm">
-                  <%= attendance.user.respond_to?(:initials) ? (attendance.user.initials rescue "U") : "U" %>
+                <div class="relative transform transition-all duration-300 hover:scale-110 hover:z-10" style="transition-delay: <%= index * 50 %>ms">
+                  <div class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-600 dark:to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                    <%= attendance.user.respond_to?(:initials) ? (attendance.user.initials rescue "U") : "U" %>
+                  </div>
                 </div>
               <% end %>
             <% rescue => e %>
               <% Rails.logger.error("Error displaying attendee: #{e.message}") %>
-              <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-gray-300 dark:bg-gray-600 shadow-sm"></div>
+              <div class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-600 dark:to-gray-700 shadow-sm"></div>
             <% end %>
           <% end %>
-          
+
           <% if event.attendances.count > 3 %>
-            <div class="h-7 w-7 rounded-full border-2 border-white dark:border-gray-800 bg-blue-500 dark:bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-sm">
-              +<%= event.attendances.count - 3 %>
+            <div class="relative transform transition-all duration-300 hover:scale-110 hover:z-10" style="transition-delay: 150ms">
+              <div class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 bg-gradient-to-br from-indigo-500 to-purple-500 dark:from-indigo-600 dark:to-purple-600 flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+                +<%= event.attendances.count - 3 %>
+              </div>
             </div>
           <% end %>
         </div>
-        
+
         <% if defined?(current_user) && current_user && event.attendances.exists?(user_id: current_user.id) %>
-          <span class="text-xs text-green-600 dark:text-green-400 font-medium">You're attending</span>
+          <span class="text-xs text-green-600 dark:text-green-400 font-medium flex items-center">
+            <%= icon "check-circle", class: "w-3.5 h-3.5 mr-1" %>
+            Attending
+          </span>
         <% elsif defined?(current_user) && current_user && current_user.respond_to?(:friends) && event.attendances.joins(:user).where(user: { id: current_user.friends.pluck(:id) }).exists? %>
-          <span class="text-xs text-blue-600 dark:text-blue-400 font-medium">
-            <%= event.attendances.joins(:user).where(user: { id: current_user.friends.pluck(:id) }).count %> friends are going
+          <span class="text-xs text-blue-600 dark:text-blue-400 font-medium flex items-center">
+            <%= icon "users", class: "w-3.5 h-3.5 mr-1" %>
+            <%= event.attendances.joins(:user).where(user: { id: current_user.friends.pluck(:id) }).count %> friends
           </span>
         <% else %>
-          <span class="text-xs text-gray-500 dark:text-gray-400">
-            Join this event
+          <span class="text-xs text-indigo-600 dark:text-indigo-400 font-medium flex items-center group-hover:translate-x-1 transition-transform duration-500">
+            <%= icon "user-plus", class: "w-3.5 h-3.5 mr-1" %>
+            Join
+            <svg class="w-3 h-3 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
           </span>
         <% end %>
       </div>
     <% end %>
   </div>
-  
-  <!-- Full clickable link overlay -->
-  <%= link_to "", event_path(event), class: "absolute inset-0 z-10", "aria-hidden": true %>
+
+  <!-- Enhanced clickable link overlay with focus styles for accessibility -->
+  <%= link_to "", event_path(event), class: "absolute inset-0 z-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-2xl", "aria-hidden": false, "aria-label": "View details for #{event.title}" %>
+</div>
+
+<!-- Card floating shadow for depth effect -->
+<div class="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5 dark:from-indigo-500/10 dark:to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 transform group-hover:scale-110 -z-10"></div>
 </div>

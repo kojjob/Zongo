@@ -1,0 +1,201 @@
+<!-- Transactions Index Page -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Transactions</h1>
+    <p class="text-gray-600 dark:text-gray-400">View and manage your transaction history</p>
+  </div>
+
+  <!-- Main Card -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <!-- Card Header with Actions -->
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Transaction History</h2>
+      <div class="flex flex-wrap gap-2">
+        <%= link_to new_transaction_path(type: 'transfer'), class: "bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm flex items-center transition-colors" do %>
+          <%= icon "arrow-right-arrow-left", class: "w-4 h-4 mr-1" %>
+          New Transfer
+        <% end %>
+        <%= link_to new_transaction_path(type: 'deposit'), class: "bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm flex items-center transition-colors" do %>
+          <%= icon "arrow-down-to-line", class: "w-4 h-4 mr-1" %>
+          New Deposit
+        <% end %>
+        <%= link_to new_transaction_path(type: 'withdrawal'), class: "bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm flex items-center transition-colors" do %>
+          <%= icon "arrow-up-from-line", class: "w-4 h-4 mr-1" %>
+          New Withdrawal
+        <% end %>
+      </div>
+    </div>
+
+    <% if @transactions.any? %>
+      <!-- Desktop Table View -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Description</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <% @transactions.each do |transaction| %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <%= link_to transaction.reference, transaction_path(transaction), class: "text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <span class="<%= transaction_type_badge_class(transaction.transaction_type) %>">
+                    <%= transaction.transaction_type_description %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <% if transaction.description.present? %>
+                    <%= transaction.description %>
+                  <% elsif transaction.transaction_type == "transfer" %>
+                    To: <%= transaction.other_party_name(current_user.id) %>
+                  <% else %>
+                    <%= transaction.transaction_type_description %>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-medium">
+                  <span class="<%= transaction_amount_class(transaction, current_user.id) %>">
+                    <%= transaction.signed_amount_for_user(current_user.id) %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                  <span class="<%= transaction_status_badge_class(transaction.status) %>">
+                    <%= transaction.status.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= link_to transaction_path(transaction), class: "text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 inline-flex items-center" do %>
+                    <span>View</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Card View -->
+      <div class="md:hidden divide-y divide-gray-200 dark:divide-gray-700">
+        <% @transactions.each do |transaction| %>
+          <%= link_to transaction_path(transaction), class: "block hover:bg-gray-50 dark:hover:bg-gray-700" do %>
+            <div class="p-4">
+              <div class="flex justify-between items-start mb-2">
+                <div>
+                  <span class="<%= transaction_type_badge_class(transaction.transaction_type) %> mb-2">
+                    <%= transaction.transaction_type_description %>
+                  </span>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>
+                  </p>
+                </div>
+                <span class="<%= transaction_status_badge_class(transaction.status) %>">
+                  <%= transaction.status.capitalize %>
+                </span>
+              </div>
+              
+              <div class="mt-2">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  <% if transaction.description.present? %>
+                    <%= transaction.description %>
+                  <% elsif transaction.transaction_type == "transfer" %>
+                    To: <%= transaction.other_party_name(current_user.id) %>
+                  <% else %>
+                    <%= transaction.transaction_type_description %>
+                  <% end %>
+                </p>
+              </div>
+              
+              <div class="flex justify-between items-center mt-2">
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Ref: <%= transaction.reference %>
+                </p>
+                <p class="text-sm font-mono font-medium <%= transaction_amount_class(transaction, current_user.id) %>">
+                  <%= transaction.signed_amount_for_user(current_user.id) %>
+                </p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <!-- Pagination -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="p-8 text-center">
+        <div class="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+          <%= icon "receipt", class: "w-8 h-8 text-gray-400 dark:text-gray-500" %>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No transactions yet</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">You haven't made any transactions yet.</p>
+        <%= link_to "Make your first transaction", new_transaction_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :helper_methods do %>
+  <% # Helper methods for transaction display %>
+  <%
+    def transaction_type_badge_class(type)
+      case type
+      when "deposit"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300"
+      when "withdrawal"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300"
+      when "transfer"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-info-100 text-info-800 dark:bg-info-900 dark:text-info-300"
+      when "payment"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent-100 text-accent-800 dark:bg-accent-900 dark:text-accent-300"
+      else
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+      end
+    end
+
+    def transaction_status_badge_class(status)
+      case status
+      when "pending"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-300"
+      when "completed"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300"
+      when "failed"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300"
+      when "reversed"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+      when "blocked"
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300"
+      else
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+      end
+    end
+
+    def transaction_amount_class(transaction, user_id)
+      direction = transaction.direction_for_user(user_id)
+      case direction
+      when :incoming
+        "text-success-600 dark:text-success-400"
+      when :outgoing
+        "text-error-600 dark:text-error-400"
+      else
+        "text-gray-900 dark:text-white"
+      end
+    end
+  %>
+<% end %>

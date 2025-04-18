@@ -1,0 +1,48 @@
+/**
+ * Content Spacing Fix
+ * Creates a balanced gap between the header and content
+ */
+
+/* Override the enhanced_search.css padding with a balanced value */
+.main-content {
+  padding-top: 30px !important; /* Balanced spacing - not too large, not too small */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 25px !important; /* Slightly smaller for mobile */
+  }
+}
+
+/* Specific page adjustments */
+.events-index .main-content,
+.profile-page .main-content,
+.settings-page .main-content,
+.wallet-page .main-content,
+.user_settings-profile .main-content,
+.user_settings-index .main-content,
+.dashboard-index .main-content,
+.admin-index .main-content {
+  padding-top: 25px !important;
+}
+
+/* Fix for search bar positioning */
+#search {
+  margin-top: 0 !important;
+  position: relative;
+  z-index: 40;
+}
+
+/* Ensure content is visible */
+.main-content > * {
+  position: relative;
+  z-index: 10;
+}
+
+/* Additional fix for any elements that might be adding to the gap */
+.main-content > div:first-child,
+.main-content > section:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}

@@ -1,0 +1,57 @@
+/* Dropdown Fix Styles */
+
+/* Improved mobile dropdown styles */
+@media (max-width: 640px) {
+  [data-dropdown-target="menu"] {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0.5rem !important;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    z-index: 50 !important;
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    transform-origin: bottom center !important;
+  }
+
+  /* Special positioning for user dropdown */
+  .user-dropdown [data-dropdown-target="menu"] {
+    top: auto !important;
+    bottom: 0 !important;
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  /* Make dropdown links easier to tap on mobile */
+  [data-dropdown-target="menu"] a,
+  [data-dropdown-target="menu"] button {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Add active state for touch feedback */
+  [data-dropdown-target="menu"] a:active,
+  [data-dropdown-target="menu"] button:active {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .dark [data-dropdown-target="menu"] a:active,
+  .dark [data-dropdown-target="menu"] button:active {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* Active tap state for mobile */
+  [data-dropdown-target="menu"] .active-tap {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .dark [data-dropdown-target="menu"] .active-tap {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+}

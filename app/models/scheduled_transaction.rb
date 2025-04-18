@@ -1,6 +1,20 @@
 class ScheduledTransaction < ApplicationRecord
+  # Check if user_id column exists before adding the belongs_to association
+  if table_exists? && column_names.include?("user_id")
+    belongs_to :user
+  end
+
   belongs_to :source_wallet, class_name: "Wallet", foreign_key: "source_wallet_id"
   belongs_to :destination_wallet, class_name: "Wallet", foreign_key: "destination_wallet_id", optional: true
+
+  # Define a method to get the user through the source wallet if user_id column doesn't exist
+  def user
+    if self.class.table_exists? && self.class.column_names.include?("user_id") && respond_to?(:user_id) && user_id.present?
+      User.find_by(id: user_id)
+    else
+      source_wallet&.user
+    end
+  end
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }

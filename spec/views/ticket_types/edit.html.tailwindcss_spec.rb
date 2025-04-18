@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "ticket_types/edit", type: :view do
+  let(:event) { create(:event) }
   let(:ticket_type) {
     TicketType.create!(
-      event: nil,
+      event: event,
       name: "MyString",
       description: "MyText",
       price: "9.99",

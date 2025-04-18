@@ -1,0 +1,284 @@
+<% content_for :title, "Transactions" %>
+
+<div class="space-y-6">
+  <!-- Header with Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Transactions</h2>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Monitor and manage all financial transactions
+      </p>
+    </div>
+
+    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+      <button type="button" class="btn btn-primary" data-controller="dropdown">
+        <%= icon "download", class: "w-5 h-5 mr-2" %>
+        Export
+        <%= icon "chevron-down", class: "w-4 h-4 ml-2" %>
+      </button>
+
+      <button type="button" class="btn btn-outline" data-controller="dropdown">
+        <%= icon "filter", class: "w-5 h-5 mr-2" %>
+        Filter
+        <%= icon "chevron-down", class: "w-4 h-4 ml-2" %>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+    <%= form_with url: admin_transactions_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "search", class: "h-5 w-5 text-gray-400" %>
+            </div>
+            <%= f.text_field :search, placeholder: "Transaction ID or description", class: "pl-10 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div>
+          <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Type</label>
+          <%= f.select :type,
+              [
+                ["All Types", ""],
+                ["Deposit", "deposit"],
+                ["Withdrawal", "withdrawal"],
+                ["Transfer", "transfer"]
+              ],
+              {},
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }
+          %>
+        </div>
+
+        <div>
+          <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date</label>
+          <%= f.date_field :start_date, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+
+        <div>
+          <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date</label>
+          <%= f.date_field :end_date, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= link_to "Clear Filters", admin_transactions_path, class: "btn btn-outline mr-3" %>
+        <%= f.submit "Apply Filters", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Transaction Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
+          <%= icon "currency-dollar", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Volume</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">₵<%= number_with_delimiter((@total_transaction_volume.nil? ? 0.0 : @total_transaction_volume.to_f).round(2)) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-300">
+          <%= icon "arrow-down", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Deposits</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">₵<%= number_with_delimiter((@total_deposits.nil? ? 0.0 : @total_deposits.to_f).round(2)) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center text-red-600 dark:text-red-300">
+          <%= icon "arrow-up", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Withdrawals</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">₵<%= number_with_delimiter((@total_withdrawals.nil? ? 0.0 : @total_withdrawals.to_f).round(2)) %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
+          <%= icon "arrow-right", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transfers</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">₵<%= number_with_delimiter((@total_transfers.nil? ? 0.0 : @total_transfers.to_f).round(2)) %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions Table -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Transaction ID
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Type
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              User
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Amount
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Date
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% @transactions.each do |transaction| %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900 dark:text-white"><%= transaction.transaction_id %></div>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= if transaction.deposit?
+                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                      elsif transaction.withdrawal?
+                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                      elsif transaction.transfer?
+                        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                      else
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      end %>">
+                  <%= transaction.transaction_type.to_s.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-8 w-8">
+                    <% user = transaction.sender || transaction.recipient %>
+                    <% if user && user.respond_to?(:avatar) && user.avatar.attached? %>
+                      <%= image_tag user.avatar, class: "h-8 w-8 rounded-full", alt: "User avatar" %>
+                    <% else %>
+                      <div class="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold text-sm">
+                        <%= user&.username&.first&.upcase || user&.email&.first&.upcase || 'U' %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-3">
+                    <% if user %>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white"><%= user.username %></div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400"><%= user.email %></div>
+                    <% else %>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">Unknown User</div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">No user associated</div>
+                    <% end %>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium <%= transaction.deposit? ? 'text-green-600 dark:text-green-400' : (transaction.withdrawal? ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400') %>">
+                  <%= transaction.deposit? ? '+' : (transaction.withdrawal? ? '-' : '') %>₵<%= number_with_delimiter((transaction.amount.nil? ? 0.0 : transaction.amount.to_f).round(2)) %>
+                </div>
+                <div class="text-xs text-gray-500 dark:text-gray-400">
+                  Fee: ₵<%= number_with_delimiter((transaction.fee.nil? ? 0.0 : transaction.fee.to_f).round(2)) %>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= if transaction.status_completed?
+                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                      elsif transaction.status_pending?
+                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                      elsif transaction.status_failed?
+                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                      else
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      end %>">
+                  <%= transaction.status.to_s.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= transaction.created_at.strftime("%b %d, %Y %H:%M") %>
+                <div class="text-xs"><%= time_ago_in_words(transaction.created_at) %> ago</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end space-x-2">
+                  <%= link_to transaction_path(transaction), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                    <%= icon "eye", class: "w-5 h-5" %>
+                  <% end %>
+
+                  <% if transaction.status_pending? %>
+                    <button type="button" class="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300">
+                      <%= icon "check", class: "w-5 h-5" %>
+                    </button>
+
+                    <button type="button" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                      <%= icon "x", class: "w-5 h-5" %>
+                    </button>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex items-center justify-between">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <% if @pagy.prev %>
+          <%= link_to "Previous", url_for(page: @pagy.prev), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+        <% else %>
+          <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Previous</span>
+        <% end %>
+
+        <% if @pagy.next %>
+          <%= link_to "Next", url_for(page: @pagy.next), class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+        <% else %>
+          <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Next</span>
+        <% end %>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            Showing <span class="font-medium"><%= @pagy.from %></span> to <span class="font-medium"><%= @pagy.to %></span> of <span class="font-medium"><%= @pagy.count %></span> transactions
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <% (1..@pagy.pages).each do |page| %>
+              <% if page == @pagy.page %>
+                <span class="relative inline-flex items-center px-4 py-2 border border-primary-500 bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 dark:border-primary-500">
+                  <%= page %>
+                </span>
+              <% else %>
+                <%= link_to page, url_for(page: page), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+              <% end %>
+            <% end %>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

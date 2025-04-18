@@ -1,0 +1,25 @@
+<%# Event Tags Component %>
+<div class="tags-container">
+  <%
+    # Handle the case when tags are nil or empty
+    if !defined?(tags) || tags.nil? || tags.empty?
+      # Generate sample tags
+      sample_tags = ["Music", "Festival", "Weekend", "Live", "Entertainment", "Family-friendly", "Outdoor", "Food", "Art", "Workshop"]
+      tags = sample_tags.sample(5).map { |name| OpenStruct.new(name: name, count: rand(10..50)) }
+    end
+  %>
+
+  <div class="flex flex-wrap gap-2">
+    <% tags.each do |tag| %>
+      <%= link_to events_path(tag: tag.name), class: "tag-item group" do %>
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/30 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105">
+          <span class="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 mr-2 group-hover:scale-125 transition-transform duration-300"></span>
+          <%= tag.name %>
+          <% if tag.respond_to?(:count) && tag.count.present? %>
+            <span class="ml-1 text-xs opacity-60 group-hover:opacity-100 transition-opacity"><%= tag.count %></span>
+          <% end %>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<% 
+  # Default values
+  variant ||= 'default'
+  status ||= 'default'
+  size ||= 'medium'
+  color ||= 'currentColor'
+  
+  # CSS classes for different states
+  icon_classes = {
+    default: 'text-gray-500',
+    active: 'text-blue-500',
+    disabled: 'text-gray-300',
+    hover: 'text-green-500'
+  }
+  
+  # Size mappings
+  size_classes = {
+    small: 'w-4 h-4',
+    medium: 'w-6 h-6',
+    large: 'w-8 h-8'
+  }
+%>
+
+<div class="external-link-icon <%= icon_classes[status.to_sym] %> <%= size_classes[size.to_sym] %>">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="<%= color %>">
+    <% case variant %>
+    <% when 'outlined' %>
+      <%# Outlined external link with thin lines %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+    
+    <% when 'filled' %>
+      <%# Filled external link with depth effect %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      <%# Additional depth shadowing %>
+      <path d="M14 4.5a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v5" stroke="currentColor" opacity="0.3" />
+    
+    <% when 'angled' %>
+      <%# Angled external link with diagonal emphasis %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+      <%# Angled corner emphasis %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 9V5a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2h4" opacity="0.7" />
+    
+    <% else %>
+      <%# Default external link icon %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+    <% end %>
+
+    <%# Status-specific modifications %>
+    <% if status == 'disabled' %>
+      <line x1="3" y1="21" x2="21" y2="3" stroke="currentColor" stroke-width="2" opacity="0.6" />
+    <% elsif status == 'hover' %>
+      <circle cx="14" cy="4" r="2" fill="currentColor" opacity="0.3" />
+    <% end %>
+  </svg>
+</div>

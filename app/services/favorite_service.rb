@@ -1,18 +1,18 @@
 class FavoriteService
   attr_reader :user
-  
+
   def initialize(user)
     @user = user
   end
-  
+
   def toggle_favorite(favoritable)
     return ServiceResult.error("User is required") unless user
     return ServiceResult.error("Cannot favorite nil object") unless favoritable
-    
+
     begin
       # Try to use the favorites table
       favorite = user.favorites.find_by(favoritable: favoritable)
-      
+
       if favorite
         favorite.destroy
         ServiceResult.success(favorited: false, favorite_count: count_favorites(favoritable))
@@ -25,7 +25,7 @@ class FavoriteService
         # Fallback to using event_favorites for Event objects
         if favoritable.is_a?(Event) && defined?(EventFavorite)
           event_favorite = EventFavorite.find_by(user_id: user.id, event_id: favoritable.id)
-          
+
           if event_favorite
             event_favorite.destroy
             ServiceResult.success(favorited: false, favorite_count: count_favorites(favoritable))
@@ -43,9 +43,9 @@ class FavoriteService
       ServiceResult.error("Error toggling favorite: #{e.message}")
     end
   end
-  
+
   private
-  
+
   def count_favorites(favoritable)
     # Count favorites or event_favorites depending on what's available
     begin
@@ -65,21 +65,21 @@ end
 # Simple service result class
 class ServiceResult
   attr_reader :success, :error, :data
-  
+
   def initialize(success, error = nil, data = {})
     @success = success
     @error = error
     @data = data
   end
-  
+
   def self.success(data = {})
     new(true, nil, data)
   end
-  
+
   def self.error(message)
     new(false, message)
   end
-  
+
   def success?
     @success
   end

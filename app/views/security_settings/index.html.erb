@@ -1,0 +1,406 @@
+<%# Security Settings Page %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center mb-6">
+    <a href="<%= user_settings_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    </a>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Security Settings</h1>
+  </div>
+
+  <%# PIN Management Section %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Transaction PIN</h2>
+    <p class="text-gray-600 dark:text-gray-400 mb-6">
+      A transaction PIN provides an additional layer of security for your transactions.
+      You'll be required to enter this PIN when withdrawing funds or making transfers.
+    </p>
+
+    <% if @has_pin_set %>
+      <div class="mb-6 flex items-center">
+        <div class="p-2 rounded-full bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400 mr-3">
+          <%= icon "check-circle", class: "w-6 h-6" %>
+        </div>
+        <span class="text-gray-700 dark:text-gray-300">Transaction PIN is set</span>
+      </div>
+
+      <div class="mb-6">
+        <button type="button" class="btn btn-secondary" data-controller="modal" data-action="modal#open" data-modal-target="change-pin-modal">
+          Change PIN
+        </button>
+        <button type="button" class="btn btn-outline ml-2" data-controller="modal" data-action="modal#open" data-modal-target="remove-pin-modal">
+          Remove PIN
+        </button>
+      </div>
+    <% else %>
+      <div class="mb-6 flex items-center">
+        <div class="p-2 rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 mr-3">
+          <%= icon "alert-circle", class: "w-6 h-6" %>
+        </div>
+        <span class="text-gray-700 dark:text-gray-300">Transaction PIN is not set</span>
+      </div>
+
+      <div class="mb-6">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('set-pin-modal').style.display = 'flex';">
+          Set Up PIN
+        </button>
+      </div>
+    <% end %>
+
+    <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "info", class: "h-5 w-5 text-yellow-600 dark:text-yellow-500" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-400">Important Note</h3>
+          <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+            <p>Your transaction PIN is separate from your account password. If you forget your PIN, you'll need to verify your identity to reset it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Security Preferences %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Security Preferences</h2>
+
+    <%= form_with url: update_security_preferences_path, method: :patch, class: "space-y-4" do |f| %>
+      <div class="space-y-4">
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <%= f.check_box :login_alerts, checked: current_user.user_settings&.login_alerts, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="login_alerts" class="font-medium text-gray-700 dark:text-gray-300">Login Notifications</label>
+            <p class="text-gray-500 dark:text-gray-400">Receive notifications when a new device logs into your account</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <%= f.check_box :password_alerts, checked: current_user.user_settings&.password_alerts, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="password_alerts" class="font-medium text-gray-700 dark:text-gray-300">Password Change Notifications</label>
+            <p class="text-gray-500 dark:text-gray-400">Receive notifications when your password or PIN is changed</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <%= f.check_box :withdrawal_alerts, checked: current_user.user_settings&.withdrawal_alerts, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="withdrawal_alerts" class="font-medium text-gray-700 dark:text-gray-300">Withdrawal Notifications</label>
+            <p class="text-gray-500 dark:text-gray-400">Receive notifications for all withdrawals from your wallet</p>
+          </div>
+        </div>
+
+        <div class="flex items-start">
+          <div class="flex items-center h-5">
+            <%= f.check_box :transfer_alerts, checked: current_user.user_settings&.transfer_alerts, class: "h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 dark:bg-gray-700 dark:border-gray-600" %>
+          </div>
+          <div class="ml-3 text-sm">
+            <label for="transfer_alerts" class="font-medium text-gray-700 dark:text-gray-300">Transfer Notifications</label>
+            <p class="text-gray-500 dark:text-gray-400">Receive notifications for all transfers from your wallet</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4">
+        <%= f.submit "Save Preferences", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Recent Activity %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-8">
+    <div class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Security Activity</h2>
+      <a href="<%= security_activity_logs_path %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline">
+        View All Activity
+      </a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Event</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date & Time</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IP Address</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Severity</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @recent_activities.empty? %>
+            <tr>
+              <td colspan="4" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                No recent security activity
+              </td>
+            </tr>
+          <% else %>
+            <% @recent_activities.each do |activity| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <%
+                      icon_name = case activity.event_type
+                                  when 'login_attempt', 'login_success' then 'log-in'
+                                  when 'login_failure' then 'alert-triangle'
+                                  when 'password_change' then 'key'
+                                  when 'account_locked' then 'lock'
+                                  when 'transaction_check', 'transaction_blocked' then 'credit-card'
+                                  when 'suspicious_activity' then 'alert-octagon'
+                                  when 'ip_change', 'device_change' then 'smartphone'
+                                  when 'verification_success', 'verification_failure' then 'shield'
+                                  else 'activity'
+                                  end
+
+                      icon_color = case activity.severity
+                                   when 'info' then 'text-blue-500'
+                                   when 'warning' then 'text-yellow-500'
+                                   when 'critical' then 'text-red-500'
+                                   end
+                    %>
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center <%= icon_color %>">
+                      <%= icon icon_name, class: "h-4 w-4" %>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">
+                        <%= activity.event_type.humanize %>
+                      </div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
+                        <% if activity.details.present? && activity.details["action"].present? %>
+                          <%= activity.details["action"] %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <%= activity.created_at.strftime("%b %d, %Y") %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= activity.created_at.strftime("%I:%M %p") %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <%= activity.ip_address.present? ? activity.ip_address : "Unknown" %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <%
+                    severity_class = case activity.severity
+                                     when 'info' then 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                                     when 'warning' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                                     when 'critical' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                     end
+                  %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= severity_class %>">
+                    <%= activity.severity.capitalize %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%# Account Security Actions %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Security</h2>
+
+    <div class="space-y-6">
+      <div>
+        <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Change Password</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-3">
+          Regularly updating your password helps keep your account secure.
+        </p>
+        <a href="<%= edit_user_registration_path %>" class="btn btn-secondary">
+          Change Password
+        </a>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Emergency Account Lock</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-3">
+          If you suspect unauthorized access to your account, you can lock it immediately.
+          This will prevent any transactions or logins until you contact support to unlock it.
+        </p>
+        <button type="button" class="btn btn-danger" data-controller="modal" data-action="modal#open" data-modal-target="lock-account-modal">
+          Lock Account
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Modals %>
+
+<%# Set PIN Modal %>
+<div id="set-pin-modal" class="fixed inset-0 z-50 overflow-y-auto hidden flex items-center justify-center" style="display: none;">
+  <div class="modal-backdrop" onclick="document.getElementById('set-pin-modal').style.display = 'none';"></div>
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Set Transaction PIN</h3>
+        <button type="button" class="modal-close" onclick="document.getElementById('set-pin-modal').style.display = 'none';">&times;</button>
+      </div>
+      <div class="modal-body">
+        <%= form_with url: set_pin_path, method: :post do |f| %>
+          <div class="space-y-4">
+            <div>
+              <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+              <%= f.password_field :current_password, required: true, class: "form-input" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Enter your current password to verify your identity</p>
+            </div>
+
+            <div>
+              <label for="pin" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New PIN</label>
+              <%= f.password_field :pin, required: true, pattern: "[0-9]{4,6}", maxlength: 6, class: "form-input" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Choose a 4-6 digit PIN</p>
+            </div>
+
+            <div>
+              <label for="pin_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm PIN</label>
+              <%= f.password_field :pin_confirmation, required: true, pattern: "[0-9]{4,6}", maxlength: 6, class: "form-input" %>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <button type="button" class="btn btn-outline mr-2" onclick="document.getElementById('set-pin-modal').style.display = 'none';">Cancel</button>
+            <%= f.submit "Set PIN", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Change PIN Modal %>
+<div id="change-pin-modal" class="modal hidden" data-controller="modal">
+  <div class="modal-backdrop" data-action="click->modal#close"></div>
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Change Transaction PIN</h3>
+        <button type="button" class="modal-close" data-action="modal#close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <%= form_with url: set_pin_path, method: :post do |f| %>
+          <div class="space-y-4">
+            <div>
+              <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+              <%= f.password_field :current_password, required: true, class: "form-input" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Enter your current password to verify your identity</p>
+            </div>
+
+            <div>
+              <label for="pin" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New PIN</label>
+              <%= f.password_field :pin, required: true, pattern: "[0-9]{4,6}", maxlength: 6, class: "form-input" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Choose a 4-6 digit PIN</p>
+            </div>
+
+            <div>
+              <label for="pin_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm PIN</label>
+              <%= f.password_field :pin_confirmation, required: true, pattern: "[0-9]{4,6}", maxlength: 6, class: "form-input" %>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <button type="button" class="btn btn-outline mr-2" data-action="modal#close">Cancel</button>
+            <%= f.submit "Change PIN", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Remove PIN Modal %>
+<div id="remove-pin-modal" class="modal hidden" data-controller="modal">
+  <div class="modal-backdrop" data-action="click->modal#close"></div>
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Remove Transaction PIN</h3>
+        <button type="button" class="modal-close" data-action="modal#close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <%= icon "alert-triangle", class: "h-5 w-5 text-yellow-600 dark:text-yellow-500" %>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-400">Warning</h3>
+              <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                <p>Removing your transaction PIN will reduce the security of your account. Without a PIN, anyone with access to your account can make transactions.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%= form_with url: remove_pin_path, method: :delete do |f| %>
+          <div>
+            <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+            <%= f.password_field :current_password, required: true, class: "form-input" %>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Enter your current password to verify your identity</p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <button type="button" class="btn btn-outline mr-2" data-action="modal#close">Cancel</button>
+            <%= f.submit "Remove PIN", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Lock Account Modal %>
+<div id="lock-account-modal" class="modal hidden" data-controller="modal">
+  <div class="modal-backdrop" data-action="click->modal#close"></div>
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Lock Your Account</h3>
+        <button type="button" class="modal-close" data-action="modal#close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <%= icon "alert-triangle", class: "h-5 w-5 text-red-600 dark:text-red-500" %>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800 dark:text-red-400">Caution</h3>
+              <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                <p>Locking your account is an emergency measure. Once locked, you'll need to contact support to regain access.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <%= form_with url: lock_account_path, method: :post do |f| %>
+          <div>
+            <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
+            <%= f.password_field :current_password, required: true, class: "form-input" %>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Enter your current password to verify your identity</p>
+          </div>
+
+          <div class="mt-6 flex justify-end">
+            <button type="button" class="btn btn-outline mr-2" data-action="modal#close">Cancel</button>
+            <%= f.submit "Lock Account", class: "btn btn-danger" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

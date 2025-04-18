@@ -2,13 +2,13 @@
   <% if defined?(loading) && loading %>
     <%= render 'loading_skeleton', count: 6 %>
   <% elsif events.any? %>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       <% events.each do |event| %>
         <%= render 'events/event_card', event: event %>
       <% end %>
     </div>
   <% else %>
-    <%= render 'empty_state', 
+    <%= render 'empty_state',
        icon: (params[:query].present? || params[:category_id].present? || params[:date_range].present? || params[:free_only] == "1") ? 'filter' : 'calendar',
        title: (params[:query].present?) ? "No matches found" : "No events found",
        message: (params[:query].present?) ? "We couldn't find any events matching '#{params[:query]}'. Try a different search term or check back later." : "There are no events scheduled at this time. Check back later or adjust your filters."

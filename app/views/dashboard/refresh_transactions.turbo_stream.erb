@@ -13,14 +13,14 @@
         <% @recent_transactions.each do |transaction| %>
           <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
             <div class="flex items-center">
-              <% 
+              <%
                 icon_name = case transaction.transaction_type
                             when 'deposit' then 'money-in'
                             when 'withdrawal' then 'money-out'
                             when 'transfer' then 'transfer'
                             when 'payment' then 'shopping'
                             end
-                            
+
                 icon_color = case transaction.transaction_type
                             when 'deposit' then 'text-green-500'
                             when 'withdrawal' then 'text-red-500'
@@ -49,7 +49,7 @@
               <div class="text-sm font-medium <%= amount_class %>">
                 <%= transaction.signed_amount_for_user(current_user.id) %>
               </div>
-              <a href="<%= wallet_transaction_path(transaction) %>" class="ml-4 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
+              <a href="<%= transaction_path(id: transaction.id) %>" class="ml-4 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
                 <%= icon "chevron-right", class: "h-5 w-5" %>
               </a>
             </div>

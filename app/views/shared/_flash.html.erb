@@ -1,6 +1,43 @@
-<div class="fixed top-4 right-4 left-4 sm:top-5 sm:right-5 sm:left-auto sm:max-w-md z-50 flex flex-col gap-3">
+<div id="flash-messages" class="fixed top-4 right-4 left-4 sm:top-5 sm:right-5 sm:left-auto sm:max-w-md z-50 flex flex-col gap-3">
   <% flash.each do |type, message| %>
     <% next if message.blank? %>
-    <%= render 'shared/flash_message', message: message, type: type %>
+    <div class="flash-message bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+         id="flash-<%= SecureRandom.hex(4) %>">
+      <div class="<%= flash_background_color(type) %> px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center">
+          <%= flash_icon(type) %>
+          <span class="ml-2 font-medium <%= flash_text_color(type) %>"><%= flash_title(type) %></span>
+        </div>
+        <button type="button" class="<%= flash_close_button_color(type) %> hover:text-gray-500 focus:outline-none" onclick="this.closest('.flash-message').remove()">
+          <span class="sr-only">Close</span>
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="px-4 py-3 <%= flash_message_color(type) %>">
+        <p><%= message %></p>
+      </div>
+    </div>
   <% end %>
 </div>
+
+<script>
+  // Auto-dismiss flash messages after 5 seconds
+  document.addEventListener('DOMContentLoaded', function() {
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(function(message) {
+      setTimeout(function() {
+        message.style.opacity = '0';
+        message.style.transform = 'translateY(-10px)';
+        message.style.transition = 'opacity 300ms ease, transform 300ms ease';
+
+        setTimeout(function() {
+          message.remove();
+        }, 300);
+      }, 5000);
+    });
+  });
+</script>
+
+<% flash.clear %>

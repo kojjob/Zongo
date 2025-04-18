@@ -1,0 +1,88 @@
+<%# Advanced Event Tags Component with Color Variations %>
+<div class="tags-container">
+  <%
+    # Define color schemes
+    color_schemes = [
+      { dot: "from-indigo-500 to-purple-500", bg: "from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30", text: "text-indigo-700 dark:text-indigo-300", border: "border-indigo-200 dark:border-indigo-800/30" },
+      { dot: "from-blue-500 to-cyan-500", bg: "from-blue-50 to-cyan-50 dark:from-blue-900/30 dark:to-cyan-900/30", text: "text-blue-700 dark:text-blue-300", border: "border-blue-200 dark:border-blue-800/30" },
+      { dot: "from-green-500 to-emerald-500", bg: "from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30", text: "text-green-700 dark:text-green-300", border: "border-green-200 dark:border-green-800/30" },
+      { dot: "from-amber-500 to-orange-500", bg: "from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-900/30", text: "text-amber-700 dark:text-amber-300", border: "border-amber-200 dark:border-amber-800/30" },
+      { dot: "from-pink-500 to-rose-500", bg: "from-pink-50 to-rose-50 dark:from-pink-900/30 dark:to-rose-900/30", text: "text-pink-700 dark:text-pink-300", border: "border-pink-200 dark:border-pink-800/30" }
+    ]
+
+    # Handle the case when tags are nil or empty
+    if !defined?(tags) || tags.nil? || tags.empty?
+      # Sample tags with different themes
+      sample_tags = [
+        { name: "Music", color: 0 },
+        { name: "Festival", color: 0 },
+        { name: "Weekend", color: 1 },
+        { name: "Live", color: 1 },
+        { name: "Entertainment", color: 2 },
+        { name: "Family-friendly", color: 2 },
+        { name: "Outdoor", color: 3 },
+        { name: "Food", color: 3 },
+        { name: "Art", color: 4 },
+        { name: "Workshop", color: 4 }
+      ]
+
+      # Create tag objects
+      tags = sample_tags.sample(5).map do |tag|
+        OpenStruct.new(name: tag[:name], color: tag[:color], count: rand(1..50))
+      end
+    end
+  %>
+
+  <div class="flex flex-wrap gap-2">
+    <% tags.each_with_index do |tag, index| %>
+      <%
+        # Determine color scheme
+        color_index = tag.respond_to?(:color) ? tag.color : index % color_schemes.length
+        scheme = color_schemes[color_index % color_schemes.length]
+
+        # Animation delay based on index
+        animation_delay = "animation-delay-#{(index * 100) % 1000}"
+      %>
+
+      <%= link_to events_path(tag: tag.name), class: "tag-item group animate-fade-in #{animation_delay}" do %>
+        <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gradient-to-r <%= scheme[:bg] %> <%= scheme[:text] %> border <%= scheme[:border] %> shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5 hover:scale-105">
+          <span class="w-2 h-2 rounded-full bg-gradient-to-r <%= scheme[:dot] %> mr-2 group-hover:scale-125 transition-transform duration-300"></span>
+          <%= tag.name %>
+          <% if tag.respond_to?(:count) && tag.count.present? %>
+            <span class="ml-1 text-xs opacity-60 group-hover:opacity-100 transition-opacity"><%= tag.count %></span>
+          <% else %>
+            <span class="ml-1 text-xs opacity-60 group-hover:opacity-100 transition-opacity"><%= rand(1..50) %></span>
+          <% end %>
+        </span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  .animation-delay-0 { animation-delay: 0ms; }
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-600 { animation-delay: 600ms; }
+  .animation-delay-700 { animation-delay: 700ms; }
+  .animation-delay-800 { animation-delay: 800ms; }
+  .animation-delay-900 { animation-delay: 900ms; }
+</style>

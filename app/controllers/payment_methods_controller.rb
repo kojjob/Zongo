@@ -1,7 +1,7 @@
 class PaymentMethodsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_payment_method, only: [ :show, :edit, :update, :destroy, :set_default, :verify ]
-  before_action :ensure_ownership, only: [ :show, :edit, :update, :destroy, :set_default ]
+  before_action :ensure_ownership, only: [ :show, :edit, :update, :destroy, :set_default, :verify ]
 
   def index
     @payment_methods = current_user.payment_methods.order(default: :desc, created_at: :desc)
@@ -66,10 +66,12 @@ class PaymentMethodsController < ApplicationController
   def verify
     # In a real application, this would initiate a verification process
     # For demo purposes, we'll just mark it as verified
-    if @payment_method.update(verified_at: Time.current, status: :verified)
+    if @payment_method.update(status: :verified, verification_status: :verification_approved)
+      # Also mark as used now
+      @payment_method.mark_as_used!
       flash[:success] = "Payment method verified successfully"
     else
-      flash[:error] = "Failed to verify payment method"
+      flash[:error] = "Failed to verify payment method: #{@payment_method.errors.full_messages.join(', ')}"
     end
     redirect_to payment_methods_path
   end

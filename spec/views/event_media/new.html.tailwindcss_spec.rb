@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "event_media/new", type: :view do
+  let(:event) { create(:event) }
+
   before(:each) do
     assign(:event_medium, EventMedium.new(
-      event: nil,
-      user: nil,
+      event: event,
       media_type: 1,
       title: "MyString",
       description: "MyText",
@@ -19,7 +20,8 @@ RSpec.describe "event_media/new", type: :view do
     assert_select "form[action=?][method=?]", event_media_path, "post" do
       assert_select "input[name=?]", "event_medium[event_id]"
 
-      assert_select "input[name=?]", "event_medium[user_id]"
+      # User ID has been removed
+      # assert_select "input[name=?]", "event_medium[user_id]"
 
       assert_select "input[name=?]", "event_medium[media_type]"
 

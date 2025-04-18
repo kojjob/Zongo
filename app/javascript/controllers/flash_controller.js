@@ -28,6 +28,26 @@ export default class extends Controller {
     // Remove from DOM after animation
     setTimeout(() => {
       this.element.remove()
+
+      // Check if this was the last flash message
+      const flashContainer = document.querySelector('.flash-container')
+      if (flashContainer && flashContainer.querySelectorAll('[data-controller="flash"]').length === 0) {
+        flashContainer.remove()
+      }
+
+      // Clear the flash from the session via AJAX
+      this.clearFlashFromSession()
     }, 300)
+  }
+
+  clearFlashFromSession() {
+    // Send a request to clear the flash message from the session
+    fetch('/clear_flash', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        'Content-Type': 'application/json'
+      }
+    })
   }
 }

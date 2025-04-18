@@ -17,7 +17,7 @@ module Zongo
     config.autoload_lib(ignore: %w[assets tasks])
 
     # Load middleware from lib directory
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W[#{config.root}/lib]
     require_relative "../lib/middleware/user_session_debugger"
     config.middleware.use ::UserSessionDebugger
 

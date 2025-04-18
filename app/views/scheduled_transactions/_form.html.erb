@@ -1,63 +1,73 @@
 <%= form_with model: scheduled_transaction, class: "space-y-6" do |f| %>
-  <%# Transaction Type Selection %>
-  <div>
-    <%= f.label :transaction_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-    <%= f.select :transaction_type, 
+  <%# Hidden Transaction Type Field - Now controlled by the visual selector %>
+  <div class="hidden">
+    <%= f.select :transaction_type,
         ScheduledTransaction.transaction_types.keys.map { |type| [type.capitalize, type] },
         { disabled: f.object.persisted? }, # Disable if editing existing record
-        { class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", required: true, autofocus: true }
+        { class: "block w-full", required: true, id: "scheduled_transaction_transaction_type" }
     %>
-    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      The type of transaction to schedule
-    </p>
   </div>
-  
-  <%# Amount Field %>
-  <div>
-    <%= f.label :amount, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-    <div class="relative">
-      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-        <span class="text-gray-500 dark:text-gray-400">
-          <%= @wallet.currency_symbol %>
-        </span>
+
+  <%# Transaction Details Section %>
+  <div class="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+      <%= icon "document-text", class: "w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" %>
+      Transaction Details
+    </h3>
+
+    <%# Amount Field %>
+    <div class="mb-6">
+      <%= f.label :amount, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span class="text-gray-500 dark:text-gray-400">
+            <%= @wallet.currency_symbol %>
+          </span>
+        </div>
+        <%= f.number_field :amount,
+            min: 0.01,
+            step: 0.01,
+            required: true,
+            placeholder: "0.00",
+            class: "pl-7 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+        %>
       </div>
-      <%= f.number_field :amount, 
-          min: 0.01, 
-          step: 0.01, 
-          required: true, 
-          placeholder: "0.00", 
-          class: "pl-7 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500"
-      %>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Amount in <%= @wallet.currency %> (<span class="font-medium">Current balance: <%= @wallet.currency_symbol %><%= @wallet.balance.to_f.round(2) %></span>)
+      </p>
     </div>
-    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      The amount to be transferred in <%= @wallet.currency %>
-    </p>
-  </div>
-  
-  <%# Recipient Field (for Transfers only) %>
-  <% if f.object.transaction_type == 'transfer' %>
-    <div>
+
+    <%# Recipient Field (for Transfers only) %>
+    <div data-transaction-type="transfer" class="<%= f.object.transaction_type != 'transfer' ? 'hidden' : '' %> mb-6">
       <label for="recipient" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipient</label>
-      <input type="text" 
-             name="recipient" 
-             id="recipient" 
-             class="block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500" 
-             placeholder="Phone number, username or email"
-             value="<%= f.object.destination_wallet.user.username if f.object.destination_wallet.present? %>"
-             required>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span class="text-blue-500 dark:text-blue-400">
+            <%= icon "user", class: "w-5 h-5" %>
+          </span>
+        </div>
+        <input type="text"
+               name="recipient"
+               id="recipient"
+               class="pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+               placeholder="Phone number, username or email"
+               value="<%= f.object.destination_wallet.user.username if f.object.destination_wallet.present? %>"
+               required>
+      </div>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
         Enter recipient's phone, username or email
       </p>
-      
+
       <% if @recent_recipients.present? %>
-        <div class="mt-2">
-          <p class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
+        <div class="mt-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-100 dark:border-blue-900/30">
+          <p class="text-xs font-medium text-blue-700 dark:text-blue-400 mb-2 flex items-center">
+            <%= icon "clock-rewind", class: "w-4 h-4 mr-1" %>
             Recent Recipients:
           </p>
-          <div class="flex flex-wrap gap-1">
+          <div class="flex flex-wrap gap-2">
             <% @recent_recipients.each do |recipient| %>
-              <button type="button" 
-                      class="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-primary-500"
+              <button type="button"
+                      class="text-xs px-3 py-1.5 bg-white dark:bg-gray-800 text-blue-700 dark:text-blue-400 rounded-full border border-blue-200 dark:border-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors shadow-sm"
                       onclick="document.getElementById('recipient').value = '<%= recipient.username %>'">
                 <%= recipient.display_name %>
               </button>
@@ -66,104 +76,158 @@
         </div>
       <% end %>
     </div>
-  <% end %>
-  
-  <%# Payment Method (for Deposits and Withdrawals) %>
-  <% if ['deposit', 'withdrawal'].include?(f.object.transaction_type) %>
-    <div>
-      <%= f.label :payment_method, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <%= f.select :payment_method, 
-          @payment_methods.map { |m| [m.description, m.method_type] },
-          { include_blank: 'Select a payment method' },
-          { class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", required: true }
-      %>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        Payment method to use for this transaction
-      </p>
+
+    <%# Payment Method (for Deposits and Withdrawals) %>
+    <div data-transaction-type="deposit" data-transaction-type="withdrawal" class="<%= !['deposit', 'withdrawal'].include?(f.object.transaction_type) ? 'hidden' : '' %> space-y-6">
+      <div>
+        <%= f.label :payment_method, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-<%= f.object.transaction_type == 'deposit' ? 'green' : 'red' %>-500 dark:text-<%= f.object.transaction_type == 'deposit' ? 'green' : 'red' %>-400">
+              <%= icon "credit-card", class: "w-5 h-5" %>
+            </span>
+          </div>
+          <%= f.select :payment_method,
+              @payment_methods.map { |m| [m.description, m.method_type] },
+              { include_blank: 'Select a payment method' },
+              { class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm", required: true }
+          %>
+        </div>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Payment method to use for this transaction
+        </p>
+      </div>
+
+      <div>
+        <%= f.label :payment_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-<%= f.object.transaction_type == 'deposit' ? 'green' : 'red' %>-500 dark:text-<%= f.object.transaction_type == 'deposit' ? 'green' : 'red' %>-400">
+              <%= icon "office-building", class: "w-5 h-5" %>
+            </span>
+          </div>
+          <%= f.text_field :payment_provider, class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm", placeholder: "e.g. MTN Mobile Money, Bank, etc." %>
+        </div>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          The provider of the payment method (optional)
+        </p>
+      </div>
     </div>
-    
-    <div>
-      <%= f.label :payment_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <%= f.text_field :payment_provider, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "e.g. MTN Mobile Money, Bank, etc." %>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-        The provider of the payment method (optional)
-      </p>
-    </div>
-  <% end %>
-  
-  <%# Payment Destination (for Payments) %>
-  <% if f.object.transaction_type == 'payment' %>
-    <div>
+
+    <%# Payment Destination (for Payments) %>
+    <div data-transaction-type="payment" class="<%= f.object.transaction_type != 'payment' ? 'hidden' : '' %> mb-6">
       <%= f.label :payment_destination, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <%= f.text_field :payment_destination, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", required: true, placeholder: "e.g. Electric Company, Internet Provider, etc." %>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span class="text-purple-500 dark:text-purple-400">
+            <%= icon "shopping-bag", class: "w-5 h-5" %>
+          </span>
+        </div>
+        <%= f.text_field :payment_destination, class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-purple-500 focus:border-purple-500 shadow-sm", required: true, placeholder: "e.g. Electric Company, Internet Provider, etc." %>
+      </div>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
         The recipient of the payment
       </p>
     </div>
-  <% end %>
-  
-  <%# Description Field %>
-  <div>
-    <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-    <%= f.text_field :description, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "Optional description" %>
-    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      Add a description for this scheduled transaction
-    </p>
+
+    <%# Description Field %>
+    <div>
+      <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <span class="text-gray-500 dark:text-gray-400">
+            <%= icon "annotation", class: "w-5 h-5" %>
+          </span>
+        </div>
+        <%= f.text_field :description, class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500 shadow-sm", placeholder: "Optional description" %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Add a description for this scheduled transaction
+      </p>
+    </div>
   </div>
-  
+
   <%# Schedule Configuration %>
-  <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
-    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Schedule Configuration</h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 border border-blue-100 dark:border-blue-900/30">
+    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+      <%= icon "calendar", class: "w-5 h-5 mr-2 text-blue-500 dark:text-blue-400" %>
+      Schedule Configuration
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <%# Frequency %>
       <div>
         <%= f.label :frequency, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-        <%= f.select :frequency, 
-            ScheduledTransaction.frequencies.keys.map { |freq| [freq.capitalize, freq] },
-            { },
-            { class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", required: true }
-        %>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-blue-500 dark:text-blue-400">
+              <%= icon "refresh", class: "w-5 h-5" %>
+            </span>
+          </div>
+          <%= f.select :frequency,
+              ScheduledTransaction.frequencies.keys.map { |freq| [freq.capitalize, freq] },
+              { },
+              { class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm", required: true }
+          %>
+        </div>
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           How often this transaction should occur
         </p>
       </div>
-      
+
       <%# Next Occurrence %>
       <div>
         <%= f.label :next_occurrence, "Start Date", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-        <%= f.datetime_field :next_occurrence, 
-            class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
-            required: true,
-            min: Date.current
-        %>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-blue-500 dark:text-blue-400">
+              <%= icon "calendar", class: "w-5 h-5" %>
+            </span>
+          </div>
+          <%= f.datetime_field :next_occurrence,
+              class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm",
+              required: true,
+              min: Date.current
+          %>
+        </div>
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           When this scheduled transaction should first occur
         </p>
       </div>
-      
+
       <%# Occurrences Limit %>
       <div>
         <%= f.label :occurrences_limit, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-        <%= f.number_field :occurrences_limit, 
-            min: 1, 
-            step: 1, 
-            class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
-            placeholder: "Leave blank for unlimited"
-        %>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-blue-500 dark:text-blue-400">
+              <%= icon "hashtag", class: "w-5 h-5" %>
+            </span>
+          </div>
+          <%= f.number_field :occurrences_limit,
+              min: 1,
+              step: 1,
+              class: "pl-10 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm",
+              placeholder: "Leave blank for unlimited"
+          %>
+        </div>
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Number of times this should occur (optional, leave blank for unlimited)
         </p>
       </div>
     </div>
   </div>
-  
+
   <%# Submit Button %>
-  <div class="flex justify-end">
-    <%= link_to "Cancel", scheduled_transactions_path, class: "btn btn-outline mr-2" %>
-    
-    <%= f.submit f.object.new_record? ? "Create Scheduled Transaction" : "Update Scheduled Transaction", 
-        class: "btn btn-primary" 
-    %>
+  <div class="flex justify-end pt-4">
+    <%= link_to scheduled_transactions_path, class: "btn btn-outline mr-3 flex items-center" do %>
+      <%= icon "x", class: "w-4 h-4 mr-1" %>
+      Cancel
+    <% end %>
+
+    <%= button_tag type: 'submit', class: "btn btn-primary flex items-center" do %>
+      <%= icon "clock", class: "w-4 h-4 mr-1" %>
+      <%= f.object.new_record? ? "Create Scheduled Transaction" : "Update Scheduled Transaction" %>
+    <% end %>
   </div>
 <% end %>

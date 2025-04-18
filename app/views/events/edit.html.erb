@@ -5,129 +5,165 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
       <!-- Form Header -->
       <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4">
-        <h1 class="text-xl font-bold text-white">Create New Event</h1>
-        <p class="text-blue-100">Share your event with the community</p>
+        <h1 class="text-xl font-bold text-white">Edit Event</h1>
+        <p class="text-blue-100">Update your event details</p>
       </div>
-      
+
       <!-- Form Content -->
-      <form class="p-6 space-y-8">
+      <%= form_with(model: @event, url: event_path(@event), method: :patch, class: "p-6 space-y-8", multipart: true) do |form| %>
         <!-- Basic Event Information -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Event Information</h2>
-          
+
           <div>
-            <label for="event_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Title *</label>
-            <input type="text" id="event_title" name="event[title]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Give your event a descriptive title" required>
+            <%= form.label :title, "Event Title *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.text_field :title, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", placeholder: "Give your event a descriptive title", required: true %>
           </div>
-          
+
           <div>
-            <label for="event_short_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Short Description *</label>
-            <input type="text" id="event_short_description" name="event[short_description]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Brief summary of your event (1-2 sentences)" required>
+            <%= form.label :short_description, "Short Description *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.text_field :short_description, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", placeholder: "Brief summary of your event (1-2 sentences)", required: true %>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">This will be displayed in event cards and previews</p>
           </div>
-          
+
           <div>
-            <label for="event_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Description *</label>
-            <textarea id="event_description" name="event[description]" rows="6" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Provide all the details about your event" required></textarea>
+            <%= form.label :description, "Full Description *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.text_area :description, rows: 6, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", placeholder: "Provide all the details about your event", required: true %>
             <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You can use basic HTML for formatting</p>
           </div>
-          
+
           <div>
-            <label for="event_category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category *</label>
-            <select id="event_category_id" name="event[category_id]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
-              <option value="">Select a category</option>
-              <option value="1">Music & Art</option>
-              <option value="2">Sports</option>
-              <option value="3">Food & Drink</option>
-              <option value="4">Technology</option>
-              <option value="5">Business</option>
-              <option value="6">Education</option>
-              <option value="7">Community</option>
-              <option value="8">Health & Wellness</option>
-            </select>
+            <%= form.label :event_category_id, "Category *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= form.collection_select :event_category_id, EventCategory.all, :id, :name, { include_blank: "Select a category" }, { class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", required: true } %>
           </div>
         </section>
-        
+
         <!-- Date & Time -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Date & Time</h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label for="event_start_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Start Date & Time *</label>
-              <input type="datetime-local" id="event_start_time" name="event[start_time]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+              <%= form.label :start_time, "Start Date & Time *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+              <%= form.datetime_local_field :start_time, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", required: true %>
             </div>
-            
+
             <div>
-              <label for="event_end_time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">End Date & Time *</label>
-              <input type="datetime-local" id="event_end_time" name="event[end_time]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
+              <%= form.label :end_time, "End Date & Time *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+              <%= form.datetime_local_field :end_time, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", required: true %>
             </div>
           </div>
         </section>
-        
+
         <!-- Location -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Location</h2>
-          
+
           <div class="grid grid-cols-1 gap-4">
             <div>
-              <label for="event_venue_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Venue *</label>
-              <select id="event_venue_id" name="event[venue_id]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" required>
-                <option value="">Select a venue</option>
-                <option value="1">National Theater</option>
-                <option value="2">Accra Sports Stadium</option>
-                <option value="3">Trade Fair Centre</option>
-                <option value="4">Coconut Grove Regency Hotel</option>
-                <option value="5">Alliance Française Accra</option>
-                <option value="new">+ Add New Venue</option>
-              </select>
+              <%= form.label :venue_id, "Select Venue *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+              <%= form.collection_select :venue_id, Venue.all, :id, :name, { include_blank: "Select a venue" }, { class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", required: true, id: "event_venue_id" } %>
             </div>
           </div>
-          
+
           <!-- New Venue Form (initially hidden) -->
           <div id="new_venue_form" class="hidden border rounded-lg p-4 bg-gray-50 dark:bg-gray-700 space-y-4">
             <h3 class="text-md font-medium text-gray-800 dark:text-white">Add New Venue</h3>
-            
+
             <div>
               <label for="venue_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Venue Name *</label>
               <input type="text" id="venue_name" name="venue[name]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Enter venue name">
             </div>
-            
+
             <div>
               <label for="venue_address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Address *</label>
               <input type="text" id="venue_address" name="venue[address]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Full address">
             </div>
-            
+
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <label for="venue_city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City *</label>
                 <input type="text" id="venue_city" name="venue[city]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" value="Accra">
               </div>
-              
+
               <div>
                 <label for="venue_region" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Region</label>
                 <input type="text" id="venue_region" name="venue[region]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Greater Accra">
               </div>
             </div>
-            
+
             <div>
               <label for="venue_capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Capacity</label>
               <input type="number" id="venue_capacity" name="venue[capacity]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Maximum capacity">
             </div>
-            
+
             <div class="flex justify-end">
               <button type="button" id="cancel_venue" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 mr-2">Cancel</button>
               <button type="button" id="save_venue" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Venue</button>
             </div>
           </div>
         </section>
-        
+
         <!-- Images -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Event Images</h2>
-          
+
+          <!-- Current Images -->
+          <% if @event.event_media.any? %>
+            <div class="mb-6">
+              <h3 class="text-md font-medium text-gray-800 dark:text-white mb-3">Current Images</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <% @event.event_media.each do |media| %>
+                  <div class="relative group rounded-lg overflow-hidden border <%= media.is_featured ? 'border-yellow-400 dark:border-yellow-600 shadow-md' : 'border-gray-200 dark:border-gray-700' %>">
+                    <% if media.is_featured %>
+                      <div class="absolute top-1 right-1 z-10 bg-yellow-500 text-white text-xs px-1.5 py-0.5 rounded-md font-medium shadow-sm">
+                        Featured
+                      </div>
+                    <% end %>
+                    <!-- Debug info -->
+                    <% if Rails.env.development? %>
+                      <div class="absolute top-0 left-0 z-20 bg-black bg-opacity-70 text-white text-xs p-1">
+                        ID: <%= media.id %><br>
+                        Has image: <%= media.image.attached? %>
+                      </div>
+                    <% end %>
+                    <% if media.image.attached? %>
+                      <%= image_tag media.image, alt: "Event image", class: "w-full h-32 object-cover" %>
+                    <% else %>
+                      <%= image_tag "event-placeholder.png", alt: "Placeholder image", class: "w-full h-32 object-cover" %>
+                    <% end %>
+                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div class="flex space-x-2">
+                        <% if media.is_featured %>
+                          <span class="p-1.5 bg-yellow-500 rounded-full text-white" title="Featured Image">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                          </span>
+                        <% else %>
+                          <%= button_to set_as_featured_event_medium_path(media), method: :post, class: "p-1.5 bg-yellow-500 rounded-full text-white", title: "Set as Featured Image" do %>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                            </svg>
+                          <% end %>
+                        <% end %>
+                        <%= button_to event_medium_path(media), method: :delete, class: "p-1.5 bg-red-500 rounded-full text-white", title: "Delete Image", form: { data: { turbo_confirm: "Are you sure you want to delete this image?" } } do %>
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                          </svg>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Upload New Images -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Main Event Image *</label>
+            <h3 class="text-md font-medium text-gray-800 dark:text-white mb-3"><%= @event.event_media.any? ? 'Add More Images' : 'Upload Images' %></h3>
+
             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-lg">
               <div class="space-y-1 text-center">
                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -135,132 +171,75 @@
                 </svg>
                 <div class="flex text-sm text-gray-600 dark:text-gray-400">
                   <label for="file-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 focus-within:outline-none">
-                    <span>Upload a file</span>
-                    <input id="file-upload" name="event[images][]" type="file" class="sr-only" accept="image/*" required>
+                    <span>Upload files</span>
+                    <input type="file" name="event[images][]" multiple accept="image/*" class="sr-only" id="file-upload">
                   </label>
                   <p class="pl-1">or drag and drop</p>
+                </div>
+                <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <% if @event.event_media.any? %>
+                    Add more images to your event
+                  <% else %>
+                    Upload at least one image for your event
+                  <% end %>
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
                   PNG, JPG, GIF up to 10MB
                 </p>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Additional Images</label>
-            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-lg">
-              <div class="space-y-1 text-center">
-                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                  <label for="additional-files-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 focus-within:outline-none">
-                    <span>Upload files</span>
-                    <input id="additional-files-upload" name="event[images][]" type="file" class="sr-only" multiple accept="image/*">
-                  </label>
-                  <p class="pl-1">or drag and drop</p>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                  Up to 5 additional images
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  The first image will be set as the main image if no images exist yet
                 </p>
               </div>
             </div>
           </div>
         </section>
-        
+
         <!-- Tickets & Capacity -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">Tickets & Capacity</h2>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                <input type="radio" name="event[is_free]" value="1" class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
-                <span class="ml-2">Free Event</span>
-              </label>
-              <label class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
-                <input type="radio" name="event[is_free]" value="0" class="h-4 w-4 text-blue-600 focus:ring-blue-500">
-                <span class="ml-2">Paid Event</span>
-              </label>
+              <div class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <%= form.radio_button :is_free, true, class: "h-4 w-4 text-blue-600 focus:ring-blue-500", onclick: "document.getElementById('price_field').classList.add('hidden'); document.getElementById('event_price').required = false;" %>
+                <%= form.label :is_free, "Free Event", value: true, class: "ml-2" %>
+              </div>
+              <div class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300">
+                <%= form.radio_button :is_free, false, class: "h-4 w-4 text-blue-600 focus:ring-blue-500", onclick: "document.getElementById('price_field').classList.remove('hidden'); document.getElementById('event_price').required = true;" %>
+                <%= form.label :is_free, "Paid Event", value: false, class: "ml-2" %>
+              </div>
             </div>
-            
-            <div id="price_field" class="hidden">
-              <label for="event_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price (GHS) *</label>
+
+            <div id="price_field" class="<%= @event.is_free? ? 'hidden' : '' %>">
+              <%= form.label :price, "Price (GHS) *", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
               <div class="relative rounded-md shadow-sm">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₵</span>
                 </div>
-                <input type="number" step="0.01" min="0" id="event_price" name="event[price]" class="w-full pl-7 pr-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="0.00">
+                <%= form.number_field :price, step: "0.01", min: 0, class: "w-full pl-7 pr-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", placeholder: "0.00", required: !@event.is_free? %>
               </div>
             </div>
           </div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label for="event_capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event Capacity</label>
-              <input type="number" min="1" id="event_capacity" name="event[capacity]" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" placeholder="Maximum number of attendees">
+              <%= form.label :capacity, "Event Capacity", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+              <%= form.number_field :capacity, min: 1, class: "w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400", placeholder: "Maximum number of attendees" %>
               <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave blank for unlimited capacity</p>
             </div>
           </div>
         </section>
-        
+
         <!-- Form Actions -->
         <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-          <button type="button" class="px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-            Save as Draft
-          </button>
-          
+          <%= form.submit "Save as Draft", name: "status", value: "draft", class: "px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" %>
+
           <div class="space-x-2">
-            <button type="button" class="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              Preview
-            </button>
-            <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-              Publish Event
-            </button>
+            <%= link_to "Cancel", event_path(@event), class: "px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" %>
+            <%= form.submit "Update Event", name: "status", value: "published", class: "px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" %>
           </div>
         </div>
-      </form>
+      <% end %>
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // New venue form toggle
-    const venueSelect = document.getElementById('event_venue_id');
-    const newVenueForm = document.getElementById('new_venue_form');
-    
-    venueSelect.addEventListener('change', function() {
-      if (this.value === 'new') {
-        newVenueForm.classList.remove('hidden');
-      } else {
-        newVenueForm.classList.add('hidden');
-      }
-    });
-    
-    document.getElementById('cancel_venue').addEventListener('click', function() {
-      newVenueForm.classList.add('hidden');
-      venueSelect.value = '';
-    });
-    
-    // Free/Paid event toggle
-    const freeRadios = document.querySelectorAll('input[name="event[is_free]"]');
-    const priceField = document.getElementById('price_field');
-    
-    freeRadios.forEach(radio => {
-      radio.addEventListener('change', function() {
-        if (this.value === '0') {
-          priceField.classList.remove('hidden');
-          document.getElementById('event_price').required = true;
-        } else {
-          priceField.classList.add('hidden');
-          document.getElementById('event_price').required = false;
-        }
-      });
-    });
-    
-    // Image preview functionality would go here
-    // For brevity, we'll implement this in the next phase
-  });
-</script>

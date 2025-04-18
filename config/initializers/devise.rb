@@ -129,10 +129,10 @@ Devise.setup do |config|
   # config.pepper = 'df676c2cb1dc357a68ebd6ffc523dcedabdb8a795e539a28476935e6d59b1490f090885918b54df1e5c857392a29f9e24f3d533984c913181d808d68a2a38371'
 
   # Send a notification to the original email when the user's email is changed.
-  # config.send_email_changed_notification = false
+  config.send_email_changed_notification = true
 
   # Send a notification email when the user's password is changed.
-  # config.send_password_change_notification = false
+  config.send_password_change_notification = true
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
@@ -291,7 +291,7 @@ Devise.setup do |config|
 
     # Add custom serialization for user objects
     manager.serialize_into_session do |user|
-      [user.class.name, user.id]
+      [ user.class.name, user.id ]
     end
 
     manager.serialize_from_session do |key|

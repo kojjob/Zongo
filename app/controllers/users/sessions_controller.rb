@@ -12,9 +12,15 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # GET /resource/sign_in
-  # def new
-  #   super
-  # end
+  def new
+    # If user is already signed in and trying to access sign_in page,
+    # redirect to root path instead of showing the "already signed in" message
+    if user_signed_in? && request.get? && is_navigational_format?
+      redirect_to after_sign_in_path_for(current_user)
+    else
+      super
+    end
+  end
 
   # POST /resource/sign_in
   def create

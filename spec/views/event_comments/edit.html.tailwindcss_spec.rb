@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "event_comments/edit", type: :view do
+  let(:user) { create(:user) }
+  let(:event) { create(:event) }
   let(:event_comment) {
     EventComment.create!(
-      event: nil,
-      user: nil,
+      event: event,
+      user: user,
       parent_comment: nil,
       content: "MyText",
       is_hidden: false,

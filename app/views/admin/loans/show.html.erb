@@ -1,0 +1,373 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to admin_loans_path, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Loans
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+        Loan Details: <%= @loan.reference_number %>
+      </h1>
+      <div>
+        <% case @loan.status %>
+        <% when "pending" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+            Pending Approval
+          </span>
+        <% when "approved" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+            Approved
+          </span>
+        <% when "active" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+            Active
+          </span>
+        <% when "completed" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+            Completed
+          </span>
+        <% when "defaulted" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+            Defaulted
+          </span>
+        <% when "rejected" %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+            Rejected
+          </span>
+        <% else %>
+          <span class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+            <%= @loan.status.titleize %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Loan Information</h2>
+          
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Borrower:</span>
+              <span class="text-gray-900 dark:text-white font-medium">
+                <%= link_to @loan.user.display_name, admin_user_path(@loan.user), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+              </span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Loan Type:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @loan.loan_type.titleize %></span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Principal Amount:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.amount, unit: "GHS ") %></span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Interest Rate:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @loan.interest_rate %>%</span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Processing Fee:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.processing_fee, unit: "GHS ") %></span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Total Amount Due:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.amount_due, unit: "GHS ") %></span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Term:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @loan.term_days %> days</span>
+            </div>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Due Date:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @loan.due_date.strftime("%B %d, %Y") %></span>
+            </div>
+            
+            <% if @loan.disbursed_at.present? %>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Disbursed On:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.disbursed_at.strftime("%B %d, %Y") %></span>
+              </div>
+            <% end %>
+            
+            <% if @loan.active? || @loan.completed? %>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Current Balance:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.current_balance, unit: "GHS ") %></span>
+              </div>
+            <% end %>
+            
+            <% if @loan.overdue? %>
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Days Overdue:</span>
+                <span class="text-red-600 dark:text-red-400 font-medium"><%= @loan.days_overdue %> days</span>
+              </div>
+            <% end %>
+            
+            <div class="flex justify-between">
+              <span class="text-gray-500 dark:text-gray-400">Application Date:</span>
+              <span class="text-gray-900 dark:text-white font-medium"><%= @loan.created_at.strftime("%B %d, %Y") %></span>
+            </div>
+            
+            <% if @loan.rejected? && @loan.rejection_reason.present? %>
+              <div class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
+                <h3 class="text-sm font-medium text-red-800 dark:text-red-300">Rejection Reason:</h3>
+                <p class="text-sm text-red-700 dark:text-red-400 mt-1"><%= @loan.rejection_reason %></p>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @credit_score_data.present? %>
+            <div class="mt-6">
+              <h3 class="text-md font-semibold text-gray-900 dark:text-white mb-3">Credit Score Information</h3>
+              
+              <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <div class="flex justify-between items-center mb-2">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">Credit Score:</span>
+                  <span class="text-sm font-medium 
+                    <%= case @credit_score_data["score"] 
+                      when 0..499 then 'text-red-600 dark:text-red-400'
+                      when 500..599 then 'text-yellow-600 dark:text-yellow-400'
+                      when 600..699 then 'text-blue-600 dark:text-blue-400'
+                      else 'text-green-600 dark:text-green-400'
+                      end %>">
+                    <%= @credit_score_data["score"] %> / 850
+                    (<%= case @credit_score_data["score"] 
+                      when 0..499 then 'Poor'
+                      when 500..599 then 'Fair'
+                      when 600..699 then 'Good'
+                      else 'Excellent'
+                      end %>)
+                  </span>
+                </div>
+                
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-200 dark:bg-gray-600">
+                  <div style="width:<%= (@credit_score_data["score"] / 850.0 * 100).round %>%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center 
+                    <%= case @credit_score_data["score"] 
+                      when 0..499 then 'bg-red-500'
+                      when 500..599 then 'bg-yellow-500'
+                      when 600..699 then 'bg-blue-500'
+                      else 'bg-green-500'
+                      end %>">
+                  </div>
+                </div>
+                
+                <% if @credit_score_data["factors"].present? %>
+                  <div class="mt-3">
+                    <h4 class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Score Factors:</h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                      <% @credit_score_data["factors"].each do |factor, value| %>
+                        <div class="flex justify-between">
+                          <span class="text-gray-500 dark:text-gray-400"><%= factor.to_s.titleize %>:</span>
+                          <span class="text-gray-900 dark:text-white"><%= value %>/100</span>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+                
+                <% if @credit_score_data["calculated_at"].present? %>
+                  <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    Calculated at: <%= Time.parse(@credit_score_data["calculated_at"]).strftime("%B %d, %Y") %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        
+        <div>
+          <% if @loan.pending? %>
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden mb-6">
+              <div class="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Loan Application Review</h3>
+              </div>
+              
+              <div class="p-4">
+                <div class="space-y-4">
+                  <%= form_with url: approve_admin_loan_path(@loan), method: :post, class: "space-y-4" do |f| %>
+                    <h4 class="text-md font-medium text-gray-900 dark:text-white">Approve Loan</h4>
+                    
+                    <div>
+                      <%= f.label :interest_rate, "Interest Rate (%)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+                      <div class="mt-1">
+                        <%= f.number_field :interest_rate, value: @loan.interest_rate, min: 0, max: 100, step: 0.01, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white" %>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <%= f.label :processing_fee, "Processing Fee (GHS)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+                      <div class="mt-1">
+                        <%= f.number_field :processing_fee, value: @loan.processing_fee, min: 0, step: 0.01, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white" %>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <%= f.label :term_days, "Term (days)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+                      <div class="mt-1">
+                        <%= f.number_field :term_days, value: @loan.term_days, min: 1, max: 365, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white" %>
+                      </div>
+                    </div>
+                    
+                    <div class="pt-4">
+                      <%= f.submit "Approve Loan", class: "w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+                    </div>
+                  <% end %>
+                  
+                  <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                    <%= form_with url: reject_admin_loan_path(@loan), method: :post, class: "space-y-4" do |f| %>
+                      <h4 class="text-md font-medium text-gray-900 dark:text-white">Reject Loan</h4>
+                      
+                      <div>
+                        <%= f.label :rejection_reason, "Rejection Reason", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+                        <div class="mt-1">
+                          <%= f.text_area :rejection_reason, rows: 3, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white", placeholder: "Provide a reason for rejecting this loan application" %>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <%= f.submit "Reject Loan", class: "w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% elsif @loan.approved? %>
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden mb-6">
+              <div class="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Loan Disbursement</h3>
+              </div>
+              
+              <div class="p-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  This loan has been approved and is ready for disbursement. Once disbursed, the funds will be transferred to the user's wallet.
+                </p>
+                
+                <%= form_with url: disburse_admin_loan_path(@loan), method: :post do |f| %>
+                  <%= f.submit "Disburse Loan", class: "w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+            <div class="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Repayment History</h3>
+            </div>
+            
+            <% if @repayments.any? %>
+              <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                <% @repayments.each do |repayment| %>
+                  <li class="p-4">
+                    <div class="flex justify-between">
+                      <div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">
+                          <%= number_to_currency(repayment.amount, unit: "GHS ") %>
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          <%= repayment.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+                        </p>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          Principal: <%= number_to_currency(repayment.principal_portion, unit: "GHS ") %>
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          Interest: <%= number_to_currency(repayment.interest_portion, unit: "GHS ") %>
+                        </p>
+                        <% if repayment.fee_portion && repayment.fee_portion > 0 %>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Fees: <%= number_to_currency(repayment.fee_portion, unit: "GHS ") %>
+                          </p>
+                        <% end %>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          Status: <span class="<%= repayment.successful? ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>">
+                            <%= repayment.status.titleize %>
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <div class="p-4 text-center text-gray-500 dark:text-gray-400">
+                <p>No repayments have been made yet.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <% if @loan.active? || @loan.disbursed? %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Repayment Schedule</h2>
+      </div>
+      <div class="p-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Installment</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Due Date</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <% @loan.repayment_schedule.each do |installment| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <%= installment[:installment_number] %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <%= installment[:due_date].strftime("%B %d, %Y") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    <%= number_to_currency(installment[:amount], unit: "GHS ") %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% case installment[:status] %>
+                    <% when "paid" %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                        Paid
+                      </span>
+                    <% when "overdue" %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                        Overdue
+                      </span>
+                    <% when "upcoming" %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                        Upcoming
+                      </span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                        <%= installment[:status].titleize %>
+                      </span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

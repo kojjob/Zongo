@@ -1,0 +1,41 @@
+/* Button fixes to ensure visibility */
+
+/* Primary button styles */
+.bg-primary-600 {
+  background-color: #16a34a !important; /* Green 600 */
+  color: white !important;
+}
+
+.hover\:bg-primary-700:hover {
+  background-color: #15803d !important; /* Green 700 */
+}
+
+/* Focus styles */
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: #22c55e !important; /* Green 500 */
+}
+
+/* Text colors */
+.text-primary-600 {
+  color: #16a34a !important; /* Green 600 */
+}
+
+.hover\:text-primary-500:hover {
+  color: #22c55e !important; /* Green 500 */
+}
+
+/* Dark mode adjustments */
+.dark .bg-primary-600 {
+  background-color: #22c55e !important; /* Green 500 - brighter in dark mode */
+}
+
+.dark .hover\:bg-primary-700:hover {
+  background-color: #16a34a !important; /* Green 600 - brighter in dark mode */
+}
+
+/* Ensure submit buttons are always visible */
+input[type="submit"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}

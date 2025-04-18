@@ -1,13 +1,5 @@
 class UserSettingsController < ApplicationController
-  # Handle authentication errors
-  def authenticate_user!
-    begin
-      super
-    rescue => e
-      logger.error "Error in UserSettingsController authenticate_user!: #{e.message}"
-      redirect_to new_user_session_path, alert: "Please sign in to access your settings"
-    end
-  end
+  # We'll use the ApplicationController's authenticate_user! method instead
 
   before_action :authenticate_user!
   before_action :set_user
@@ -48,25 +40,59 @@ class UserSettingsController < ApplicationController
     # Template will be automatically rendered from app/views/user_settings/support.html.erb
   end
 
-    # Update profile information
-    def update_profile
-        # Add additional error handling
-        begin
-        if @user.update(profile_params)
-            flash[:success] = "Profile updated successfully"
-            redirect_to user_settings_profile_path
-        else
-            # Log validation errors
-            Rails.logger.error @user.errors.full_messages
-            render :edit
-        end
-        rescue ActiveSupport::MessageVerifier::InvalidSignature => e
-        # Log the specific error
-        Rails.logger.error "Session verification error: #{e.message}"
-        flash[:error] = "There was an issue updating your profile. Please try again."
-        redirect_to user_settings_profile_path
-        end
+  # Update profile information
+  def update_profile
+    # Add additional error handling
+    begin
+      # Handle avatar upload separately
+      if params[:user][:avatar].present?
+        @user.avatar.attach(params[:user][:avatar])
+      end
+
+      # Update user attributes
+      if @user.update(profile_params)
+        # Log the successful profile update
+        SecurityLog.log_event(
+          @user,
+          :profile_updated,
+          severity: :info,
+          details: {
+            updated_fields: profile_params.keys,
+            ip_address: request.remote_ip
+          }
+        )
+
+        flash[:success] = "Profile updated successfully"
+        redirect_to profile_path
+      else
+        # Log validation errors
+        Rails.logger.error @user.errors.full_messages
+        flash.now[:error] = @user.errors.full_messages.join(", ")
+        render :profile
+      end
+    rescue ActiveSupport::MessageVerifier::InvalidSignature => e
+      # Log the specific error
+      Rails.logger.error "Session verification error: #{e.message}"
+      flash[:error] = "There was an issue updating your profile. Please try again."
+      redirect_to profile_path
+    rescue => e
+      # Log any other errors
+      Rails.logger.error "Error updating profile: #{e.message}"
+      flash[:error] = "An unexpected error occurred. Please try again."
+      redirect_to profile_path
     end
+  end
+
+  # Remove avatar
+  def remove_avatar
+    if @user.avatar.attached?
+      @user.avatar.purge
+      flash[:success] = "Profile picture removed"
+    else
+      flash[:notice] = "No profile picture to remove"
+    end
+    redirect_to profile_path
+  end
 
   # Update security settings
   def update_security
@@ -166,7 +192,23 @@ class UserSettingsController < ApplicationController
   end
 
   def profile_params
-    params.require(:user).permit(:username, :email, :first_name, :last_name, :phone, :avatar)
+    params.require(:user).permit(
+      :username,
+      :email,
+      :first_name,
+      :last_name,
+      :phone_number,
+      :bio,
+      :date_of_birth,
+      :gender,
+      :address,
+      :city,
+      :state,
+      :country,
+      :postal_code,
+      :website,
+      :occupation
+    )
   end
 
   def security_params

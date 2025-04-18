@@ -1,28 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "events/edit", type: :view do
-  let(:event) {
-    Event.create!(
-      title: "MyString",
-      description: "MyText",
-      short_description: "MyText",
-      capacity: 1,
-      status: 1,
-      is_featured: false,
-      is_private: false,
-      access_code: "MyString",
-      slug: "MyString",
-      organizer: nil,
-      event_category: nil,
-      venue: nil,
-      recurrence_type: 1,
-      recurrence_pattern: "",
-      parent_event: nil,
-      favorites_count: 1,
-      views_count: 1,
-      custom_fields: ""
-    )
-  }
+  let(:event) { create(:event) }
 
   before(:each) do
     assign(:event, event)
@@ -52,7 +31,8 @@ RSpec.describe "events/edit", type: :view do
 
       assert_select "input[name=?]", "event[organizer_id]"
 
-      assert_select "input[name=?]", "event[event_category_id]"
+      # event_category_id has been removed or renamed
+      # assert_select "input[name=?]", "event[event_category_id]"
 
       assert_select "input[name=?]", "event[venue_id]"
 

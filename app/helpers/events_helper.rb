@@ -26,78 +26,78 @@ module EventsHelper
       "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300" # Default
     end
   end
-  
+
   # Generate Google Calendar link
   def google_calendar_link(event)
     dates = format_dates_for_google(event.start_time, event.end_time)
-    location = event.venue&.address.present? ? CGI.escape(event.venue.address) : ''
+    location = event.venue&.address.present? ? CGI.escape(event.venue.address) : ""
     title = CGI.escape(event.title)
     details = CGI.escape(event.short_description.to_s)
-    
+
     "https://calendar.google.com/calendar/render?action=TEMPLATE&text=#{title}&dates=#{dates}&details=#{details}&location=#{location}&sf=true&output=xml"
   end
-  
+
   # Generate iCal/Apple Calendar link
   def ical_link(event)
     title = CGI.escape(event.title)
     dates = format_dates_for_ical(event.start_time, event.end_time)
     location = CGI.escape(event.venue&.address.to_s)
     details = CGI.escape(event.short_description.to_s)
-    
+
     "data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:#{dates[:start]}%0ADTEND:#{dates[:end]}%0ASUMMARY:#{title}%0ADESCRIPTION:#{details}%0ALOCATION:#{location}%0AEND:VEVENT%0AEND:VCALENDAR"
   end
-  
+
   # Generate Outlook Calendar link
   def outlook_calendar_link(event)
     dates = format_dates_for_outlook(event.start_time, event.end_time)
     location = CGI.escape(event.venue&.address.to_s)
     title = CGI.escape(event.title)
     details = CGI.escape(event.short_description.to_s)
-    
+
     "https://outlook.office.com/calendar/0/deeplink/compose?subject=#{title}&body=#{details}&startdt=#{dates[:start]}&enddt=#{dates[:end]}&location=#{location}&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent"
   end
-  
+
   # Generate Yahoo Calendar link
   def yahoo_calendar_link(event)
     title = CGI.escape(event.title)
     dates = format_dates_for_yahoo(event.start_time, event.end_time)
     location = CGI.escape(event.venue&.address.to_s)
     details = CGI.escape(event.short_description.to_s)
-    
+
     "https://calendar.yahoo.com/?v=60&title=#{title}&st=#{dates[:start]}&et=#{dates[:end]}&desc=#{details}&in_loc=#{location}"
   end
-  
+
   private
-  
+
   # Format dates for Google Calendar
   def format_dates_for_google(start_time, end_time)
-    start_str = start_time.strftime('%Y%m%dT%H%M%S')
-    end_str = end_time.strftime('%Y%m%dT%H%M%S')
-    
+    start_str = start_time.strftime("%Y%m%dT%H%M%S")
+    end_str = end_time.strftime("%Y%m%dT%H%M%S")
+
     "#{start_str}/#{end_str}"
   end
-  
+
   # Format dates for iCal/Apple Calendar
   def format_dates_for_ical(start_time, end_time)
-    start_str = start_time.strftime('%Y%m%dT%H%M%S')
-    end_str = end_time.strftime('%Y%m%dT%H%M%S')
-    
+    start_str = start_time.strftime("%Y%m%dT%H%M%S")
+    end_str = end_time.strftime("%Y%m%dT%H%M%S")
+
     { start: start_str, end: end_str }
   end
-  
+
   # Format dates for Outlook Calendar
   def format_dates_for_outlook(start_time, end_time)
-    start_str = start_time.strftime('%Y-%m-%dT%H:%M:%S')
-    end_str = end_time.strftime('%Y-%m-%dT%H:%M:%S')
-    
+    start_str = start_time.strftime("%Y-%m-%dT%H:%M:%S")
+    end_str = end_time.strftime("%Y-%m-%dT%H:%M:%S")
+
     { start: start_str, end: end_str }
   end
-  
+
   # Format dates for Yahoo Calendar
   def format_dates_for_yahoo(start_time, end_time)
-    start_str = start_time.strftime('%Y%m%dT%H%M%S')
-    end_str = end_time.strftime('%Y%m%dT%H%M%S')
-    
+    start_str = start_time.strftime("%Y%m%dT%H%M%S")
+    end_str = end_time.strftime("%Y%m%dT%H%M%S")
+
     { start: start_str, end: end_str }
   end
 end

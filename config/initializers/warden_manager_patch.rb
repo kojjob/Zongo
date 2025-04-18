@@ -18,7 +18,7 @@ Rails.application.config.after_initialize do
         Warden::Manager.class_eval do
           alias_method :_original_run_strategies, :run_strategies
 
-          def run_strategies(scope, args={})
+          def run_strategies(scope, args = {})
             begin
               _original_run_strategies(scope, args)
             rescue => e

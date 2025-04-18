@@ -3,31 +3,31 @@ module ApplicationHelper
   def registration_path(scope = :user)
     "/#{scope.to_s.pluralize}/sign_up"
   end
-  
+
   def new_user_registration_path
     registration_path(:user)
   end
-  
+
   def user_registration_path
     registration_path(:user)
   end
-  
+
   def session_path(scope = :user)
     "/#{scope.to_s.pluralize}/sign_in"
   end
-  
+
   def new_user_session_path
     session_path(:user)
   end
-  
+
   def user_session_path
     session_path(:user)
   end
-  
+
   def destroy_user_session_path
     "/users/sign_out"
   end
-  
+
   def edit_user_registration_path
     "/users/edit"
   end
@@ -46,7 +46,7 @@ module ApplicationHelper
       content_tag :use, nil, "xlink:href" => "#icon-#{name}"
     end
   end
-  
+
   # Helper method to get SVG path for category icons
   def get_icon_path(icon_name)
     case icon_name.to_s
@@ -68,6 +68,20 @@ module ApplicationHelper
       "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
     else
       "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    end
+  end
+
+  # Helper function for transaction status colors
+  def transaction_status_color(status)
+    case status.to_s.downcase
+    when "completed"
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+    when "pending"
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+    when "failed"
+      "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+    else
+      "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
     end
   end
 

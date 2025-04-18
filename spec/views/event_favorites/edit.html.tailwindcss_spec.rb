@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "event_favorites/edit", type: :view do
+  let(:user) { create(:user) }
+  let(:event) { create(:event) }
+
   let(:event_favorite) {
     EventFavorite.create!(
-      event: nil,
-      user: nil
+      event: event,
+      user: user
     )
   }
 

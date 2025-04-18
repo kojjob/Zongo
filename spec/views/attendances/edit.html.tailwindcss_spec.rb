@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "attendances/edit", type: :view do
+  let(:user) { create(:user) }
+  let(:event) { create(:event) }
   let(:attendance) {
     Attendance.create!(
-      user: nil,
-      event: nil,
+      user: user,
+      event: event,
       status: 1,
       additional_info: "MyText",
       form_responses: ""

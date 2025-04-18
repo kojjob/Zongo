@@ -1,0 +1,66 @@
+/* Direct fix for admin layout issues */
+
+/* Force the sidebar to be fixed and visible */
+.admin-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 280px !important;
+  z-index: 100 !important; /* Lower z-index so cards can appear above it */
+  background-color: white !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark .admin-sidebar {
+  background-color: #1f2937 !important; /* dark:bg-gray-800 */
+}
+
+/* Force the content area to have the correct margin */
+.admin-content {
+  margin-left: 280px !important;
+  width: calc(100% - 280px) !important;
+}
+
+/* Collapsed sidebar state */
+.admin-sidebar.collapsed {
+  width: 80px !important;
+}
+
+.admin-content.expanded {
+  margin-left: 80px !important;
+  width: calc(100% - 80px) !important;
+}
+
+/* Fix for cards to ensure they appear above the sidebar */
+.admin-grid {
+  position: relative !important;
+  z-index: 200 !important; /* Higher than sidebar */
+}
+
+.stat-card {
+  position: relative !important;
+  z-index: 300 !important; /* Even higher than grid */
+}
+
+/* Ensure all content in the admin area has proper z-index */
+.admin-content > * {
+  position: relative !important;
+  z-index: 150 !important; /* Higher than sidebar */
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 1023px) {
+  .admin-sidebar {
+    transform: translateX(-100%) !important;
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .admin-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}

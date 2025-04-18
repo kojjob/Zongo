@@ -1,15 +1,55 @@
-<%# New Payment Method %>
-<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="flex items-center mb-6">
-    <a href="<%= payment_methods_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
-      <%= icon "arrow-left", class: "w-5 h-5" %>
-    </a>
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add Payment Method</h1>
+  <% content_for :title, "New Payment Method" %>
+<%# New Payment Method - Enhanced Visual Design %>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center justify-between mb-8">
+    <div class="flex items-center">
+      <a href="<%= payment_methods_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-3 bg-white dark:bg-gray-800 p-2 rounded-full shadow-sm">
+        <%= icon "arrow-left", class: "w-5 h-5" %>
+      </a>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Add Payment Method</h1>
+    </div>
+
+    <div class="hidden sm:block">
+      <div class="bg-white dark:bg-gray-800 rounded-full px-3 py-1 shadow-sm flex items-center">
+        <span class="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs font-bold">1</span>
+        <span class="mx-2 text-sm font-medium text-gray-900 dark:text-white">Choose Type</span>
+        <span class="text-gray-300 dark:text-gray-600">→</span>
+        <span class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center text-xs font-bold mx-2">2</span>
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Enter Details</span>
+        <span class="text-gray-300 dark:text-gray-600">→</span>
+        <span class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 flex items-center justify-center text-xs font-bold mx-2">3</span>
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">Confirm</span>
+      </div>
+    </div>
   </div>
 
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-red-700">
+    <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-750">
+      <div class="flex items-center">
+        <%= icon "credit-card", class: "w-6 h-6 text-primary-500 dark:text-primary-400 mr-2" %>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Add a new payment method</h2>
+      </div>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-8">
+        This payment method will be securely stored for future transactions
+      </p>
+    </div>
+
     <div class="p-6">
       <%= render 'form', payment_method: @payment_method %>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-blue-50 dark:bg-blue-900/10 rounded-xl p-6 border border-blue-100 dark:border-blue-800">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <%= icon "shield-check", class: "h-6 w-6 text-blue-600 dark:text-blue-400" %>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Your information is secure</h3>
+        <div class="mt-2 text-sm text-blue-700 dark:text-blue-400">
+          <p>We use industry-standard encryption to protect your payment information. Your account details are never stored in plain text and are only used for the transactions you authorize.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

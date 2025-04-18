@@ -75,10 +75,6 @@ gem "devise", "~> 4.9"
 # Pagination
 gem "pagy", "~> 7.0"
 
-# PDF generation
-gem "wicked_pdf"
-gem "wkhtmltopdf-binary"
-
 gem "rspec-rails", "~> 7.1", groups: [ :development, :test ]
 
 gem "factory_bot_rails", "~> 6.4", groups: [ :development, :test ]
@@ -90,3 +86,9 @@ gem "geocoder"
 gem "icalendar"
 gem "icalendar-recurrence"
 gem "tzinfo", "~> 2.0"
+
+# QR code generation
+gem "rqrcode"
+
+# Friendly URLs
+gem "friendly_id", "~> 5.5"
