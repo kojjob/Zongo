@@ -1,0 +1,1027 @@
+<%# Pay Bill View %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Enhanced Header with Gradient Background -->
+    <%
+      # Set gradient colors based on bill type
+      case params[:type]
+      when 'electricity'
+        gradient_class = "from-yellow-500 to-amber-600"
+        icon_name = "zap"
+      when 'water'
+        gradient_class = "from-blue-500 to-cyan-600"
+        icon_name = "droplets"
+      when 'internet'
+        gradient_class = "from-purple-500 to-indigo-600"
+        icon_name = "wifi"
+      when 'airtime'
+        gradient_class = "from-green-500 to-emerald-600"
+        icon_name = "phone"
+      when 'tv'
+        gradient_class = "from-red-500 to-rose-600"
+        icon_name = "tv"
+      when 'gas'
+        gradient_class = "from-orange-500 to-red-600"
+        icon_name = "flame"
+      when 'insurance'
+        gradient_class = "from-indigo-500 to-blue-600"
+        icon_name = "shield-check"
+      when 'loan'
+        gradient_class = "from-emerald-500 to-teal-600"
+        icon_name = "landmark"
+      when 'mortgage'
+        gradient_class = "from-pink-500 to-rose-600"
+        icon_name = "building"
+      when 'education'
+        gradient_class = "from-cyan-500 to-blue-600"
+        icon_name = "book-open"
+      else
+        gradient_class = "from-blue-600 to-indigo-700"
+        icon_name = "file-text"
+      end
+    %>
+    <div class="mb-10 bg-gradient-to-r <%= gradient_class %> rounded-2xl shadow-lg overflow-hidden">
+      <div class="relative p-6 md:p-8">
+        <!-- Enhanced decorative elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-32 -mr-32 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -mb-24 -ml-24 blur-2xl"></div>
+
+        <% if params[:type] == 'electricity' %>
+          <!-- Electricity-specific decorative elements -->
+          <div class="absolute top-10 right-10 text-white/20">
+            <%= icon("zap", class: "w-24 h-24 transform rotate-12") %>
+          </div>
+          <div class="absolute bottom-10 left-10 text-white/10">
+            <%= icon("lightbulb", class: "w-16 h-16 transform -rotate-12") %>
+          </div>
+        <% end %>
+
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center mb-6 md:mb-0">
+            <a href="<%= wallet_bills_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300 mr-4 shadow-md">
+              <%= icon("arrow-left", class: "w-5 h-5") %>
+            </a>
+
+            <div class="flex items-center">
+              <div class="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center mr-4 shadow-md backdrop-blur-sm">
+                <%= icon(icon_name, class: "w-7 h-7 text-white") %>
+              </div>
+
+              <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">
+                  <% case params[:type] %>
+                  <% when 'electricity' %>
+                    Pay Electricity Bill
+                  <% when 'water' %>
+                    Pay Water Bill
+                  <% when 'internet' %>
+                    Buy Internet/Data
+                  <% when 'airtime' %>
+                    Buy Airtime
+                  <% when 'tv' %>
+                    Pay TV Subscription
+                  <% when 'gas' %>
+                    Pay Gas Bill
+                  <% when 'insurance' %>
+                    Pay Insurance
+                  <% when 'loan' %>
+                    Loan Repayment
+                  <% when 'mortgage' %>
+                    Pay Mortgage
+                  <% when 'education' %>
+                    Pay School Fees
+                  <% else %>
+                    Pay Bill
+                  <% end %>
+                </h1>
+                <p class="mt-2 text-white/80 max-w-md">
+                  <% case params[:type] %>
+                  <% when 'electricity' %>
+                    Pay your electricity bill quickly and securely with instant confirmation
+                  <% when 'water' %>
+                    Pay your water bill without any hassle
+                  <% when 'internet' %>
+                    Purchase internet data bundles for any network
+                  <% when 'airtime' %>
+                    Top up your phone credit instantly
+                  <% when 'tv' %>
+                    Renew your TV subscription seamlessly
+                  <% when 'gas' %>
+                    Pay for gas and cooking fuel easily
+                  <% when 'insurance' %>
+                    Keep your insurance coverage active
+                  <% when 'loan' %>
+                    Make your loan repayments on time
+                  <% when 'mortgage' %>
+                    Pay your mortgage installments securely
+                  <% when 'education' %>
+                    Pay school fees and educational expenses
+                  <% else %>
+                    Pay your bills quickly and securely
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <% if params[:type] == 'electricity' %>
+            <!-- Quick info for electricity bills -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 shadow-md self-start md:self-center">
+              <div class="flex items-center mb-2">
+                <%= icon("info", class: "w-4 h-4 mr-2 text-white/80") %>
+                <span class="text-sm font-medium text-white">Payment Tips</span>
+              </div>
+              <ul class="text-xs text-white/80 space-y-1">
+                <li class="flex items-start">
+                  <span class="inline-block w-3 h-3 rounded-full bg-white/20 mt-1 mr-2"></span>
+                  Have your meter number ready
+                </li>
+                <li class="flex items-start">
+                  <span class="inline-block w-3 h-3 rounded-full bg-white/20 mt-1 mr-2"></span>
+                  Payments are processed instantly
+                </li>
+                <li class="flex items-start">
+                  <span class="inline-block w-3 h-3 rounded-full bg-white/20 mt-1 mr-2"></span>
+                  Save your receipt for reference
+                </li>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content - Enhanced Form for Electricity Bills -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+      <!-- Form with improved styling -->
+      <div class="p-8">
+        <%= form_with url: process_bill_payment_path, method: :post, class: "space-y-8" do |f| %>
+          <%= f.hidden_field :bill_type, value: params[:type] %>
+
+          <% if params[:type] == 'electricity' %>
+            <!-- Electricity-specific form header -->
+            <div class="flex items-center justify-between pb-6 border-b border-gray-200 dark:border-gray-700">
+              <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400 mr-3">
+                  <%= icon("zap", class: "w-5 h-5") %>
+                </div>
+                <div>
+                  <h3 class="font-bold text-gray-900 dark:text-white">Electricity Bill Payment</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Pay your electricity bill securely</p>
+                </div>
+              </div>
+              <div class="hidden md:block">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                  <%= icon("shield-check", class: "w-3.5 h-3.5 mr-1") %>
+                  Secure Payment
+                </span>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Provider Selection -->
+          <div class="space-y-2">
+            <label for="provider" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Provider</label>
+
+            <%
+              # Define provider options with logos/icons
+              providers = case params[:type]
+              when 'electricity'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "Electricity Company of Ghana (ECG)", value: "ECG", logo: "zap" },
+                  { name: "Northern Electricity Distribution Company (NEDCo)", value: "NEDCO", logo: "zap" },
+                  { name: "Volta River Authority (VRA)", value: "VRA", logo: "zap" }
+                ]
+              when 'water'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "Ghana Water Company Limited (GWCL)", value: "GWCL", logo: "droplet" }
+                ]
+              when 'internet'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "MTN", value: "MTN", logo: "wifi" },
+                  { name: "Vodafone", value: "VODAFONE", logo: "wifi" },
+                  { name: "AirtelTigo", value: "AIRTELTIGO", logo: "wifi" }
+                ]
+              when 'airtime'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "MTN", value: "MTN", logo: "phone" },
+                  { name: "Vodafone", value: "VODAFONE", logo: "phone" },
+                  { name: "AirtelTigo", value: "AIRTELTIGO", logo: "phone" }
+                ]
+              when 'tv'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "DSTV", value: "DSTV", logo: "tv" },
+                  { name: "GOtv", value: "GOTV", logo: "tv" },
+                  { name: "StarTimes", value: "STARTIMES", logo: "tv" }
+                ]
+              when 'gas'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "Ghana Gas", value: "GHANA_GAS", logo: "flame" },
+                  { name: "LPG Distributor", value: "LPG", logo: "flame" }
+                ]
+              when 'insurance'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "SIC Insurance", value: "SIC", logo: "shield-check" },
+                  { name: "Enterprise Insurance", value: "ENTERPRISE", logo: "shield-check" },
+                  { name: "Star Assurance", value: "STAR", logo: "shield-check" }
+                ]
+              when 'loan'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "GCB Bank", value: "GCB", logo: "landmark" },
+                  { name: "Ecobank", value: "ECOBANK", logo: "landmark" },
+                  { name: "Fidelity Bank", value: "FIDELITY", logo: "landmark" }
+                ]
+              when 'mortgage'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "HFC Bank", value: "HFC", logo: "home" },
+                  { name: "Republic Bank", value: "REPUBLIC", logo: "home" },
+                  { name: "Stanbic Bank", value: "STANBIC", logo: "home" }
+                ]
+              when 'education'
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "University of Ghana", value: "UG", logo: "book-open" },
+                  { name: "KNUST", value: "KNUST", logo: "book-open" },
+                  { name: "Cape Coast University", value: "UCC", logo: "book-open" }
+                ]
+              else
+                [
+                  { name: "Select Provider", value: "", logo: nil },
+                  { name: "Other Service Provider", value: "OTHER", logo: "building" }
+                ]
+              end
+            %>
+
+            <!-- Provider Selection Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
+              <% providers.each_with_index do |provider, index| %>
+                <% next if index == 0 # Skip the first "Select Provider" option %>
+                <label class="provider-option cursor-pointer">
+                  <%= f.radio_button :provider, provider[:value], class: "hidden provider-radio" %>
+                  <div class="flex flex-col items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl text-center hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 provider-card">
+                    <div class="w-12 h-12 rounded-full flex items-center justify-center mb-2 provider-icon-bg">
+                      <%= icon(provider[:logo], class: "w-6 h-6 provider-icon") %>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300"><%= provider[:name] %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+
+            <% if params[:type] == 'electricity' %>
+              <div class="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                <%= icon("info", class: "w-3.5 h-3.5 mr-1 text-blue-500") %>
+                Select your electricity provider to proceed
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Account/Meter/Phone Number -->
+          <div class="space-y-2">
+            <%
+              # Set field label and icon based on bill type
+              case params[:type]
+              when 'electricity'
+                field_label = "Meter Number"
+                field_icon = "hash"
+                field_placeholder = "Enter your meter number"
+                field_type = "text"
+                field_pattern = "[0-9]*"
+                field_help = "Your meter number can be found on your meter or previous bill"
+                field_maxlength = "11"
+              when 'water'
+                field_label = "Account Number"
+                field_icon = "hash"
+                field_placeholder = "Enter your account number"
+                field_type = "text"
+                field_pattern = "[0-9]*"
+                field_help = "Your account number can be found on your water bill"
+                field_maxlength = "10"
+              when 'internet', 'airtime'
+                field_label = "Phone Number"
+                field_icon = "phone"
+                field_placeholder = "Enter your phone number"
+                field_type = "tel"
+                field_pattern = "[0-9]*"
+                field_help = "Enter the phone number you want to recharge"
+                field_maxlength = "10"
+              when 'tv'
+                field_label = "Smart Card Number"
+                field_icon = "credit-card"
+                field_placeholder = "Enter your smart card number"
+                field_type = "text"
+                field_pattern = "[0-9]*"
+                field_help = "Your smart card number can be found on your decoder or subscription card"
+                field_maxlength = "12"
+              when 'gas'
+                field_label = "Customer ID"
+                field_icon = "hash"
+                field_placeholder = "Enter your customer ID"
+                field_type = "text"
+                field_pattern = "[0-9]*"
+                field_help = "Your customer ID can be found on your gas bill"
+                field_maxlength = "10"
+              when 'insurance'
+                field_label = "Policy Number"
+                field_icon = "file-text"
+                field_placeholder = "Enter your policy number"
+                field_type = "text"
+                field_pattern = nil
+                field_help = "Your policy number can be found on your insurance documents"
+                field_maxlength = "20"
+              when 'loan'
+                field_label = "Loan Account Number"
+                field_icon = "hash"
+                field_placeholder = "Enter your loan account number"
+                field_type = "text"
+                field_pattern = nil
+                field_help = "Your loan account number can be found on your loan statement"
+                field_maxlength = "15"
+              when 'mortgage'
+                field_label = "Mortgage Account Number"
+                field_icon = "hash"
+                field_placeholder = "Enter your mortgage account number"
+                field_type = "text"
+                field_pattern = nil
+                field_help = "Your mortgage account number can be found on your mortgage statement"
+                field_maxlength = "15"
+              when 'education'
+                field_label = "Student ID"
+                field_icon = "user"
+                field_placeholder = "Enter your student ID"
+                field_type = "text"
+                field_pattern = nil
+                field_help = "Your student ID can be found on your student card"
+                field_maxlength = "10"
+              else
+                field_label = "Account Number"
+                field_icon = "hash"
+                field_placeholder = "Enter account number"
+                field_type = "text"
+                field_pattern = nil
+                field_help = "Enter your account number"
+                field_maxlength = "15"
+              end
+
+              # Set field color based on bill type
+              field_color = case params[:type]
+              when 'electricity'
+                "yellow"
+              when 'water'
+                "blue"
+              when 'internet', 'airtime'
+                "indigo"
+              when 'tv'
+                "purple"
+              when 'gas'
+                "red"
+              when 'insurance'
+                "green"
+              else
+                "blue"
+              end
+            %>
+
+            <div class="flex justify-between items-center">
+              <label for="account_number" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <%= field_label %>
+              </label>
+
+              <% if params[:type] == 'electricity' %>
+                <div class="flex items-center">
+                  <button type="button" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                    <%= icon("camera", class: "w-3.5 h-3.5 mr-1") %>
+                    Scan Meter
+                  </button>
+                  <span class="mx-2 text-gray-300 dark:text-gray-600">|</span>
+                  <button type="button" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                    <%= icon("bookmark", class: "w-3.5 h-3.5 mr-1") %>
+                    Saved Meters
+                  </button>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <%= icon(field_icon, class: "w-5 h-5 text-#{field_color}-500") %>
+              </div>
+              <%= f.telephone_field :account_number,
+                  type: field_type,
+                  pattern: field_pattern,
+                  maxlength: field_maxlength,
+                  class: "form-input block w-full pl-10 py-3 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-#{field_color}-500 dark:focus:ring-#{field_color}-600 focus:border-#{field_color}-500 dark:focus:border-#{field_color}-600 shadow-sm",
+                  placeholder: field_placeholder
+              %>
+            </div>
+
+            <div class="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400">
+              <%= icon("info", class: "w-3.5 h-3.5 mr-1 text-#{field_color}-500") %>
+              <%= field_help %>
+            </div>
+
+            <% if params[:type] == 'electricity' %>
+              <div class="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                <%= icon("info", class: "w-3.5 h-3.5 mr-1 text-blue-500") %>
+                Your meter number can be found on your meter or previous bill
+              </div>
+
+              <!-- Meter Type Selection for Electricity -->
+              <div class="mt-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-100 dark:border-yellow-900/30">
+                <div class="flex items-center mb-3">
+                  <%= icon("alert-circle", class: "w-4 h-4 mr-2 text-yellow-600 dark:text-yellow-400") %>
+                  <span class="text-sm font-medium text-yellow-800 dark:text-yellow-300">Meter Type</span>
+                </div>
+
+                <div class="flex space-x-6 mb-3">
+                  <label class="flex items-center">
+                    <%= f.radio_button :meter_type, "prepaid", class: "form-radio text-yellow-600 focus:ring-yellow-500 h-4 w-4" %>
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Prepaid</span>
+                  </label>
+
+                  <label class="flex items-center">
+                    <%= f.radio_button :meter_type, "postpaid", class: "form-radio text-yellow-600 focus:ring-yellow-500 h-4 w-4" %>
+                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Postpaid</span>
+                  </label>
+                </div>
+
+                <!-- Prepaid Meter Info -->
+                <div id="prepaid-info" class="mt-2 text-xs text-gray-600 dark:text-gray-400 bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg hidden">
+                  <div class="flex items-start mb-2">
+                    <%= icon("info", class: "w-3.5 h-3.5 mr-1.5 mt-0.5 text-blue-500") %>
+                    <span>For prepaid meters, your payment will generate a token that you'll need to enter into your meter.</span>
+                  </div>
+                  <div class="flex items-center">
+                    <%= icon("check-circle", class: "w-3.5 h-3.5 mr-1.5 text-green-500") %>
+                    <span>Tokens are delivered instantly via SMS and email.</span>
+                  </div>
+                </div>
+
+                <!-- Postpaid Meter Info -->
+                <div id="postpaid-info" class="mt-2 text-xs text-gray-600 dark:text-gray-400 bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg hidden">
+                  <div class="flex items-start mb-2">
+                    <%= icon("info", class: "w-3.5 h-3.5 mr-1.5 mt-0.5 text-blue-500") %>
+                    <span>For postpaid meters, your payment will be applied to your account and reflected in your next bill.</span>
+                  </div>
+                  <div class="flex items-center">
+                    <%= icon("check-circle", class: "w-3.5 h-3.5 mr-1.5 text-green-500") %>
+                    <span>Payment confirmation will be sent via SMS and email.</span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <% if ['internet', 'tv'].include?(params[:type]) %>
+            <!-- Package Selection for Internet/TV -->
+            <div class="space-y-2">
+              <label for="package" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Package</label>
+
+              <%
+                # Define packages with details
+                packages = case params[:type]
+                when 'internet'
+                  [
+                    { name: "Daily Bundle - 1GB", value: "DAILY_1GB", data: "1GB", validity: "24 hours", price: 5 },
+                    { name: "Weekly Bundle - 5GB", value: "WEEKLY_5GB", data: "5GB", validity: "7 days", price: 20 },
+                    { name: "Monthly Bundle - 20GB", value: "MONTHLY_20GB", data: "20GB", validity: "30 days", price: 50 }
+                  ]
+                when 'tv'
+                  [
+                    { name: "Basic Package", value: "BASIC", channels: "30+ channels", validity: "30 days", price: 25 },
+                    { name: "Classic Package", value: "CLASSIC", channels: "60+ channels", validity: "30 days", price: 45 },
+                    { name: "Premium Package", value: "PREMIUM", channels: "100+ channels", validity: "30 days", price: 80 }
+                  ]
+                else
+                  []
+                end
+
+                # Set package color based on bill type
+                package_color = params[:type] == 'internet' ? "indigo" : "purple"
+              %>
+
+              <!-- Package Selection Cards -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3">
+                <% packages.each do |package| %>
+                  <label class="package-option cursor-pointer">
+                    <%= f.radio_button :package, package[:value], class: "hidden package-radio", data: { price: package[:price] } %>
+                    <div class="flex flex-col h-full border border-gray-200 dark:border-gray-700 rounded-xl hover:border-<%= package_color %>-300 dark:hover:border-<%= package_color %>-700 transition-all duration-200 package-card overflow-hidden">
+                      <!-- Package Header -->
+                      <div class="bg-<%= package_color %>-50 dark:bg-<%= package_color %>-900/20 p-3 border-b border-gray-200 dark:border-gray-700">
+                        <h4 class="font-bold text-<%= package_color %>-700 dark:text-<%= package_color %>-300 text-center"><%= package[:name] %></h4>
+                      </div>
+
+                      <!-- Package Details -->
+                      <div class="p-4 flex flex-col flex-grow">
+                        <div class="text-center mb-3">
+                          <span class="text-2xl font-bold text-gray-800 dark:text-white">₵<%= package[:price] %></span>
+                        </div>
+
+                        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400 flex-grow">
+                          <% if params[:type] == 'internet' %>
+                            <li class="flex items-center">
+                              <%= icon("wifi", class: "w-4 h-4 mr-2 text-#{package_color}-500") %>
+                              <%= package[:data] %> Data
+                            </li>
+                          <% else %>
+                            <li class="flex items-center">
+                              <%= icon("tv", class: "w-4 h-4 mr-2 text-#{package_color}-500") %>
+                              <%= package[:channels] %>
+                            </li>
+                          <% end %>
+                          <li class="flex items-center">
+                            <%= icon("calendar", class: "w-4 h-4 mr-2 text-#{package_color}-500") %>
+                            Valid for <%= package[:validity] %>
+                          </li>
+                        </ul>
+
+                        <div class="mt-4 text-center">
+                          <span class="inline-block px-3 py-1 bg-<%= package_color %>-100 dark:bg-<%= package_color %>-900/30 text-<%= package_color %>-700 dark:text-<%= package_color %>-300 rounded-full text-xs font-medium">
+                            Select Package
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Amount Section -->
+          <div class="pt-6 border-t border-gray-200 dark:border-gray-700 space-y-2">
+            <div class="flex justify-between items-center">
+              <label for="amount" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Amount</label>
+
+              <% if params[:type] == 'electricity' %>
+                <div class="flex items-center">
+                  <button type="button" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                    <%= icon("refresh-cw", class: "w-3.5 h-3.5 mr-1") %>
+                    Check Balance
+                  </button>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <% if params[:type] == 'electricity' %>
+                  <%= icon("dollar-sign", class: "w-5 h-5 text-yellow-500") %>
+                <% else %>
+                  <%= icon("dollar-sign", class: "w-5 h-5 text-gray-400") %>
+                <% end %>
+              </div>
+              <div class="absolute inset-y-0 left-9 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400">₵</span>
+              </div>
+              <%= f.number_field :amount, id: "amount", class: "form-input block w-full pl-14 py-3 rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm", placeholder: "0.00", min: "0", step: "0.01" %>
+            </div>
+
+            <!-- Quick Amount Buttons -->
+            <% if ['airtime', 'internet'].include?(params[:type]) %>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" onclick="setAmount(5)">₵5</button>
+                <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" onclick="setAmount(10)">₵10</button>
+                <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" onclick="setAmount(20)">₵20</button>
+                <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" onclick="setAmount(50)">₵50</button>
+                <button type="button" class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors shadow-sm" onclick="setAmount(100)">₵100</button>
+              </div>
+            <% elsif params[:type] == 'electricity' %>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <button type="button" class="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-100 dark:hover:bg-yellow-800/40 transition-colors shadow-sm" onclick="setAmount(20)">₵20</button>
+                <button type="button" class="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-100 dark:hover:bg-yellow-800/40 transition-colors shadow-sm" onclick="setAmount(50)">₵50</button>
+                <button type="button" class="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-100 dark:hover:bg-yellow-800/40 transition-colors shadow-sm" onclick="setAmount(100)">₵100</button>
+                <button type="button" class="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-100 dark:hover:bg-yellow-800/40 transition-colors shadow-sm" onclick="setAmount(200)">₵200</button>
+                <button type="button" class="px-4 py-2 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-100 dark:hover:bg-yellow-800/40 transition-colors shadow-sm" onclick="setAmount(500)">₵500</button>
+              </div>
+
+              <!-- Electricity Units Estimate -->
+              <div id="units-estimate" class="mt-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3 border border-blue-100 dark:border-blue-900/30 hidden">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <%= icon("zap", class: "w-4 h-4 mr-2 text-blue-600 dark:text-blue-400") %>
+                    <span class="text-sm font-medium text-blue-800 dark:text-blue-300">Estimated Units</span>
+                  </div>
+                  <span class="text-sm font-bold text-blue-800 dark:text-blue-300" id="estimated-units">0 kWh</span>
+                </div>
+                <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">This is an estimate based on current rates</p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Fee Information -->
+          <div class="bg-gray-50 dark:bg-gray-750 rounded-xl p-6 shadow-inner">
+            <% if params[:type] == 'electricity' %>
+              <!-- Electricity-specific payment summary -->
+              <h4 class="text-sm font-bold text-gray-700 dark:text-gray-300 mb-4 flex items-center">
+                <%= icon("clipboard-list", class: "w-4 h-4 mr-2 text-yellow-500") %>
+                Payment Summary
+              </h4>
+            <% end %>
+
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center">
+                <%= icon("credit-card", class: "w-4 h-4 mr-2 opacity-70") %>
+                Amount
+              </span>
+              <span class="text-sm font-bold text-gray-900 dark:text-gray-100" id="display_amount">₵0.00</span>
+            </div>
+
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center">
+                <%= icon("plus", class: "w-4 h-4 mr-2 opacity-70") %>
+                Service Fee
+              </span>
+              <span class="text-sm font-bold text-gray-900 dark:text-gray-100" id="fee">₵0.00</span>
+            </div>
+
+            <% if params[:type] == 'electricity' %>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center">
+                  <%= icon("zap", class: "w-4 h-4 mr-2 opacity-70") %>
+                  Estimated Units
+                </span>
+                <span class="text-sm font-bold text-gray-900 dark:text-gray-100" id="units">0 kWh</span>
+              </div>
+            <% end %>
+
+            <div class="flex justify-between items-center pt-3 border-t border-gray-200 dark:border-gray-700">
+              <span class="font-bold text-gray-900 dark:text-white flex items-center">
+                <%= icon("check-circle", class: "w-4 h-4 mr-2 text-green-500") %>
+                Total
+              </span>
+              <span class="font-bold text-lg text-gray-900 dark:text-white" id="total">₵0.00</span>
+            </div>
+
+            <% if params[:type] == 'electricity' %>
+              <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center mb-2">
+                  <div class="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 mr-2">
+                    <%= icon("shield", class: "w-3 h-3") %>
+                  </div>
+                  <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Secure Payment</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-5 h-5 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-2">
+                    <%= icon("clock", class: "w-3 h-3") %>
+                  </div>
+                  <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Instant Processing</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <% if params[:type] == 'electricity' %>
+              <%= f.button type: "submit", class: "w-full py-4 px-6 bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500" do %>
+                <div class="flex items-center justify-center">
+                  <%= icon("zap", class: "w-5 h-5 mr-2") %>
+                  Pay Electricity Bill
+                </div>
+              <% end %>
+              <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-3">
+                By clicking the button above, you agree to our <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</a>
+              </p>
+            <% else %>
+              <%= f.button type: "submit", class: "w-full py-4 px-6 bg-gradient-to-r #{gradient_class} text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+                <div class="flex items-center justify-center">
+                  <%= icon("credit-card", class: "w-5 h-5 mr-2") %>
+                  Pay Now
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Payments - Enhanced with modern design -->
+    <div class="mt-12">
+      <!-- Section header with gradient underline -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Recent Payments</h2>
+          <div class="h-1 w-16 bg-gradient-to-r <%= gradient_class %> rounded-full mt-2"></div>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+        <% if @recent_bill_payments.present? && @recent_bill_payments.any? %>
+          <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <% @recent_bill_payments.each do |payment| %>
+              <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-r <%= gradient_class %> flex items-center justify-center mr-3 shadow-md text-white">
+                      <%= icon(bill_type_icon(payment.bill_type.to_s), class: "w-5 h-5") %>
+                    </div>
+                    <div>
+                      <p class="font-bold text-gray-900 dark:text-white"><%= payment.provider %></p>
+                      <div class="flex items-center mt-1">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("hash", class: "w-3 h-3 mr-1 opacity-70") %>
+                          <%= payment.account_number %>
+                        </span>
+                        <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("calendar", class: "w-3 h-3 mr-1 opacity-70") %>
+                          <%= payment.created_at.strftime("%b %d, %Y") %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <p class="font-bold text-gray-900 dark:text-white">
+                      ₵<%= number_with_delimiter(payment.amount, delimiter: ',') %>
+                    </p>
+                    <%
+                      # Set status colors and styles
+                      if payment.status.to_s == 'completed'
+                        status_bg = "bg-green-100 dark:bg-green-900/30"
+                        status_text = "text-green-800 dark:text-green-300"
+                        status_icon = "check-circle"
+                      elsif payment.status.to_s == 'pending'
+                        status_bg = "bg-amber-100 dark:bg-amber-900/30"
+                        status_text = "text-amber-800 dark:text-amber-300"
+                        status_icon = "clock"
+                      else
+                        status_bg = "bg-red-100 dark:bg-red-900/30"
+                        status_text = "text-red-800 dark:text-red-300"
+                        status_icon = "x-circle"
+                      end
+                    %>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= status_bg %> <%= status_text %> mt-1">
+                      <%= icon(status_icon, class: "w-3 h-3 mr-1") %>
+                      <%= payment.status.titleize %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="p-8 text-center">
+            <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-r <%= gradient_class %> flex items-center justify-center mb-4 text-white shadow-lg">
+              <%= icon(icon_name, class: "w-8 h-8") %>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No recent payments</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Your payment history for this bill type will appear here</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <style>
+    /* Provider and Package Card Styles */
+    .provider-card, .package-card {
+      transition: all 0.3s ease;
+    }
+
+    .provider-card:hover, .package-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .provider-icon-bg {
+      background-color: rgba(229, 231, 235, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .dark .provider-icon-bg {
+      background-color: rgba(55, 65, 81, 0.5);
+    }
+
+    .provider-icon {
+      color: rgba(107, 114, 128, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .dark .provider-icon {
+      color: rgba(156, 163, 175, 0.8);
+    }
+
+    /* Improve focus styles for accessibility */
+    .provider-radio:focus + .provider-card,
+    .package-radio:focus + .package-card {
+      outline: 2px solid rgba(59, 130, 246, 0.5);
+      outline-offset: 2px;
+    }
+
+    /* Animation for selection */
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    .provider-radio:checked + .provider-card,
+    .package-radio:checked + .package-card {
+      animation: pulse 1.5s 1;
+    }
+  </style>
+  <script>
+    function setAmount(amount) {
+      document.getElementById('amount').value = amount;
+      updateAmounts();
+    }
+
+    function updateAmounts() {
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const fee = amount * 0.005; // 0.5% fee example
+      const total = amount + fee;
+
+      document.getElementById('display_amount').textContent = `₵${amount.toFixed(2)}`;
+      document.getElementById('fee').textContent = `₵${fee.toFixed(2)}`;
+      document.getElementById('total').textContent = `₵${total.toFixed(2)}`;
+
+      // For electricity bills, show estimated units
+      const billType = '<%= params[:type] %>';
+      if (billType === 'electricity') {
+        // Show the units estimate section if amount > 0
+        const unitsEstimateSection = document.getElementById('units-estimate');
+        if (unitsEstimateSection) {
+          if (amount > 0) {
+            unitsEstimateSection.classList.remove('hidden');
+          } else {
+            unitsEstimateSection.classList.add('hidden');
+          }
+        }
+
+        // Calculate estimated units (assuming 1 GHS = 1.2 kWh for this example)
+        const estimatedUnits = amount * 1.2;
+
+        // Update units in both places
+        const estimatedUnitsElement = document.getElementById('estimated-units');
+        const unitsElement = document.getElementById('units');
+
+        if (estimatedUnitsElement) {
+          estimatedUnitsElement.textContent = `${estimatedUnits.toFixed(1)} kWh`;
+        }
+
+        if (unitsElement) {
+          unitsElement.textContent = `${estimatedUnits.toFixed(1)} kWh`;
+        }
+      }
+    }
+
+    // Function to handle meter type selection
+    function handleMeterTypeChange() {
+      const meterType = document.querySelector('input[name="meter_type"]:checked')?.value;
+      const prepaidInfo = document.getElementById('prepaid-info');
+      const postpaidInfo = document.getElementById('postpaid-info');
+
+      if (meterType === 'prepaid') {
+        if (prepaidInfo) prepaidInfo.classList.remove('hidden');
+        if (postpaidInfo) postpaidInfo.classList.add('hidden');
+      } else if (meterType === 'postpaid') {
+        if (prepaidInfo) prepaidInfo.classList.add('hidden');
+        if (postpaidInfo) postpaidInfo.classList.remove('hidden');
+      }
+    }
+
+    // Handle provider card selection
+    function handleProviderSelection() {
+      const providerRadios = document.querySelectorAll('.provider-radio');
+      const providerCards = document.querySelectorAll('.provider-card');
+
+      providerRadios.forEach((radio, index) => {
+        if (radio.checked) {
+          providerCards[index].classList.add('border-2', 'border-blue-500', 'dark:border-blue-400', 'shadow-md');
+          providerCards[index].querySelector('.provider-icon-bg').classList.add('bg-blue-100', 'dark:bg-blue-900/50');
+          providerCards[index].querySelector('.provider-icon').classList.add('text-blue-600', 'dark:text-blue-400');
+        } else {
+          providerCards[index].classList.remove('border-2', 'border-blue-500', 'dark:border-blue-400', 'shadow-md');
+          providerCards[index].querySelector('.provider-icon-bg').classList.remove('bg-blue-100', 'dark:bg-blue-900/50');
+          providerCards[index].querySelector('.provider-icon').classList.remove('text-blue-600', 'dark:text-blue-400');
+        }
+      });
+    }
+
+    // Handle package card selection
+    function handlePackageSelection() {
+      const packageRadios = document.querySelectorAll('.package-radio');
+      const packageCards = document.querySelectorAll('.package-card');
+      const billType = '<%= params[:type] %>';
+      const packageColor = billType === 'internet' ? 'indigo' : 'purple';
+
+      packageRadios.forEach((radio, index) => {
+        if (radio.checked) {
+          packageCards[index].classList.add(`border-2`, `border-${packageColor}-500`, `dark:border-${packageColor}-400`, 'shadow-md');
+          // Update the "Select Package" text to "Selected"
+          const selectText = packageCards[index].querySelector('span.inline-block');
+          if (selectText) {
+            selectText.textContent = 'Selected';
+            selectText.classList.add(`bg-${packageColor}-500`, `dark:bg-${packageColor}-600`, 'text-white', 'dark:text-white');
+            selectText.classList.remove(`bg-${packageColor}-100`, `dark:bg-${packageColor}-900/30`, `text-${packageColor}-700`, `dark:text-${packageColor}-300`);
+          }
+
+          // If the package has a price, update the amount field
+          if (radio.dataset.price) {
+            document.getElementById('amount').value = radio.dataset.price;
+            updateAmounts();
+          }
+        } else {
+          packageCards[index].classList.remove(`border-2`, `border-${packageColor}-500`, `dark:border-${packageColor}-400`, 'shadow-md');
+          // Reset the "Selected" text back to "Select Package"
+          const selectText = packageCards[index].querySelector('span.inline-block');
+          if (selectText) {
+            selectText.textContent = 'Select Package';
+            selectText.classList.remove(`bg-${packageColor}-500`, `dark:bg-${packageColor}-600`, 'text-white', 'dark:text-white');
+            selectText.classList.add(`bg-${packageColor}-100`, `dark:bg-${packageColor}-900/30`, `text-${packageColor}-700`, `dark:text-${packageColor}-300`);
+          }
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add event listener to amount field
+      const amountInput = document.getElementById('amount');
+      if (amountInput) {
+        amountInput.addEventListener('input', updateAmounts);
+      }
+
+      // Initialize amounts
+      updateAmounts();
+
+      // Add event listeners to provider radio buttons
+      const providerRadios = document.querySelectorAll('.provider-radio');
+      providerRadios.forEach(radio => {
+        radio.addEventListener('change', handleProviderSelection);
+      });
+
+      // Add event listeners to package radio buttons
+      const packageRadios = document.querySelectorAll('.package-radio');
+      packageRadios.forEach(radio => {
+        radio.addEventListener('change', handlePackageSelection);
+      });
+
+      // For electricity bills, add meter type change listeners
+      const billType = '<%= params[:type] %>';
+      if (billType === 'electricity') {
+        const meterTypeRadios = document.querySelectorAll('input[name="meter_type"]');
+        meterTypeRadios.forEach(radio => {
+          radio.addEventListener('change', handleMeterTypeChange);
+        });
+      }
+
+      // Initialize provider and package selections
+      handleProviderSelection();
+      handlePackageSelection();
+    });
+
+    // Helper function for transaction status colors
+    function transaction_status_color(status) {
+      switch(status) {
+        case 'completed':
+          return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        case 'pending':
+          return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+        case 'failed':
+          return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+        default:
+          return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+      }
+    }
+
+    function bill_type_icon(type) {
+      switch(type) {
+        case 'electricity':
+          return 'zap';
+        case 'water':
+          return 'droplets';
+        case 'internet':
+          return 'wifi';
+        case 'airtime':
+          return 'phone';
+        case 'tv':
+          return 'tv';
+        case 'gas':
+          return 'flame';
+        case 'insurance':
+          return 'shield-check';
+        case 'loan':
+          return 'landmark';
+        case 'mortgage':
+          return 'building';
+        case 'education':
+          return 'book-open';
+        default:
+          return 'file-text';
+      }
+    }
+  </script>
+<% end %>

@@ -2,6 +2,10 @@ class Transaction < ApplicationRecord
   # Relationships
   belongs_to :source_wallet, class_name: "Wallet", optional: true
   belongs_to :destination_wallet, class_name: "Wallet", optional: true
+  has_many :wallet_transactions, dependent: :destroy
+  has_many :scheduled_transactions, dependent: :destroy
+  has_many :bill_payments, foreign_key: "transaction_id", dependent: :destroy
+  has_many :security_logs, as: :loggable, dependent: :destroy
 
   # Indirect relationships via wallets
   has_one :sender, through: :source_wallet, source: :user
@@ -19,7 +23,8 @@ class Transaction < ApplicationRecord
     pending: 0,     # Initial state
     completed: 1,   # Successfully processed
     failed: 2,      # Transaction failed
-    reversed: 3     # Transaction was reversed/refunded
+    reversed: 3,    # Transaction was reversed/refunded
+    blocked: 4      # Transaction was blocked by security checks
   }, default: :pending, prefix: true
 
   enum :payment_method, {
@@ -45,9 +50,12 @@ class Transaction < ApplicationRecord
   after_update :log_transaction_status_change, if: :saved_change_to_status?
 
   # Scopes
-  scope :successful, -> { where(status: :completed) }
-  scope :pending_or_failed, -> { where(status: [ :pending, :failed ]) }
-  scope :recent, -> { order(created_at: :desc) }
+  scope :completed, -> { where(status: 'completed') }
+  scope :successful, -> { where(status: 'completed') } # Alias for completed
+  scope :pending, -> { where(status: 'pending') }
+  scope :failed, -> { where(status: 'failed') }
+  scope :transfers, -> { where(transaction_type: 'transfer') }
+  scope :bill_payments, -> { where(transaction_type: 'bill_payment') }
   scope :by_date_range, ->(start_date, end_date) {
     where("created_at BETWEEN ? AND ?", start_date.beginning_of_day, end_date.end_of_day)
   }
@@ -56,6 +64,7 @@ class Transaction < ApplicationRecord
     .joins("LEFT JOIN wallets dest ON dest.id = transactions.destination_wallet_id")
     .where("source.user_id = ? OR dest.user_id = ?", user_id, user_id)
   }
+  scope :blocked, -> { where(status: :blocked) }
 
   # Class methods
 
@@ -65,12 +74,17 @@ class Transaction < ApplicationRecord
   # @param payment_method [Symbol] How the money is being deposited
   # @param provider [String] The payment provider name
   # @param metadata [Hash] Additional information about the transaction
+  # @param apply_fee [Boolean] Whether to apply transaction fee
   # @return [Transaction] The created transaction object
-  def self.create_deposit(wallet:, amount:, payment_method:, provider:, metadata: {})
+  def self.create_deposit(wallet:, amount:, payment_method:, provider:, metadata: {}, apply_fee: true)
+    # Calculate fee if applicable
+    fee = apply_fee && defined?(TransactionFee) ? TransactionFee.calculate_fee_for(:deposit, amount) : 0
+
     create(
       transaction_type: :deposit,
       status: :pending,
       amount: amount,
+      fee: fee,
       currency: wallet.currency,
       destination_wallet_id: wallet.id,
       payment_method: payment_method,
@@ -86,12 +100,17 @@ class Transaction < ApplicationRecord
   # @param payment_method [Symbol] How the money is being withdrawn
   # @param provider [String] The payment provider name
   # @param metadata [Hash] Additional information about the transaction
+  # @param apply_fee [Boolean] Whether to apply transaction fee
   # @return [Transaction] The created transaction object
-  def self.create_withdrawal(wallet:, amount:, payment_method:, provider:, metadata: {})
+  def self.create_withdrawal(wallet:, amount:, payment_method:, provider:, metadata: {}, apply_fee: true)
+    # Calculate fee if applicable
+    fee = apply_fee && defined?(TransactionFee) ? TransactionFee.calculate_fee_for(:withdrawal, amount) : 0
+
     create(
       transaction_type: :withdrawal,
       status: :pending,
       amount: amount,
+      fee: fee,
       currency: wallet.currency,
       source_wallet_id: wallet.id,
       payment_method: payment_method,
@@ -107,12 +126,44 @@ class Transaction < ApplicationRecord
   # @param amount [Decimal] The amount to transfer
   # @param description [String] Description of the transfer
   # @param metadata [Hash] Additional information about the transaction
+  # @param apply_fee [Boolean] Whether to apply transaction fee
   # @return [Transaction] The created transaction object
-  def self.create_transfer(source_wallet:, destination_wallet:, amount:, description: nil, metadata: {})
+  def self.create_transfer(source_wallet:, destination_wallet:, amount:, description: nil, metadata: {}, apply_fee: true)
+    # Calculate fee if applicable
+    fee = apply_fee && defined?(TransactionFee) ? TransactionFee.calculate_fee_for(:transfer, amount) : 0
+
     create(
       transaction_type: :transfer,
       status: :pending,
       amount: amount,
+      fee: fee,
+      currency: source_wallet.currency,
+      source_wallet_id: source_wallet.id,
+      destination_wallet_id: destination_wallet.id,
+      payment_method: :wallet,
+      description: description,
+      metadata: metadata,
+      initiated_at: Time.current
+    )
+  end
+
+  # Create a payment transaction
+  # @param source_wallet [Wallet] The sender's wallet
+  # @param destination_wallet [Wallet] The recipient's wallet (merchant)
+  # @param amount [Decimal] The amount to pay
+  # @param description [String] Description of the payment
+  # @param metadata [Hash] Additional information about the transaction
+  # @param apply_fee [Boolean] Whether to apply transaction fee
+  # @return [Transaction] The created transaction object
+  def self.create_payment(source_wallet:, destination_wallet:, amount:, description: nil, metadata: {}, apply_fee: true)
+    # Calculate fee if applicable
+    fee = apply_fee && defined?(TransactionFee) ? TransactionFee.calculate_fee_for(:payment, amount) : 0
+
+    create(
+      transaction_type: :payment,
+      status: :pending,
+      amount: amount,
+      fee: fee,
       currency: source_wallet.currency,
       source_wallet_id: source_wallet.id,
       destination_wallet_id: destination_wallet.id,
@@ -125,11 +176,59 @@ class Transaction < ApplicationRecord
 
   # Instance methods
 
+  # Perform security check on the transaction
+  # @param user [User] The user performing the transaction
+  # @param ip_address [String] The IP address of the request
+  # @param user_agent [String] The user agent of the request
+  # @return [Boolean] True if the transaction passes security checks
+  def security_check(user, ip_address = nil, user_agent = nil)
+    security_service = TransactionSecurityService.new(self, user, ip_address, user_agent)
+    result = security_service.secure?
+
+    # Log security check results
+    log_data = security_service.log_security_check(result)
+
+    # Create security log entry
+    severity = result ? :info : :warning
+    SecurityLog.log_event(
+      user,
+      result ? :transaction_check : :transaction_blocked,
+      severity: severity,
+      details: {
+        transaction_id: id,
+        transaction_type: transaction_type,
+        amount: amount,
+        currency: currency,
+        risk_score: log_data[:risk_score],
+        errors: security_service.errors
+      },
+      ip_address: ip_address,
+      user_agent: user_agent,
+      loggable: self
+    )
+
+    # If security check failed, update transaction status
+    unless result
+      update(
+        status: :blocked,
+        metadata: metadata.merge(
+          security_check: {
+            failed_at: Time.current,
+            reasons: security_service.errors,
+            risk_score: log_data[:risk_score]
+          }
+        )
+      )
+    end
+
+    result
+  end
+
   # Complete a transaction
   # @param external_reference [String] External reference from payment processor
   # @return [Boolean] True if completed successfully, false otherwise
   def complete!(external_reference: nil)
-    return false unless pending?
+    return false unless status_pending?
 
     transaction do
       # Process based on transaction type
@@ -155,6 +254,23 @@ class Transaction < ApplicationRecord
           completed_at: Time.current,
           external_reference: external_reference
         )
+
+        # Log successful transaction
+        user = source_wallet&.user || destination_wallet.user
+        SecurityLog.log_event(
+          user,
+          :transaction_check,
+          severity: :info,
+          details: {
+            transaction_id: id,
+            transaction_type: transaction_type,
+            amount: amount,
+            currency: currency,
+            status: :completed
+          },
+          loggable: self
+        )
+
         return true
       else
         # Mark as failed if wallet operations didn't succeed
@@ -162,6 +278,24 @@ class Transaction < ApplicationRecord
           status: :failed,
           failed_at: Time.current
         )
+
+        # Log failed transaction
+        user = source_wallet&.user || destination_wallet.user
+        SecurityLog.log_event(
+          user,
+          :transaction_check,
+          severity: :warning,
+          details: {
+            transaction_id: id,
+            transaction_type: transaction_type,
+            amount: amount,
+            currency: currency,
+            status: :failed,
+            reason: "Wallet operation failed"
+          },
+          loggable: self
+        )
+
         return false
       end
     end
@@ -171,6 +305,26 @@ class Transaction < ApplicationRecord
       status: :failed,
       failed_at: Time.current
     )
+
+    # Log error
+    user = source_wallet&.user || destination_wallet&.user
+    if user
+      SecurityLog.log_event(
+        user,
+        :transaction_check,
+        severity: :warning,
+        details: {
+          transaction_id: id,
+          transaction_type: transaction_type,
+          amount: amount,
+          currency: currency,
+          status: :failed,
+          error: e.message
+        },
+        loggable: self
+      )
+    end
+
     false
   end
 
@@ -178,20 +332,43 @@ class Transaction < ApplicationRecord
   # @param reason [String] Reason for failure
   # @return [Boolean] True if updated successfully
   def fail!(reason: nil)
-    return false unless pending?
+    return false unless status_pending?
 
-    self.update(
+    result = self.update(
       status: :failed,
       failed_at: Time.current,
       metadata: metadata.merge(failure_reason: reason)
     )
+
+    # Log failure
+    if result
+      user = source_wallet&.user || destination_wallet&.user
+      if user
+        SecurityLog.log_event(
+          user,
+          :transaction_check,
+          severity: :warning,
+          details: {
+            transaction_id: id,
+            transaction_type: transaction_type,
+            amount: amount,
+            currency: currency,
+            status: :failed,
+            reason: reason
+          },
+          loggable: self
+        )
+      end
+    end
+
+    result
   end
 
   # Reverse/refund a completed transaction
   # @param reason [String] Reason for reversal
   # @return [Boolean] True if reversed successfully, false otherwise
   def reverse!(reason: nil)
-    return false unless completed?
+    return false unless status_completed?
 
     transaction do
       # Process reversal based on transaction type
@@ -209,18 +386,61 @@ class Transaction < ApplicationRecord
 
       if result
         # Update transaction state
-        self.update(
+        update_result = self.update(
           status: :reversed,
           reversed_at: Time.current,
           metadata: metadata.merge(reversal_reason: reason)
         )
-        return true
+
+        # Log reversal
+        if update_result
+          user = source_wallet&.user || destination_wallet&.user
+          if user
+            SecurityLog.log_event(
+              user,
+              :transaction_check,
+              severity: :info,
+              details: {
+                transaction_id: id,
+                transaction_type: transaction_type,
+                amount: amount,
+                currency: currency,
+                status: :reversed,
+                reason: reason
+              },
+              loggable: self
+            )
+          end
+        end
+
+        return update_result
       else
         return false
       end
     end
   rescue => e
     Rails.logger.error("Error reversing transaction #{transaction_id}: #{e.message}")
+
+    # Log error
+    user = source_wallet&.user || destination_wallet&.user
+    if user
+      SecurityLog.log_event(
+        user,
+        :transaction_check,
+        severity: :warning,
+        details: {
+          transaction_id: id,
+          transaction_type: transaction_type,
+          amount: amount,
+          currency: currency,
+          status: :failed,
+          action: "reversal",
+          error: e.message
+        },
+        loggable: self
+      )
+    end
+
     false
   end
 
@@ -239,6 +459,33 @@ class Transaction < ApplicationRecord
     when "transfer" then "Wallet Transfer"
     when "payment" then "Payment"
     else "Unknown Transaction"
+    end
+  end
+
+  # Get the recipient's name for display
+  # @return [String, nil] Recipient name or nil if not applicable
+  def recipient_name
+    return nil unless destination_wallet&.user.present?
+    destination_wallet.user.display_name
+  end
+
+  # Get the source's name for display
+  # @return [String, nil] Source name or nil if not applicable
+  def source_name
+    return nil unless source_wallet&.user.present?
+    source_wallet.user.display_name
+  end
+
+  # Get the name of the other party in the transaction for a specific user
+  # @param user_id [Integer] User ID to check
+  # @return [String] Name of the other party
+  def other_party_name(user_id)
+    if source_wallet&.user_id == user_id
+      recipient_name || "Unknown Recipient"
+    elsif destination_wallet&.user_id == user_id
+      source_name || "Unknown Sender"
+    else
+      "Unknown Party"
     end
   end
 
@@ -313,21 +560,29 @@ class Transaction < ApplicationRecord
     when "withdrawal" then "WIT"
     when "transfer" then "TRF"
     when "payment" then "PAY"
+    when "airtime" then "AIR"
     else "TXN"
     end
 
+    timestamp = Time.current.strftime('%Y%m%d%H%M%S')
+    random_suffix = SecureRandom.hex(3).upcase
+
     loop do
-      self.transaction_id = "#{prefix}#{Time.current.strftime('%Y%m%d')}#{SecureRandom.alphanumeric(8).upcase}"
-      break unless Transaction.exists?(transaction_id: transaction_id)
+      new_id = "#{prefix}#{timestamp}#{random_suffix}"
+      unless Transaction.exists?(transaction_id: new_id)
+        self.transaction_id = new_id
+        break
+      end
+      random_suffix = SecureRandom.hex(3).upcase
     end
   end
 
   # Set default timestamps based on status
   def set_default_timestamps
-    self.initiated_at ||= Time.current if pending?
-    self.completed_at ||= Time.current if completed?
-    self.failed_at ||= Time.current if failed?
-    self.reversed_at ||= Time.current if reversed?
+    self.initiated_at ||= Time.current if status_pending?
+    self.completed_at ||= Time.current if status_completed?
+    self.failed_at ||= Time.current if status_failed?
+    self.reversed_at ||= Time.current if status_reversed?
   end
 
   # Validate the wallet associations based on transaction type

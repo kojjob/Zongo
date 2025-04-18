@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_16_000007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,40 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
+  create_table "beneficiaries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "account_number", null: false
+    t.string "bank_name"
+    t.string "phone_number"
+    t.integer "transfer_type", default: 0, null: false
+    t.integer "usage_count", default: 0, null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "account_number"], name: "index_beneficiaries_on_user_id_and_account_number", unique: true
+    t.index ["user_id"], name: "index_beneficiaries_on_user_id"
+  end
+
+  create_table "bill_payments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "transaction_id"
+    t.integer "bill_type", default: 0, null: false
+    t.string "provider", null: false
+    t.string "account_number", null: false
+    t.string "package"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "fee", precision: 10, scale: 2, default: "0.0"
+    t.integer "status", default: 0, null: false
+    t.string "reference_number"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reference_number"], name: "index_bill_payments_on_reference_number", unique: true
+    t.index ["transaction_id"], name: "index_bill_payments_on_transaction_id"
+    t.index ["user_id"], name: "index_bill_payments_on_user_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -96,6 +130,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.index ["email"], name: "index_contact_submissions_on_email", unique: true
     t.index ["read"], name: "index_contact_submissions_on_read"
     t.index ["read_at"], name: "index_contact_submissions_on_read_at"
+  end
+
+  create_table "credit_scores", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "score", null: false
+    t.text "factors"
+    t.datetime "calculated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_current", default: true
+    t.index ["is_current"], name: "index_credit_scores_on_is_current"
+    t.index ["score"], name: "index_credit_scores_on_score"
+    t.index ["user_id"], name: "index_credit_scores_on_user_id"
   end
 
   create_table "event_categories", force: :cascade do |t|
@@ -151,6 +198,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.index ["event_id", "media_type"], name: "index_event_media_on_event_id_and_media_type"
     t.index ["event_id"], name: "index_event_media_on_event_id"
     t.index ["user_id"], name: "index_event_media_on_user_id"
+  end
+
+  create_table "event_tags", force: :cascade do |t|
+    t.bigint "event_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "tag_id"], name: "index_event_tags_on_event_id_and_tag_id", unique: true
+    t.index ["event_id"], name: "index_event_tags_on_event_id"
+    t.index ["tag_id"], name: "index_event_tags_on_tag_id"
   end
 
   create_table "event_tickets", force: :cascade do |t|
@@ -239,6 +296,48 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
+  create_table "loan_repayments", force: :cascade do |t|
+    t.bigint "loan_id", null: false
+    t.bigint "transaction_id"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "principal_amount", precision: 10, scale: 2, null: false
+    t.decimal "interest_amount", precision: 10, scale: 2, null: false
+    t.integer "status", default: 0
+    t.date "due_date"
+    t.datetime "paid_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["due_date"], name: "index_loan_repayments_on_due_date"
+    t.index ["loan_id"], name: "index_loan_repayments_on_loan_id"
+    t.index ["status"], name: "index_loan_repayments_on_status"
+    t.index ["transaction_id"], name: "index_loan_repayments_on_transaction_id"
+  end
+
+  create_table "loans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "reference_number", null: false
+    t.integer "loan_type", default: 0
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.decimal "interest_rate", precision: 5, scale: 2, null: false
+    t.integer "term_months", null: false
+    t.date "due_date", null: false
+    t.integer "status", default: 0
+    t.text "purpose"
+    t.integer "credit_score"
+    t.decimal "current_balance", precision: 10, scale: 2
+    t.datetime "approved_at"
+    t.datetime "disbursed_at"
+    t.datetime "completed_at"
+    t.datetime "defaulted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "term_days"
+    t.index ["loan_type"], name: "index_loans_on_loan_type"
+    t.index ["reference_number"], name: "index_loans_on_reference_number", unique: true
+    t.index ["status"], name: "index_loans_on_status"
+    t.index ["user_id"], name: "index_loans_on_user_id"
+  end
+
   create_table "navigation_items", force: :cascade do |t|
     t.string "title", null: false
     t.string "path"
@@ -270,6 +369,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.datetime "last_used_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["status"], name: "index_payment_methods_on_status"
     t.index ["user_id", "default"], name: "index_payment_methods_on_user_id_and_default"
     t.index ["user_id", "method_type"], name: "index_payment_methods_on_user_id_and_method_type"
@@ -294,10 +394,30 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.jsonb "metadata", default: {}
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["destination_wallet_id"], name: "index_scheduled_transactions_on_destination_wallet_id"
     t.index ["next_occurrence"], name: "index_scheduled_transactions_on_next_occurrence"
     t.index ["source_wallet_id"], name: "index_scheduled_transactions_on_source_wallet_id"
     t.index ["status"], name: "index_scheduled_transactions_on_status"
+    t.index ["user_id"], name: "index_scheduled_transactions_on_user_id"
+  end
+
+  create_table "security_logs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "event_type", default: 0, null: false
+    t.integer "severity", default: 0, null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.string "loggable_type"
+    t.bigint "loggable_id"
+    t.jsonb "details", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["loggable_type", "loggable_id"], name: "index_security_logs_on_loggable"
+    t.index ["severity"], name: "index_security_logs_on_severity"
+    t.index ["user_id", "created_at"], name: "index_security_logs_on_user_id_and_created_at"
+    t.index ["user_id", "event_type"], name: "index_security_logs_on_user_id_and_event_type"
+    t.index ["user_id"], name: "index_security_logs_on_user_id"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -306,6 +426,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_settings_on_key", unique: true
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.integer "events_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["slug"], name: "index_tags_on_slug", unique: true
   end
 
   create_table "ticket_types", force: :cascade do |t|
@@ -322,6 +452,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_ticket_types_on_event_id"
+  end
+
+  create_table "transaction_fees", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "transaction_type", default: 4, null: false
+    t.integer "fee_type", default: 0, null: false
+    t.decimal "fixed_amount", precision: 10, scale: 2
+    t.decimal "percentage", precision: 5, scale: 2
+    t.decimal "min_fee", precision: 10, scale: 2
+    t.decimal "max_fee", precision: 10, scale: 2
+    t.boolean "active", default: true
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_transaction_fees_on_active"
+    t.index ["transaction_type"], name: "index_transaction_fees_on_transaction_type"
   end
 
   create_table "transactions", force: :cascade do |t|
@@ -406,10 +552,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.boolean "admin", default: false
+    t.boolean "super_admin", default: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone_number"
+    t.text "bio"
+    t.date "date_of_birth"
+    t.string "gender"
+    t.string "address"
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.string "postal_code"
+    t.string "website"
+    t.string "occupation"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["super_admin"], name: "index_users_on_super_admin"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
@@ -457,6 +619,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
+  add_foreign_key "beneficiaries", "users"
+  add_foreign_key "bill_payments", "transactions"
+  add_foreign_key "bill_payments", "users"
+  add_foreign_key "credit_scores", "users"
   add_foreign_key "event_categories", "event_categories", column: "parent_category_id"
   add_foreign_key "event_comments", "event_comments", column: "parent_comment_id"
   add_foreign_key "event_comments", "events"
@@ -465,6 +631,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
   add_foreign_key "event_favorites", "users"
   add_foreign_key "event_media", "events"
   add_foreign_key "event_media", "users"
+  add_foreign_key "event_tags", "events"
+  add_foreign_key "event_tags", "tags"
   add_foreign_key "event_tickets", "attendances"
   add_foreign_key "event_tickets", "events"
   add_foreign_key "event_tickets", "ticket_types"
@@ -477,10 +645,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_163500) do
   add_foreign_key "events", "users", column: "organizer_id"
   add_foreign_key "events", "venues"
   add_foreign_key "favorites", "users"
+  add_foreign_key "loan_repayments", "loans"
+  add_foreign_key "loan_repayments", "transactions"
+  add_foreign_key "loans", "users"
   add_foreign_key "navigation_items", "navigation_items", column: "parent_id"
   add_foreign_key "payment_methods", "users"
+  add_foreign_key "scheduled_transactions", "users"
   add_foreign_key "scheduled_transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "scheduled_transactions", "wallets", column: "source_wallet_id"
+  add_foreign_key "security_logs", "users"
   add_foreign_key "ticket_types", "events"
   add_foreign_key "transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "transactions", "wallets", column: "source_wallet_id"

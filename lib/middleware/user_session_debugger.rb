@@ -6,8 +6,8 @@ class UserSessionDebugger
   def call(env)
     # Before request: Check if there's a user in the session
     begin
-      if env['rack.session'] && env['rack.session']['warden.user.user.key']
-        key = env['rack.session']['warden.user.user.key']
+      if env["rack.session"] && env["rack.session"]["warden.user.user.key"]
+        key = env["rack.session"]["warden.user.user.key"]
         Rails.logger.debug "SESSION USER: #{key.inspect}"
 
         if key.is_a?(Hash)
@@ -25,7 +25,7 @@ class UserSessionDebugger
       Rails.logger.error "Error in middleware chain: #{e.message}"
       Rails.logger.error e.backtrace.join("\n")
       # Return a 500 error response
-      return [500, {'Content-Type' => 'text/html'}, ["<html><body><h1>Internal Server Error</h1><p>#{e.message}</p></body></html>"]]
+      return [ 500, { "Content-Type" => "text/html" }, [ "<html><body><h1>Internal Server Error</h1><p>#{e.message}</p></body></html>" ] ]
     end
 
     # After request: Check if there's a user in the warden
@@ -52,6 +52,6 @@ class UserSessionDebugger
     #   Rails.logger.error "Error in post-request warden check: #{e.message}"
     # end
 
-    [status, headers, response]
+    [ status, headers, response ]
   end
 end

@@ -10,14 +10,14 @@ class EnsureEventViewsTableExists < ActiveRecord::Migration[8.0]
         t.string :referer
         t.string :referrer
         t.datetime :viewed_at, default: -> { 'CURRENT_TIMESTAMP' }
-        
+
         t.timestamps
       end
-      
+
       # Add index for efficient queries on IP + event within a time period
-      add_index :event_views, [:event_id, :ip_address, :created_at]
+      add_index :event_views, [ :event_id, :ip_address, :created_at ]
     end
-    
+
     # Make sure views_count exists on events table
     unless column_exists?(:events, :views_count)
       # Check if event_views_count exists instead

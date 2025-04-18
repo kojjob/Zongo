@@ -1,0 +1,201 @@
+<%= form_with(model: [:admin, transaction_fee], class: "space-y-6", data: { controller: "fee-form" }) do |form| %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <div class="mb-6">
+        <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= form.text_field :name, class: "form-input block w-full rounded-md", placeholder: "e.g., Standard Withdrawal Fee" %>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :transaction_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= form.select :transaction_type, 
+          TransactionFee.transaction_types.keys.map { |type| [type.titleize, type] }, 
+          {}, 
+          { class: "form-select block w-full rounded-md" } 
+        %>
+      </div>
+
+      <div class="mb-6">
+        <%= form.label :fee_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= form.select :fee_type, 
+          TransactionFee.fee_types.keys.map { |type| [type.titleize, type] }, 
+          {}, 
+          { class: "form-select block w-full rounded-md", 
+            data: { 
+              action: "change->fee-form#toggleFeeFields",
+              fee_form_target: "feeType"
+            } 
+          } 
+        %>
+      </div>
+
+      <div class="mb-6" data-fee-form-target="fixedFeeField">
+        <%= form.label :fixed_amount, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <div class="relative rounded-md shadow-sm">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₵</span>
+          </div>
+          <%= form.number_field :fixed_amount, class: "form-input block w-full pl-7 rounded-md", step: "0.01", min: "0", placeholder: "0.00" %>
+        </div>
+      </div>
+
+      <div class="mb-6" data-fee-form-target="percentageFeeField">
+        <%= form.label :percentage, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <div class="relative rounded-md shadow-sm">
+          <%= form.number_field :percentage, class: "form-input block w-full pr-12 rounded-md", step: "0.01", min: "0", max: "100", placeholder: "0.00" %>
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 dark:text-gray-400 sm:text-sm">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4" data-fee-form-target="hybridFeeFields">
+        <div class="mb-6">
+          <%= form.label :min_fee, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₵</span>
+            </div>
+            <%= form.number_field :min_fee, class: "form-input block w-full pl-7 rounded-md", step: "0.01", min: "0", placeholder: "Min" %>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <%= form.label :max_fee, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">₵</span>
+            </div>
+            <%= form.number_field :max_fee, class: "form-input block w-full pl-7 rounded-md", step: "0.01", min: "0", placeholder: "Max" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="mb-6">
+        <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= form.text_area :description, rows: 4, class: "form-textarea block w-full rounded-md", placeholder: "Describe the purpose of this fee..." %>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex items-center">
+          <%= form.check_box :active, class: "form-checkbox h-5 w-5 text-indigo-600 rounded" %>
+          <%= form.label :active, "Active", class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+        </div>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          Inactive fees will not be applied to transactions
+        </p>
+      </div>
+
+      <div class="bg-gray-50 dark:bg-gray-750 p-4 rounded-lg border border-gray-200 dark:border-gray-700 mb-6">
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Fee Preview</h3>
+        <div class="space-y-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">For a ₵100 transaction:</span>
+            <span class="font-medium text-gray-900 dark:text-white" data-fee-form-target="previewAmount100">₵0.00</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">For a ₵500 transaction:</span>
+            <span class="font-medium text-gray-900 dark:text-white" data-fee-form-target="previewAmount500">₵0.00</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-500 dark:text-gray-400">For a ₵1,000 transaction:</span>
+            <span class="font-medium text-gray-900 dark:text-white" data-fee-form-target="previewAmount1000">₵0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+    <%= link_to "Cancel", admin_transaction_fees_path, class: "btn btn-outline-secondary" %>
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<% content_for :page_helpers do %>
+  <script>
+    class FeeFormController {
+      static targets = ["feeType", "fixedFeeField", "percentageFeeField", "hybridFeeFields", 
+                        "previewAmount100", "previewAmount500", "previewAmount1000"]
+      
+      connect() {
+        this.toggleFeeFields()
+        this.setupInputListeners()
+        this.updatePreview()
+      }
+      
+      toggleFeeFields() {
+        const feeType = this.feeTypeTarget.value
+        
+        // Hide all fields first
+        this.fixedFeeFieldTarget.classList.add('hidden')
+        this.percentageFeeFieldTarget.classList.add('hidden')
+        this.hybridFeeFieldsTarget.classList.add('hidden')
+        
+        // Show relevant fields based on fee type
+        if (feeType === 'fixed') {
+          this.fixedFeeFieldTarget.classList.remove('hidden')
+        } else if (feeType === 'percentage') {
+          this.percentageFeeFieldTarget.classList.remove('hidden')
+        } else if (feeType === 'hybrid') {
+          this.percentageFeeFieldTarget.classList.remove('hidden')
+          this.hybridFeeFieldsTarget.classList.remove('hidden')
+        }
+        
+        this.updatePreview()
+      }
+      
+      setupInputListeners() {
+        // Add input event listeners to all form fields that affect the fee calculation
+        const form = this.element
+        const inputs = form.querySelectorAll('input[type="number"], select')
+        
+        inputs.forEach(input => {
+          input.addEventListener('input', () => this.updatePreview())
+        })
+      }
+      
+      updatePreview() {
+        const feeType = this.feeTypeTarget.value
+        const fixedAmount = parseFloat(this.element.querySelector('#transaction_fee_fixed_amount')?.value || 0)
+        const percentage = parseFloat(this.element.querySelector('#transaction_fee_percentage')?.value || 0)
+        const minFee = parseFloat(this.element.querySelector('#transaction_fee_min_fee')?.value || 0)
+        const maxFee = parseFloat(this.element.querySelector('#transaction_fee_max_fee')?.value || 0)
+        
+        // Calculate fees for different amounts
+        this.previewAmount100Target.textContent = '₵' + this.calculateFee(100, feeType, fixedAmount, percentage, minFee, maxFee).toFixed(2)
+        this.previewAmount500Target.textContent = '₵' + this.calculateFee(500, feeType, fixedAmount, percentage, minFee, maxFee).toFixed(2)
+        this.previewAmount1000Target.textContent = '₵' + this.calculateFee(1000, feeType, fixedAmount, percentage, minFee, maxFee).toFixed(2)
+      }
+      
+      calculateFee(amount, feeType, fixedAmount, percentage, minFee, maxFee) {
+        let fee = 0
+        
+        if (feeType === 'fixed') {
+          fee = fixedAmount
+        } else if (feeType === 'percentage') {
+          fee = amount * (percentage / 100)
+        } else if (feeType === 'hybrid') {
+          fee = amount * (percentage / 100)
+          
+          // Apply min fee if set and calculated fee is less than min
+          if (minFee > 0 && fee < minFee) {
+            fee = minFee
+          }
+          
+          // Apply max fee if set and calculated fee is more than max
+          if (maxFee > 0 && fee > maxFee) {
+            fee = maxFee
+          }
+        }
+        
+        return fee
+      }
+    }
+    
+    // Register the controller with Stimulus
+    application.register("fee-form", FeeFormController)
+  </script>
+<% end %>

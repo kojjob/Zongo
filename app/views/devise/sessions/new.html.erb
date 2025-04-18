@@ -1,7 +1,7 @@
 <div class="max-w-md mx-auto py-12">
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
     <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Log in</h2>
-    
+
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <div class="mb-5">
         <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
@@ -9,18 +9,30 @@
           <%= f.email_field :email, placeholder: "example@mail.com", class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" %>
         </div>
       </div>
-      
+
       <div class="mb-5">
-        <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+        <div class="flex justify-between items-center mb-2">
+          <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <%= link_to "Forgot password?", new_user_password_path, class: "text-sm text-primary-600 hover:text-primary-500" %>
+        </div>
         <%= f.password_field :password, class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" %>
         <% if @user.errors[:password].any? %>
           <p class="mt-2 text-sm text-red-600"><%= @user.errors[:password].join(", ") %></p>
         <% end %>
       </div>
 
-      <%= f.submit "Continue", class: "w-full py-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-base transition-colors" %>
+      <div class="mb-5 flex items-center">
+        <%= f.check_box :remember_me, class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" %>
+        <%= f.label :remember_me, class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+      </div>
+
+      <div class="mb-5">
+        <button type="submit" class="w-full py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium text-base transition-colors">
+          Log in
+        </button>
+      </div>
     <% end %>
-    
+
     <div class="mt-6 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
         You don't have an account? <%= link_to "Sign up", new_user_registration_path, class: "text-primary-600 hover:text-primary-500" %>

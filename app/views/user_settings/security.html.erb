@@ -12,32 +12,32 @@
         <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
         Overview
       <% end %>
-      
+
       <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
         Profile
       <% end %>
-      
+
       <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
         Security
       <% end %>
-      
+
       <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
         Notifications
       <% end %>
-      
+
       <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
         Appearance
       <% end %>
-      
+
       <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
         Payment
       <% end %>
-      
+
       <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
         <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
         Support
@@ -49,25 +49,25 @@
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Change Password</h2>
-      
+
       <%= form_with url: user_settings_update_security_path, method: :patch, local: true, class: "space-y-6" do |form| %>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="md:col-span-2">
             <%= form.label :current_password, "Current Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
             <%= form.password_field :current_password, class: "form-input w-full rounded-lg", placeholder: "Enter your current password" %>
           </div>
-          
+
           <div>
             <%= form.label :password, "New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
             <%= form.password_field :user_password, class: "form-input w-full rounded-lg", placeholder: "Enter new password" %>
           </div>
-          
+
           <div>
             <%= form.label :password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
             <%= form.password_field :user_password_confirmation, class: "form-input w-full rounded-lg", placeholder: "Confirm new password" %>
           </div>
         </div>
-        
+
         <div class="flex justify-end">
           <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
           <%= form.submit "Update Password", class: "btn btn-primary" %>
@@ -75,7 +75,7 @@
       <% end %>
     </div>
   </div>
-  
+
   <%# Two-Factor Authentication %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
     <div class="p-6">
@@ -91,12 +91,12 @@
       </div>
     </div>
   </div>
-  
+
   <%# Login History %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Login History</h2>
-      
+
       <div class="overflow-x-auto">
         <table class="min-w-full bg-white dark:bg-gray-800">
           <thead>
@@ -144,21 +144,21 @@
       </div>
     </div>
   </div>
-  
+
   <%# Security Settings %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Additional Security Settings</h2>
-      
+
       <div class="space-y-4">
         <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
           <div>
             <h3 class="text-base font-medium text-gray-900 dark:text-white">Transaction PIN</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">Require PIN for all financial transactions</p>
           </div>
-          <button type="button" class="btn btn-primary-outline">Manage PIN</button>
+          <button type="button" class="btn btn-primary-outline" data-modal-target="pin-modal" data-action="click->modal#open">Manage PIN</button>
         </div>
-        
+
         <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
           <div>
             <h3 class="text-base font-medium text-gray-900 dark:text-white">Login Notifications</h3>
@@ -169,18 +169,22 @@
             <label for="login_alerts" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
           </div>
         </div>
-        
+
         <div class="flex items-center justify-between py-3">
           <div>
             <h3 class="text-base font-medium text-gray-900 dark:text-white">Trusted Devices</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">Manage devices that can access your account without verification</p>
           </div>
-          <button type="button" class="btn btn-primary-outline">Manage Devices</button>
+          <button type="button" class="btn btn-primary-outline" data-modal-target="devices-modal" data-action="click->modal#open">Manage Devices</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<%# Render the Modals %>
+<%= render 'shared/pin_modal' %>
+<%= render 'shared/devices_modal' %>
 
 <style>
   /* Custom toggle switch styles */
@@ -189,5 +193,36 @@
   }
   .toggle-checkbox:checked + .toggle-label {
     @apply bg-primary-600;
+  }
+
+  /* Animation classes for modals */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out forwards;
+  }
+
+  .animate-fade-out-down {
+    animation: fadeOutDown 0.3s ease-in forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOutDown {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(10px);
+    }
   }
 </style>

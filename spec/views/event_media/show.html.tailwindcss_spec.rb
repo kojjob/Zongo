@@ -1,10 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "event_media/show", type: :view do
+  let(:event) { create(:event) }
+
   before(:each) do
     assign(:event_medium, EventMedium.create!(
-      event: nil,
-      user: nil,
+      event: event,
       media_type: 2,
       title: "Title",
       description: "MyText",
@@ -15,8 +16,9 @@ RSpec.describe "event_media/show", type: :view do
 
   it "renders attributes in <p>" do
     render
-    expect(rendered).to match(//)
-    expect(rendered).to match(//)
+    # Event ID
+    expect(rendered).to match(/#{event.id}/)
+    # User ID has been removed
     expect(rendered).to match(/2/)
     expect(rendered).to match(/Title/)
     expect(rendered).to match(/MyText/)

@@ -11,16 +11,16 @@ module CalendarHelper
       sf: true,
       output: "xml"
     }
-    
+
     "#{base_url}?#{params.to_query}"
   end
-  
+
   # Generate Apple/iCal Calendar link
   def ical_calendar_link(event)
     base_url = event_url(event, format: :ics)
     base_url
   end
-  
+
   # Generate Outlook Calendar link
   def outlook_calendar_link(event)
     base_url = "https://outlook.live.com/calendar/0/deeplink/compose"
@@ -32,10 +32,10 @@ module CalendarHelper
       location: event.venue&.address.to_s,
       path: "/calendar/action/compose"
     }
-    
+
     "#{base_url}?#{params.to_query}"
   end
-  
+
   # Generate Yahoo Calendar link
   def yahoo_calendar_link(event)
     base_url = "https://calendar.yahoo.com/"
@@ -47,12 +47,12 @@ module CalendarHelper
       desc: event.description.to_s.truncate(500),
       in_loc: event.venue&.address.to_s
     }
-    
+
     "#{base_url}?#{params.to_query}"
   end
-  
+
   private
-  
+
   # Format datetime for Google Calendar (YYYYMMDDTHHMMSSZ)
   def format_datetime_for_google(datetime)
     datetime.utc.strftime("%Y%m%dT%H%M%SZ")

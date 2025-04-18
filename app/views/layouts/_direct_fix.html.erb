@@ -181,25 +181,65 @@
       // Find all dropdown controllers
       const dropdownElements = document.querySelectorAll('[data-controller*="dropdown"]');
 
-      dropdownElements.forEach(dropdown => {
+      // Create a map to store dropdown relationships
+      const dropdownMap = new Map();
+
+      // First pass: assign unique IDs and build the relationship map
+      dropdownElements.forEach((dropdown, index) => {
         // Find toggle button and menu
         const toggle = dropdown.querySelector('[data-action*="dropdown#toggle"]');
         const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
 
         if (toggle && menu) {
-          // Remove the original event listener if possible
-          const toggleClone = toggle.cloneNode(true);
-          toggle.parentNode.replaceChild(toggleClone, toggle);
+          // Assign a unique ID to each dropdown
+          const dropdownId = `dropdown-${index}-${Math.random().toString(36).substring(2, 8)}`;
+          dropdown.dataset.dropdownId = dropdownId;
+          toggle.dataset.dropdownId = dropdownId;
+          menu.dataset.dropdownId = dropdownId;
+          
+          // Store the relationship in our map
+          dropdownMap.set(dropdownId, { dropdown, toggle, menu });
+        }
+      });
 
-          // Add our direct toggle function with improved responsive behavior
-          toggleClone.addEventListener('click', function(e) {
+      // Second pass: set up event listeners with proper isolation
+      dropdownMap.forEach(({ dropdown, toggle, menu }, dropdownId) => {
+        // Remove the original event listener by cloning
+        const toggleClone = toggle.cloneNode(true);
+        toggle.parentNode.replaceChild(toggleClone, toggle);
+        
+        // Preserve the data attribute
+        toggleClone.dataset.dropdownId = dropdownId;
+
+        // Add our direct toggle function with improved responsive behavior
+        toggleClone.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          // Close all other dropdowns but not this one
+          dropdownMap.forEach((item, id) => {
+            if (id !== dropdownId && !item.menu.classList.contains('hidden')) {
+              hideDropdownMenu(item.menu);
+            }
+          });
+
+          // Toggle ONLY this specific menu with animation
+          if (menu.classList.contains('hidden')) {
+            showDropdownMenu(menu);
+          } else {
+            hideDropdownMenu(menu);
+          }
+        });
+
+        // Add touch events for better mobile support
+        toggleClone.addEventListener('touchend', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            // Close all other dropdowns
-            document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
-              if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
-                hideDropdownMenu(otherMenu);
+            // Close all other dropdowns but not this one
+            dropdownMap.forEach((item, id) => {
+              if (id !== dropdownId && !item.menu.classList.contains('hidden')) {
+                hideDropdownMenu(item.menu);
               }
             });
 
@@ -211,36 +251,16 @@
             }
           });
 
-          // Add touch events for better mobile support
-          toggleClone.addEventListener('touchend', function(e) {
-            e.preventDefault();
+        // Make all links in the dropdown responsive to touch
+        menu.querySelectorAll('a, button').forEach(element => {
+          // Clone to remove existing listeners
+          const elementClone = element.cloneNode(true);
+          element.parentNode.replaceChild(elementClone, element);
+
+          // Add touch event listener
+          elementClone.addEventListener('touchend', function(e) {
             e.stopPropagation();
-
-            // Close all other dropdowns
-            document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
-              if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
-                hideDropdownMenu(otherMenu);
-              }
-            });
-
-            // Toggle this menu with animation
-            if (menu.classList.contains('hidden')) {
-              showDropdownMenu(menu);
-            } else {
-              hideDropdownMenu(menu);
-            }
-          });
-
-          // Make all links in the dropdown responsive to touch
-          menu.querySelectorAll('a, button').forEach(element => {
-            // Clone to remove existing listeners
-            const elementClone = element.cloneNode(true);
-            element.parentNode.replaceChild(elementClone, element);
-
-            // Add touch event listener
-            elementClone.addEventListener('touchend', function(e) {
-              e.stopPropagation();
-              // Don't prevent default to allow navigation
+            // Don't prevent default to allow navigation
 
               // For mobile: add a slight delay to ensure the tap is registered
               if (window.innerWidth <= 640) {

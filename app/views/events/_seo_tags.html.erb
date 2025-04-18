@@ -3,24 +3,24 @@
   <%# Meta tags for single event %>
   <title><%= @event.title %> | Zongo Events</title>
   <meta name="description" content="<%= @event.short_description.truncate(160) %>">
-  
+
   <%# Open Graph tags for social sharing %>
   <meta property="og:title" content="<%= @event.title %>">
   <meta property="og:description" content="<%= @event.short_description.truncate(160) %>">
   <meta property="og:url" content="<%= event_url(@event) %>">
   <meta property="og:type" content="website">
-  <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
-    <meta property="og:image" content="<%= @event.event_media.first.url %>">
+  <% if @event.event_media.present? %>
+    <meta property="og:image" content="<%= @event.event_media.first.image_url %>">
   <% end %>
-  
+
   <%# Twitter Card tags %>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<%= @event.title %>">
   <meta name="twitter:description" content="<%= @event.short_description.truncate(160) %>">
-  <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
-    <meta name="twitter:image" content="<%= @event.event_media.first.url %>">
+  <% if @event.event_media.present? %>
+    <meta name="twitter:image" content="<%= @event.event_media.first.image_url %>">
   <% end %>
-  
+
   <%# Structured data for SEO %>
   <script type="application/ld+json">
     {
@@ -30,8 +30,8 @@
       "description": "<%= @event.short_description %>",
       "startDate": "<%= @event.start_time.iso8601 %>",
       "endDate": "<%= @event.end_time.iso8601 %>",
-      <% if @event.event_media.present? && @event.event_media.first&.url.present? %>
-      "image": "<%= @event.event_media.first.url %>",
+      <% if @event.event_media.present? %>
+      "image": "<%= @event.event_media.first.image_url %>",
       <% end %>
       <% if @event.venue.present? %>
       "location": {
@@ -67,13 +67,13 @@
   <%# Meta tags for events index page %>
   <title>Events | Zongo - Discover Events Near You</title>
   <meta name="description" content="Discover the best events in your area. Find concerts, workshops, meetups, and more on Zongo Events.">
-  
+
   <%# Open Graph tags %>
   <meta property="og:title" content="Events | Zongo - Discover Events Near You">
   <meta property="og:description" content="Discover the best events in your area. Find concerts, workshops, meetups, and more on Zongo Events.">
   <meta property="og:url" content="<%= events_url %>">
   <meta property="og:type" content="website">
-  
+
   <%# Twitter Card tags %>
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Events | Zongo - Discover Events Near You">

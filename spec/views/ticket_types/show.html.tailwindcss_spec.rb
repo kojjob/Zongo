@@ -1,9 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe "ticket_types/show", type: :view do
+  let(:event) { create(:event) }
+
+  let(:event) { create(:event) }
+
+  let(:event) { create(:event) }
+
   before(:each) do
     assign(:ticket_type, TicketType.create!(
-      event: nil,
+      event: event,
       name: "Name",
       description: "MyText",
       price: "9.99",
@@ -16,6 +22,8 @@ RSpec.describe "ticket_types/show", type: :view do
 
   it "renders attributes in <p>" do
     render
+    # Event ID
+    expect(rendered).to match(/#{event.id}/)
     expect(rendered).to match(//)
     expect(rendered).to match(/Name/)
     expect(rendered).to match(/MyText/)

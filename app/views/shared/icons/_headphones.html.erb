@@ -1,0 +1,56 @@
+<% 
+  # Default values
+  status ||= 'default'
+  size ||= 'medium'
+  color ||= 'currentColor'
+  
+  # CSS classes for different states
+  icon_classes = {
+    default: 'text-gray-500',
+    active: 'text-green-500',
+    muted: 'text-red-500',
+    charging: 'text-blue-500',
+    low_battery: 'text-yellow-500'
+  }
+  
+  # Size mappings
+  size_classes = {
+    small: 'w-4 h-4',
+    medium: 'w-6 h-6',
+    large: 'w-8 h-8'
+  }
+%>
+
+<div class="headphones-icon <%= icon_classes[status.to_sym] %> <%= size_classes[size.to_sym] %>">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="<%= color %>">
+    <% case status %>
+    <% when 'active' %>
+      <%# Active headphones icon with a slight vibration/sound wave effect %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+      <%# Optional sound wave lines %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10l3-1" opacity="0.6" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 12l5-2" opacity="0.4" />
+    
+    <% when 'muted' %>
+      <%# Muted headphones with a slash or cross %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+      <line x1="3" y1="21" x2="21" y2="3" stroke="currentColor" stroke-width="2" />
+    
+    <% when 'charging' %>
+      <%# Headphones with a battery/charging indicator %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+      <%# Battery bolt %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10l-3 5h4l-3 5" opacity="0.7" />
+    
+    <% when 'low_battery' %>
+      <%# Low battery indicator %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+      <%# Battery warning %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01" />
+    
+    <% else %>
+      <%# Default headphones icon %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+    <% end %>
+  </svg>
+</div>

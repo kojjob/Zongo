@@ -1,5 +1,5 @@
 <%# New Transaction Page %>
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="transaction-form">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="transaction-form pin-verification" data-pin-verification-required-value="<%= params[:requires_pin] == 'true' %>" data-pin-verification-amount-value="0">
   <div class="flex items-center mb-6">
     <a href="<%= wallet_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
       <%= icon "arrow-left", class: "w-5 h-5" %>
@@ -20,23 +20,25 @@
 
   <%# Transaction Form Card %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-    <%# Top Tabs for Transaction Types %>
+    <%# Top Tabs for Transaction Types - Enhanced Visual Design %>
     <div class="flex border-b border-gray-200 dark:border-gray-700">
-      <% 
+      <%
         transaction_types = [
-          { id: 'deposit', label: 'Deposit', icon: 'money-in' },
-          { id: 'withdrawal', label: 'Withdraw', icon: 'money-out' },
-          { id: 'transfer', label: 'Transfer', icon: 'transfer' }
+          { id: 'deposit', label: 'Deposit', icon: 'money-in', color: 'green' },
+          { id: 'withdrawal', label: 'Withdraw', icon: 'money-out', color: 'blue' },
+          { id: 'transfer', label: 'Transfer', icon: 'transfer', color: 'purple' }
         ]
       %>
       <% transaction_types.each do |type| %>
-        <a 
-          href="<%= new_transaction_wallet_path(type: type[:id]) %>" 
-          class="flex-1 px-4 py-3 text-center <%= @transaction_type == type[:id] ? 'bg-primary-50 dark:bg-primary-900/20 border-b-2 border-primary-500 dark:border-primary-400' : 'hover:bg-gray-50 dark:hover:bg-gray-700' %>"
+        <a
+          href="<%= new_transaction_wallet_path(type: type[:id]) %>"
+          class="flex-1 px-4 py-4 text-center <%= @transaction_type == type[:id] ? "bg-#{type[:color]}-50 dark:bg-#{type[:color]}-900/20 border-b-3 border-#{type[:color]}-500 dark:border-#{type[:color]}-400" : 'hover:bg-gray-50 dark:hover:bg-gray-700' %>"
         >
-          <div class="flex items-center justify-center">
-            <%= icon type[:icon], class: "w-5 h-5 mr-2 #{@transaction_type == type[:id] ? 'text-primary-500 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400'}" %>
-            <span class="<%= @transaction_type == type[:id] ? 'text-primary-600 dark:text-primary-400 font-medium' : 'text-gray-600 dark:text-gray-300' %>">
+          <div class="flex flex-col items-center justify-center">
+            <div class="<%= @transaction_type == type[:id] ? "bg-#{type[:color]}-100 dark:bg-#{type[:color]}-900/40 text-#{type[:color]}-600 dark:text-#{type[:color]}-400" : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400' %> rounded-full p-3 mb-2">
+              <%= icon type[:icon], class: "w-6 h-6" %>
+            </div>
+            <span class="<%= @transaction_type == type[:id] ? "text-#{type[:color]}-600 dark:text-#{type[:color]}-400 font-medium" : 'text-gray-600 dark:text-gray-300' %>">
               <%= type[:label] %>
             </span>
           </div>
@@ -48,123 +50,257 @@
     <div class="p-6">
       <% case @transaction_type %>
       <% when 'deposit' %>
-        <%= form_with url: deposit_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+        <%= form_with url: deposit_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm", controller: "transaction-form", transaction_type: "deposit" } do |f| %>
           <div>
-            <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (<%= @wallet.currency %>)</label>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
+            <label for="amount" class="block text-lg font-bold text-gray-800 dark:text-gray-200 mb-3 flex items-center">
+              <%= icon "cash", class: "w-5 h-5 mr-2 text-green-600 dark:text-green-400" %>
+              Amount (<%= @wallet.currency %>)
+            </label>
+
+            <div class="relative rounded-xl shadow-md bg-white dark:bg-gray-800 border-2 border-green-100 dark:border-green-900/30 overflow-hidden">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span class="text-green-600 dark:text-green-400 text-2xl font-bold"><%= @wallet.currency_symbol %></span>
               </div>
-              <%= f.number_field :amount, step: "0.01", min: "1", required: true, 
-                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
-                  placeholder: "0.00", 
+              <%= f.number_field :amount, step: "0.01", min: "1", required: true,
+                  class: "block w-full pl-10 pr-12 py-5 text-3xl font-extrabold text-gray-900 dark:text-white border-0 focus:ring-green-500 focus:border-green-500",
+                  placeholder: "0.00",
+                  autocomplete: "off",
+                  id: "amount",
                   data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
             </div>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Minimum amount: <%= @wallet.currency_symbol %>1.00</p>
+
+            <div class="mt-3 flex items-center bg-green-50 dark:bg-green-900/10 px-4 py-2 rounded-lg border border-green-100 dark:border-green-800/30">
+              <%= icon "information-circle", class: "w-5 h-5 text-green-600 dark:text-green-400 mr-2 flex-shrink-0" %>
+              <p class="text-sm text-green-800 dark:text-green-300">Minimum deposit amount: <strong><%= @wallet.currency_symbol %>1.00</strong></p>
+            </div>
+
+            <div class="mt-5">
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Quick amounts:</p>
+              <div class="grid grid-cols-3 gap-3">
+                <button type="button"
+                        class="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl py-3 text-green-700 dark:text-green-300 font-bold border border-green-200 dark:border-green-800/30 transition-colors flex items-center justify-center"
+                        onclick="document.getElementById('amount').value='50'; document.getElementById('amount').dispatchEvent(new Event('input'));">
+                  <span class="text-xl">+50</span>
+                </button>
+                <button type="button"
+                        class="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl py-3 text-green-700 dark:text-green-300 font-bold border border-green-200 dark:border-green-800/30 transition-colors flex items-center justify-center"
+                        onclick="document.getElementById('amount').value='100'; document.getElementById('amount').dispatchEvent(new Event('input'));">
+                  <span class="text-xl">+100</span>
+                </button>
+                <button type="button"
+                        class="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 rounded-xl py-3 text-green-700 dark:text-green-300 font-bold border border-green-200 dark:border-green-800/30 transition-colors flex items-center justify-center"
+                        onclick="document.getElementById('amount').value='200'; document.getElementById('amount').dispatchEvent(new Event('input'));">
+                  <span class="text-xl">+200</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <div>
-            <label for="payment_method_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Payment Method</label>
-            <div class="mt-1">
+            <label for="payment_method_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
+            <div>
               <% if @payment_methods.empty? %>
-                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-md">
-                  <div class="flex items-center">
-                    <%= icon "alert", class: "w-5 h-5 text-yellow-500 mr-2" %>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">You don't have any payment methods set up.</p>
-                  </div>
-                  <div class="mt-3">
-                    <a href="<%= new_payment_method_path(return_to: request.path) %>" class="btn btn-primary btn-sm">
+                <div class="p-6 bg-gray-50 dark:bg-gray-700 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-center">
+                  <div class="flex flex-col items-center">
+                    <%= icon "credit-card", class: "w-12 h-12 text-gray-400 dark:text-gray-500 mb-3" %>
+                    <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">No payment methods</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">You need to add a payment method to make a deposit</p>
+                    <a href="<%= new_payment_method_path(return_to: request.path) %>" class="btn btn-primary">
                       <%= icon "plus", class: "w-4 h-4 mr-1" %>
                       Add Payment Method
                     </a>
                   </div>
                 </div>
               <% else %>
-                <div class="space-y-2" data-transaction-form-target="methodsContainer">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" data-transaction-form-target="methodsContainer">
                   <% @payment_methods.each do |method| %>
-                    <div class="relative flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md hover:border-primary-400 dark:hover:border-primary-500 cursor-pointer"
+                    <div class="relative border-2 <%= method.default? ? 'border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-900/10' : 'border-gray-200 dark:border-gray-700' %> rounded-lg p-4 hover:border-green-400 dark:hover:border-green-500 cursor-pointer transition-all duration-200"
                          data-action="click->transaction-form#selectMethod">
-                      <%= f.radio_button :payment_method_id, method.id, 
-                          class: "absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary-600 dark:text-primary-500 focus:ring-primary-500", 
+                      <%= f.radio_button :payment_method_id, method.id,
+                          class: "sr-only",
                           required: true,
                           data: { transaction_form_target: "methodRadio" } %>
-                      <div class="ml-7 flex items-center">
-                        <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-600 dark:text-gray-400">
-                          <%= icon method.icon_name, class: "h-5 w-5" %>
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-14 w-14 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm flex items-center justify-center text-gray-600 dark:text-gray-400">
+                          <%= icon method.icon_name, class: "h-7 w-7" %>
                         </div>
-                        <div class="ml-3">
-                          <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= method.description %></h4>
+                        <div class="ml-4 flex-1">
+                          <h4 class="text-base font-medium text-gray-900 dark:text-white"><%= method.description %></h4>
+                          <p class="text-sm text-gray-600 dark:text-gray-400"><%= method.masked_account_number %></p>
                           <% if method.last_used_at %>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">Last used <%= time_ago_in_words(method.last_used_at) %> ago</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Last used <%= time_ago_in_words(method.last_used_at) %> ago</p>
                           <% end %>
+                        </div>
+                        <div class="ml-2">
+                          <div class="h-5 w-5 border-2 border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center payment-method-radio">
+                            <div class="h-3 w-3 bg-green-500 dark:bg-green-400 rounded-full hidden payment-method-radio-checked"></div>
+                          </div>
                         </div>
                       </div>
                       <% if method.default? %>
-                        <span class="absolute right-4 top-4 px-2 py-1 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 text-xs font-medium rounded">
+                        <span class="absolute right-3 top-3 px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-xs font-medium rounded-full">
                           Default
                         </span>
                       <% end %>
                     </div>
                   <% end %>
-                </div>
-                <div class="mt-4">
-                  <a href="<%= new_payment_method_path(return_to: request.path) %>" class="text-primary-600 dark:text-primary-400 text-sm font-medium hover:underline flex items-center">
-                    <%= icon "plus", class: "w-4 h-4 mr-1" %>
-                    Add New Payment Method
+
+                  <a href="<%= new_payment_method_path(return_to: request.path) %>" class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors duration-200 h-full min-h-[120px]">
+                    <%= icon "plus-circle", class: "w-10 h-10 mb-2" %>
+                    <span class="text-sm font-medium">Add New Payment Method</span>
                   </a>
                 </div>
               <% end %>
             </div>
           </div>
 
+          <script>
+            // Add visual feedback for payment method selection
+            document.addEventListener('DOMContentLoaded', function() {
+              const methodContainers = document.querySelectorAll('[data-transaction-form-target="methodsContainer"] > div');
+              const radioButtons = document.querySelectorAll('[data-transaction-form-target="methodRadio"]');
+
+              function updateSelectedState() {
+                methodContainers.forEach((container, index) => {
+                  const radio = radioButtons[index];
+                  const radioVisual = container.querySelector('.payment-method-radio');
+                  const radioChecked = container.querySelector('.payment-method-radio-checked');
+
+                  if (radio && radio.checked) {
+                    container.classList.add('border-green-500', 'dark:border-green-600', 'bg-green-50', 'dark:bg-green-900/10');
+                    container.classList.remove('border-gray-200', 'dark:border-gray-700');
+                    if (radioVisual) radioVisual.classList.add('border-green-500', 'dark:border-green-600');
+                    if (radioVisual) radioVisual.classList.remove('border-gray-300', 'dark:border-gray-600');
+                    if (radioChecked) radioChecked.classList.remove('hidden');
+                  } else {
+                    container.classList.remove('border-green-500', 'dark:border-green-600', 'bg-green-50', 'dark:bg-green-900/10');
+                    container.classList.add('border-gray-200', 'dark:border-gray-700');
+                    if (radioVisual) radioVisual.classList.remove('border-green-500', 'dark:border-green-600');
+                    if (radioVisual) radioVisual.classList.add('border-gray-300', 'dark:border-gray-600');
+                    if (radioChecked) radioChecked.classList.add('hidden');
+                  }
+                });
+              }
+
+              // Initial state
+              updateSelectedState();
+
+              // Update on change
+              radioButtons.forEach(radio => {
+                radio.addEventListener('change', updateSelectedState);
+              });
+
+              // Make entire container clickable
+              methodContainers.forEach((container, index) => {
+                container.addEventListener('click', function() {
+                  if (radioButtons[index]) {
+                    radioButtons[index].checked = true;
+                    updateSelectedState();
+                  }
+                });
+              });
+            });
+          </script>
+
           <div>
-            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description (Optional)</label>
-            <div class="mt-1">
-              <%= f.text_area :description, rows: 2, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "Add a note for this deposit" %>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Description (Optional)</label>
+            <div>
+              <%= f.text_area :description, rows: 2, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-green-500 focus:border-green-500", placeholder: "Add a note for this deposit" %>
+            </div>
+            <div class="mt-2 flex items-center">
+              <%= icon "information-circle", class: "w-4 h-4 text-gray-400 mr-1" %>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Add a note to help you remember this transaction</p>
             </div>
           </div>
 
-          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
-              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
-              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+          <div class="bg-gradient-to-r from-green-500/10 to-emerald-500/10 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800/30 shadow-sm relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -mt-10 -mr-10"></div>
+            <div class="absolute bottom-0 left-0 w-24 h-24 bg-emerald-500/5 rounded-full -mb-8 -ml-8"></div>
+
+            <div class="relative">
+              <h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-4 flex items-center">
+                <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
+                  <%= icon "receipt-tax", class: "w-5 h-5 text-green-600 dark:text-green-400" %>
+                </div>
+                Transaction Summary
+              </h3>
+
+              <div class="space-y-3 ml-2">
+                <div class="flex justify-between items-center bg-white/50 dark:bg-black/20 p-3 rounded-lg">
+                  <span class="text-base text-gray-700 dark:text-gray-300 flex items-center">
+                    <%= icon "cash", class: "w-5 h-5 mr-2 text-green-600 dark:text-green-400" %>
+                    Amount:
+                  </span>
+                  <span class="text-base font-bold text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+                </div>
+
+                <div class="flex justify-between items-center bg-white/50 dark:bg-black/20 p-3 rounded-lg">
+                  <span class="text-base text-gray-700 dark:text-gray-300 flex items-center">
+                    <%= icon "currency-dollar", class: "w-5 h-5 mr-2 text-green-600 dark:text-green-400" %>
+                    Fee:
+                  </span>
+                  <span class="text-base font-bold text-gray-900 dark:text-white" data-transaction-form-target="summaryFee"><%= @wallet.currency_symbol %>0.00</span>
+                </div>
+
+                <div class="flex justify-between items-center p-4 mt-3 bg-green-100 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-800/30">
+                  <span class="text-lg font-bold text-green-800 dark:text-green-300 flex items-center">
+                    <%= icon "check-circle", class: "w-6 h-6 mr-2" %>
+                    Total:
+                  </span>
+                  <span class="text-xl font-extrabold text-green-800 dark:text-green-300" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="flex justify-end">
-            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
-            <%= f.submit "Deposit Funds", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          <div class="pt-6">
+            <div class="flex flex-col-reverse sm:flex-row sm:justify-between items-center gap-4">
+              <a href="<%= wallet_path %>" class="w-full sm:w-auto flex items-center justify-center px-6 py-3 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <%= icon "x", class: "w-5 h-5 mr-2" %>
+                Cancel
+              </a>
+
+              <button type="submit" class="w-full sm:w-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold px-8 py-4 rounded-xl shadow-lg flex items-center justify-center transition-all transform hover:-translate-y-1 hover:shadow-xl" data-transaction-form-target="submitButton">
+                <%= icon "money-in", class: "w-6 h-6 mr-3" %>
+                <span class="text-lg">Deposit Funds</span>
+              </button>
+            </div>
           </div>
         <% end %>
       <% when 'withdrawal' %>
-        <%= form_with url: withdraw_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+        <%= form_with url: withdraw_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm", controller: "transaction-form", transaction_type: "withdrawal" } do |f| %>
           <div>
             <div class="flex justify-between items-center mb-1">
-              <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (<%= @wallet.currency %>)</label>
+              <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount (<%= @wallet.currency %>)</label>
               <span class="text-sm text-gray-500 dark:text-gray-400">Available: <%= @wallet.formatted_balance %></span>
             </div>
-            <div class="mt-1 relative rounded-md shadow-sm">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
+            <div class="relative rounded-lg shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 text-lg font-medium"><%= @wallet.currency_symbol %></span>
               </div>
-              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true, 
-                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true,
+                  class: "block w-full pl-10 pr-12 py-4 text-2xl font-bold text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-lg focus:ring-blue-500 focus:border-blue-500",
                   placeholder: "0.00",
-                  data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
-              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <button type="button" class="text-primary-600 dark:text-primary-400 text-xs font-medium" data-action="transaction-form#setMaxAmount">MAX</button>
+                  autocomplete: "off",
+                  data: { transaction_form_target: "amount", pin_verification_target: "amount", action: "input->transaction-form#updateTotal input->pin-verification#updateAmount" } %>
+              <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+                <button type="button" class="text-blue-600 dark:text-blue-400 text-sm font-medium bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded" data-action="transaction-form#setMaxAmount">MAX</button>
               </div>
             </div>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Daily limit: <%= @wallet.currency_symbol %><%= @wallet.daily_limit %></p>
+            <div class="mt-2 flex items-center">
+              <%= icon "information-circle", class: "w-4 h-4 text-gray-400 mr-1" %>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Daily limit: <%= @wallet.currency_symbol %><%= @wallet.daily_limit %></p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mt-3">
+              <button type="button" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md py-2 text-gray-700 dark:text-gray-300 font-medium transition-colors"
+                      onclick="document.getElementById('amount').value='50'; document.getElementById('amount').dispatchEvent(new Event('input'));">+50</button>
+              <button type="button" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md py-2 text-gray-700 dark:text-gray-300 font-medium transition-colors"
+                      onclick="document.getElementById('amount').value='100'; document.getElementById('amount').dispatchEvent(new Event('input'));">+100</button>
+              <button type="button" class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md py-2 text-gray-700 dark:text-gray-300 font-medium transition-colors"
+                      onclick="document.getElementById('amount').value='200'; document.getElementById('amount').dispatchEvent(new Event('input'));">+200</button>
+            </div>
           </div>
 
           <div>
@@ -188,8 +324,8 @@
                   <% @payment_methods.each do |method| %>
                     <div class="relative flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md hover:border-primary-400 dark:hover:border-primary-500 cursor-pointer"
                          data-action="click->transaction-form#selectMethod">
-                      <%= f.radio_button :payment_method_id, method.id, 
-                          class: "absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary-600 dark:text-primary-500 focus:ring-primary-500", 
+                      <%= f.radio_button :payment_method_id, method.id,
+                          class: "absolute left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 text-primary-600 dark:text-primary-500 focus:ring-primary-500",
                           required: true,
                           data: { transaction_form_target: "methodRadio" } %>
                       <div class="ml-7 flex items-center">
@@ -228,34 +364,68 @@
             </div>
           </div>
 
-          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
-              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
-              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+          <div class="bg-blue-50 dark:bg-blue-900/10 p-5 rounded-lg border border-blue-100 dark:border-blue-800">
+            <h3 class="text-base font-medium text-blue-800 dark:text-blue-300 mb-3 flex items-center">
+              <%= icon "receipt-tax", class: "w-5 h-5 mr-2" %>
+              Transaction Summary
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Amount:</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Fee:</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="summaryFee"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
+              <div class="flex justify-between items-center pt-2 border-t border-blue-200 dark:border-blue-800 mt-2">
+                <span class="text-base font-medium text-blue-800 dark:text-blue-300">Total:</span>
+                <span class="text-base font-medium text-blue-800 dark:text-blue-300" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
             </div>
           </div>
 
-          <div class="flex justify-end">
-            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
-            <%= f.submit "Withdraw Funds", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          <div id="pin-verification-container" class="mb-4 hidden" data-pin-verification-target="pinContainer">
+            <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <%= icon "shield", class: "h-5 w-5 text-yellow-600 dark:text-yellow-500" %>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-400">PIN Verification Required</h3>
+                  <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                    <p>This transaction requires your security PIN for authorization.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <label for="pin" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Enter Your PIN</label>
+            <div class="mt-1">
+              <%= f.password_field :pin, maxlength: 6,
+                  class: "block w-full py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
+                  placeholder: "Enter your 4-6 digit PIN",
+                  inputmode: "numeric",
+                  data: {
+                    pin_verification_target: "pinInput",
+                    action: "input->pin-verification#validatePin"
+                  } %>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">For your security, this withdrawal requires PIN verification.</p>
+          </div>
+
+          <div class="pt-4">
+            <a href="<%= wallet_path %>" class="btn btn-outline w-full mb-3">Cancel</a>
+            <%= f.submit "Withdraw Funds", class: "btn btn-primary w-full py-3 text-base bg-blue-600 hover:bg-blue-700 focus:ring-blue-500", data: { transaction_form_target: "submitButton", pin_verification_target: "submitButton" } %>
           </div>
         <% end %>
       <% when 'transfer' %>
-        <%= form_with url: transfer_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm" } do |f| %>
+        <%= form_with url: transfer_wallet_path, method: :post, class: "space-y-6", data: { turbo: false, action: "transaction-form#validateForm", controller: "transaction-form", transaction_type: "transfer" } do |f| %>
           <div>
             <label for="recipient" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Recipient</label>
             <div class="mt-1 relative rounded-md shadow-sm">
-              <%= f.text_field :recipient, required: true, 
-                  class: "block w-full py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+              <%= f.text_field :recipient, required: true,
+                  class: "block w-full py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
                   placeholder: "Phone, username, or email",
                   data: { transaction_form_target: "recipient" } %>
             </div>
@@ -267,7 +437,7 @@
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recent Recipients</label>
               <div class="flex flex-wrap gap-2" data-transaction-form-target="recentRecipients">
                 <% @recent_recipients.each do |recipient| %>
-                  <button type="button" 
+                  <button type="button"
                     class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                     data-recipient="<%= recipient.phone %>"
                     data-action="transaction-form#selectRecipient">
@@ -290,8 +460,8 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="text-gray-500 dark:text-gray-400 sm:text-sm"><%= @wallet.currency_symbol %></span>
               </div>
-              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true, 
-                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", 
+              <%= f.number_field :amount, step: "0.01", min: "1", max: @wallet.balance, required: true,
+                  class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
                   placeholder: "0.00",
                   data: { transaction_form_target: "amount", action: "input->transaction-form#updateTotal" } %>
               <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -308,25 +478,59 @@
             </div>
           </div>
 
-          <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Transaction Summary</h4>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
-              <span class="text-sm text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
-              <span class="text-sm text-gray-900 dark:text-white"><%= @wallet.currency_symbol %>0.00</span>
-            </div>
-            <div class="flex justify-between py-1 border-t border-gray-200 dark:border-gray-600 mt-1 pt-2">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+          <div class="bg-purple-50 dark:bg-purple-900/10 p-5 rounded-lg border border-purple-100 dark:border-purple-800">
+            <h3 class="text-base font-medium text-purple-800 dark:text-purple-300 mb-3 flex items-center">
+              <%= icon "receipt-tax", class: "w-5 h-5 mr-2" %>
+              Transaction Summary
+            </h3>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Amount:</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="displayAmount"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Fee:</span>
+                <span class="text-sm font-medium text-gray-900 dark:text-white" data-transaction-form-target="summaryFee"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
+              <div class="flex justify-between items-center pt-2 border-t border-purple-200 dark:border-purple-800 mt-2">
+                <span class="text-base font-medium text-purple-800 dark:text-purple-300">Total:</span>
+                <span class="text-base font-medium text-purple-800 dark:text-purple-300" data-transaction-form-target="displayTotal"><%= @wallet.currency_symbol %>0.00</span>
+              </div>
             </div>
           </div>
 
-          <div class="flex justify-end">
-            <a href="<%= wallet_path %>" class="btn btn-secondary mr-3">Cancel</a>
-            <%= f.submit "Send Money", class: "btn btn-primary", data: { transaction_form_target: "submitButton" } %>
+          <div id="pin-verification-container" class="mb-4 hidden" data-pin-verification-target="pinContainer">
+            <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <%= icon "shield", class: "h-5 w-5 text-yellow-600 dark:text-yellow-500" %>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-400">PIN Verification Required</h3>
+                  <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+                    <p>This transaction requires your security PIN for authorization.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <label for="pin" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Enter Your PIN</label>
+            <div class="mt-1">
+              <%= f.password_field :pin, maxlength: 6,
+                  class: "block w-full py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500",
+                  placeholder: "Enter your 4-6 digit PIN",
+                  inputmode: "numeric",
+                  data: {
+                    pin_verification_target: "pinInput",
+                    action: "input->pin-verification#validatePin"
+                  } %>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">For your security, transfers require PIN verification.</p>
+          </div>
+
+          <div class="pt-4">
+            <a href="<%= wallet_path %>" class="btn btn-outline w-full mb-3">Cancel</a>
+            <%= f.submit "Send Money", class: "btn btn-primary w-full py-3 text-base bg-purple-600 hover:bg-purple-700 focus:ring-purple-500", data: { transaction_form_target: "submitButton", pin_verification_target: "submitButton" } %>
           </div>
         <% end %>
       <% end %>

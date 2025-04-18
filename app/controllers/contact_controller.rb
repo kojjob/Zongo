@@ -6,6 +6,9 @@ class ContactController < ApplicationController
   def submit
     @contact = ContactSubmission.new(contact_params)
 
+    # Set terms_accepted_at if terms is true
+    @contact.terms_accepted_at = Time.current if @contact.terms?
+
     if @contact.save
       # Success response
       flash[:notice] = "Thank you for your message! We'll respond shortly."

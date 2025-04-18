@@ -36,8 +36,8 @@ end
 # Find a user to be the organizer
 puts "Finding or creating user..."
 user = User.first_or_create!(
-  email: "admin@example.com", 
-  password: "password123", 
+  email: "admin@example.com",
+  password: "password123",
   name: "Admin User"
 )
 
@@ -115,15 +115,15 @@ events_data.each do |event_data|
     e.is_featured = event_data[:is_featured] || false
     e.organizer = user
   end
-  
+
   # Create some placeholder event media
   unless event.event_media.exists?
     event.event_media.create!(
-      url: "/assets/events/#{['event1', 'event2', 'event3', 'festival', 'concert'].sample}.jpg",
+      url: "/assets/events/#{[ 'event1', 'event2', 'event3', 'festival', 'concert' ].sample}.jpg",
       media_type: "image"
     )
   end
-  
+
   # Create some attendances if needed
   if event.attendances.count < 5
     5.times do
@@ -133,7 +133,7 @@ events_data.each do |event_data|
         password: "password123",
         name: "Attendee #{rand(1000)}"
       )
-      
+
       # Make them attend if they're not already attending
       unless event.attendances.exists?(user_id: attendee.id)
         event.attendances.create!(user: attendee)

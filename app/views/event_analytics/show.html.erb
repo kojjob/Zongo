@@ -270,7 +270,7 @@
                     <div class="flex items-center">
                       <div class="flex-shrink-0 h-10 w-10 rounded-md bg-gray-200 dark:bg-gray-700 overflow-hidden">
                         <% if event.event_media.present? %>
-                          <img src="<%= event.event_media.first.url %>" alt="Event image" class="h-full w-full object-cover">
+                          <img src="<%= event.event_media.first.image_url %>" alt="Event image" class="h-full w-full object-cover">
                         <% end %>
                       </div>
                       <div class="ml-4">
@@ -295,9 +295,9 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <% conversion = event.views_count > 0 ? (event.attendances.count.to_f / event.views_count * 100).round(1) : 0 %>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      <%= conversion >= 10 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
-                        (conversion >= 5 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                      <%= conversion >= 10 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                        (conversion >= 5 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
                         'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300') %>">
                       <%= number_to_percentage(conversion, precision: 1) %>
                     </span>
@@ -321,18 +321,18 @@
     const isDarkMode = document.documentElement.classList.contains('dark');
     const textColor = isDarkMode ? '#9ca3af' : '#4b5563';
     const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
-    
+
     // Common chart options
     Chart.defaults.color = textColor;
     Chart.defaults.borderColor = gridColor;
-    
+
     // Views chart
     const viewsCanvas = document.getElementById('views-chart');
     if (viewsCanvas) {
       const viewsData = <%= raw @views_by_date.to_json %>;
       const dates = Object.keys(viewsData).sort();
       const viewCounts = dates.map(date => viewsData[date] || 0);
-      
+
       new Chart(viewsCanvas, {
         type: 'line',
         data: {
@@ -372,20 +372,20 @@
         }
       });
     }
-    
+
     // Attendance chart
     const attendanceCanvas = document.getElementById('attendance-chart');
     if (attendanceCanvas) {
       const attendanceData = <%= raw @attendance_by_date.to_json %>;
       const attendanceDates = Object.keys(attendanceData).sort();
-      
+
       // Calculate cumulative attendance
       let cumulative = 0;
       const cumulativeData = attendanceDates.map(date => {
         cumulative += attendanceData[date] || 0;
         return cumulative;
       });
-      
+
       new Chart(attendanceCanvas, {
         type: 'line',
         data: {
@@ -425,14 +425,14 @@
         }
       });
     }
-    
+
     // Popular hours chart
     const hoursCanvas = document.getElementById('hours-chart');
     if (hoursCanvas) {
       const hoursData = <%= raw @popular_hours.to_json %>;
       const hours = Array.from({ length: 24 }, (_, i) => i);
       const hourCounts = hours.map(hour => hoursData[hour] || 0);
-      
+
       new Chart(hoursCanvas, {
         type: 'bar',
         data: {
@@ -469,14 +469,14 @@
         }
       });
     }
-    
+
     // Devices chart
     const devicesCanvas = document.getElementById('devices-chart');
     if (devicesCanvas) {
       const deviceData = <%= raw @device_breakdown.to_json %>;
       const deviceLabels = Object.keys(deviceData);
       const deviceCounts = deviceLabels.map(label => deviceData[label]);
-      
+
       new Chart(devicesCanvas, {
         type: 'doughnut',
         data: {
@@ -504,14 +504,14 @@
         }
       });
     }
-    
+
     // Sources chart
     const sourcesCanvas = document.getElementById('sources-chart');
     if (sourcesCanvas) {
       const sourceData = <%= raw @traffic_sources.to_json %>;
       const sourceLabels = Object.keys(sourceData);
       const sourceCounts = sourceLabels.map(label => sourceData[label]);
-      
+
       new Chart(sourcesCanvas, {
         type: 'pie',
         data: {

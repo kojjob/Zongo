@@ -1,0 +1,38 @@
+/**
+ * Search Position Fix
+ * Overrides the enhanced_search.css styles for balanced spacing
+ */
+
+/* Override the search bar positioning with a small gap */
+#search {
+  margin-top: 10px !important; /* Small gap instead of 64px margin */
+  position: relative;
+  z-index: 40;
+}
+
+/* Override the main content padding with a balanced value */
+.main-content {
+  padding-top: 30px !important; /* Balanced spacing instead of 120px padding */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  #search {
+    margin-top: 8px !important; /* Slightly smaller gap for mobile */
+  }
+
+  .main-content {
+    padding-top: 25px !important; /* Slightly smaller for mobile */
+  }
+}
+
+/* Add a small padding to the top of the first element in the main content */
+.main-content > *:first-child {
+  padding-top: 0; /* No additional padding needed */
+}
+
+/* Ensure the search bar is properly positioned */
+.search-bar-container {
+  position: relative;
+  z-index: 40;
+}

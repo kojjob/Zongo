@@ -6,12 +6,12 @@ class AddAnalyticsFieldsToEventViews < ActiveRecord::Migration[8.0]
       unless column_exists?(:event_views, :referer) || column_exists?(:event_views, :referrer)
         add_column :event_views, :referer, :string
       end
-      
+
       unless column_exists?(:event_views, :viewed_at)
         add_column :event_views, :viewed_at, :datetime, default: -> { 'CURRENT_TIMESTAMP' }
       end
     end
-    
+
     # Make sure views_count exists on events table
     unless column_exists?(:events, :views_count)
       # Check if event_views_count exists instead

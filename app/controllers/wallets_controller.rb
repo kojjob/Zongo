@@ -51,10 +51,13 @@ class WalletsController < ApplicationController
       html.html_safe
     end
   end
+
   # Include Pagy for pagination
   before_action :authenticate_user!
-  before_action :set_wallet, only: [:show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions]
-  before_action :ensure_wallet_ownership, only: [:show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions]
+  before_action :set_wallet, only: [ :show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions ]
+  before_action :ensure_wallet_ownership, only: [ :show, :edit, :update, :new_transaction, :deposit, :withdraw, :transfer, :transactions, :transaction_details, :refresh_balance, :recent_transactions ]
+  before_action :check_account_security, only: [ :deposit, :withdraw, :transfer ]
+  before_action :verify_pin, only: [ :withdraw, :transfer ], if: :requires_pin_verification?
 
   # Dashboard page showing wallet overview
   def show
@@ -75,12 +78,18 @@ class WalletsController < ApplicationController
 
     # Get active payment methods for quick actions
     @payment_methods = current_user.payment_methods.active_methods.verified_methods.order(default: :desc)
+
+    # Check for any blocked transactions that the user should know about
+    @blocked_transactions_count = Transaction.where("(source_wallet_id = ? OR destination_wallet_id = ?) AND status = ?",
+                                                  @wallet.id, @wallet.id, Transaction.statuses[:blocked])
+                                           .where("created_at > ?", 24.hours.ago)
+                                           .count
   end
 
   # New transaction form
   def new_transaction
     # @wallet is now set by the set_wallet before_action
-    
+
     @transaction_type = params[:type] || "deposit"
     @payment_methods = current_user.payment_methods.active_methods.verified_methods
 
@@ -99,6 +108,9 @@ class WalletsController < ApplicationController
 
     # Initialize new transaction
     @transaction = Transaction.new
+
+    # Check for suspicious activity
+    @requires_extra_verification = SecurityLog.recent_suspicious_activity?(current_user.id)
   end
 
   # Process a deposit
@@ -139,11 +151,21 @@ class WalletsController < ApplicationController
         payment_method_id: payment_method.id,
         description: description,
         user_agent: request.user_agent,
-        ip_address: request.remote_ip
+        ip_address: request.remote_ip,
+        verification_provided: params[:verification_code].present?
       }
     )
 
     if transaction.persisted?
+      # Run security checks
+      security_passed = transaction.security_check(current_user, request.remote_ip, request.user_agent)
+
+      unless security_passed
+        flash[:error] = "Transaction blocked due to security concerns. Please contact support."
+        redirect_to wallet_path
+        return
+      end
+
       # Mark payment method as used
       payment_method.mark_as_used!
 
@@ -213,11 +235,21 @@ class WalletsController < ApplicationController
         payment_method_id: payment_method.id,
         description: description,
         user_agent: request.user_agent,
-        ip_address: request.remote_ip
+        ip_address: request.remote_ip,
+        verification_provided: params[:verification_code].present?
       }
     )
 
     if transaction.persisted?
+      # Run security checks
+      security_passed = transaction.security_check(current_user, request.remote_ip, request.user_agent)
+
+      unless security_passed
+        flash[:error] = "Transaction blocked due to security concerns. Please contact support."
+        redirect_to wallet_path
+        return
+      end
+
       # Mark payment method as used
       payment_method.mark_as_used!
 
@@ -304,11 +336,21 @@ class WalletsController < ApplicationController
         sender_name: current_user.display_name,
         recipient_name: recipient.display_name,
         user_agent: request.user_agent,
-        ip_address: request.remote_ip
+        ip_address: request.remote_ip,
+        verification_provided: params[:verification_code].present?
       }
     )
 
     if transaction.persisted?
+      # Run security checks
+      security_passed = transaction.security_check(current_user, request.remote_ip, request.user_agent)
+
+      unless security_passed
+        flash[:error] = "Transaction blocked due to security concerns. Please contact support."
+        redirect_to wallet_path
+        return
+      end
+
       # Process the transfer
       if transaction.complete!
         flash[:success] = "Successfully transferred #{transaction.formatted_amount} to #{recipient.display_name}"
@@ -428,7 +470,6 @@ class WalletsController < ApplicationController
     end
   end
 
-
   private
 
   # Set wallet from user association
@@ -454,5 +495,141 @@ class WalletsController < ApplicationController
       flash[:error] = "You don't have permission to access this wallet"
       redirect_to root_path
     end
+  end
+
+  # Check for any account security issues
+  def check_account_security
+    # Check for recent suspicious activity
+    if SecurityLog.recent_suspicious_activity?(current_user.id)
+      # Log security event
+      SecurityLog.log_event(
+        current_user,
+        :suspicious_activity,
+        severity: :warning,
+        details: {
+          action_attempted: action_name,
+          controller: controller_name
+        },
+        ip_address: request.remote_ip,
+        user_agent: request.user_agent
+      )
+
+      # If this is a high-risk action and verification isn't provided, block it
+      if [ "withdraw", "transfer" ].include?(action_name) && !params[:verification_code].present?
+        flash[:error] = "Additional verification required due to recent suspicious activity"
+        redirect_to new_transaction_wallet_path(type: action_name, requires_verification: true)
+        return false
+      end
+    end
+
+    # Check for multiple failed login attempts
+    if SecurityLog.multiple_failed_logins?(current_user.id)
+      # Log security event
+      SecurityLog.log_event(
+        current_user,
+        :login_failure,
+        severity: :warning,
+        details: {
+          action_attempted: action_name,
+          controller: controller_name,
+          reason: "Multiple failed login attempts detected"
+        },
+        ip_address: request.remote_ip,
+        user_agent: request.user_agent
+      )
+
+      # For sensitive actions, require additional verification
+      if [ "withdraw", "transfer" ].include?(action_name) && !params[:verification_code].present?
+        flash[:error] = "Additional verification required due to recent login attempts"
+        redirect_to new_transaction_wallet_path(type: action_name, requires_verification: true)
+        return false
+      end
+    end
+
+    true
+  end
+
+  # Check if PIN verification is required
+  def requires_pin_verification?
+    # Always require for large transactions
+    return true if params[:amount].to_f > @wallet.daily_limit * 0.5
+
+    # Require if there's been suspicious activity
+    return true if SecurityLog.recent_suspicious_activity?(current_user.id)
+
+    # Require for new recipients in transfers
+    if action_name == "transfer" && params[:recipient].present?
+      recipient = User.find_by("phone = ? OR username = ? OR email = ?",
+                              params[:recipient], params[:recipient], params[:recipient])
+
+      if recipient
+        # Check if this is a new recipient
+        recent_transfers = Transaction.successful
+                                     .where(transaction_type: :transfer, source_wallet_id: @wallet.id)
+                                     .includes(destination_wallet: :user)
+                                     .where("created_at > ?", 30.days.ago)
+                                     .pluck("wallets.user_id")
+
+        return true unless recent_transfers.include?(recipient.id)
+      end
+    end
+
+    # Not required for other cases
+    false
+  end
+
+  # Verify PIN when required
+  def verify_pin
+    # Skip if no PIN is set up yet
+    return true unless current_user.pin_digest.present?
+
+    # Check if PIN was provided
+    unless params[:pin].present?
+      flash[:error] = "PIN verification required for this transaction"
+      redirect_to new_transaction_wallet_path(type: action_name, requires_pin: true)
+      return false
+    end
+
+    # Verify the PIN
+    unless current_user.authenticate_pin(params[:pin])
+      # Log failed PIN attempt
+      SecurityLog.log_event(
+        current_user,
+        :verification_failure,
+        severity: :warning,
+        details: {
+          action_attempted: action_name,
+          controller: controller_name,
+          verification_type: "PIN"
+        },
+        ip_address: request.remote_ip,
+        user_agent: request.user_agent
+      )
+
+      flash[:error] = "Invalid PIN. Please try again."
+      redirect_to new_transaction_wallet_path(type: action_name, requires_pin: true)
+      return false
+    end
+
+    # Log successful verification
+    SecurityLog.log_event(
+      current_user,
+      :verification_success,
+      severity: :info,
+      details: {
+        action_attempted: action_name,
+        controller: controller_name,
+        verification_type: "PIN"
+      },
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent
+    )
+
+    true
+  end
+
+  # Strong parameters for wallet updates
+  def wallet_params
+    params.require(:wallet).permit(:daily_limit, :currency)
   end
 end

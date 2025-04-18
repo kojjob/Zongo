@@ -1,0 +1,89 @@
+<%# Security Alert Component %>
+<% 
+  # Determine alert style based on severity level
+  alert_bg_class = case severity
+                   when 'critical' then 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'
+                   when 'warning' then 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800'
+                   when 'info' then 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+                   else 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'
+                   end
+                   
+  alert_title_class = case severity
+                      when 'critical' then 'text-red-800 dark:text-red-400'
+                      when 'warning' then 'text-yellow-800 dark:text-yellow-400'
+                      when 'info' then 'text-blue-800 dark:text-blue-400'
+                      else 'text-gray-800 dark:text-gray-300'
+                      end
+                      
+  alert_text_class = case severity
+                     when 'critical' then 'text-red-700 dark:text-red-300'
+                     when 'warning' then 'text-yellow-700 dark:text-yellow-300'
+                     when 'info' then 'text-blue-700 dark:text-blue-300'
+                     else 'text-gray-700 dark:text-gray-400'
+                     end
+                     
+  icon_class = case severity
+               when 'critical' then 'text-red-600 dark:text-red-500'
+               when 'warning' then 'text-yellow-600 dark:text-yellow-500'
+               when 'info' then 'text-blue-600 dark:text-blue-500'
+               else 'text-gray-500 dark:text-gray-400'
+               end
+               
+  icon_name = case severity
+              when 'critical' then 'alert-octagon'
+              when 'warning' then 'alert-triangle'
+              else 'info'
+              end
+
+  # Set defaults
+  title ||= case severity
+            when 'critical' then 'Security Alert'
+            when 'warning' then 'Security Warning'
+            when 'info' then 'Security Notice'
+            else 'Notice'
+            end
+            
+  message ||= 'No additional details provided.'
+  
+  # Set default for dismissible
+  dismissible = true unless defined?(dismissible)
+  
+  # Set default for action_text and action_url
+  action_text ||= nil
+  action_url ||= nil
+%>
+
+<div class="<%= alert_bg_class %> border rounded-lg p-4 mb-4" data-controller="<%= dismissible ? 'alert' : '' %>">
+  <div class="flex">
+    <div class="flex-shrink-0">
+      <%= icon icon_name, class: "h-5 w-5 #{icon_class}" %>
+    </div>
+    <div class="ml-3 flex-1">
+      <h3 class="text-sm font-medium <%= alert_title_class %>"><%= title %></h3>
+      <div class="mt-2 text-sm <%= alert_text_class %>">
+        <p><%= message %></p>
+      </div>
+      
+      <% if action_text.present? && action_url.present? %>
+        <div class="mt-4">
+          <div class="-mx-2 -my-1.5 flex">
+            <a href="<%= action_url %>" class="px-2 py-1.5 rounded-md text-sm font-medium <%= alert_title_class %> hover:underline">
+              <%= action_text %>
+            </a>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <% if dismissible %>
+      <div class="ml-auto pl-3">
+        <div class="-mx-1.5 -my-1.5">
+          <button type="button" class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 <%= icon_class %>" data-action="alert#dismiss">
+            <span class="sr-only">Dismiss</span>
+            <%= icon "x", class: "h-5 w-5" %>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

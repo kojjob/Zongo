@@ -9,7 +9,7 @@ def safe_log(level, message)
 end
 
 begin
-  require 'devise/strategies/base'
+  require "devise/strategies/base"
 
   module Devise
     module Strategies

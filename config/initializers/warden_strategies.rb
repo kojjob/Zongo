@@ -21,7 +21,7 @@ Rails.application.config.after_initialize do
 
       # Load the strategy
       begin
-        require_relative '../../lib/strategies/some_external_strategy'
+        require_relative "../../lib/strategies/some_external_strategy"
 
         # Register the strategy if it's defined
         if defined?(Devise::Strategies::SomeExternalStrategy)

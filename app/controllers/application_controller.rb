@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
       if original_user.is_a?(Hash)
         # If current_user is a Hash, find the actual User object
-        user_id = original_user[:id] || original_user['id']
+        user_id = original_user[:id] || original_user["id"]
         logger.info "Converting Hash current_user to User object (ID: #{user_id})"
         User.find_by(id: user_id)
       else
@@ -55,6 +55,23 @@ class ApplicationController < ActionController::Base
       logger.error "Error in authenticate_user!: #{e.message}"
       # Redirect to sign in page
       redirect_to new_user_session_path, alert: "Please sign in to continue"
+    end
+  end
+
+  # Override Devise's method to handle already authenticated users
+  def require_no_authentication
+    return unless is_navigational_format?
+
+    if user_signed_in?
+      # If trying to access profile or settings, just go there instead of showing error
+      if request.path.match?(/\/(profile|settings|user_settings)/)
+        redirect_to profile_path
+        return
+      end
+
+      # For other authentication pages, use the default behavior
+      set_flash_message(:alert, "already_authenticated")
+      redirect_to after_sign_in_path_for(current_user)
     end
   end
 
@@ -89,10 +106,26 @@ class ApplicationController < ActionController::Base
   end
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # Admin helper method
+  def require_admin
+    unless current_user&.admin?
+      redirect_to root_path, alert: "You don't have permission to access this page."
+    end
+  end
+
   protected
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :phone, :name, :username, :avatar ])
     devise_parameter_sanitizer.permit(:account_update, keys: [ :phone, :name, :username, :avatar ])
+  end
+
+  # Action to clear flash messages
+  def clear_flash
+    # Clear all flash messages
+    flash.clear
+
+    # Redirect back to the previous page
+    redirect_back(fallback_location: root_path)
   end
 end

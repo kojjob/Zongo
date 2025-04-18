@@ -1,18 +1,38 @@
 class PaymentMethod < ApplicationRecord
   belongs_to :user
 
+  # Virtual attribute for account number
+  attr_accessor :account_number
+
   # Validations
   validates :method_type, presence: true
-  validates :account_number, presence: true
+  validates :account_number, presence: true, on: :create
   validates :description, presence: true
 
   # Enums
+  enum :method_type, {
+    mobile_money: 0,
+    bank: 1,
+    card: 2,
+    wallet: 3,
+    other: 4
+  }, default: :mobile_money
+
   enum :status, {
     pending: 0,
     verified: 1,
     rejected: 2,
     expired: 3
   }, default: :pending
+
+  enum :verification_status, {
+    pending_verification: 0,
+    verification_approved: 1,
+    verification_failed: 2
+  }, default: :pending_verification
+
+  # Callbacks
+  before_save :encrypt_account_number, if: -> { account_number.present? }
 
   # Scopes
   scope :active_methods, -> { where.not(status: [ :rejected, :expired ]) }
@@ -21,11 +41,61 @@ class PaymentMethod < ApplicationRecord
 
   # Methods
   def verified?
-    status == "verified" && verified_at.present?
+    status == "verified"
+  end
+
+  def verification_approved?
+    verification_status == "verification_approved"
+  end
+
+  def pending_verification?
+    verification_status == "pending_verification"
   end
 
   def expired?
-    expiry_date.present? && expiry_date < Date.current
+    return false unless expiry_date.present?
+
+    # Convert string to date if needed
+    date = expiry_date.is_a?(Date) ? expiry_date : parse_expiry_date
+    date.present? && date < Date.current
+  end
+
+  # Format the expiry date as MM/YY
+  def formatted_expiry_date
+    return nil unless expiry_date.present?
+
+    if expiry_date.is_a?(Date) || expiry_date.is_a?(Time)
+      expiry_date.strftime("%m/%y")
+    else
+      # If it's already in MM/YY format, return as is
+      if expiry_date.match?(/^\d{2}\/\d{2}$/)
+        expiry_date
+      else
+        # Try to parse and format
+        date = parse_expiry_date
+        date ? date.strftime("%m/%y") : expiry_date
+      end
+    end
+  end
+
+  # Parse expiry date from string
+  def parse_expiry_date
+    return nil unless expiry_date.present?
+    return expiry_date if expiry_date.is_a?(Date) || expiry_date.is_a?(Time)
+
+    begin
+      # Try different formats
+      if expiry_date.match?(/^\d{2}\/\d{2}$/)
+        # MM/YY format
+        month, year = expiry_date.split("/")
+        Date.new(2000 + year.to_i, month.to_i, 1).end_of_month
+      else
+        # Try standard date parsing
+        Date.parse(expiry_date)
+      end
+    rescue
+      nil
+    end
   end
 
   def mark_as_used!
@@ -33,10 +103,14 @@ class PaymentMethod < ApplicationRecord
   end
 
   def masked_account_number
+    # If we have a masked_number stored, use that
+    return masked_number if masked_number.present?
+
+    # Otherwise, if we have the account_number, mask it
     return nil unless account_number
 
     # Different masking based on method type
-    case method_type
+    case method_type.to_s
     when "bank"
       # For bank accounts, show last 4 digits
       "•••• •••• " + account_number.last(4)
@@ -73,7 +147,7 @@ class PaymentMethod < ApplicationRecord
   def icon_name
     return "credit-card" if method_type.blank?
 
-    case method_type
+    case method_type.to_s
     when "bank"
       "bank"
     when "card"
@@ -85,5 +159,13 @@ class PaymentMethod < ApplicationRecord
     else
       "credit-card"
     end
+  end
+
+  private
+
+  # Encrypt the account number and store it in account_number_digest
+  def encrypt_account_number
+    require "bcrypt"
+    self.account_number_digest = BCrypt::Password.create(account_number)
   end
 end

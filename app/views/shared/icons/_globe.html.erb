@@ -1,0 +1,67 @@
+
+<% 
+  # Default values
+  variant ||= 'default'
+  status ||= 'default'
+  size ||= 'medium'
+  color ||= 'currentColor'
+  
+  # CSS classes for different states
+  icon_classes = {
+    default: 'text-gray-500',
+    active: 'text-blue-500',
+    disabled: 'text-gray-300',
+    loading: 'text-yellow-500 animate-pulse'
+  }
+  
+  # Size mappings
+  size_classes = {
+    small: 'w-4 h-4',
+    medium: 'w-6 h-6',
+    large: 'w-8 h-8'
+  }
+%>
+
+<div class="globe-icon <%= icon_classes[status.to_sym] %> <%= size_classes[size.to_sym] %>">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="<%= color %>">
+    <% case variant %>
+    <% when 'outlined' %>
+      <%# Outlined globe with continents %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h0A2.5 2.5 0 0013 5.5V3.055M11 20.945V18.5A2.5 2.5 0 008.5 16h0a2.5 2.5 0 00-2.5 2.5v2.945" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <%# Continent-like lines %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 3v1m0 16v1m9-9h-1M4 12H3" opacity="0.5" />
+    
+    <% when 'filled' %>
+      <%# Filled globe with more detailed continent representation %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3" opacity="0.3" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.485 7.515A9 9 0 0015 3.055M3.515 16.485A9 9 0 008 20.945m12.025-12.025A9 9 0 003.525 16.475m15.95-7.96a9 9 0 00-15.95 7.96" />
+      <%# Additional continent contour details %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.5" />
+    
+    <% when 'connected' %>
+      <%# Globe with connection/network lines %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3" opacity="0.3" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.485 7.515A9 9 0 0015 3.055M3.515 16.485A9 9 0 008 20.945m12.025-12.025A9 9 0 003.525 16.475m15.95-7.96a9 9 0 00-15.95 7.96" />
+      <%# Network connection lines %>
+      <line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+      <line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+      <line x1="12" y1="12" x2="8" y2="16" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+    
+    <% else %>
+      <%# Default globe icon %>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3" opacity="0.3" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a12 12 0 001 6.51A12 12 0 0012 21a12 12 0 0012-12V7.49A12 12 0 0012 3 12 12 0 003 15z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7v10" opacity="0.5" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 7a5 5 0 015 5 5 5 0 01-5 5" opacity="0.5" />
+    <% end %>
+
+    <%# Status-specific overlays %>
+    <% if status == 'loading' %>
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity="0.3" />
+      <path d="M12 2a10 10 0 00-8.5 5" stroke="currentColor" stroke-width="2" fill="none" />
+    <% elsif status == 'disabled' %>
+      <line x1="3" y1="21" x2="21" y2="3" stroke="currentColor" stroke-width="2" />
+    <% end %>
+  </svg>
+</div>

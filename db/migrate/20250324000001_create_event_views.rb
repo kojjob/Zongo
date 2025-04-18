@@ -6,12 +6,12 @@ class CreateEventViews < ActiveRecord::Migration[7.1]
       t.string :ip_address, null: false
       t.string :user_agent
       t.string :referrer
-      
+
       t.timestamps
     end
-    
-    add_index :event_views, [:event_id, :ip_address, :created_at]
-    
+
+    add_index :event_views, [ :event_id, :ip_address, :created_at ]
+
     # Add counter cache to events
     add_column :events, :event_views_count, :integer, default: 0, null: false
   end

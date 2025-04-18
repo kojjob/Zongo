@@ -26,7 +26,16 @@ class DashboardController < ApplicationController
     @payment_methods = current_user.payment_methods.order(default: :desc) rescue []
 
     # Get scheduled transactions/bills if that feature exists
-    @scheduled_transactions = current_user.scheduled_transactions.where("next_date >= ?", Date.today).order(next_date: :asc) rescue []
+    begin
+      if ScheduledTransaction.table_exists?
+        @scheduled_transactions = current_user.scheduled_transactions.where("next_occurrence >= ?", Date.today).order(next_occurrence: :asc)
+      else
+        @scheduled_transactions = []
+      end
+    rescue => e
+      Rails.logger.error("Error getting scheduled transactions: #{e.message}")
+      @scheduled_transactions = []
+    end
   end
 
   def refresh_balance

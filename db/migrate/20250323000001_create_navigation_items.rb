@@ -11,7 +11,7 @@ class CreateNavigationItems < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
-    
+
     add_index :navigation_items, :position
     add_index :navigation_items, :active
   end

@@ -1,0 +1,37 @@
+/**
+ * Dashboard Spacing
+ * Adds balanced spacing for dashboard elements
+ */
+
+/* Add specific spacing for dashboard content */
+.dashboard-container,
+.admin-dashboard-container {
+  padding-top: 10px !important;
+}
+
+/* Add spacing for dashboard cards */
+.dashboard-card,
+.admin-card,
+.stat-card {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+/* Add spacing for dashboard sections */
+.dashboard-section,
+.admin-section {
+  margin-top: 15px !important;
+}
+
+/* First section needs less spacing */
+.dashboard-section:first-child,
+.admin-section:first-child {
+  margin-top: 5px !important;
+}
+
+/* Dashboard grid spacing */
+.dashboard-grid,
+.admin-grid {
+  gap: 15px !important;
+  padding: 5px !important;
+}

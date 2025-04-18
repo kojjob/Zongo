@@ -1,168 +1,314 @@
-<%# Transaction Details Page %>
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<%# Enhanced Transaction Details Page %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
   <div class="flex items-center mb-6">
-    <a href="<%= transactions_wallet_path %>" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mr-2">
+    <a href="<%= transactions_wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary-100 dark:hover:bg-primary-900/30 hover:text-primary-600 dark:hover:text-primary-400 transition-colors mr-3 shadow-sm">
       <%= icon "arrow-left", class: "w-5 h-5" %>
     </a>
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transaction Details</h1>
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Transaction Details</h1>
   </div>
 
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-    <%# Transaction Status Header %>
-    <% 
-      header_bg_class = case @transaction.status
-                        when 'completed' then 'bg-green-500'
-                        when 'pending' then 'bg-yellow-500'
-                        when 'failed' then 'bg-red-500'
-                        when 'reversed' then 'bg-gray-500'
-                        end
-                        
-      icon_name = case @transaction.transaction_type
-                  when 'deposit' then 'money-in'
-                  when 'withdrawal' then 'money-out'
-                  when 'transfer' then 'transfer'
-                  when 'payment' then 'shopping'
-                  end
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+    <%# Transaction Status Header - Enhanced %>
+    <%
+      # Define status-specific styling
+      case @transaction.status
+      when 'completed'
+        header_bg = 'bg-gradient-to-r from-green-500 to-green-600'
+        header_pattern = 'bg-[url("/assets/images/patterns/pattern-1.svg")] bg-no-repeat bg-cover opacity-10'
+        status_bg = 'bg-green-400/20'
+        status_icon = 'check-circle'
+      when 'pending'
+        header_bg = 'bg-gradient-to-r from-yellow-500 to-amber-500'
+        header_pattern = 'bg-[url("/assets/images/patterns/pattern-2.svg")] bg-no-repeat bg-cover opacity-10'
+        status_bg = 'bg-yellow-400/20'
+        status_icon = 'clock'
+      when 'failed'
+        header_bg = 'bg-gradient-to-r from-red-500 to-red-600'
+        header_pattern = 'bg-[url("/assets/images/patterns/pattern-3.svg")] bg-no-repeat bg-cover opacity-10'
+        status_bg = 'bg-red-400/20'
+        status_icon = 'alert-triangle'
+      when 'reversed'
+        header_bg = 'bg-gradient-to-r from-gray-500 to-gray-600'
+        header_pattern = 'bg-[url("/assets/images/patterns/pattern-4.svg")] bg-no-repeat bg-cover opacity-10'
+        status_bg = 'bg-gray-400/20'
+        status_icon = 'refresh-ccw'
+      end
+
+      # Define transaction type styling
+      case @transaction.transaction_type
+      when 'deposit'
+        icon_name = 'money-in'
+        icon_bg = 'bg-green-100 dark:bg-green-900/50'
+        icon_color = 'text-green-600 dark:text-green-400'
+        tx_label = 'Money In'
+      when 'withdrawal'
+        icon_name = 'money-out'
+        icon_bg = 'bg-red-100 dark:bg-red-900/50'
+        icon_color = 'text-red-600 dark:text-red-400'
+        tx_label = 'Money Out'
+      when 'transfer'
+        icon_name = 'transfer'
+        icon_bg = 'bg-blue-100 dark:bg-blue-900/50'
+        icon_color = 'text-blue-600 dark:text-blue-400'
+        tx_label = 'Transfer'
+      when 'payment'
+        icon_name = 'shopping'
+        icon_bg = 'bg-purple-100 dark:bg-purple-900/50'
+        icon_color = 'text-purple-600 dark:text-purple-400'
+        tx_label = 'Payment'
+      end
+
+      # Determine if amount is positive or negative
+      amount = @transaction.signed_amount_for_user(current_user.id)
+      is_positive = amount.include?('+')
+      amount_color = is_positive ? 'text-green-400' : 'text-white'
     %>
-    <div class="<%= header_bg_class %> p-6 text-white">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-        <div class="flex items-center mb-4 md:mb-0">
-          <div class="flex-shrink-0 h-12 w-12 rounded-full bg-white/20 flex items-center justify-center">
-            <%= icon icon_name, class: "h-6 w-6" %>
+    <div class="<%= header_bg %> p-8 text-white relative overflow-hidden">
+      <!-- Decorative background pattern -->
+      <div class="absolute inset-0 <%= header_pattern %>"></div>
+      <!-- Decorative circles -->
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
+      <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-lg"></div>
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between relative">
+        <div class="flex items-center mb-6 md:mb-0">
+          <div class="flex-shrink-0 h-16 w-16 rounded-full <%= icon_bg %> <%= icon_color %> flex items-center justify-center shadow-lg border-2 border-white/30">
+            <%= icon icon_name, class: "h-8 w-8" %>
           </div>
           <div class="ml-4">
-            <h2 class="text-xl font-bold"><%= @transaction.transaction_type_description %></h2>
-            <p><%= @transaction.reference %></p>
+            <div class="flex items-center">
+              <span class="px-2 py-1 rounded-md bg-white/10 text-xs font-medium mr-2"><%= tx_label %></span>
+              <span class="inline-flex items-center px-2 py-1 rounded-full <%= status_bg %> text-xs font-medium">
+                <%= icon status_icon, class: "w-3 h-3 mr-1" %>
+                <%= @transaction.status.capitalize %>
+              </span>
+            </div>
+            <h2 class="text-xl md:text-2xl font-bold mt-1"><%= @transaction.transaction_type_description %></h2>
+            <p class="text-white/80 text-sm mt-1 font-mono"><%= @transaction.reference %></p>
           </div>
         </div>
-        
-        <div class="text-right">
-          <div class="text-2xl font-bold">
+
+        <div class="text-right bg-white/10 p-4 rounded-xl backdrop-blur-sm">
+          <div class="text-xs text-white/80 mb-1">Transaction Amount</div>
+          <div class="text-2xl md:text-3xl font-bold <%= amount_color %>">
             <%= @transaction.signed_amount_for_user(current_user.id) %>
           </div>
-          <div class="mt-1 inline-block px-3 py-1 rounded-full bg-white/20 text-sm font-medium">
-            <%= @transaction.status.capitalize %>
+          <div class="text-xs text-white/80 mt-1">
+            <%= @transaction.created_at.strftime("%b %d, %Y at %I:%M %p") %>
           </div>
         </div>
       </div>
     </div>
-    
-    <%# Transaction Details %>
-    <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">DETAILS</h3>
+
+    <%# Transaction Details - Enhanced %>
+    <div class="p-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-gray-50 dark:bg-gray-900/30 rounded-xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+          <h3 class="flex items-center text-base font-semibold text-gray-900 dark:text-white mb-4">
+            <%= icon "info", class: "w-4 h-4 mr-2 text-primary-500" %>
+            Transaction Details
+          </h3>
           <ul class="space-y-4">
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Date & Time</span>
-              <span class="text-sm text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "calendar", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Date & Time</span>
+              </div>
+              <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md text-gray-900 dark:text-white">
                 <%= @transaction.created_at.strftime("%b %d, %Y at %I:%M %p") %>
               </span>
             </li>
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Transaction ID</span>
-              <span class="text-sm text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "hash", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Transaction ID</span>
+              </div>
+              <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md text-gray-900 dark:text-white truncate max-w-[200px]" title="<%= @transaction.transaction_id %>">
                 <%= @transaction.transaction_id %>
               </span>
             </li>
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Status</span>
-              <% 
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "activity", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Status</span>
+              </div>
+              <%
                 status_class = case @transaction.status
-                              when 'completed' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                              when 'pending' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                              when 'failed' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                              when 'reversed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                              when 'completed' then 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800'
+                              when 'pending' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800'
+                              when 'failed' then 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-800'
+                              when 'reversed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300 border border-gray-200 dark:border-gray-800'
+                              end
+
+                status_icon = case @transaction.status
+                              when 'completed' then 'check-circle'
+                              when 'pending' then 'clock'
+                              when 'failed' then 'alert-triangle'
+                              when 'reversed' then 'refresh-ccw'
                               end
               %>
-              <span class="px-2 py-0.5 rounded-full text-xs font-medium <%= status_class %>">
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= status_class %>">
+                <%= icon status_icon, class: "w-4 h-4 mr-1" %>
                 <%= @transaction.status.capitalize %>
               </span>
             </li>
             <% if @transaction.completed_at.present? %>
-              <li class="flex justify-between">
-                <span class="text-sm text-gray-500 dark:text-gray-400">Completed At</span>
-                <span class="text-sm text-gray-900 dark:text-white">
+              <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center mb-2 sm:mb-0">
+                  <%= icon "check-circle", class: "w-4 h-4 mr-2 text-gray-400" %>
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Completed At</span>
+                </div>
+                <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md text-gray-900 dark:text-white">
                   <%= @transaction.completed_at.strftime("%b %d, %Y at %I:%M %p") %>
                 </span>
               </li>
             <% end %>
           </ul>
         </div>
-        
-        <div>
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">PAYMENT INFORMATION</h3>
+
+        <div class="bg-gray-50 dark:bg-gray-900/30 rounded-xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm">
+          <h3 class="flex items-center text-base font-semibold text-gray-900 dark:text-white mb-4">
+            <%= icon "credit-card", class: "w-4 h-4 mr-2 text-primary-500" %>
+            Payment Information
+          </h3>
           <ul class="space-y-4">
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Amount</span>
-              <span class="text-sm text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "dollar-sign", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Amount</span>
+              </div>
+              <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md font-bold text-gray-900 dark:text-white">
                 <%= @transaction.formatted_amount %>
               </span>
             </li>
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Fee</span>
-              <span class="text-sm text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "tag", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Fee</span>
+              </div>
+              <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md text-gray-900 dark:text-white">
                 <%= @wallet.currency_symbol %><%= @transaction.fee.to_f %>
               </span>
             </li>
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Total</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "calculator", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Total</span>
+              </div>
+              <span class="text-sm font-mono bg-primary-100 dark:bg-primary-900/30 px-3 py-1 rounded-md font-bold text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-800">
                 <%= @wallet.currency_symbol %><%= (@transaction.amount + @transaction.fee).to_f %>
               </span>
             </li>
-            <li class="flex justify-between">
-              <span class="text-sm text-gray-500 dark:text-gray-400">Payment Method</span>
-              <span class="text-sm text-gray-900 dark:text-white">
+            <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+              <div class="flex items-center mb-2 sm:mb-0">
+                <%= icon "credit-card", class: "w-4 h-4 mr-2 text-gray-400" %>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Payment Method</span>
+              </div>
+              <span class="text-sm font-mono bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-md text-gray-900 dark:text-white">
                 <%= @transaction.payment_method&.humanize || 'Wallet Transfer' %>
                 <% if @transaction.provider.present? %>
-                  (<%= @transaction.provider %>)
+                  <span class="ml-1 px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs">
+                    <%= @transaction.provider %>
+                  </span>
                 <% end %>
               </span>
             </li>
           </ul>
         </div>
       </div>
-      
+
       <% if @transaction.transaction_type == 'transfer' %>
         <div class="mt-8">
-          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">PARTIES</h3>
+          <h3 class="flex items-center text-base font-semibold text-gray-900 dark:text-white mb-4">
+            <%= icon "users", class: "w-4 h-4 mr-2 text-primary-500" %>
+            Transaction Parties
+          </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-              <div class="flex items-center mb-3">
-                <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-sm font-medium text-gray-700 dark:text-gray-300">
-                  <%= @transaction.sender.initials %>
+            <!-- Sender Card -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-100 dark:border-blue-800 shadow-sm relative overflow-hidden">
+              <!-- Decorative elements -->
+              <div class="absolute top-0 right-0 w-16 h-16 bg-blue-200/50 dark:bg-blue-800/20 rounded-full -mt-8 -mr-8 z-0"></div>
+              <div class="absolute bottom-0 left-0 w-24 h-24 bg-blue-200/30 dark:bg-blue-800/10 rounded-full -mb-12 -ml-12 z-0"></div>
+
+              <div class="relative z-10">
+                <div class="flex items-center mb-4">
+                  <% if @transaction.sender.respond_to?(:avatar) && @transaction.sender.avatar.present? && @transaction.sender.avatar.attached? %>
+                    <%= image_tag @transaction.sender.avatar, class: "w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md", alt: "Sender Profile" %>
+                  <% else %>
+                    <div class="w-12 h-12 rounded-full bg-blue-200 dark:bg-blue-800 flex items-center justify-center text-base font-bold text-blue-700 dark:text-blue-300 border-2 border-white dark:border-gray-800 shadow-md">
+                      <%= @transaction.sender.initials %>
+                    </div>
+                  <% end %>
+                  <div class="ml-3">
+                    <div class="flex items-center">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-medium">
+                        <%= icon "arrow-up-right", class: "w-3 h-3 mr-1" %>
+                        Sender
+                      </span>
+                    </div>
+                    <h4 class="text-base font-bold text-gray-900 dark:text-white mt-1"><%= @transaction.sender.display_name %></h4>
+                  </div>
                 </div>
-                <div class="ml-3">
-                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Sender</h4>
-                  <p class="text-xs text-gray-500 dark:text-gray-400"><%= @transaction.sender.display_name %></p>
+
+                <div class="space-y-2 pl-2 border-l-2 border-blue-200 dark:border-blue-800">
+                  <div class="flex items-center">
+                    <%= icon "phone", class: "w-4 h-4 mr-2 text-blue-500" %>
+                    <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"><%= @transaction.sender.phone %></span>
+                  </div>
+                  <% if @transaction.sender.email.present? %>
+                    <div class="flex items-center">
+                      <%= icon "mail", class: "w-4 h-4 mr-2 text-blue-500" %>
+                      <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"><%= @transaction.sender.email %></span>
+                    </div>
+                  <% end %>
                 </div>
               </div>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Phone: <%= @transaction.sender.phone %></p>
-              <% if @transaction.sender.email.present? %>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Email: <%= @transaction.sender.email %></p>
-              <% end %>
             </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
-              <div class="flex items-center mb-3">
-                <div class="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-sm font-medium text-gray-700 dark:text-gray-300">
-                  <%= @transaction.recipient.initials %>
+
+            <!-- Recipient Card -->
+            <div class="bg-green-50 dark:bg-green-900/20 p-5 rounded-xl border border-green-100 dark:border-green-800 shadow-sm relative overflow-hidden">
+              <!-- Decorative elements -->
+              <div class="absolute top-0 right-0 w-16 h-16 bg-green-200/50 dark:bg-green-800/20 rounded-full -mt-8 -mr-8 z-0"></div>
+              <div class="absolute bottom-0 left-0 w-24 h-24 bg-green-200/30 dark:bg-green-800/10 rounded-full -mb-12 -ml-12 z-0"></div>
+
+              <div class="relative z-10">
+                <div class="flex items-center mb-4">
+                  <% if @transaction.recipient.respond_to?(:avatar) && @transaction.recipient.avatar.present? && @transaction.recipient.avatar.attached? %>
+                    <%= image_tag @transaction.recipient.avatar, class: "w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow-md", alt: "Recipient Profile" %>
+                  <% else %>
+                    <div class="w-12 h-12 rounded-full bg-green-200 dark:bg-green-800 flex items-center justify-center text-base font-bold text-green-700 dark:text-green-300 border-2 border-white dark:border-gray-800 shadow-md">
+                      <%= @transaction.recipient.initials %>
+                    </div>
+                  <% end %>
+                  <div class="ml-3">
+                    <div class="flex items-center">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-xs font-medium">
+                        <%= icon "arrow-down-left", class: "w-3 h-3 mr-1" %>
+                        Recipient
+                      </span>
+                    </div>
+                    <h4 class="text-base font-bold text-gray-900 dark:text-white mt-1"><%= @transaction.recipient.display_name %></h4>
+                  </div>
                 </div>
-                <div class="ml-3">
-                  <h4 class="text-sm font-medium text-gray-900 dark:text-white">Recipient</h4>
-                  <p class="text-xs text-gray-500 dark:text-gray-400"><%= @transaction.recipient.display_name %></p>
+
+                <div class="space-y-2 pl-2 border-l-2 border-green-200 dark:border-green-800">
+                  <div class="flex items-center">
+                    <%= icon "phone", class: "w-4 h-4 mr-2 text-green-500" %>
+                    <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"><%= @transaction.recipient.phone %></span>
+                  </div>
+                  <% if @transaction.recipient.email.present? %>
+                    <div class="flex items-center">
+                      <%= icon "mail", class: "w-4 h-4 mr-2 text-green-500" %>
+                      <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"><%= @transaction.recipient.email %></span>
+                    </div>
+                  <% end %>
                 </div>
               </div>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Phone: <%= @transaction.recipient.phone %></p>
-              <% if @transaction.recipient.email.present? %>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Email: <%= @transaction.recipient.email %></p>
-              <% end %>
             </div>
           </div>
         </div>
       <% end %>
-      
+
       <% if @transaction.description.present? %>
         <div class="mt-8">
           <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">DESCRIPTION</h3>
@@ -171,7 +317,7 @@
           </div>
         </div>
       <% end %>
-      
+
       <% if @transaction.metadata.present? && @transaction.metadata.any? %>
         <div class="mt-8">
           <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">ADDITIONAL INFORMATION</h3>
@@ -188,7 +334,7 @@
         </div>
       <% end %>
     </div>
-    
+
     <%# Action Buttons %>
     <div class="p-6 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 flex justify-between">
       <div>
@@ -199,13 +345,13 @@
           </button>
         <% end %>
       </div>
-      
+
       <div>
         <button type="button" class="btn btn-outline btn-sm mr-2" onclick="window.print()">
           <%= icon "print", class: "w-4 h-4 mr-1" %>
           Print
         </button>
-        
+
         <a href="<%= transactions_wallet_path %>" class="btn btn-primary btn-sm">
           <%= icon "list", class: "w-4 h-4 mr-1" %>
           Back to Transactions
@@ -213,7 +359,7 @@
       </div>
     </div>
   </div>
-  
+
   <% if @transaction.status == 'failed' %>
     <div class="mt-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
       <div class="flex">
@@ -235,7 +381,7 @@
       </div>
     </div>
   <% end %>
-  
+
   <% if @transaction.status == 'reversed' %>
     <div class="mt-6 bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
       <div class="flex">
@@ -268,15 +414,15 @@
           <h5 class="modal-title" id="repeatTransactionModalLabel">Repeat Transaction</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        
+
         <%= form_with url: transfer_wallet_path, method: :post, data: { turbo: false } do |f| %>
           <div class="modal-body">
             <p class="text-gray-600 dark:text-gray-400 mb-4">
               You are about to repeat a transfer to <%= @transaction.recipient.display_name %>.
             </p>
-            
+
             <%= f.hidden_field :recipient, value: @transaction.recipient.phone %>
-            
+
             <div class="mb-3">
               <label for="amount" class="form-label">Amount (<%= @wallet.currency %>)</label>
               <div class="input-group">
@@ -285,13 +431,13 @@
               </div>
               <div class="form-text">Available balance: <%= @wallet.formatted_balance %></div>
             </div>
-            
+
             <div class="mb-3">
               <label for="description" class="form-label">Message (Optional)</label>
               <%= f.text_area :description, value: @transaction.description, rows: 2, class: "form-control" %>
             </div>
           </div>
-          
+
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <%= f.submit "Send Money", class: "btn btn-primary" %>

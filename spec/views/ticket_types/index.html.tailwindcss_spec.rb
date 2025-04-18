@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "ticket_types/index", type: :view do
+  let(:event) { create(:event) }
+
   before(:each) do
     assign(:ticket_types, [
       TicketType.create!(
-        event: nil,
+        event: event,
         name: "Name",
         description: "MyText",
         price: "9.99",
@@ -14,7 +16,7 @@ RSpec.describe "ticket_types/index", type: :view do
         transferable: false
       ),
       TicketType.create!(
-        event: nil,
+        event: event,
         name: "Name",
         description: "MyText",
         price: "9.99",
@@ -29,7 +31,7 @@ RSpec.describe "ticket_types/index", type: :view do
   it "renders a list of ticket_types" do
     render
     cell_selector = 'div>p'
-    assert_select cell_selector, text: Regexp.new(nil.to_s), count: 2
+    assert_select cell_selector, text: Regexp.new(event.id.to_s), count: 2
     assert_select cell_selector, text: Regexp.new("Name".to_s), count: 2
     assert_select cell_selector, text: Regexp.new("MyText".to_s), count: 2
     assert_select cell_selector, text: Regexp.new("9.99".to_s), count: 2

@@ -16,6 +16,7 @@ class ContactSubmission < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   # Callbacks
+  before_save :set_terms_accepted_at, if: -> { terms_changed? && terms? }
   after_create :send_notification_email
 
   private
@@ -23,5 +24,9 @@ class ContactSubmission < ApplicationRecord
   def send_notification_email
     # This will be called automatically when a new submission is created
     ContactMailer.new_message(self).deliver_later
+  end
+
+  def set_terms_accepted_at
+    self.terms_accepted_at = Time.current
   end
 end

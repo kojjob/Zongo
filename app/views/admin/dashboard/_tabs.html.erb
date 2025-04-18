@@ -1,0 +1,118 @@
+<!-- This is a completely new implementation of the tab navigation -->
+<div data-controller="simple-tab">
+  <!-- Tab Navigation Bar -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md mb-8">
+    <div class="flex overflow-x-auto hide-scrollbar">
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 active-tab border-primary-500 dark:border-primary-400 text-primary-600 dark:text-primary-400 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          Overview
+        </div>
+      </button>
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+          Users
+        </div>
+      </button>
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Transactions
+        </div>
+      </button>
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+          Loans
+        </div>
+      </button>
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Events
+        </div>
+      </button>
+      <button
+        class="admin-tab-button min-w-max px-6 py-4 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 font-medium text-center transition-colors duration-200"
+        data-simple-tab-target="tab"
+        data-action="click->simple-tab#select">
+        <div class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          Analytics
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Panels -->
+  <!-- Overview Tab Panel -->
+  <div class="admin-tab-panel space-y-8" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/overview' %>
+  </div>
+
+  <!-- Users Tab Panel -->
+  <div class="admin-tab-panel hidden" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/users' %>
+  </div>
+
+  <!-- Transactions Tab Panel -->
+  <div class="admin-tab-panel hidden" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/transactions' %>
+  </div>
+
+  <!-- Loans Tab Panel -->
+  <div class="admin-tab-panel hidden" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/loans' %>
+  </div>
+
+  <!-- Events Tab Panel -->
+  <div class="admin-tab-panel hidden" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/events' %>
+  </div>
+
+  <!-- Analytics Tab Panel -->
+  <div class="admin-tab-panel hidden" data-simple-tab-target="panel">
+    <%= render 'admin/dashboard/tabs/analytics' %>
+  </div>
+</div>

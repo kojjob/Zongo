@@ -1,67 +1,130 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="dropdown"
-export default class DropdownController extends Controller {
-  static targets = ["menu"]
-  
+export default class extends Controller {
+  static targets = [ "button", "menu" ]
+
   connect() {
-    console.log("Dropdown controller connected", this.element);
-    // Make sure dropdowns start hidden
-    if (this.hasMenuTarget) {
-      this.hideMenu();
-    }
+    // Ensure the dropdown is closed initially
+    this.close();
+
+    // Generate a unique ID for this dropdown
+    this.id = `dropdown-${Math.random().toString(36).substring(2, 11)}`;
+
+    // Set up event listeners with properly bound methods
+    this._clickOutsideHandler = this._handleClickOutside.bind(this);
+    this._otherDropdownHandler = this._handleOtherDropdown.bind(this);
+
+    // Add event listeners
+    document.addEventListener('click', this._clickOutsideHandler);
+    document.addEventListener('dropdown:toggle', this._otherDropdownHandler);
   }
-  
+
   disconnect() {
-    // Clean up any event listeners if needed
+    // Clean up event listeners
+    document.removeEventListener('click', this._clickOutsideHandler);
+    document.removeEventListener('dropdown:toggle', this._otherDropdownHandler);
   }
-  
+
   toggle(event) {
     // Prevent default behavior
-    event.preventDefault();
-    console.log("Dropdown toggle called", this.element);
-    
-    if (!this.hasMenuTarget) {
-      console.error("Menu target not found for", this.element);
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    // Check if we have the menu target
+    if (!this.hasMenuTarget) return;
+
+    // Check if the dropdown is currently open
+    const isOpen = !this.menuTarget.classList.contains('opacity-0');
+
+    if (isOpen) {
+      // If open, close it
+      this.close();
+    } else {
+      // If closed, open it and notify others
+      this.open();
+
+      // Dispatch event to close other dropdowns
+      const event = new CustomEvent('dropdown:toggle', {
+        bubbles: true,
+        detail: { id: this.id }
+      });
+      document.dispatchEvent(event);
+    }
+  }
+
+  open() {
+    if (!this.hasMenuTarget) return;
+
+    // Position the dropdown correctly
+    this._positionDropdown();
+
+    // Show the dropdown
+    this.menuTarget.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+    this.menuTarget.classList.add('opacity-100', 'scale-100');
+
+    // Update button state
+    if (this.hasButtonTarget) {
+      this.buttonTarget.setAttribute('data-dropdown-open', '');
+    }
+  }
+
+  close() {
+    if (!this.hasMenuTarget) return;
+
+    // Hide the dropdown
+    this.menuTarget.classList.remove('opacity-100', 'scale-100');
+    this.menuTarget.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+
+    // Update button state
+    if (this.hasButtonTarget) {
+      this.buttonTarget.removeAttribute('data-dropdown-open');
+    }
+  }
+
+  // Private methods
+
+  _positionDropdown() {
+    if (!this.hasMenuTarget || !this.hasButtonTarget) return;
+
+    // Get dimensions and positions
+    const buttonRect = this.buttonTarget.getBoundingClientRect();
+    const menuWidth = this.menuTarget.offsetWidth;
+    const windowWidth = window.innerWidth;
+
+    // Check if the dropdown would go off the right edge of the screen
+    if (buttonRect.left + menuWidth > windowWidth) {
+      this.menuTarget.classList.add('right-0');
+      this.menuTarget.classList.remove('left-0');
+    } else {
+      this.menuTarget.classList.add('left-0');
+      this.menuTarget.classList.remove('right-0');
+    }
+
+    // Ensure the dropdown appears below the button
+    this.menuTarget.classList.add('top-full');
+  }
+
+  _handleClickOutside(event) {
+    // Don't do anything if we don't have the necessary targets
+    if (!this.hasMenuTarget || !this.hasButtonTarget) return;
+
+    // Don't close if clicking on the button or inside the menu
+    if (this.buttonTarget.contains(event.target) || this.menuTarget.contains(event.target)) {
       return;
     }
-    
-    const isHidden = this.menuTarget.classList.contains('hidden');
-    
-    if (isHidden) {
-      this.showMenu();
-    } else {
-      this.hideMenu();
+
+    // Close the dropdown if it's open
+    if (!this.menuTarget.classList.contains('opacity-0')) {
+      this.close();
     }
   }
-  
-  hide(event) {
-    // Hide dropdown when clicking outside
-    if (this.hasMenuTarget && !this.element.contains(event.target)) {
-      this.hideMenu();
-    }
-  }
-  
-  // Helper to show menu with animation
-  showMenu() {
-    this.menuTarget.classList.remove('hidden');
-    // Use setTimeout to ensure the transition happens after the display change
-    setTimeout(() => {
-      this.menuTarget.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-      this.menuTarget.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-    }, 10);
-  }
-  
-  // Helper to hide menu with animation
-  hideMenu() {
-    if (this.hasMenuTarget) {
-      this.menuTarget.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-      this.menuTarget.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-      
-      // Wait for animation to complete before hiding
-      setTimeout(() => {
-        this.menuTarget.classList.add('hidden');
-      }, 150);
+
+  _handleOtherDropdown(event) {
+    // Close this dropdown if another one is being opened
+    if (event.detail.id !== this.id) {
+      this.close();
     }
   }
 }

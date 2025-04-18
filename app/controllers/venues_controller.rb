@@ -24,7 +24,7 @@ class VenuesController < ApplicationController
     if @venue.save
       redirect_to @venue, notice: "Venue created successfully!"
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -37,7 +37,7 @@ class VenuesController < ApplicationController
     if @venue.update(venue_params)
       redirect_to @venue, notice: "Venue updated successfully!"
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 

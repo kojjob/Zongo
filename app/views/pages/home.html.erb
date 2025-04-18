@@ -1,842 +1,1096 @@
-<section class="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-indigo-950 dark:to-purple-950">
-  <!-- Theme Status Indicator - Only visible during development -->
-  <div class="fixed bottom-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" id="theme-debug-panel">
-    <div class="flex items-center space-x-3">
-      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Theme:</span>
-      <span class="px-2 py-1 text-xs font-bold rounded-md bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200" id="current-theme-status">light</span>
-      <button onclick="toggleThemeDebug()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+<!-- home.html.erb -->
+
+<!-- Hero Section with Video Background -->
+<section class="relative h-screen overflow-hidden">
+  <!-- Video Background with Fallback Image -->
+  <div class="absolute inset-0 z-0">
+    <video class="w-full h-full object-cover hidden md:block" autoplay loop muted playsinline>
+      <source src="<%= asset_path('ghanapp.mp4') %>" type="video/mp4">
+    </video>
+    <!-- Fallback image for mobile or if video fails -->
+    <img src="<%= asset_path('hero_ghana.jpg') %>" alt="Vibrant Ghana market scene" class="w-full h-full object-cover md:hidden">
+    <!-- Gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-r from-primary-900/80 to-primary-800/70"></div>
+  </div>
+  
+  <!-- Hero Content -->
+  <div class="relative z-10 flex flex-col justify-center items-start h-full container mx-auto px-4 md:px-8">
+    <div class="max-w-3xl" data-controller="parallax">
+      <div class="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white font-semibold animate-fade-in">
+        <span class="flex items-center">
+          <span class="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
+          Ghana's First All-In-One Super App
+        </span>
+      </div>
+      
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6 animate-fade-in">
+        Your Complete Digital <br class="hidden md:block">
+        <span class="text-gradient bg-gradient-to-r from-accent-400 to-accent-300">Life Companion</span>
+      </h1>
+      
+      <p class="text-xl text-white/90 mb-8 max-w-2xl animate-fade-in-delay">
+        Simplify your daily life with Ghana's revolutionary super app. Send money, shop, pay bills, book rides, and connect with your community—all in one place.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-delay">
+        <a href="#download" class="btn-primary flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Download App
+        </a>
+        <a href="#features" class="btn-secondary flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Explore Features
+        </a>
+      </div>
+      
+      <!-- Social Proof -->
+      <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 animate-fade-in-delay-long">
+        <div class="flex -space-x-2">
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user1.png') %>" alt="User">
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user2.png') %>" alt="User">
+          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user3.png') %>" alt="User">
+          <div class="inline-flex h-8 w-8 items-center justify-center rounded-full ring-2 ring-white bg-primary-400 text-xs font-medium text-white">
+            +5K
+          </div>
+        </div>
+        <div>
+          <div class="flex mb-1">
+            <% 5.times do %>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <p class="text-white text-sm">Trusted by 5,000+ users across Ghana</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Floating Mobile App Preview -->
+    <div class="hidden lg:block absolute right-8 top-1/2 transform -translate-y-1/2">
+      <div class="relative">
+        <img src="<%= asset_path('app-mockup-3d.png') %>" alt="Super Ghana App Preview" class="w-80 h-auto animate-float">
+        <div class="absolute -bottom-6 -left-6 w-full h-20 bg-gradient-to-r from-accent-500 to-secondary-500 rounded-full filter blur-xl opacity-30"></div>
+      </div>
+    </div>
+    
+    <!-- Scroll Down Indicator -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
+      <a href="#features" class="text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
-      </button>
-    </div>
-  </div>
-  
-  <!-- Background Decorative Elements -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-gradient-to-br from-primary-400/20 to-secondary-400/20 blur-2xl"></div>
-    <div class="absolute top-1/3 -left-24 w-64 h-64 rounded-full bg-gradient-to-br from-primary-400/20 to-accent-400/20 blur-xl"></div>
-    <div class="absolute bottom-0 right-1/4 w-48 h-48 rounded-full bg-gradient-to-br from-secondary-400/20 to-accent-400/20 blur-xl"></div>
-    
-    <!-- Animated circles -->
-    <div class="absolute top-20 left-1/4 w-8 h-8 rounded-full bg-primary-500/30 animate-ping-slow"></div>
-    <div class="absolute bottom-32 right-1/3 w-6 h-6 rounded-full bg-secondary-500/30 animate-ping-slower"></div>
-    <div class="absolute top-1/2 left-1/5 w-4 h-4 rounded-full bg-accent-500/30 animate-ping-slowest"></div>
-  </div>
-  
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative">
-    <div class="flex flex-col lg:flex-row items-center">
-      <!-- Hero Text -->
-      <div class="lg:w-1/2 mb-12 lg:mb-0 text-center lg:text-left">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white animate-fade-in">
-          Your Complete <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Super App</span> for Ghana
-        </h1>
-        <p class="mt-6 text-xl text-gray-600 dark:text-gray-300 max-w-lg mx-auto lg:mx-0 animate-fade-in-delayed">
-          Send money, pay bills, shop, and access essential services all in one place. Designed specifically for Ghanaians.
-        </p>
-        <div class="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4 animate-fade-in-more-delayed">
-          <%= link_to "Get Started", new_user_registration_path, class: "px-8 py-4 bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5" %>
-          <a href="#how-it-works" class="px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg font-medium rounded-xl shadow-md hover:shadow-lg transition border border-gray-200 dark:border-gray-700 sm:mt-0 mt-4 transform hover:-translate-y-0.5">
-            Learn More
-          </a>
-        </div>
-      </div>
-      
-      <!-- Hero Image with Device Mockup -->
-      <div class="lg:w-1/2 relative">
-        <div class="w-full max-w-md mx-auto animate-fade-in-delayed">
-          <!-- Enhanced Phone Device Frame with better proportions -->
-          <div class="relative rounded-[40px] overflow-hidden shadow-2xl mx-auto max-w-[280px] h-[580px] bg-gray-100 dark:bg-gray-800">
-            <!-- Phone Outline with realistic frame -->
-            <div class="absolute inset-0 border-[12px] border-gray-900 dark:border-gray-800 rounded-[40px] z-10 pointer-events-none shadow-inner"></div>
-            
-            <!-- Camera Notch -->
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-[70px] h-7 bg-gray-900 dark:bg-gray-800 rounded-b-2xl z-20"></div>
-            
-            <!-- Status Bar -->
-            <div class="bg-gray-900 dark:bg-gray-800 h-8 w-full flex items-center justify-between px-6 z-20 relative">
-              <div class="text-white text-xs">9:41</div>
-              <div class="flex space-x-2">
-                <div class="text-white text-xs">🇬🇭</div>
-                <div class="flex space-x-1">
-                  <div class="w-2 h-2 rounded-full bg-white/70"></div>
-                  <div class="w-2 h-2 rounded-full bg-white/70"></div>
-                  <div class="w-2 h-2 rounded-full bg-white/70"></div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- App Content - Direct integration instead of nested screenshot -->
-            <div class="relative w-full bg-white dark:bg-gray-900 p-4 h-[500px] overflow-y-auto">
-              <!-- App Header -->
-              <div class="flex justify-between items-center mb-5">
-                <div class="text-primary-600 dark:text-primary-400 font-bold text-lg">Super Ghana</div>
-                
-                <!-- Enhanced User Avatar -->
-                <div class="relative">
-                  <!-- Avatar with border and gradient background -->
-                  <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0.5">
-                    <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center overflow-hidden">
-                      <!-- Use an actual photo if available or use initials -->
-                      <div class="w-full h-full bg-gradient-to-br from-primary-100 to-primary-300 dark:from-primary-900 dark:to-primary-700 flex items-center justify-center text-primary-800 dark:text-primary-100 font-bold text-lg">
-                        KA
-                      </div>
-                      <!-- Alternatively, use a profile image -->
-                      <!-- <img src="profile-pic.jpg" alt="User Profile" class="w-full h-full object-cover"> -->
-                    </div>
-                  </div>
-                  
-                  <!-- Online Status Indicator -->
-                  <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-2 border-white dark:border-gray-800"></div>
-                </div>
-              </div>
-              
-              <!-- Greeting -->
-              <div class="mb-4">
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Good morning, Kwame</h2>
-                <p class="text-sm text-gray-600 dark:text-gray-400">Welcome back to Super Ghana</p>
-              </div>
-              
-              <!-- Balance Card -->
-              <div class="bg-gradient-to-r from-primary-600 to-secondary-600 rounded-xl p-4 text-white mb-6">
-                <div class="text-sm opacity-80 mb-1">Your Balance</div>
-                <div class="text-2xl font-bold mb-4">GHS 2,458.50</div>
-                <div class="flex justify-between">
-                  <div class="bg-white/20 rounded-lg px-2 py-1 text-xs backdrop-blur-sm">
-                    <span class="font-medium">+15.2%</span> This Month
-                  </div>
-                  <div class="flex space-x-2">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                      <%= icon "money-in", class: "h-4 w-4 text-white" %>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
-                      <%= icon "money-out", class: "h-4 w-4 text-white" %>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Quick Actions -->
-              <div class="mb-6">
-                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Quick Actions</h3>
-                <div class="grid grid-cols-4 gap-3">
-                  <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-1">
-                      <%= icon "transfer", class: "h-6 w-6 text-primary-600 dark:text-primary-400" %>
-                    </div>
-                    <span class="text-xs text-gray-800 dark:text-gray-200">Send</span>
-                  </div>
-                  <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-1">
-                      <%= icon "wallet", class: "h-6 w-6 text-blue-600 dark:text-blue-400" %>
-                    </div>
-                    <span class="text-xs text-gray-800 dark:text-gray-200">Receive</span>
-                  </div>
-                  <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-1">
-                      <%= icon "shopping", class: "h-6 w-6 text-purple-600 dark:text-purple-400" %>
-                    </div>
-                    <span class="text-xs text-gray-800 dark:text-gray-200">Shop</span>
-                  </div>
-                  <div class="flex flex-col items-center">
-                    <div class="w-12 h-12 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center mb-1">
-                      <%= icon "repeat", class: "h-6 w-6 text-yellow-600 dark:text-yellow-400" %>
-                    </div>
-                    <span class="text-xs text-gray-800 dark:text-gray-200">Bills</span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Recent Transactions -->
-              <div class="mb-6">
-                <div class="flex justify-between items-center mb-3">
-                  <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200">Recent Transactions</h3>
-                  <a href="#" class="text-xs font-medium text-primary-600 dark:text-primary-400">View All</a>
-                </div>
-                <div class="space-y-3">
-                  <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                    <div class="flex items-center">
-                      <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
-                        <%= icon "money-in", class: "h-5 w-5 text-green-600 dark:text-green-400" %>
-                      </div>
-                      <div>
-                        <div class="text-sm font-medium text-gray-800 dark:text-gray-200">Salary Deposit</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">Yesterday</div>
-                      </div>
-                    </div>
-                    <div class="text-sm font-medium text-green-600 dark:text-green-400">+GHS 1,250.00</div>
-                  </div>
-                  <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                    <div class="flex items-center">
-                      <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-3">
-                        <%= icon "money-out", class: "h-5 w-5 text-red-600 dark:text-red-400" %>
-                      </div>
-                      <div>
-                        <div class="text-sm font-medium text-gray-800 dark:text-gray-200">Grocery Shopping</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">Today</div>
-                      </div>
-                    </div>
-                    <div class="text-sm font-medium text-red-600 dark:text-red-400">-GHS 125.75</div>
-                  </div>
-                  <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                    <div class="flex items-center">
-                      <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
-                        <%= icon "transfer", class: "h-5 w-5 text-purple-600 dark:text-purple-400" %>
-                      </div>
-                      <div>
-                        <div class="text-sm font-medium text-gray-800 dark:text-gray-200">Transfer to Ama</div>
-                        <div class="text-xs text-gray-500 dark:text-gray-400">2 days ago</div>
-                      </div>
-                    </div>
-                    <div class="text-sm font-medium text-red-600 dark:text-red-400">-GHS 350.00</div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Upcoming Bills -->
-              <div>
-                <h3 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Upcoming Bills</h3>
-                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-4 text-white">
-                  <div class="flex justify-between items-center mb-2">
-                    <div>
-                      <div class="text-sm opacity-90">Electricity Bill</div>
-                      <div class="text-lg font-bold">GHS 87.50</div>
-                    </div>
-                    <div class="bg-white/20 rounded-lg p-2">
-                      <%= icon "repeat", class: "h-6 w-6 text-white" %>
-                    </div>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <div class="text-xs opacity-80">Due in 3 days</div>
-                    <button class="text-xs bg-white text-blue-700 font-medium px-3 py-1 rounded-full">Pay Now</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Home Indicator -->
-            <div class="bg-gray-900 dark:bg-gray-800 h-10 w-full flex items-center justify-center z-20">
-              <div class="w-1/3 h-1 rounded-full bg-white/70"></div>
-            </div>
-          </div>
-          
-          <!-- Reflection Effect -->
-          <div class="h-4 w-[220px] mx-auto bg-gradient-to-b from-gray-900/20 to-transparent rounded-b-full blur-sm -mt-1"></div>
-          
-          <!-- Enhanced Floating App Features -->
-          <div class="absolute -top-6 -left-6 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-lg border border-gray-100 dark:border-gray-700 animate-float z-20">
-            <div class="flex items-center">
-              <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                <%= icon "transfer", class: "h-5 w-5" %>
-              </div>
-              <div class="ml-3">
-                <span class="font-medium text-gray-900 dark:text-white block">Instant Transfers</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400">Send money instantly</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="absolute top-1/3 -right-6 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-lg border border-gray-100 dark:border-gray-700 animate-float-delayed z-20">
-            <div class="flex items-center">
-              <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                <%= icon "wallet", class: "h-5 w-5" %>
-              </div>
-              <div class="ml-3">
-                <span class="font-medium text-gray-900 dark:text-white block">Bill Payments</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400">Pay utilities easily</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="absolute bottom-1/4 -left-6 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-lg border border-gray-100 dark:border-gray-700 animate-float-more-delayed z-20">
-            <div class="flex items-center">
-              <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400">
-                <%= icon "shopping", class: "h-5 w-5" %>
-              </div>
-              <div class="ml-3">
-                <span class="font-medium text-gray-900 dark:text-white block">Shop Online</span>
-                <span class="text-xs text-gray-600 dark:text-gray-400">Purchase with ease</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Wave Divider -->
-  <div class="absolute -bottom-30 left-0 right-0 z-10">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto fill-current text-white dark:text-gray-950">
-      <path d="M0,64L80,58.7C160,53,320,43,480,42.7C640,43,800,53,960,58.7C1120,64,1280,64,1360,64L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
-    </svg>
-  </div>
-</section>
-
-<!-- Features Grid Section with Vibrant Hover Effects -->
-<section id="features" class="py-20 bg-white dark:bg-gray-950 relative -mt-1 z-5">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16 max-w-3xl mx-auto">
-      <span class="text-primary-600 dark:text-primary-400 font-semibold tracking-wider uppercase text-sm">Everything You Need</span>
-      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">One App for All Your Needs</h2>
-      <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">
-        Super Ghana brings together all the essential services you need in your daily life, designed specifically for Ghanaians.
-      </p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Feature 1: Mobile Money -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-1.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-primary-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "wallet", class: "h-8 w-8 text-primary-600 dark:text-primary-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition duration-300">Mobile Money & Payments</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Send and receive money instantly, pay bills, buy airtime, and manage all your financial needs in one place.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Instant transfers to any network</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Pay utility bills with ease</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Quick airtime and data purchase</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature 2: Shopping & Marketplace -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-2.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-secondary-100 dark:bg-secondary-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-secondary-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "shopping", class: "h-8 w-8 text-secondary-600 dark:text-secondary-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition duration-300">Shopping & Marketplace</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Shop from local businesses, order food, buy groceries, and discover great deals all within the app.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Local store directory</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Food delivery from popular restaurants</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Exclusive in-app discounts</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature 3: Transportation -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-3.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-accent-100 dark:bg-accent-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-accent-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "transport", class: "h-8 w-8 text-accent-600 dark:text-accent-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition duration-300">Transportation & Travel</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Book rides, buy bus tickets, and plan your travels with just a few taps on your phone.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>On-demand ride hailing</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Intercity bus ticketing</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Real-time trip tracking</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature 4: Agriculture -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-4.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-green-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "agriculture", class: "h-8 w-8 text-green-600 dark:text-green-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-green-600 dark:group-hover:text-green-400 transition duration-300">Agricultural Services</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Access market prices, connect with buyers, get weather forecasts, and more to support farming activities.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Real-time crop market prices</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Direct farmer-buyer connections</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Weather forecasts for farming</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature 5: Financial Services -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-5.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-red-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "finance", class: "h-8 w-8 text-red-600 dark:text-red-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-red-600 dark:group-hover:text-red-400 transition duration-300">Financial Services</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Access savings, loans, and insurance products tailored to meet your financial needs.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Goal-based savings plans</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Quick micro-loans</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Simple insurance products</span>
-          </li>
-        </ul>
-      </div>
-      
-      <!-- Feature 6: Community -->
-      <div class="group bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 hover:scale-[1.02] relative overflow-hidden">
-        <!-- Feature Background Pattern -->
-        <div class="absolute inset-0 bg-[url('/assets/images/patterns/pattern-6.svg')] opacity-5 dark:opacity-10 bg-no-repeat bg-cover pointer-events-none"></div>
-        
-        <div class="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-6 group-hover:scale-110 transition duration-300 relative">
-          <div class="absolute inset-0 bg-purple-500/10 rounded-2xl animate-pulse-slow"></div>
-          <%= icon "community", class: "h-8 w-8 text-purple-600 dark:text-purple-400" %>
-        </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition duration-300">Community & Social</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          Connect with local communities, discover events, and participate in group savings.
-        </p>
-        <ul class="space-y-2">
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Neighborhood communities</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Local events discovery</span>
-          </li>
-          <li class="flex items-center text-gray-700 dark:text-gray-300">
-            <%= icon "check", class: "h-5 w-5 text-green-500 mr-2 flex-shrink-0" %>
-            <span>Group savings ("susu") circles</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works Section with Interactive Timeline -->
-<section id="how-it-works" class="py-20 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-  <!-- Background Patterns -->
-  <%# <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white dark:from-gray-950 to-transparent"></div>
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-primary-300/10 to-secondary-300/10 dark:from-primary-600/5 dark:to-secondary-600/5 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-20 -left-20 w-60 h-60 bg-gradient-to-tr from-secondary-300/10 to-accent-300/10 dark:from-secondary-600/5 dark:to-accent-600/5 rounded-full blur-2xl"></div>
-  </div> %>
-  
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-    <div class="text-center mb-16 max-w-3xl mx-auto">
-      <span class="text-primary-600 dark:text-primary-400 font-semibold tracking-wider uppercase text-sm">Simple Process</span>
-      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">How It Works</h2>
-      <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">
-        Getting started with Super Ghana is quick and easy. Here's how to begin your journey.
-      </p>
-    </div>
-    
-    <div class="relative">
-      <!-- Connection Line for Desktop -->
-      <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary-600 via-secondary-600 to-accent-600 transform -translate-x-1/2 rounded-full"></div>
-      
-      <div class="space-y-16 relative">
-        <!-- Step 1 -->
-        <div data-step="1" class="lg:flex items-center group">
-          <div class="lg:w-1/2 lg:pr-16 mb-8 lg:mb-0 text-center lg:text-right">
-            <div class="inline-block text-purple-600 dark:text-purple-400 font-semibold tracking-wider uppercase text-sm mb-2">Step 1</div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition duration-300">Download & Sign Up</h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Download the app from Google Play or App Store. Create an account using your mobile number for quick verification.
-            </p>
-          </div>
-          
-          <div class="lg:absolute lg:inset-y-0 lg:left-1/2 flex lg:transform lg:-translate-x-1/2 justify-center lg:justify-center lg:items-center">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-purple-500 text-white text-xl font-bold flex items-center justify-center shadow-lg z-10 group-hover:scale-110 transition">
-              1
-            </div>
-          </div>
-          
-          <div class="lg:w-1/2 lg:pl-16 mt-8 lg:mt-0">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition duration-300 transform group-hover:scale-[1.02]">
-              <%= image_tag "step1-signup.png", alt: "Download and Sign Up", class: "w-full h-auto object-cover" %>
-              
-              <!-- Mobile Device Frame Overlay -->
-              <div class="absolute inset-0 border-[8px] border-gray-800 dark:border-gray-700 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Step 2 -->
-        <div data-step="2" class="lg:flex items-center flex-row-reverse group">
-          <div class="lg:w-1/2 lg:pl-16 mb-8 lg:mb-0 text-center lg:text-left">
-            <div class="inline-block text-purple-600 dark:text-purple-400 font-semibold tracking-wider uppercase text-sm mb-2">Step 2</div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition duration-300">Verify Your Identity</h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Complete a simple KYC process to verify your identity. This ensures your account is secure and ready for transactions.
-            </p>
-          </div>
-          
-          <div class="lg:absolute lg:inset-y-0 lg:left-1/2 flex lg:transform lg:-translate-x-1/2 justify-center lg:justify-center lg:items-center">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-purple-500 text-white text-xl font-bold flex items-center justify-center shadow-lg z-10 group-hover:scale-110 transition">
-              2
-            </div>
-          </div>
-          
-          <div class="lg:w-1/2 lg:pr-16 mt-8 lg:mt-0">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition duration-300 transform group-hover:scale-[1.02]">
-              <%= image_tag "step2-verify.png", alt: "Verify Your Identity", class: "w-full h-auto object-cover" %>
-              
-              <!-- Mobile Device Frame Overlay -->
-              <div class="absolute inset-0 border-[8px] border-gray-800 dark:border-gray-700 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Step 3 -->
-        <div data-step="3" class="lg:flex items-center group">
-           <div class="lg:w-1/2 lg:pr-16 mb-8 lg:mb-0 text-center lg:text-right">
-           <div class="inline-block text-purple-600 dark:text-purple-400 font-semibold tracking-wider uppercase text-sm mb-2">Step 3</div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition duration-300">Add Money to Wallet</h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Fund your wallet using mobile money, bank transfer, or cash deposit at partner locations across Ghana.
-            </p>
-          </div>
-          
-          <div class="lg:absolute lg:inset-y-0 lg:left-1/2 flex lg:transform lg:-translate-x-1/2 justify-center lg:justify-center lg:items-center">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-purple-500 text-white text-xl font-bold flex items-center justify-center shadow-lg z-10 group-hover:scale-110 transition">
-              3
-            </div>
-          </div>
-          
-          <div class="lg:w-1/2 lg:pl-16 mt-8 lg:mt-0">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition duration-300 transform group-hover:scale-[1.02]">
-              <%= image_tag "step3-wallet.png", alt: "Add Money to Wallet", class: "w-full h-auto object-cover" %>
-              
-              <!-- Mobile Device Frame Overlay -->
-              <div class="absolute inset-0 border-[8px] border-gray-800 dark:border-gray-700 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300"></div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Step 4 -->
-        <div data-step="4" class="lg:flex items-center flex-row-reverse group">
-          <div class="lg:w-1/2 lg:pl-16 mb-8 lg:mb-0 text-center lg:text-left">
-            <%# Continuing Step 4 in the How It Works section %>
-            <div class="inline-block text-purple-600 dark:text-purple-400 font-semibold tracking-wider uppercase text-sm mb-2">Step 4</div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition duration-300">Enjoy All Services</h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Start sending money, paying bills, shopping, and accessing all the features Super Ghana has to offer.
-            </p>
-          </div>
-          
-          <div class="lg:absolute lg:inset-y-0 lg:left-1/2 flex lg:transform lg:-translate-x-1/2 justify-center lg:justify-center lg:items-center">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-purple-500 text-white text-xl font-bold flex items-center justify-center shadow-lg z-10 group-hover:scale-110 transition">
-              4
-            </div>
-          </div>
-          
-          <div class="lg:w-1/2 lg:pr-16 mt-8 lg:mt-0">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition duration-300 transform group-hover:scale-[1.02]">
-              <%= image_tag "step4-use.png", alt: "Enjoy All Services", class: "w-full h-auto object-cover" %>
-              
-              <!-- Mobile Device Frame Overlay -->
-              <div class="absolute inset-0 border-[8px] border-gray-800 dark:border-gray-700 rounded-2xl opacity-0 group-hover:opacity-100 pointer-events-none transition duration-300"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="mt-16 text-center">
-      <a href="#" class="inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white font-medium shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
-        <span>Get Started Today</span>
-        <%= icon "arrow-right", class: "h-5 w-5 ml-2" %>
       </a>
     </div>
   </div>
 </section>
 
-<!-- Testimonials with Animated Cards -->
-<section id="testimonials" class="py-20 bg-white dark:bg-gray-950 relative overflow-hidden">
-  <!-- Background Elements -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-primary-900/20 dark:to-secondary-900/20 rounded-full blur-3xl opacity-70"></div>
-    <div class="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-accent-100 to-purple-100 dark:from-accent-900/20 dark:to-purple-900/20 rounded-full blur-3xl opacity-70"></div>
-  </div>
-  
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-    <div class="text-center mb-16 max-w-3xl mx-auto">
-      <span class="text-primary-600 dark:text-primary-400 font-semibold tracking-wider uppercase text-sm">Testimonials</span>
-      <h2 class="mt-2 text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">What Our Users Say</h2>
-      <p class="mt-4 text-xl text-gray-600 dark:text-gray-400">
-        Join thousands of satisfied users who are transforming how they handle everyday tasks.
-      </p>
+<!-- Featured In Section -->
+<section class="py-10 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-6">
+      <span class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wider">Featured In</span>
     </div>
-    
-    <!-- Theme enforcement script for testimonials -->
-    <script>
-      document.addEventListener('theme-changed', function(e) {
-        // Force re-applying dark/light theme to testimonial cards
-        const testimonialCards = document.querySelectorAll('#testimonials .bg-gradient-to-br');
-        const isDark = document.documentElement.classList.contains('dark');
-        
-        // For each testimonial card
-        testimonialCards.forEach(card => {
-          if (isDark) {
-            card.style.backgroundImage = 'linear-gradient(to bottom right, #1f2937, #111827)';
-          } else {
-            card.style.backgroundImage = 'linear-gradient(to bottom right, #ffffff, #f9fafb)';
-          }
-        });
-        
-        console.log('Theme enforcement applied to testimonials:', isDark ? 'dark' : 'light');
-      });
-    </script>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
-      <!-- Testimonial 1 -->
-      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 relative">
-        <!-- Quote Mark Decoration -->
-        <div class="absolute -top-4 -left-4 w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-          </svg>
-        </div>
-        
-        <div class="flex items-center mb-6">
-          <div class="h-14 w-14 rounded-full overflow-hidden ring-4 ring-primary-100 dark:ring-primary-900">
-            <%= image_tag "testimonial-1.jpg", alt: "Abena Mensah", class: "h-full w-full object-cover" %>
-          </div>
-          <div class="ml-4">
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white">Abena Mensah</h4>
-            <p class="text-gray-600 dark:text-gray-400">Market Vendor, Kumasi</p>
-          </div>
-        </div>
-        
-        <div class="mb-4 flex">
-          <% 5.times do %>
-            <%= icon "star", class: "h-5 w-5 text-yellow-500" %>
-          <% end %>
-        </div>
-        
-        <p class="text-gray-700 dark:text-gray-300 italic relative">
-          <span class="text-primary-500 text-4xl font-serif absolute -top-2 -left-1 opacity-20">"</span>
-          Super Ghana has changed how I run my business. I can receive payments easily, pay my suppliers, and even save for expanding my shop. It's like having a bank in my pocket!
-          <span class="text-primary-500 text-4xl font-serif absolute -bottom-6 -right-1 opacity-20">"</span>
-        </p>
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
+        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/>
+          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">GhanaNews</text>
+        </svg>
       </div>
-      
-      <!-- Testimonial 2 -->
-      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 relative">
-        <!-- Quote Mark Decoration -->
-        <div class="absolute -top-4 -left-4 w-8 h-8 bg-secondary-500 rounded-full flex items-center justify-center text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-          </svg>
-        </div>
-        
-        <div class="flex items-center mb-6">
-          <div class="h-14 w-14 rounded-full overflow-hidden ring-4 ring-secondary-100 dark:ring-secondary-900">
-            <%= image_tag "testimonial-2.jpg", alt: "Kwame Osei", class: "h-full w-full object-cover" %>
-          </div>
-          <div class="ml-4">
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white">Kwame Osei</h4>
-            <p class="text-gray-600 dark:text-gray-400">Student, University of Ghana</p>
-          </div>
-        </div>
-        
-        <div class="mb-4 flex">
-          <% 5.times do %>
-            <%= icon "star", class: "h-5 w-5 text-yellow-500" %>
-          <% end %>
-        </div>
-        
-        <p class="text-gray-700 dark:text-gray-300 italic relative">
-          <span class="text-secondary-500 text-4xl font-serif absolute -top-2 -left-1 opacity-20">"</span>
-          Paying my school fees and splitting bills with roommates is so easy now. I also love that I can buy data bundles at any time, even late at night when I'm studying!
-          <span class="text-secondary-500 text-4xl font-serif absolute -bottom-6 -right-1 opacity-20">"</span>
-        </p>
+      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
+        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
+          <circle cx="15" cy="15" r="10" fill="currentColor"/>
+          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">TechAfrica</text>
+        </svg>
       </div>
-      
-      <!-- Testimonial 3 -->
-      <div class="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2 relative">
-        <!-- Quote Mark Decoration -->
-        <div class="absolute -top-4 -left-4 w-8 h-8 bg-accent-500 rounded-full flex items-center justify-center text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-          </svg>
-        </div>
-        
-        <div class="flex items-center mb-6">
-          <div class="h-14 w-14 rounded-full overflow-hidden ring-4 ring-accent-100 dark:ring-accent-900">
-            <%= image_tag "testimonial-3.jpg", alt: "Kofi Addo", class: "h-full w-full object-cover" %>
-          </div>
-          <div class="ml-4">
-            <h4 class="text-lg font-bold text-gray-900 dark:text-white">Kofi Addo</h4>
-            <p class="text-gray-600 dark:text-gray-400">Farmer, Northern Region</p>
-          </div>
-        </div>
-        
-        <div class="mb-4 flex">
-          <% 5.times do %>
-            <%= icon "star", class: "h-5 w-5 text-yellow-500" %>
-          <% end %>
-        </div>
-        
-        <p class="text-gray-700 dark:text-gray-300 italic relative">
-          <span class="text-accent-500 text-4xl font-serif absolute -top-2 -left-1 opacity-20">"</span>
-          The agricultural features are a game-changer! I check market prices before selling my crops and have connected with buyers in Accra. My income has increased by 30% since using Super Ghana.
-          <span class="text-accent-500 text-4xl font-serif absolute -bottom-6 -right-1 opacity-20">"</span>
-        </p>
+      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
+        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
+          <rect x="5" y="5" width="20" height="20" fill="currentColor"/>
+          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">BusinessGH</text>
+        </svg>
+      </div>
+      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
+        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
+          <polygon points="15,5 25,15 15,25 5,15" fill="currentColor"/>
+          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">FinanceDaily</text>
+        </svg>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Stats Section with Animated Counters -->
-<section class="py-20 bg-gradient-to-r from-primary-600 to-secondary-600 text-white relative overflow-hidden" data-controller="counter">
-  <!-- Decorative Background Elements -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-white rounded-full opacity-10 blur-3xl"></div>
-    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-white rounded-full opacity-10 blur-3xl"></div>
-    <div class="absolute top-1/4 left-1/4 w-20 h-20 bg-white rounded-full opacity-20 animate-ping-slow"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-12 h-12 bg-white rounded-full opacity-20 animate-ping-slower"></div>
-  </div>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+<!-- Core Features Section -->
+<section id="features" class="py-20 bg-white dark:bg-gray-900">
+  <div class="container mx-auto px-4">
     <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold">Growing Rapidly Across Ghana</h2>
-      <p class="mt-4 text-xl text-white/90 max-w-3xl mx-auto">
-        Join our community of users who are transforming their daily lives with Super Ghana.
+      <div class="inline-block p-3 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Everything You Need in One App</h2>
+      <div class="w-20 h-1 bg-primary-500 mx-auto mb-8"></div>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        Super Ghana brings together essential services that simplify your daily life, save you time, and help you manage your finances.
       </p>
     </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <!-- Stat 1 -->
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition duration-300 hover:transform hover:scale-105">
-        <div class="text-4xl md:text-5xl font-bold mb-2" data-counter-target="number" data-final-number="1.2">0</div>
-        <div class="text-white/80 font-medium">Million+ Users</div>
+    <!-- Feature Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-primary-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Mobile Money & Payments</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Send money instantly, pay bills, buy airtime, and manage all your finances in one secure wallet.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Instant P2P transfers</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Bill payments & subscriptions</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>QR code merchant payments</span>
+            </li>
+          </ul>
+        </div>
       </div>
       
-      <!-- Stat 2 -->
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition duration-300 hover:transform hover:scale-105">
-        <div class="text-4xl md:text-5xl font-bold mb-2" data-counter-target="number" data-final-number="85">0</div>
-        <div class="text-white/80 font-medium">Million+ Transactions</div>
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-secondary-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Shopping & Marketplace</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Discover local products, shop from trusted merchants, and get everything delivered to your doorstep.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Local merchant marketplace</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Secure in-app purchasing</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Delivery tracking & notifications</span>
+            </li>
+          </ul>
+        </div>
       </div>
       
-      <!-- Stat 3 -->
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition duration-300 hover:transform hover:scale-105">
-        <div class="text-4xl md:text-5xl font-bold mb-2" data-counter-target="number" data-final-number="25000">0</div>
-        <div class="text-white/80 font-medium">Merchant Partners</div>
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-accent-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Transportation & Travel</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Book rides, purchase bus tickets, and plan your journeys with our integrated transit options.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Ride-hailing services</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Bus and transit ticketing</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Route planning and navigation</span>
+            </li>
+          </ul>
+        </div>
       </div>
       
-      <!-- Stat 4 -->
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-center hover:bg-white/20 transition duration-300 hover:transform hover:scale-105">
-        <div class="text-4xl md:text-5xl font-bold mb-2" data-counter-target="number" data-final-number="16">0</div>
-        <div class="text-white/80 font-medium">Regions Covered</div>
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-success-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Agricultural Services</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Track crop prices, get weather forecasts, and connect with buyers in the agricultural sector.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Market price tracking</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Weather forecasts and alerts</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Farmer marketplace connections</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Feature 5 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-warning-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-warning-100 dark:bg-warning-900 flex items-center justify-center text-warning-600 dark:text-warning-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Financial Services</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Access loans, create savings groups, and learn about financial management all in one place.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Micro-lending services</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Group savings ("susu") tools</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Financial education resources</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Feature 6 -->
+      <div class="feature-card">
+        <div class="h-3 w-full bg-info-500 rounded-t-2xl"></div>
+        <div class="p-8">
+          <div class="w-16 h-16 rounded-xl bg-info-100 dark:bg-info-900 flex items-center justify-center text-info-600 dark:text-info-400 mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Community & Social</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4">
+            Connect with your community, discover local events, and build networks with people in your area.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Community groups & forums</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Event discovery & ticketing</span>
+            </li>
+            <li class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span>Local service provider directory</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Download CTA Section -->
-<section class="py-20 bg-white dark:bg-gray-950 relative overflow-hidden">
-  <!-- Background Decoration -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -bottom-96 right-0 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-primary-100/30 to-secondary-100/30 dark:from-primary-900/10 dark:to-secondary-900/10 blur-3xl"></div>
-  </div>
+<!-- App Demo Section with Animated Screens -->
+<section class="py-20 bg-gradient-to-br from-primary-900 to-primary-700 text-white overflow-hidden relative">
+  <div class="absolute inset-0 z-0 opacity-10 pattern-dots"></div>
   
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-    <div class="flex flex-col md:flex-row items-center justify-between">
-      <div class="md:w-1/2 mb-12 md:mb-0">
-        <div class="inline-block text-primary-600 dark:text-primary-400 font-semibold tracking-wider uppercase text-sm mb-2">Download Now</div>
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">Transform Your Daily Life</h2>
-        <p class="text-xl mb-8 text-gray-600 dark:text-gray-400 max-w-lg">
-          Join the thousands of Ghanaians who are simplifying their daily lives with our all-in-one super app.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4">
-          <a href="#" class="group inline-flex items-center justify-center px-6 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5">
-            <%= icon "google-play", class: "h-6 w-6 mr-3 text-white dark:text-gray-900" %>
-            <div class="flex flex-col text-left">
-              <span class="text-xs">GET IT ON</span>
-              <span class="text-base font-semibold">Google Play</span>
-            </div>
-          </a>
-          <a href="#" class="group inline-flex items-center justify-center px-6 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5">
-            <%= icon "app-store", class: "h-6 w-6 mr-3 text-white dark:text-gray-900" %>
-            <div class="flex flex-col text-left">
-              <span class="text-xs">DOWNLOAD ON THE</span>
-              <span class="text-base font-semibold">App Store</span>
-            </div>
-          </a>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-16">
+      <div class="inline-block p-3 rounded-full bg-white/10 text-white mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4">See the App in Action</h2>
+      <div class="w-20 h-1 bg-white mx-auto mb-8"></div>
+      <p class="text-xl text-white/90 max-w-3xl mx-auto">
+        Experience the simplicity and power of Super Ghana through our interactive demo.
+      </p>
+    </div>
+    
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+      <!-- App Screenshots Slider -->
+      <div class="lg:w-3/5 relative">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <img src="<%= asset_path('app-screen-animation.gif') %>" alt="App Demo" class="w-full h-full object-cover rounded-3xl">
+          </div>
         </div>
+        
+        <div class="absolute -top-10 -left-10 w-20 h-20 bg-accent-500 rounded-full opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-5 -right-5 w-16 h-16 bg-secondary-500 rounded-full opacity-20 animate-pulse delay-300"></div>
       </div>
       
-      <div class="md:w-1/2 relative flex justify-center md:justify-end">
-        <div class="w-72 h-auto relative perspective-1000">
-          <!-- 3D Mockup with reflection and glowing effect -->
-          <div class="relative transform-3d rotate-y-10 rotate-x-5 transition-transform duration-500 hover:rotate-y-0 hover:rotate-x-0">
-            <%= image_tag "app-mockup-3d.png", alt: "Super Ghana App Mockup", class: "w-full h-auto object-cover relative z-10 rounded-[40px] shadow-2xl" %>
-            
-            <!-- Glow Effect -->
-            <div class="absolute -inset-4 bg-gradient-to-r from-primary-400/20 via-secondary-400/20 to-accent-400/10 dark:from-primary-400/10 dark:via-secondary-400/10 dark:to-accent-400/5 blur-xl rounded-full z-0"></div>
-            
-            <!-- Active Screen Animation -->
-            <div class="absolute inset-5 bg-white dark:bg-gray-900 rounded-3xl overflow-hidden z-20">
-              <div class="absolute inset-0 opacity-70 animate-pulse-slow">
-                <%= image_tag "app-screen-animation.gif", alt: "App Interface Animation", class: "w-full h-full object-cover" %>
+      <!-- Features List -->
+      <div class="lg:w-2/5 space-y-8">
+        <!-- Feature 1 -->
+        <div class="feature-highlight" data-controller="hover-effect">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
+            <div class="flex">
+              <div class="w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center mr-4 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">Intuitive Interface</h3>
+                <p class="text-white/80">
+                  Designed for all users regardless of tech experience, with simple navigation and clear visuals.
+                </p>
               </div>
             </div>
           </div>
-          
-          <!-- Reflection -->
-          <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-4/5 h-10 bg-black/10 dark:bg-white/10 blur-md rounded-full"></div>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="feature-highlight" data-controller="hover-effect">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
+            <div class="flex">
+              <div class="w-12 h-12 rounded-xl bg-secondary-500 flex items-center justify-center mr-4 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">Bank-Grade Security</h3>
+                <p class="text-white/80">
+                  Your data and money are protected with industry-leading encryption and security measures.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="feature-highlight" data-controller="hover-effect">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
+            <div class="flex">
+              <div class="w-12 h-12 rounded-xl bg-accent-500 flex items-center justify-center mr-4 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold mb-2">Works Offline</h3>
+                <p class="text-white/80">
+                  Continue using essential features even when your connection is unstable or unavailable.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-8">
+          <a href="#download" class="btn-white flex items-center justify-center mx-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            Try the Demo
+          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-white dark:bg-gray-900">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <div class="inline-block p-3 rounded-full bg-warning-100 dark:bg-warning-900 text-warning-600 dark:text-warning-400 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Getting Started is Easy</h2>
+      <div class="w-20 h-1 bg-warning-500 mx-auto mb-8"></div>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        Start using Super Ghana in just a few simple steps
+      </p>
+    </div>
+    
+    <div class="relative">
+      <!-- Steps connection line -->
+      <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 transform -translate-y-1/2 z-0"></div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+        <!-- Step 1 -->
+        <div class="text-center flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-4 relative">
+            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary-600 text-white text-sm flex items-center justify-center">1</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Download the App</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              Get Super Ghana from your app store and install it on your smartphone.
+            </p>
+            <img src="<%= asset_path('step1-signup.png') %>" alt="Download app" class="h-32 mx-auto mt-4">
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="text-center flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-4 relative">
+            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-secondary-600 text-white text-sm flex items-center justify-center">2</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Create Your Account</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              Register with your phone number and complete a simple verification process.
+            </p>
+            <img src="<%= asset_path('step2-verify.png') %>" alt="Create account" class="h-32 mx-auto mt-4">
+          </div>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="text-center flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-4 relative">
+            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-accent-600 text-white text-sm flex items-center justify-center">3</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Add Money to Wallet</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              Fund your wallet using mobile money, bank transfer, or other payment methods.
+            </p>
+            <img src="<%= asset_path('step3-wallet.png') %>" alt="Add money" class="h-32 mx-auto mt-4">
+          </div>
+        </div>
+        
+        <!-- Step 4 -->
+        <div class="text-center flex flex-col items-center">
+          <div class="w-16 h-16 rounded-full bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-4 relative">
+            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-success-600 text-white text-sm flex items-center justify-center">4</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Start Using the App</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              Explore all features and start enjoying the convenience of Super Ghana.
+            </p>
+            <img src="<%= asset_path('step4-use.png') %>" alt="Use app" class="h-32 mx-auto mt-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-gray-50 dark:bg-gray-800">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <div class="inline-block p-3 rounded-full bg-success-100 dark:bg-success-900 text-success-600 dark:text-success-400 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">What Our Users Say</h2>
+      <div class="w-20 h-1 bg-success-500 mx-auto mb-8"></div>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        Join thousands of satisfied users who have transformed their daily lives with Super Ghana
+      </p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Testimonial 1 -->
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center mb-4">
+            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-1.jpg') %>" alt="User">
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white">Ama Kufuor</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Market Vendor, Kumasi</p>
+            </div>
+          </div>
+          <div class="flex mb-4">
+            <% 5.times do %>
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
+            "Super Ghana has transformed how I run my market business. I can now accept mobile payments, order new stock, and even get small loans when I need them - all in one app!"
+          </blockquote>
+          <div class="flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Mobile Money User
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 2 -->
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center mb-4">
+            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-2.jpg') %>" alt="User">
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white">Kwame Asante</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">University Student, Accra</p>
+            </div>
+          </div>
+          <div class="flex mb-4">
+            <% 5.times do %>
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
+            "As a student, managing money was always difficult. With Super Ghana, I can easily pay my school fees, split costs with roommates, and even save money towards my goals."
+          </blockquote>
+          <div class="flex items-center text-secondary-600 dark:text-secondary-400 text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            Student User
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 3 -->
+      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
+        <div class="p-8">
+          <div class="flex items-center mb-4">
+            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-3.jpg') %>" alt="User">
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white">Ibrahim Mensa</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Farmer, Northern Region</p>
+            </div>
+          </div>
+          <div class="flex mb-4">
+            <% 5.times do %>
+              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
+            "The farming tools on Super Ghana help me track market prices and connect with buyers directly. I've increased my profits and expanded my farm thanks to the agricultural loans."
+          </blockquote>
+          <div class="flex items-center text-success-600 dark:text-success-400 text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Agricultural Services User
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-12">
+      <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center justify-center">
+        Read More Success Stories
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Download & CTA Section -->
+<section id="download" class="py-20 bg-white dark:bg-gray-900 relative overflow-hidden">
+  <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary-100 to-white opacity-50 dark:opacity-10 z-0"></div>
+  <div class="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-t from-secondary-100 to-white opacity-50 dark:opacity-10 z-0"></div>
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-12">
+      <div class="lg:w-3/5">
+        <div class="inline-block p-2 px-4 rounded-full bg-success-100 dark:bg-success-900 text-success-600 dark:text-success-400 mb-4">
+          <span class="text-sm font-semibold">Available Now</span>
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white">Download Super Ghana Today</h2>
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">
+          Join thousands of Ghanaians who are simplifying their daily lives with our all-in-one super app. Available for Android and iOS devices.
+        </p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <!-- Download Button 1 -->
+          <a href="#" class="download-button group">
+            <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
+              <div class="mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.9,2.4c-0.1,0-0.2,0-0.3,0.1c-0.7,0.4-1.2,0.9-1.5,1.5C15.6,5,15.3,6.2,15.3,7.4c0,1.1,0.3,2.1,1,2.9c0.7,0.8,1.5,1.3,2.5,1.3 c0.1,0,0.2,0,0.3-0.1c0.7-0.4,1.2-0.9,1.6-1.5c0
+.4-0.6,0.5-1.3,0.5-1.9C21.2,4.6,19.8,2.4,17.9,2.4z M7.3,11.8c-2.9,0-5.3,2.3-5.3,5.2c0,2.8,2.4,5.1,5.3,5.1c2.9,0,5.3-2.3,5.3-5.1C12.5,14.1,10.2,11.8,7.3,11.8z M17.7,11.8c-2.9,0-5.3,2.3-5.3,5.2 c0,2.8,2.4,5.1,5.3,5.1c2.9,0,5.3-2.3,5.3-5.1C23,14.1,20.6,11.8,17.7,11.8z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs">GET IT ON</div>
+                <div class="text-xl font-semibold">Google Play</div>
+              </div>
+            </div>
+          </a>
+          
+          <!-- Download Button 2 -->
+          <a href="#" class="download-button group">
+            <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
+              <div class="mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.645 7.262c2.075.179 4.135 2.031 4.135 4.811 0 2.962-2.249 4.706-4.217 4.706-1.079 0-1.97-.305-2.681-.822-1.225-.892-1.891-2.446-1.891-4.504 0-1.204.207-2.207.732-3.102a3.928 3.928 0 0 1 3.272-1.618c.206.001.428.021.65.06v.469zm-2.917-6.062c1.978 0 4.322 1.194 5.688 3.132-1.955-.515-3.654.334-4.572 1.509-.878 1.089-1.128 2.619-1.086 3.927.012.362.068.731.157 1.049-1.875.125-2.983-.622-3.966-1.75-1.367-1.582-2.35-4.25-2.35-6.803 0-1.021.188-1.734.617-2.266.633-.824 1.731-1.101 3.114-1.101 1.298 0 2.35.338 3.261.972-.32.424-.503.946-.503 1.508 0 .826.34 1.751.64 2.823zm-5.239 1.414c1.285 1.011 2.554 1.96 2.554 4.407 0 3.145-2.522 4.248-4.617 4.248-2.116 0-4.426-1.04-4.426-3.573 0-1.331.766-2.911 2.089-3.957 1.239-.969 2.952-1.125 4.4-1.125z"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs">Download on the</div>
+                <div class="text-xl font-semibold">App Store</div>
+              </div>
+            </div>
+          </a>
+        </div>
+        
+        <div class="flex items-center justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400">
+          <div class="flex mr-4">
+            <% 5.times do %>
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <span>Rated 4.8/5 from over 2,000 users</span>
+        </div>
+      </div>
+      
+      <div class="lg:w-2/5 mt-8 lg:mt-0">
+        <!-- QR Code for App Download -->
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-sm mx-auto transform hover:scale-105 transition duration-300">
+          <div class="text-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Scan to Download</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm">
+              Use your phone camera to scan this QR code
+            </p>
+          </div>
+          
+          <div class="bg-white p-4 rounded-xl mx-auto max-w-xs">
+            <div class="aspect-square w-full bg-[url('/assets/qr-code.svg')] bg-contain bg-no-repeat bg-center">
+              <!-- QR Code placeholder -->
+            </div>
+          </div>
+          
+          <div class="mt-4 text-center">
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Or visit <span class="text-primary-600 dark:text-primary-400 font-semibold">superghanaglobal.com/download</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-20 bg-gray-50 dark:bg-gray-800">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <div class="inline-block p-3 rounded-full bg-info-100 dark:bg-info-900 text-info-600 dark:text-info-400 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+      <div class="w-20 h-1 bg-info-500 mx-auto mb-8"></div>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        Get answers to common questions about Super Ghana
+      </p>
+    </div>
+    
+    <div class="max-w-4xl mx-auto" data-controller="accordion">
+      <!-- FAQ Item 1 -->
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
+          <span class="text-lg font-semibold text-gray-900 dark:text-white">What is Super Ghana?</span>
+          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="hidden pb-6" data-accordion-target="content">
+          <p class="text-gray-700 dark:text-gray-300">
+            Super Ghana is a comprehensive digital platform that brings together essential services in one application. It includes mobile money transfers, bill payments, shopping, transportation services, agricultural tools, financial services, and community features - all designed specifically for the Ghanaian market.
+          </p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 2 -->
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
+          <span class="text-lg font-semibold text-gray-900 dark:text-white">Is my money safe with Super Ghana?</span>
+          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="hidden pb-6" data-accordion-target="content">
+          <p class="text-gray-700 dark:text-gray-300">
+            Absolutely! We prioritize the security of your funds and personal information. Super Ghana employs industry-leading security measures, including encryption, secure authentication, and fraud detection systems. Additionally, we comply with all relevant financial regulations in Ghana to ensure your money is protected.
+          </p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 3 -->
+      <div class="border-b border-gray-200 dark:border-gray-700">
+        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
+          <span class="text-lg font-semibold text-gray-900 dark:text-white">Can I use Super Ghana if I don't have a smartphone?</span>
+          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="hidden pb-6" data-accordion-target="content">
+          <p class="text-gray-700 dark:text-gray-300">
+            Yes! While the full app experience is available on smartphones, we've also designed basic services to be accessible via USSD codes on feature phones. This ensures that essential financial services are available to all Ghanaians, regardless of the type of phone they use.
+          </p>
+        </div>
+      </div>
+      
+      <!-- FAQ Item 4 -->
+      <div>
+        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
+          <span class="text-lg font-semibold text-gray-900 dark:text-white">How can I become a merchant on Super Ghana?</span>
+          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div class="hidden pb-6" data-accordion-target="content">
+          <p class="text-gray-700 dark:text-gray-300">
+            To become a merchant, download the app and select "Become a Merchant" in the settings menu. You'll need to provide business details and documentation for verification. Once approved, you'll receive a merchant QR code for accepting payments and can set up your storefront in the marketplace to sell products and services.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-12">
+      <a href="#" class="btn-primary inline-flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        Contact Support
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-16 bg-primary-600 text-white">
+  <div class="container mx-auto px-4">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-2xl sm:text-3xl font-bold mb-4">Stay Updated</h2>
+      <p class="text-white/80 mb-8">
+        Subscribe to our newsletter to receive updates, special offers, and exclusive tips.
+      </p>
+      
+      <form class="flex flex-col sm:flex-row gap-4">
+        <input type="email" placeholder="Enter your email" class="flex-1 rounded-lg px-4 py-3 text-gray-900 border-0 focus:ring-2 focus:ring-white">
+        <button type="submit" class="bg-white text-primary-600 font-medium rounded-lg px-6 py-3 hover:bg-white/90 transition">
+          Subscribe
+        </button>
+      </form>
+      
+      <p class="text-white/60 text-sm mt-4">
+        We respect your privacy. Unsubscribe at any time.
+      </p>
+    </div>
+  </div>
+</section>
+<!-- Custom CSS for additional styling -->
+<style>
+  /* Feature Card Styling */
+  .feature-card {
+    @apply bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden transition transform hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  /* Button Styling */
+  .btn-primary {
+    @apply px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 bg-white hover:bg-gray-100 text-primary-600 font-medium rounded-lg border border-primary-500 transition shadow-md;
+  }
+  
+  .btn-white {
+    @apply px-6 py-3 bg-white hover:bg-gray-100 text-gray-900 font-medium rounded-lg transition shadow-md;
+  }
+  
+  /* Phone Mockup Styling */
+  .phone-mockup {
+    @apply relative w-full max-w-xs mx-auto;
+    aspect-ratio: 1/2;
+  }
+  
+  .phone-mockup::before {
+    content: "";
+    @apply absolute inset-0 bg-gray-900 rounded-[40px] border-4 border-gray-800 shadow-2xl;
+    z-index: 1;
+  }
+  
+  .phone-screen {
+    @apply absolute top-2 right-2 bottom-2 left-2 bg-white rounded-[32px] overflow-hidden;
+    z-index: 2;
+  }
+  
+  /* Text Gradient */
+  .text-gradient {
+    @apply text-transparent bg-clip-text;
+    -webkit-background-clip: text;
+  }
+  
+  /* Pattern Styling */
+  .pattern-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+  
+  .animate-fade-in-delay {
+    animation: fadeIn 1s ease-out 0.3s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  
+  .animate-fade-in-delay-long {
+    animation: fadeIn 1s ease-out 0.6s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+  
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  .animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  /* Download Button Hover Effect */
+  .download-button:hover svg {
+    @apply animate-pulse;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
+    .phone-mockup {
+      max-width: 220px;
+    }
+  }
+</style>
+
+<!-- JavaScript for Interactivity -->
+<script>
+  document.addEventListener('turbo:load', function() {
+    // Initialize Alpine.js components if they exist
+    if (typeof Alpine !== 'undefined') {
+      Alpine.start();
+    }
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Intersection Observer for animations
+    const animateElements = document.querySelectorAll('.feature-card, .feature-highlight');
+    
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      animateElements.forEach(el => {
+        observer.observe(el);
+        // Initially hide
+        el.style.opacity = '0';
+      });
+    }
+    
+    // Theme toggle functionality
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', function() {
+        if (htmlElement.classList.contains('dark')) {
+          htmlElement.classList.remove('dark');
+          localStorage.theme = 'light';
+        } else {
+          htmlElement.classList.add('dark');
+          localStorage.theme = 'dark';
+        }
+      });
+    }
+    
+    // Set initial theme
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+    
+    // Accordion functionality
+    const accordionButtons = document.querySelectorAll('[data-action="accordion#toggle"]');
+    
+    accordionButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const icon = this.querySelector('[data-accordion-target="icon"]');
+        
+        if (content.classList.contains('hidden')) {
+          content.classList.remove('hidden');
+          icon.classList.add('rotate-180');
+        } else {
+          content.classList.add('hidden');
+          icon.classList.remove('rotate-180');
+        }
+      });
+    });
+    
+    // Parallax effect for hero section
+    const parallaxElements = document.querySelectorAll('[data-controller="parallax"]');
+    
+    if (parallaxElements.length > 0) {
+      window.addEventListener('scroll', function() {
+        const scrollPosition = window.pageYOffset;
+        
+        parallaxElements.forEach(element => {
+          const image = element.querySelector('[data-parallax-target="image"]');
+          if (image) {
+            // Move the image at 40% of the scroll speed
+            image.style.transform = `translateY(${scrollPosition * 0.4}px)`;
+          }
+        });
+      });
+    }
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>

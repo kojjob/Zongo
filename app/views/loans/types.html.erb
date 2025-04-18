@@ -1,0 +1,125 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to loans_path, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Loans
+    <% end %>
+  </div>
+
+  <div class="max-w-5xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white">Loan Types</h1>
+      </div>
+      
+      <div class="p-6">
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          We offer various loan types to meet your different financial needs. Review the options below to find the right loan for you.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @loan_types.each do |loan_type| %>
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden">
+              <div class="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-700">
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white"><%= loan_type[:name] %></h2>
+              </div>
+              
+              <div class="p-4 space-y-4">
+                <p class="text-sm text-gray-500 dark:text-gray-400"><%= loan_type[:description] %></p>
+                
+                <div>
+                  <h3 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Loan Details</h3>
+                  <ul class="space-y-2 text-sm">
+                    <li class="flex justify-between">
+                      <span class="text-gray-500 dark:text-gray-400">Amount Range:</span>
+                      <span class="text-gray-900 dark:text-white font-medium">GHS <%= loan_type[:min_amount] %> - <%= loan_type[:max_amount] %></span>
+                    </li>
+                    <li class="flex justify-between">
+                      <span class="text-gray-500 dark:text-gray-400">Term:</span>
+                      <span class="text-gray-900 dark:text-white font-medium"><%= loan_type[:term_range] %></span>
+                    </li>
+                    <li class="flex justify-between">
+                      <span class="text-gray-500 dark:text-gray-400">Interest Rate:</span>
+                      <span class="text-gray-900 dark:text-white font-medium"><%= loan_type[:interest_rate] %></span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h3 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Requirements</h3>
+                  <ul class="space-y-1 text-sm">
+                    <% loan_type[:requirements].each do |requirement| %>
+                      <li class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary-500 dark:text-primary-400 mt-0.5 mr-1.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-gray-500 dark:text-gray-400"><%= requirement %></span>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+                
+                <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <% if current_user.eligible_for_loan? %>
+                    <%= link_to new_loan_path(loan_type: loan_type[:type]), class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                      Apply Now
+                    <% end %>
+                  <% else %>
+                    <%= link_to eligibility_loans_path, class: "w-full flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                      Check Eligibility
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Frequently Asked Questions</h2>
+      </div>
+      
+      <div class="p-6 space-y-4">
+        <div>
+          <h3 class="text-base font-medium text-gray-900 dark:text-white mb-2">How do I qualify for a loan?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            To qualify for a loan, you need to have a verified identity, maintain regular activity on your account, and have a good credit score. Different loan types have different eligibility requirements.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-base font-medium text-gray-900 dark:text-white mb-2">How is my credit score calculated?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Your credit score is calculated based on your transaction history, previous loan repayments, account age, and identity verification status. Maintaining regular deposits and repaying loans on time will improve your score.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-base font-medium text-gray-900 dark:text-white mb-2">How long does loan approval take?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Most loan applications are reviewed within 24 hours. Emergency loans may be processed faster, often within a few hours.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-base font-medium text-gray-900 dark:text-white mb-2">How do I repay my loan?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Loan repayments can be made directly from your wallet. You can make full or partial payments at any time before the due date. For installment loans, you'll need to follow the repayment schedule.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-base font-medium text-gray-900 dark:text-white mb-2">What happens if I can't repay on time?</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            If you're unable to repay on time, please contact us immediately. Late payments may incur additional fees and affect your credit score. We can work with you to arrange a repayment plan.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

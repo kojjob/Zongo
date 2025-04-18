@@ -1,0 +1,156 @@
+<% content_for :title, "Contact Submissions" %>
+
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Contact Submissions</h1>
+    
+    <div class="flex space-x-3">
+      <%= link_to admin_contact_submissions_path, class: "px-4 py-2 rounded-lg text-sm font-medium #{params[:status].blank? ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'}" do %>
+        All
+      <% end %>
+      
+      <%= link_to admin_contact_submissions_path(status: 'unread'), class: "px-4 py-2 rounded-lg text-sm font-medium #{params[:status] == 'unread' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'}" do %>
+        Unread
+        <% if @unread_contact_submissions > 0 %>
+          <span class="ml-1 px-2 py-0.5 rounded-full text-xs bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
+            <%= @unread_contact_submissions %>
+          </span>
+        <% end %>
+      <% end %>
+      
+      <%= link_to admin_contact_submissions_path(status: 'read'), class: "px-4 py-2 rounded-lg text-sm font-medium #{params[:status] == 'read' ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'}" do %>
+        Read
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Email
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Subject
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Date
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @contact_submissions.any? %>
+            <% @contact_submissions.each do |submission| %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if submission.read? %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                      Read
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
+                      Unread
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    <%= submission.name %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= submission.email %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <%= submission.subject.present? ? submission.subject : "No subject" %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= time_ago_in_words(submission.created_at) %> ago
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-2">
+                    <%= link_to admin_contact_submission_path(submission), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                      <%= icon "eye", class: "w-5 h-5" %>
+                    <% end %>
+                    
+                    <%= button_to admin_contact_submission_path(submission), method: :delete, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300", data: { confirm: "Are you sure you want to delete this message?" } do %>
+                      <%= icon "trash", class: "w-5 h-5" %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="px-6 py-10 text-center">
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 mb-4">
+                    <%= icon "mail", class: "w-8 h-8" %>
+                  </div>
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No Contact Submissions</h3>
+                  <p class="text-gray-500 dark:text-gray-400 mb-4">There are no contact submissions to display.</p>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy && @pagy.pages > 1 %>
+      <!-- Pagination -->
+      <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex items-center justify-between">
+        <div class="flex-1 flex justify-between sm:hidden">
+          <% if @pagy.prev %>
+            <%= link_to "Previous", url_for(page: @pagy.prev), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+          <% else %>
+            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Previous</span>
+          <% end %>
+          
+          <% if @pagy.next %>
+            <%= link_to "Next", url_for(page: @pagy.next), class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+          <% else %>
+            <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Next</span>
+          <% end %>
+        </div>
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              Showing <span class="font-medium"><%= @pagy.from %></span> to <span class="font-medium"><%= @pagy.to %></span> of <span class="font-medium"><%= @pagy.count %></span> contact submissions
+            </p>
+          </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <% (1..@pagy.pages).each do |page| %>
+                <% if page == @pagy.page %>
+                  <span class="relative inline-flex items-center px-4 py-2 border border-primary-500 bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 dark:border-primary-500">
+                    <%= page %>
+                  </span>
+                <% else %>
+                  <%= link_to page, url_for(page: page), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+                <% end %>
+              <% end %>
+            </nav>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

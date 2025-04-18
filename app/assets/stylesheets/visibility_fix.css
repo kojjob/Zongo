@@ -1,0 +1,43 @@
+/**
+ * Emergency visibility fix
+ * This file overrides any styles that might be hiding elements
+ */
+
+/* Make all elements visible */
+.js-reveal,
+.js-reveal-left,
+.js-reveal-right {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Fix for FAQ accordions */
+.faq-accordion-content {
+  display: block !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fix for hidden content in accordions */
+[data-accordion-target="content"].hidden {
+  display: block !important;
+}
+
+/* Fix for reveal-on-scroll elements */
+.reveal-on-scroll {
+  opacity: 1 !important;
+  transform: none !important;
+  visibility: visible !important;
+}
+
+/* Fix for delighter dots */
+.delighter-dot {
+  display: none !important;
+}
+
+/* Fix for custom cursor */
+.custom-cursor {
+  display: none !important;
+}

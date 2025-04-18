@@ -1,0 +1,241 @@
+<%# Bills View %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Enhanced Header with Gradient Background -->
+    <div class="mb-10 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl shadow-lg overflow-hidden">
+      <div class="relative p-6 md:p-8">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-32 -mr-32 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -mb-24 -ml-24 blur-2xl"></div>
+
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center mb-4 md:mb-0">
+            <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300 mr-4 shadow-md">
+              <%= icon("arrow-left", class: "w-5 h-5") %>
+            </a>
+            <div>
+              <h1 class="text-2xl md:text-3xl font-bold text-white">Bill Payments</h1>
+              <p class="mt-2 text-white/80">
+                Pay your bills quickly and securely
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick action buttons -->
+          <div class="flex space-x-3">
+            <a href="<%= wallet_path %>" class="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow">
+              <%= icon("home", class: "w-4 h-4 mr-2") %>
+              Dashboard
+            </a>
+            <a href="<%= transactions_wallet_path %>" class="flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow">
+              <%= icon("history", class: "w-4 h-4 mr-2") %>
+              History
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bill Categories with Enhanced Design -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <!-- Electricity Bill -->
+      <a href="<%= pay_bill_path(type: 'electricity') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("zap", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors duration-300">Electricity Bill</span>
+      </a>
+
+      <!-- Water Bill -->
+      <a href="<%= pay_bill_path(type: 'water') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("droplets", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">Water Bill</span>
+      </a>
+
+      <!-- Internet/Data -->
+      <a href="<%= pay_bill_path(type: 'internet') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("wifi", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-300">Internet/Data</span>
+      </a>
+
+      <!-- Airtime -->
+      <a href="<%= pay_bill_path(type: 'airtime') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("phone", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-300">Airtime</span>
+      </a>
+
+      <!-- TV Subscription -->
+      <a href="<%= pay_bill_path(type: 'tv') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("tv", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-300">TV Subscription</span>
+      </a>
+
+      <!-- Gas Bill -->
+      <a href="<%= pay_bill_path(type: 'gas') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("flame", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors duration-300">Gas Bill</span>
+      </a>
+
+      <!-- Insurance -->
+      <a href="<%= pay_bill_path(type: 'insurance') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("shield-check", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">Insurance</span>
+      </a>
+
+      <!-- Loan Repayment -->
+      <a href="<%= pay_bill_path(type: 'loan') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("landmark", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">Loan Repayment</span>
+      </a>
+
+      <!-- Mortgage -->
+      <a href="<%= pay_bill_path(type: 'mortgage') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("building", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors duration-300">Mortgage</span>
+      </a>
+
+      <!-- School Fees -->
+      <a href="<%= pay_bill_path(type: 'education') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("book-open", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">School Fees</span>
+      </a>
+
+      <!-- Other Bills -->
+      <a href="<%= pay_bill_path(type: 'other') %>" class="group bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center justify-center hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 dark:border-gray-700">
+        <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-500 to-slate-600 flex items-center justify-center mb-4 text-white shadow-md group-hover:shadow-lg transition-all duration-300">
+          <%= icon("file-text", class: "w-8 h-8") %>
+        </div>
+        <span class="text-base font-medium text-gray-900 dark:text-white text-center group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors duration-300">Other Bills</span>
+      </a>
+    </div>
+
+    <!-- Recent Bill Payments - Enhanced with modern design -->
+    <div class="mt-16">
+      <!-- Section header with gradient underline -->
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Recent Bill Payments</h2>
+          <div class="h-1 w-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mt-2"></div>
+        </div>
+        <a href="<%= transactions_wallet_path %>" class="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition-colors duration-300">
+          <span>View All</span>
+          <%= icon("chevron-right", class: "w-5 h-5 ml-1") %>
+        </a>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+        <% if @recent_bill_payments.present? && @recent_bill_payments.any? %>
+          <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <% @recent_bill_payments.each do |payment| %>
+              <%
+                # Set gradient colors based on bill type
+                case payment.bill_type
+                when 'electricity'
+                  gradient_class = "bg-gradient-to-r from-yellow-500 to-amber-600"
+                when 'water'
+                  gradient_class = "bg-gradient-to-r from-blue-500 to-cyan-600"
+                when 'internet'
+                  gradient_class = "bg-gradient-to-r from-purple-500 to-indigo-600"
+                when 'airtime'
+                  gradient_class = "bg-gradient-to-r from-green-500 to-emerald-600"
+                when 'tv'
+                  gradient_class = "bg-gradient-to-r from-red-500 to-rose-600"
+                when 'gas'
+                  gradient_class = "bg-gradient-to-r from-orange-500 to-red-600"
+                when 'insurance'
+                  gradient_class = "bg-gradient-to-r from-indigo-500 to-blue-600"
+                when 'loan'
+                  gradient_class = "bg-gradient-to-r from-emerald-500 to-teal-600"
+                when 'mortgage'
+                  gradient_class = "bg-gradient-to-r from-pink-500 to-rose-600"
+                else
+                  gradient_class = "bg-gradient-to-r from-gray-500 to-slate-600"
+                end
+              %>
+              <div class="p-5 hover:bg-gray-50 dark:hover:bg-gray-750 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="w-12 h-12 rounded-xl <%= gradient_class %> flex items-center justify-center mr-4 shadow-md text-white">
+                      <%= icon(bill_type_icon(payment.bill_type.to_s), class: "w-6 h-6") %>
+                    </div>
+                    <div>
+                      <p class="font-bold text-gray-900 dark:text-white text-base"><%= payment.provider %></p>
+                      <div class="flex items-center mt-1">
+                        <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("hash", class: "w-3.5 h-3.5 mr-1 opacity-70") %>
+                          <%= payment.account_number %>
+                        </span>
+                        <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("calendar", class: "w-3.5 h-3.5 mr-1 opacity-70") %>
+                          <%= payment.created_at.strftime("%b %d, %Y") %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <p class="text-lg font-bold text-gray-900 dark:text-white">
+                      ₵<%= number_with_delimiter(payment.amount, delimiter: ',') %>
+                    </p>
+                    <%
+                      # Set status colors and styles
+                      if payment.status.to_s == 'completed'
+                        status_bg = "bg-green-100 dark:bg-green-900/30"
+                        status_text = "text-green-800 dark:text-green-300"
+                        status_icon = "check-circle"
+                      elsif payment.status.to_s == 'pending'
+                        status_bg = "bg-amber-100 dark:bg-amber-900/30"
+                        status_text = "text-amber-800 dark:text-amber-300"
+                        status_icon = "clock"
+                      else
+                        status_bg = "bg-red-100 dark:bg-red-900/30"
+                        status_text = "text-red-800 dark:text-red-300"
+                        status_icon = "x-circle"
+                      end
+                    %>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%= status_bg %> <%= status_text %> mt-1">
+                      <%= icon(status_icon, class: "w-3.5 h-3.5 mr-1") %>
+                      <%= payment.status.titleize %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="p-8 text-center">
+            <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center mb-4 text-white shadow-lg">
+              <%= icon("receipt", class: "w-10 h-10") %>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No recent bill payments</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">Your payment history will appear here once you start paying bills</p>
+            <a href="<%= pay_bill_path(type: 'electricity') %>" class="inline-flex items-center px-6 py-3 rounded-xl font-bold shadow-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-xl transition-all duration-300">
+              <%= icon("plus-circle", class: "w-5 h-5 mr-2") %>
+              Make Your First Payment
+            </a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

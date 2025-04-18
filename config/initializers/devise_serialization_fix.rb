@@ -20,7 +20,7 @@ Rails.application.config.after_initialize do
           # When serializing to the session, just store the ID and class name
           manager.serialize_into_session do |user|
             safe_log(:debug, "Serializing user to session: #{user.class.name} #{user.id}")
-            [user.class.name, user.id]
+            [ user.class.name, user.id ]
           end
 
           # When retrieving from the session, properly find the User object

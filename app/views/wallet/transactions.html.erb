@@ -1,0 +1,288 @@
+<%# Transactions View %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center">
+          <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors mr-3">
+            <%= icon "arrow-left", class: "w-5 h-5" %>
+          </a>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transaction History</h1>
+        </div>
+
+        <div class="flex space-x-3">
+          <button type="button" class="btn btn-outline-primary flex items-center">
+            <%= icon "filter", class: "w-5 h-5 mr-2" %>
+            Filter
+          </button>
+          <button type="button" class="btn btn-outline-primary flex items-center">
+            <%= icon "download", class: "w-5 h-5 mr-2" %>
+            Export
+          </button>
+        </div>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400">
+        View and manage all your transactions
+      </p>
+    </div>
+
+    <!-- Transaction Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Date Range -->
+        <div>
+          <label for="date_range" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date Range</label>
+          <select id="date_range" class="form-select block w-full rounded-lg">
+            <option value="all">All Time</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="this_week">This Week</option>
+            <option value="this_month" selected>This Month</option>
+            <option value="last_month">Last Month</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+
+        <!-- Transaction Type -->
+        <div>
+          <label for="transaction_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transaction Type</label>
+          <select id="transaction_type" class="form-select block w-full rounded-lg">
+            <option value="all" selected>All Types</option>
+            <option value="deposit">Deposits</option>
+            <option value="withdrawal">Withdrawals</option>
+            <option value="transfer">Transfers</option>
+            <option value="bill_payment">Bill Payments</option>
+          </select>
+        </div>
+
+        <!-- Status -->
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+          <select id="status" class="form-select block w-full rounded-lg">
+            <option value="all" selected>All Statuses</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
+          </select>
+        </div>
+
+        <!-- Search -->
+        <div>
+          <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "search", class: "w-5 h-5 text-gray-400" %>
+            </div>
+            <input type="text" id="search" class="form-input block w-full pl-10 rounded-lg" placeholder="Search transactions...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+      <!-- Table Header -->
+      <div class="hidden md:flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-750 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+        <div class="w-12 px-6 py-3"></div>
+        <div class="flex-1 px-6 py-3">Description</div>
+        <div class="w-32 px-6 py-3">Date</div>
+        <div class="w-32 px-6 py-3 text-right">Amount</div>
+        <div class="w-32 px-6 py-3 text-center">Status</div>
+        <div class="w-16 px-6 py-3"></div>
+      </div>
+
+      <!-- Transactions -->
+      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% if @transactions.present? %>
+          <% @transactions.each do |transaction| %>
+            <div class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+              <!-- Mobile View -->
+              <div class="md:hidden p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3
+                      <%= transaction_type_color_class(transaction.transaction_type) %>">
+                      <%= icon transaction_type_icon(transaction.transaction_type), class: "w-5 h-5" %>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-900 dark:text-white"><%= transaction.description || "Transaction" %></p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.created_at.strftime("%d %b, %Y • %H:%M") %></p>
+                    </div>
+                  </div>
+
+                  <div class="text-right">
+                    <p class="font-medium <%= transaction_amount_color_class(transaction) %>">
+                      <%= transaction_amount_prefix(transaction) %>₵<%= number_with_delimiter(transaction.amount, delimiter: ',') %>
+                    </p>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= transaction_status_color(transaction.status) %>">
+                      <%= transaction.status.titleize %>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="mt-2 flex justify-end">
+                  <a href="<%= transaction_path(transaction) %>" class="text-primary-600 dark:text-primary-400 text-sm hover:underline">
+                    View Details
+                  </a>
+                </div>
+              </div>
+
+              <!-- Desktop View -->
+              <div class="hidden md:flex items-center">
+                <div class="w-12 px-6 py-4">
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center
+                    <%= transaction_type_color_class(transaction.transaction_type) %>">
+                    <%= icon transaction_type_icon(transaction.transaction_type), class: "w-4 h-4" %>
+                  </div>
+                </div>
+                <div class="flex-1 px-6 py-4">
+                  <div class="font-medium text-gray-900 dark:text-white"><%= transaction.description || "Transaction" %></div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= transaction_recipient_info(transaction) %>
+                  </div>
+                </div>
+                <div class="w-32 px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                  <%= transaction.created_at.strftime("%d %b, %Y") %>
+                  <div class="text-xs"><%= transaction.created_at.strftime("%H:%M") %></div>
+                </div>
+                <div class="w-32 px-6 py-4 text-right">
+                  <div class="font-medium <%= transaction_amount_color_class(transaction) %>">
+                    <%= transaction_amount_prefix(transaction) %>₵<%= number_with_delimiter(transaction.amount, delimiter: ',') %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= transaction.fee > 0 ? "Fee: ₵#{number_with_delimiter(transaction.fee, delimiter: ',')}" : "No fee" %>
+                  </div>
+                </div>
+                <div class="w-32 px-6 py-4 text-center">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= transaction_status_color(transaction.status) %>">
+                    <%= transaction.status.titleize %>
+                  </span>
+                </div>
+                <div class="w-16 px-6 py-4 text-right">
+                  <a href="<%= transaction_path(transaction) %>" class="text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+                    <%= icon "chevron-right", class: "w-5 h-5" %>
+                  </a>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="p-8 text-center">
+            <div class="w-16 h-16 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+              <%= icon "receipt", class: "w-8 h-8 text-gray-400 dark:text-gray-500" %>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No transactions yet</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Your transaction history will appear here</p>
+            <div class="flex justify-center space-x-3">
+              <a href="<%= send_money_path %>" class="btn btn-outline-primary">
+                Send Money
+              </a>
+              <a href="<%= receive_money_path %>" class="btn btn-primary">
+                Receive Money
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Pagination -->
+      <% if @transactions.present? && @pagy.pages > 1 %>
+        <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+          <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+            <div>
+              <p class="text-sm text-gray-700 dark:text-gray-400">
+                Showing <span class="font-medium"><%= @pagy.from %></span> to <span class="font-medium"><%= @pagy.to %></span> of <span class="font-medium"><%= @pagy.count %></span> transactions
+              </p>
+            </div>
+            <div>
+              <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <% if @pagy.prev %>
+                  <%= link_to url_for(page: @pagy.prev), class: "relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-650" do %>
+                    <%= icon('chevron-left', class: 'w-5 h-5') %>
+                    <span class="sr-only">Previous</span>
+                  <% end %>
+                <% end %>
+
+                <% @pagy.pages.times do |i| %>
+                  <% if @pagy.page == i + 1 %>
+                    <span class="relative inline-flex items-center px-4 py-2 border border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-sm font-medium text-primary-600 dark:text-primary-400">
+                      <%= i + 1 %>
+                    </span>
+                  <% else %>
+                    <%= link_to i + 1, url_for(page: i + 1), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-650" %>
+                  <% end %>
+                <% end %>
+
+                <% if @pagy.next %>
+                  <%= link_to url_for(page: @pagy.next), class: "relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-650" do %>
+                    <%= icon('chevron-right', class: 'w-5 h-5') %>
+                    <span class="sr-only">Next</span>
+                  <% end %>
+                <% end %>
+              </nav>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <script>
+    // Helper functions for transaction display
+    function transaction_type_color_class(type) {
+      switch(type) {
+        case 'deposit':
+          return 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400';
+        case 'withdrawal':
+          return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
+        case 'transfer':
+          return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400';
+        case 'bill_payment':
+          return 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400';
+        default:
+          return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+      }
+    }
+
+    function transaction_type_icon(type) {
+      switch(type) {
+        case 'deposit':
+          return 'arrow-down-circle';
+        case 'withdrawal':
+          return 'arrow-up-circle';
+        case 'transfer':
+          return 'arrow-left-right';
+        case 'bill_payment':
+          return 'receipt';
+        default:
+          return 'circle';
+      }
+    }
+
+    function transaction_amount_color_class(transaction) {
+      if (transaction.transaction_type === 'deposit') {
+        return 'text-green-600 dark:text-green-400';
+      } else {
+        return 'text-red-600 dark:text-red-400';
+      }
+    }
+
+    function transaction_amount_prefix(transaction) {
+      return transaction.transaction_type === 'deposit' ? '+' : '-';
+    }
+
+    function transaction_recipient_info(transaction) {
+      if (transaction.recipient_name) {
+        return `To: ${transaction.recipient_name}`;
+      } else if (transaction.source_name) {
+        return `From: ${transaction.source_name}`;
+      } else {
+        return transaction.transaction_type.titleize;
+      }
+    }
+  </script>
+<% end %>

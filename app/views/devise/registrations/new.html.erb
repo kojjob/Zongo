@@ -1,7 +1,7 @@
 <div class="max-w-md mx-auto py-12">
   <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg">
     <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-6">Create Your Account</h2>
-    
+
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <div class="mb-5">
         <%= f.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
@@ -19,7 +19,7 @@
           <span>ZG</span> <!-- For "Zongo" perhaps, or whatever makes sense for your app -->
         </div>
         <img src="" class="w-full h-full object-cover hidden" data-avatar-preview-target="preview">
-        
+
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
           <label for="user_avatar" class="cursor-pointer text-white text-sm font-medium">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,17 +29,17 @@
             Change Avatar
           </label>
         </div>
-        
+
         <%= f.file_field :avatar, class: "hidden", accept: "image/jpeg,image/png,image/gif", id: "user_avatar", data: { avatar_preview_target: "input" } %>
       </div>
-      
+
       <div class="mb-5">
         <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
         <div class="relative">
           <%= f.email_field :email, placeholder: "example@mail.com", class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" %>
         </div>
       </div>
-      
+
       <div class="mb-5">
         <%= f.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
         <%= f.password_field :password, class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" %>
@@ -47,7 +47,7 @@
           <p class="mt-2 text-sm text-red-600"><%= @user.errors[:password].join(", ") %></p>
         <% end %>
       </div>
-      
+
       <div class="mb-5">
         <%= f.label :password_confirmation, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
         <%= f.password_field :password_confirmation, class: "w-full py-3 px-4 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500" %>
@@ -55,17 +55,21 @@
           <p class="mt-2 text-sm text-red-600"><%= @user.errors[:password_confirmation].join(", ") %></p>
         <% end %>
       </div>
-      
+
       <div class="mb-6 flex items-center">
         <input type="checkbox" id="terms" name="terms" required class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
         <label for="terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
           I agree to the <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a> and <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
         </label>
       </div>
-      
-      <%= f.submit "Continue", class: "w-full py-4 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-base transition-colors" %>
+
+      <div class="mb-5">
+        <button type="submit" class="w-full py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-medium text-base transition-colors">
+          Sign up
+        </button>
+      </div>
     <% end %>
-    
+
     <div class="mt-6 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
         Already have an account? <%= link_to "Sign in", new_user_session_path, class: "text-primary-600 hover:text-primary-500" %>

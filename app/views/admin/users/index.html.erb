@@ -1,0 +1,180 @@
+<% content_for :title, "User Management" %>
+
+<div class="space-y-6">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">User Management</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage all users in the system</p>
+    </div>
+
+    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
+        <%= icon "shield-check", class: "w-4 h-4 mr-1" %>
+        Admin Mode
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+    <div class="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-4">
+      <%= form_with url: admin_users_path, method: :get, class: "w-full flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2" do |f| %>
+        <div class="flex-1">
+          <%= f.text_field :search, value: params[:search], placeholder: "Search by username, email or phone", class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+        </div>
+
+        <div>
+          <%= f.select :status,
+              [
+                ['All Statuses', ''],
+                ['Active', 'active'],
+                ['Suspended', 'suspended'],
+                ['Locked', 'locked'],
+                ['Closed', 'closed']
+              ],
+              { selected: params[:status] },
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500" }
+          %>
+        </div>
+
+        <div>
+          <%= f.select :role,
+              [
+                ['All Roles', ''],
+                ['Regular Users', 'regular'],
+                ['Admins', 'admin']
+              ],
+              { selected: params[:role] },
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500" }
+          %>
+        </div>
+
+        <div>
+          <%= f.submit "Filter", class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Joined</th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% @users.each do |user| %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <% if user.respond_to?(:avatar) && user.avatar.attached? %>
+                      <%= image_tag user.avatar, class: "h-10 w-10 rounded-full", alt: "User avatar" %>
+                    <% else %>
+                      <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold text-lg">
+                        <%= (user&.username.presence || user&.email[0])&.first&.upcase || 'U' %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                      <%= user.username %>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      ID: <%= user.id %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-white"><%= user.email %></div>
+                <div class="text-sm text-gray-500 dark:text-gray-400"><%= user.phone %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% status_class = case user.status
+                   when 'active' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                   when 'suspended' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                   when 'locked' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                   when 'closed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+                   end %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                  <%= user.status.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% if user.admin? %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                    Admin
+                  </span>
+                <% else %>
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300">
+                    Regular User
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= user.created_at.strftime("%b %d, %Y") %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end space-x-2">
+                  <%= link_to admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                    <%= icon "eye", class: "w-5 h-5" %>
+                  <% end %>
+
+                  <% if !user.admin? || current_user.admin? %>
+                    <%= link_to edit_admin_user_path(user), class: "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" do %>
+                      <%= icon "pencil", class: "w-5 h-5" %>
+                    <% end %>
+
+                    <% if user.status == 'active' %>
+                      <%= button_to suspend_admin_user_path(user), method: :post, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } } do %>
+                        <%= icon "ban", class: "w-5 h-5" %>
+                      <% end %>
+                    <% elsif user.status == 'suspended' %>
+                      <%= button_to activate_admin_user_path(user), method: :post, class: "text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" do %>
+                        <%= icon "check-circle", class: "w-5 h-5" %>
+                      <% end %>
+                    <% end %>
+
+                    <% if !user.admin? %>
+                      <%= button_to promote_admin_user_path(user), method: :post, class: "text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } } do %>
+                        <%= icon "arrow-up", class: "w-5 h-5" %>
+                      <% end %>
+                    <% else %>
+                      <%= button_to demote_admin_user_path(user), method: :post, class: "text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } } do %>
+                        <%= icon "arrow-down", class: "w-5 h-5" %>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @pagy.pages > 1 %>
+      <div class="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-700 sm:px-6">
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              Showing <span class="font-medium"><%= @pagy.from %></span> to <span class="font-medium"><%= @pagy.to %></span> of <span class="font-medium"><%= @pagy.count %></span> users
+            </p>
+          </div>
+          <div>
+            <%== pagy_nav(@pagy) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

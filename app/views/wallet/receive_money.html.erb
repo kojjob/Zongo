@@ -1,0 +1,622 @@
+<div class="bg-gradient-to-b from-primary-50 to-gray-50 dark:from-gray-900 dark:to-gray-950 min-h-screen"
+     data-controller="receive-money"
+     data-receive-money-account-name="<%= current_user.full_name %>"
+     data-receive-money-account-number="<%= @wallet.wallet_id %>"
+     data-receive-money-bank-name="Super Ghana Bank"
+     data-receive-money-payment-link="<%= @payment_link %>">
+
+  <!-- Toast Notification for Copy Actions -->
+  <div data-receive-money-target="toast" class="fixed top-24 inset-x-0 z-50 hidden">
+    <div class="max-w-sm mx-auto bg-gray-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-400 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span data-receive-money-target="toastMessage">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header with Decorative Background -->
+    <div class="mb-8 relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-800 dark:to-primary-900 rounded-2xl shadow-lg p-6">
+      <!-- Decorative Elements -->
+      <div class="absolute top-0 right-0 w-64 h-64 transform translate-x-1/3 -translate-y-1/3 opacity-10">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#FFFFFF" d="M45.3,-59.1C58.9,-51.1,70.2,-37.8,76.4,-21.8C82.6,-5.8,83.8,12.9,77.2,28.1C70.6,43.3,56.2,55,40.3,62.3C24.4,69.6,7,72.5,-10.2,70.8C-27.4,69.1,-44.4,62.8,-57.1,50.9C-69.8,39,-78.2,21.5,-79.3,3.5C-80.4,-14.6,-74.2,-33.2,-62.1,-45.6C-50,-58,-33,-64.2,-16.8,-67.5C-0.6,-70.8,15.8,-71.2,31.7,-67.1C47.6,-63,71,-51.5,45.3,-59.1Z" transform="translate(100 100)" />
+        </svg>
+      </div>
+      <div class="relative z-10">
+        <div class="flex items-center mb-4">
+          <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors mr-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5"></path>
+              <path d="M12 19l-7-7 7-7"></path>
+            </svg>
+          </a>
+          <h1 class="text-2xl font-bold text-white">Receive Money</h1>
+        </div>
+        <p class="text-white text-opacity-90 max-w-xl">
+          Share your payment details with anyone to receive money directly into your account.
+        </p>
+        <div class="mt-4 flex items-center">
+          <div class="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 text-sm flex items-center">
+            <span class="mr-2 text-white text-opacity-90">Balance:</span>
+            <span class="font-bold text-white"><%= @wallet.currency_symbol %><%= number_with_delimiter(@wallet.balance, delimiter: ',') %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+      <!-- Tab Navigation using Universal Tab Controller -->
+      <div data-controller="universal-tab" data-universal-tab-sync-hash-value="true" data-universal-tab-persist-value="true" data-universal-tab-style-value="pills" data-universal-tab-default-tab-value="<%= @active_tab || 'account_details' %>">
+        <div class="bg-gray-50 dark:bg-gray-800 p-3 border-b border-gray-200 dark:border-gray-700" data-universal-tab-target="tabsList">
+          <div class="grid grid-cols-3 gap-2">
+            <button
+              data-universal-tab-target="tab"
+              data-action="universal-tab#select"
+              data-tab-id="account_details"
+              class="w-full py-3 px-2 rounded-xl flex flex-col items-center justify-center transition-all duration-200 bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow">
+              <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-600 dark:text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                  <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+              </div>
+              <span class="text-sm font-medium">Account Details</span>
+            </button>
+
+            <button
+              data-universal-tab-target="tab"
+              data-action="universal-tab#select"
+              data-tab-id="qr_code"
+              class="w-full py-3 px-2 rounded-xl flex flex-col items-center justify-center transition-all duration-200 bg-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </div>
+              <span class="text-sm font-medium">QR Code</span>
+            </button>
+
+            <button
+              data-universal-tab-target="tab"
+              data-action="universal-tab#select"
+              data-tab-id="payment_link"
+              class="w-full py-3 px-2 rounded-xl flex flex-col items-center justify-center transition-all duration-200 bg-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+              <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+              </div>
+              <span class="text-sm font-medium">Payment Link</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab Panels -->
+        <div>
+          <!-- Account Details Tab Panel -->
+          <div data-universal-tab-target="panel" data-tab-id="account_details" class="p-0">
+            <div class="p-6">
+              <!-- Account Card -->
+              <div class="relative bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-700 dark:to-primary-900 rounded-xl p-6 shadow-lg overflow-hidden mb-6">
+                <!-- Decorative circles -->
+                <div class="absolute top-0 right-0 w-40 h-40 rounded-full bg-white opacity-5"></div>
+                <div class="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-white opacity-5"></div>
+
+                <!-- Card content -->
+                <div class="relative z-10">
+                  <!-- Card header -->
+                  <div class="flex justify-between items-start mb-6">
+                    <div>
+                      <h3 class="text-xl font-bold text-white">Super Ghana Bank</h3>
+                      <p class="text-primary-100">Your Account Details</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center text-white">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Account details -->
+                  <div class="space-y-4">
+                    <!-- Account Number with visual emphasis -->
+                    <div class="mb-6">
+                      <label class="block text-xs font-medium text-primary-100 mb-1">Account Number</label>
+                      <div class="flex items-center justify-between">
+                        <p class="text-white font-mono text-2xl tracking-wider font-bold">
+                          <% formatted_id = @wallet.wallet_id.to_s.scan(/.{1,4}/).join(' ') %>
+                          <%= formatted_id %>
+                        </p>
+                        <button type="button" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors"
+                                data-action="receive-money#copyToClipboard"
+                                data-copy-text="<%= @wallet.wallet_id %>">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Account Name -->
+                    <div>
+                      <label class="block text-xs font-medium text-primary-100 mb-1">Account Name</label>
+                      <div class="flex items-center justify-between">
+                        <p class="text-white font-medium"><%= current_user.full_name %></p>
+                        <button type="button" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors"
+                                data-action="receive-money#copyToClipboard"
+                                data-copy-text="<%= current_user.full_name %>">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Bank Name -->
+                    <div>
+                      <label class="block text-xs font-medium text-primary-100 mb-1">Bank Name</label>
+                      <div class="flex items-center justify-between">
+                        <p class="text-white font-medium">Super Ghana Bank</p>
+                        <button type="button" class="bg-white/20 hover:bg-white/30 text-white p-2 rounded-lg transition-colors"
+                                data-action="receive-money#copyToClipboard"
+                                data-copy-text="Super Ghana Bank">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Share Options -->
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary-500 dark:text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  Share Account Details
+                </h3>
+
+                <div class="grid grid-cols-3 gap-4">
+                  <button type="button" data-action="receive-money#shareViaWhatsApp"
+                          class="flex flex-col items-center justify-center space-y-2 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600 dark:text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
+                      <path d="M9 10a0.5 .5 0 0 0 1 0V9a0.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a0.5 .5 0 0 0 0 -1h-1a0.5 .5 0 0 0 0 1"></path>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">WhatsApp</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareViaSMS"
+                          class="flex flex-col items-center justify-center space-y-2 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">SMS</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareViaEmail"
+                          class="flex flex-col items-center justify-center space-y-2 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Email</span>
+                  </button>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                  <button data-universal-tab-target="tab" data-action="universal-tab#select" data-tab-id="qr_code"
+                          class="flex items-center justify-center py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="14" width="7" height="7"></rect>
+                      <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Show QR Code
+                  </button>
+
+                  <button data-universal-tab-target="tab" data-action="universal-tab#select" data-tab-id="payment_link"
+                          class="flex items-center justify-center py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-lg transition-colors shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                    </svg>
+                    Show Payment Link
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QR Code Tab Panel -->
+          <div data-universal-tab-target="panel" data-tab-id="qr_code" class="p-0">
+            <div class="p-6">
+              <!-- QR Code Card -->
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-700 dark:to-primary-900 p-6">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="text-xl font-bold text-white">Your QR Code</h3>
+                      <p class="text-primary-100">Let others scan to pay you instantly</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- QR Code Display -->
+                <div class="flex flex-col items-center justify-center p-8 bg-gray-50 dark:bg-gray-900/30">
+                  <!-- QR Code with decorative frame -->
+                  <div class="relative">
+                    <!-- Decorative corners -->
+                    <div class="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-primary-500 dark:border-primary-400"></div>
+                    <div class="absolute -top-3 -right-3 w-6 h-6 border-t-2 border-r-2 border-primary-500 dark:border-primary-400"></div>
+                    <div class="absolute -bottom-3 -left-3 w-6 h-6 border-b-2 border-l-2 border-primary-500 dark:border-primary-400"></div>
+                    <div class="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-primary-500 dark:border-primary-400"></div>
+
+                    <!-- QR Code -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                      <% begin %>
+                        <%= qr_code_as_svg(@qr_code_data, size: 10, module_size: 6) %>
+                      <% rescue => e %>
+                        <!-- Fallback QR code -->
+                        <div class="text-center">
+                          <p class="text-red-500 dark:text-red-400 mb-2">Error generating QR code</p>
+                          <% simple_data = @payment_link.to_s.truncate(50) %>
+                          <%= qr_code_as_svg(simple_data, size: 5, module_size: 8) rescue "<p class='text-red-500'>Could not generate QR code</p>".html_safe %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <!-- Account info below QR -->
+                  <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Scan to send money to</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-white"><%= current_user.full_name %></p>
+                    <p class="text-sm text-gray-500 dark:text-gray-500">Account: <%= @wallet.wallet_id %></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Download and Share Options -->
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary-500 dark:text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  Save & Share QR Code
+                </h3>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <button type="button" data-action="receive-money#downloadQRCode"
+                          class="flex flex-col items-center justify-center space-y-2 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors rounded-xl p-6 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary-600 dark:text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Download QR</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareQRCode"
+                          class="flex flex-col items-center justify-center space-y-2 bg-secondary-50 dark:bg-secondary-900/20 hover:bg-secondary-100 dark:hover:bg-secondary-900/30 transition-colors rounded-xl p-6 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-secondary-600 dark:text-secondary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Share QR</span>
+                  </button>
+                </div>
+
+                <!-- Request Specific Amount Section -->
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-4">Request Specific Amount</h3>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label for="requested_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount (<%= @wallet.currency %>)</label>
+                      <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span class="text-gray-500 dark:text-gray-400"><%= @wallet.currency_symbol %></span>
+                        </div>
+                        <input type="number" id="requested_amount" class="block w-full pl-8 pr-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="0.00" min="1" step="0.01" data-receive-money-target="requestAmount">
+                      </div>
+                    </div>
+
+                    <div>
+                      <label for="payment_purpose" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Purpose (Optional)</label>
+                      <input type="text" id="payment_purpose" class="block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="What's this payment for?" data-receive-money-target="requestPurpose">
+                    </div>
+
+                    <button type="button" data-action="receive-money#generateAmountQR" class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                      Generate QR Code with Amount
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Link Tab Panel -->
+          <div data-universal-tab-target="panel" data-tab-id="payment_link" class="p-0">
+            <div class="p-6">
+              <!-- Payment Link Card -->
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
+                <div class="bg-gradient-to-r from-secondary-600 to-secondary-800 dark:from-secondary-700 dark:to-secondary-900 p-6">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="text-xl font-bold text-white">Your Payment Link</h3>
+                      <p class="text-secondary-100">Share this link for easy payments</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Link Display -->
+                <div class="p-6 bg-gray-50 dark:bg-gray-900/30">
+                  <div class="flex items-stretch">
+                    <div class="flex-grow bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-l-lg px-4 py-3 overflow-x-auto whitespace-nowrap text-gray-700 dark:text-gray-300 font-mono">
+                      <%= @payment_link %>
+                    </div>
+                    <button type="button" class="bg-primary-600 hover:bg-primary-700 text-white px-4 rounded-r-lg flex items-center justify-center transition-colors"
+                            data-action="receive-money#copyToClipboard"
+                            data-copy-text="<%= @payment_link %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">This link allows anyone to send money to your account</p>
+                    <div class="flex items-center justify-center">
+                      <div class="w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 flex items-center justify-center mr-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                          <line x1="12" y1="9" x2="12" y2="13"></line>
+                          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                      </div>
+                      <p class="text-sm text-yellow-700 dark:text-yellow-500">Never share this link with untrusted sources</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom Payment Link Generator -->
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-6">
+                <div class="p-6">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Create Custom Payment Link</h3>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label for="payment_amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount (<%= @wallet.currency %>)</label>
+                      <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span class="text-gray-500 dark:text-gray-400"><%= @wallet.currency_symbol %></span>
+                        </div>
+                        <input type="number" id="payment_amount" class="block w-full pl-8 pr-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="0.00" min="1" step="0.01" data-receive-money-target="linkAmount">
+                      </div>
+                    </div>
+
+                    <div>
+                      <label for="link_purpose" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Purpose (Optional)</label>
+                      <input type="text" id="link_purpose" class="block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-primary-500 focus:border-primary-500" placeholder="What's this payment for?" data-receive-money-target="linkPurpose">
+                    </div>
+
+                    <div>
+                      <label for="link_expiry" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Link Expiry</label>
+                      <select id="link_expiry" class="block w-full px-4 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-primary-500 focus:border-primary-500" data-receive-money-target="linkExpiry">
+                        <option value="never">Never expires</option>
+                        <option value="24h">24 hours</option>
+                        <option value="7d">7 days</option>
+                        <option value="30d">30 days</option>
+                      </select>
+                    </div>
+
+                    <button type="button" data-action="receive-money#generateCustomLink" class="w-full py-3 px-4 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2">
+                      Generate Custom Payment Link
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Share Link Options -->
+              <div class="bg-gray-50 dark:bg-gray-700/30 rounded-xl p-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-secondary-500 dark:text-secondary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  Share Payment Link
+                </h3>
+
+                <div class="grid grid-cols-4 gap-4">
+                  <button type="button" data-action="receive-money#shareViaWhatsApp" data-share-type="link"
+                          class="flex flex-col items-center justify-center space-y-2 bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600 dark:text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path>
+                      <path d="M9 10a0.5 .5 0 0 0 1 0V9a0.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a0.5 .5 0 0 0 0 -1h-1a0.5 .5 0 0 0 0 1"></path>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-xs font-medium">WhatsApp</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareViaSMS" data-share-type="link"
+                          class="flex flex-col items-center justify-center space-y-2 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-xs font-medium">SMS</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareViaEmail" data-share-type="link"
+                          class="flex flex-col items-center justify-center space-y-2 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-xs font-medium">Email</span>
+                  </button>
+
+                  <button type="button" data-action="receive-money#shareViaOther" data-share-type="link"
+                          class="flex flex-col items-center justify-center space-y-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors rounded-xl p-4 shadow-sm hover:shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="18" cy="5" r="3"></circle>
+                      <circle cx="6" cy="12" r="3"></circle>
+                      <circle cx="18" cy="19" r="3"></circle>
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                    </svg>
+                    <span class="text-gray-700 dark:text-gray-300 text-xs font-medium">More</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Payment Link History -->
+              <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Payment Links</h3>
+                </div>
+                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                  <% if @recent_payment_links.present? %>
+                    <% @recent_payment_links.each do |link| %>
+                      <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors">
+                        <div class="flex items-center justify-between">
+                          <div>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white mb-1">
+                              <%= link.purpose.present? ? link.purpose : "Payment" %>
+                              <% if link.amount.present? %>
+                                - <%= @wallet.currency_symbol %><%= number_with_delimiter(link.amount, delimiter: ',') %>
+                              <% end %>
+                            </p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                              Created: <%= link.created_at.strftime("%b %d, %Y") %>
+                              <% if link.expires_at.present? %>
+                                • Expires: <%= link.expires_at.strftime("%b %d, %Y") %>
+                              <% end %>
+                            </p>
+                          </div>
+                          <div class="flex items-center">
+                            <button type="button" class="text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 p-2"
+                                    data-action="receive-money#copyToClipboard"
+                                    data-copy-text="<%= link.url %>">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                              </svg>
+                            </button>
+                            <button type="button" class="text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 p-2"
+                                    data-action="receive-money#deletePaymentLink"
+                                    data-link-id="<%= link.id %>">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <div class="p-6 text-center">
+                      <div class="w-16 h-16 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                      </div>
+                      <p class="text-gray-600 dark:text-gray-400 mb-4">You haven't created any payment links yet</p>
+                      <button type="button" data-action="receive-money#focusCustomLink" class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                        Create Your First Link
+                      </button>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help and Support Section -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+        <div class="ml-4 flex-1">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Need Help?</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            If you're experiencing issues with receiving payments or have questions about the process, our support team is here to help.
+          </p>
+          <a href="<%= support_path %>" class="inline-flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+            Contact Support
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <script>
+    // This is where JavaScript for the receive-money controller would go
+    document.addEventListener('DOMContentLoaded', function() {
+      // JavaScript to support the controller's functions
+    });
+  </script>
+<% end %>

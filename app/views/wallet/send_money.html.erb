@@ -1,0 +1,178 @@
+<%# Send Money View %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center mb-4">
+        <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors mr-3">
+          <%= icon "arrow-left", class: "w-5 h-5" %>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Send Money</h1>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400">
+        Transfer money to anyone, instantly
+      </p>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-200 dark:border-gray-700">
+        <button class="flex-1 py-4 px-4 text-center border-b-2 border-primary-500 font-medium text-primary-600 dark:text-primary-400">
+          Bank Transfer
+        </button>
+        <button class="flex-1 py-4 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+          Mobile Money
+        </button>
+        <button class="flex-1 py-4 px-4 text-center border-b-2 border-transparent font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+          Wallet Transfer
+        </button>
+      </div>
+      
+      <!-- Form -->
+      <div class="p-6">
+        <%= form_with url: send_money_path, method: :post, class: "space-y-6" do |f| %>
+          <!-- Recipient Section -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipient</label>
+            
+            <!-- Recent Recipients -->
+            <div class="flex space-x-3 mb-4 overflow-x-auto pb-2">
+              <% if @recent_recipients.present? %>
+                <% @recent_recipients.each do |recipient| %>
+                  <div class="flex-shrink-0">
+                    <button type="button" class="flex flex-col items-center w-16" onclick="selectRecipient('<%= recipient.id %>', '<%= recipient.name %>', '<%= recipient.account_number %>')">
+                      <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden mb-1">
+                        <% if recipient.avatar.present? %>
+                          <%= image_tag recipient.avatar, class: "w-full h-full object-cover" %>
+                        <% else %>
+                          <%= icon "user", class: "w-6 h-6 text-gray-500 dark:text-gray-400" %>
+                        <% end %>
+                      </div>
+                      <span class="text-xs text-gray-700 dark:text-gray-300 truncate w-full text-center"><%= recipient.name %></span>
+                    </button>
+                  </div>
+                <% end %>
+              <% end %>
+              
+              <div class="flex-shrink-0">
+                <a href="<%= new_beneficiary_path %>" class="flex flex-col items-center w-16">
+                  <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-1">
+                    <%= icon "plus", class: "w-6 h-6 text-gray-500 dark:text-gray-400" %>
+                  </div>
+                  <span class="text-xs text-gray-700 dark:text-gray-300 truncate w-full text-center">New</span>
+                </a>
+              </div>
+            </div>
+            
+            <!-- Account Details -->
+            <div class="space-y-4">
+              <div>
+                <label for="recipient_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipient Name</label>
+                <%= f.text_field :recipient_name, id: "recipient_name", class: "form-input block w-full rounded-lg", placeholder: "Enter recipient name" %>
+              </div>
+              
+              <div>
+                <label for="account_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Account Number</label>
+                <%= f.text_field :account_number, id: "account_number", class: "form-input block w-full rounded-lg", placeholder: "Enter account number" %>
+              </div>
+              
+              <div>
+                <label for="bank_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bank Name</label>
+                <%= f.select :bank_name, 
+                  [
+                    ["Select Bank", ""], 
+                    ["Ghana Commercial Bank", "GCB"], 
+                    ["Ecobank Ghana", "ECO"],
+                    ["Fidelity Bank", "FID"],
+                    ["Zenith Bank", "ZEN"],
+                    ["Standard Chartered", "SCB"]
+                  ],
+                  { selected: "" },
+                  { class: "form-select block w-full rounded-lg" }
+                %>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Amount Section -->
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400">₵</span>
+              </div>
+              <%= f.number_field :amount, id: "amount", class: "form-input block w-full pl-8 rounded-lg", placeholder: "0.00", min: "0", step: "0.01" %>
+            </div>
+            
+            <!-- Quick Amount Buttons -->
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="setAmount(50)">₵50</button>
+              <button type="button" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="setAmount(100)">₵100</button>
+              <button type="button" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="setAmount(200)">₵200</button>
+              <button type="button" class="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="setAmount(500)">₵500</button>
+            </div>
+          </div>
+          
+          <!-- Description Section -->
+          <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description (Optional)</label>
+            <%= f.text_field :description, id: "description", class: "form-input block w-full rounded-lg", placeholder: "What's this for?" %>
+          </div>
+          
+          <!-- Fee Information -->
+          <div class="bg-gray-50 dark:bg-gray-750 rounded-lg p-4">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm text-gray-600 dark:text-gray-400">Amount</span>
+              <span class="text-sm text-gray-900 dark:text-gray-100" id="display_amount">₵0.00</span>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm text-gray-600 dark:text-gray-400">Fee</span>
+              <span class="text-sm text-gray-900 dark:text-gray-100" id="fee">₵0.00</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">
+              <span class="font-medium text-gray-900 dark:text-white">Total</span>
+              <span class="font-medium text-gray-900 dark:text-white" id="total">₵0.00</span>
+            </div>
+          </div>
+          
+          <!-- Submit Button -->
+          <div>
+            <%= f.submit "Send Money", class: "btn btn-primary w-full py-3" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <script>
+    function selectRecipient(id, name, accountNumber) {
+      document.getElementById('recipient_name').value = name;
+      document.getElementById('account_number').value = accountNumber;
+    }
+    
+    function setAmount(amount) {
+      document.getElementById('amount').value = amount;
+      updateAmounts();
+    }
+    
+    function updateAmounts() {
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const fee = amount * 0.01; // 1% fee example
+      const total = amount + fee;
+      
+      document.getElementById('display_amount').textContent = `₵${amount.toFixed(2)}`;
+      document.getElementById('fee').textContent = `₵${fee.toFixed(2)}`;
+      document.getElementById('total').textContent = `₵${total.toFixed(2)}`;
+    }
+    
+    // Add event listener to amount field
+    document.getElementById('amount').addEventListener('input', updateAmounts);
+    
+    // Initialize
+    updateAmounts();
+  </script>
+<% end %>

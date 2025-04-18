@@ -1,0 +1,92 @@
+/* Enhanced Search Bar Styles */
+
+/* Make the search bar more prominent */
+.search-bar-container input[type="search"] {
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Add a subtle glow effect on focus */
+.search-bar-container input[type="search"]:focus {
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb), 0.2), 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Increase the size of the search bar on focus */
+@media (min-width: 1024px) {
+  .search-bar-container input[type="search"]:focus {
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+  }
+}
+
+/* Styles for the full-width search bar below header */
+#search {
+  position: relative;
+  z-index: 40;
+  margin-top: 64px; /* Match the header height */
+}
+
+/* Adjust content to account for the search bar */
+.main-content {
+  padding-top: 120px; /* Header height + search bar height */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  #search {
+    margin-top: 56px; /* Smaller header on mobile */
+  }
+
+  .main-content {
+    padding-top: 110px; /* Adjusted for mobile */
+  }
+}
+
+/* Add a subtle animation to the search icon */
+.search-bar-container:focus-within .search-icon {
+  color: var(--color-primary-500);
+  transform: scale(1.1);
+  transition: all 0.3s ease;
+}
+
+/* Style the search dropdown */
+.search-dropdown {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+/* Add animation to the search dropdown */
+.search-dropdown.open {
+  animation: slideDown 0.2s ease-out forwards;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Style the search results */
+.search-result-item {
+  transition: background-color 0.2s ease;
+}
+
+.search-result-item:hover {
+  background-color: rgba(var(--color-primary-50-rgb), 0.5);
+}
+
+/* Dark mode adjustments */
+.dark .search-bar-container input[type="search"]:focus {
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-400-rgb), 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark .search-result-item:hover {
+  background-color: rgba(var(--color-primary-900-rgb), 0.3);
+}

@@ -1,0 +1,147 @@
+<%# Payment Page View %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center mb-4">
+        <a href="<%= root_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors mr-3">
+          <%= icon "arrow-left", class: "w-5 h-5" %>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Send Money</h1>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400">
+        You're sending money to <%= @recipient.full_name %>
+      </p>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+      <!-- Recipient Info -->
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center">
+          <% if @recipient.avatar.attached? %>
+            <%= image_tag @recipient.avatar.variant(resize_to_fill: [48, 48]), class: "w-12 h-12 rounded-full mr-4" %>
+          <% else %>
+            <div class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center mr-4">
+              <%= @recipient.first_name.first.upcase %>
+            </div>
+          <% end %>
+          
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white"><%= @recipient.full_name %></h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Account: <%= @recipient_wallet.wallet_id %></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Payment Form -->
+      <div class="p-6">
+        <% if user_signed_in? %>
+          <%= form_with url: send_money_path, method: :post, class: "space-y-6" do |form| %>
+            <%= form.hidden_field :recipient_id, value: @recipient.id %>
+            <%= form.hidden_field :recipient_wallet_id, value: @recipient_wallet.wallet_id %>
+            
+            <div>
+              <label for="amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Amount</label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 dark:text-gray-400"><%= @sender_wallet.currency_symbol %></span>
+                </div>
+                <%= form.number_field :amount, value: @amount, min: 1, step: "0.01", required: true, class: "block w-full pl-7 pr-12 py-3 border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", placeholder: "0.00" %>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500 dark:text-gray-400"><%= @sender_wallet.currency %></span>
+                </div>
+              </div>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Available balance: <%= @sender_wallet.currency_symbol %><%= number_with_delimiter(@sender_wallet.balance, delimiter: ',') %></p>
+            </div>
+            
+            <div>
+              <label for="note" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Note (Optional)</label>
+              <%= form.text_area :note, class: "block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md focus:ring-primary-500 focus:border-primary-500", rows: 2, placeholder: "What's this payment for?" %>
+            </div>
+            
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+              <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Payment Summary</h3>
+              
+              <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Amount</span>
+                  <span class="text-gray-900 dark:text-white font-medium" id="display_amount"><%= @sender_wallet.currency_symbol %><%= @amount ? number_with_delimiter(@amount, delimiter: ',') : '0.00' %></span>
+                </div>
+                
+                <div class="flex justify-between text-sm">
+                  <span class="text-gray-500 dark:text-gray-400">Fee</span>
+                  <span class="text-gray-900 dark:text-white font-medium" id="fee"><%= @sender_wallet.currency_symbol %>0.00</span>
+                </div>
+                
+                <div class="flex justify-between text-sm pt-2 border-t border-gray-200 dark:border-gray-600 mt-2">
+                  <span class="text-gray-700 dark:text-gray-300 font-medium">Total</span>
+                  <span class="text-gray-900 dark:text-white font-medium" id="total"><%= @sender_wallet.currency_symbol %><%= @amount ? number_with_delimiter(@amount, delimiter: ',') : '0.00' %></span>
+                </div>
+              </div>
+            </div>
+            
+            <%= form.submit "Send Money", class: "w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2" %>
+          <% end %>
+        <% else %>
+          <div class="text-center py-6">
+            <div class="w-16 h-16 mx-auto rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-4">
+              <%= icon "lock", class: "w-8 h-8" %>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Sign in to continue</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-6">You need to sign in to send money to <%= @recipient.first_name %></p>
+            
+            <div class="flex flex-col space-y-3">
+              <a href="<%= new_user_session_path %>" class="py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
+                Sign In
+              </a>
+              <a href="<%= new_user_registration_path %>" class="py-3 px-4 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-600 font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                Create Account
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <!-- Security Notice -->
+    <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+      <div class="flex items-start">
+        <div class="flex-shrink-0 mt-0.5">
+          <%= icon "shield-check", class: "w-5 h-5 text-green-500 dark:text-green-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white">Secure Payment</h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            All transactions are encrypted and processed securely. We never store your payment details.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for :page_helpers do %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const amountInput = document.getElementById('amount');
+      if (amountInput) {
+        amountInput.addEventListener('input', updateAmounts);
+        updateAmounts(); // Initialize
+      }
+      
+      function updateAmounts() {
+        const amount = parseFloat(amountInput.value) || 0;
+        const fee = 0; // No fee for now
+        const total = amount + fee;
+        
+        const currencySymbol = '<%= @sender_wallet&.currency_symbol || "₵" %>';
+        
+        document.getElementById('display_amount').textContent = currencySymbol + amount.toFixed(2);
+        document.getElementById('fee').textContent = currencySymbol + fee.toFixed(2);
+        document.getElementById('total').textContent = currencySymbol + total.toFixed(2);
+      }
+    });
+  </script>
+<% end %>

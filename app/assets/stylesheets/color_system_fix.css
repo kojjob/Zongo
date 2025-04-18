@@ -1,0 +1,563 @@
+/* color_system_fix.css - Global fix for color visibility issues across the app */
+
+/* 
+ * This is a comprehensive fix for the color system discrepancy between
+ * TailwindCSS configuration and theme.css variables, addressing invisible text
+ * issues across the entire application including landing page and dashboard.
+ */
+
+/* Primary Color System Fix - All color variations */
+
+/* Primary backgrounds */
+.bg-primary-50 {
+  background-color: #f0fdf4 !important;
+}
+.bg-primary-100 {
+  background-color: #dcfce7 !important;
+}
+.bg-primary-200 {
+  background-color: #bbf7d0 !important;
+}
+.bg-primary-300 {
+  background-color: #86efac !important;
+}
+.bg-primary-400 {
+  background-color: #4ade80 !important;
+}
+.bg-primary-500 {
+  background-color: #22c55e !important;
+}
+.bg-primary-600 {
+  background-color: #16a34a !important;
+}
+.bg-primary-700 {
+  background-color: #15803d !important;
+}
+.bg-primary-800 {
+  background-color: #166534 !important;
+}
+.bg-primary-900 {
+  background-color: #14532d !important;
+}
+
+/* Dark mode primary backgrounds */
+.dark .bg-primary-50 {
+  background-color: #14532d !important;
+}
+.dark .bg-primary-100 {
+  background-color: #166534 !important;
+}
+.dark .bg-primary-200 {
+  background-color: #15803d !important;
+}
+.dark .bg-primary-300 {
+  background-color: #16a34a !important;
+}
+.dark .bg-primary-400 {
+  background-color: #22c55e !important;
+}
+.dark .bg-primary-500 {
+  background-color: #4ade80 !important;
+}
+.dark .bg-primary-600 {
+  background-color: #86efac !important;
+}
+.dark .bg-primary-700 {
+  background-color: #bbf7d0 !important;
+}
+.dark .bg-primary-800 {
+  background-color: #dcfce7 !important;
+}
+.dark .bg-primary-900 {
+  background-color: #f0fdf4 !important;
+}
+
+/* Primary text colors */
+.text-primary-50 {
+  color: #f0fdf4 !important;
+}
+.text-primary-100 {
+  color: #dcfce7 !important;
+}
+.text-primary-200 {
+  color: #bbf7d0 !important;
+}
+.text-primary-300 {
+  color: #86efac !important;
+}
+.text-primary-400 {
+  color: #4ade80 !important;
+}
+.text-primary-500 {
+  color: #22c55e !important;
+}
+.text-primary-600 {
+  color: #16a34a !important;
+}
+.text-primary-700 {
+  color: #15803d !important;
+}
+.text-primary-800 {
+  color: #166534 !important;
+}
+.text-primary-900 {
+  color: #14532d !important;
+}
+
+/* Dark mode primary text colors */
+.dark .text-primary-50 {
+  color: #14532d !important;
+}
+.dark .text-primary-100 {
+  color: #166534 !important;
+}
+.dark .text-primary-200 {
+  color: #15803d !important;
+}
+.dark .text-primary-300 {
+  color: #16a34a !important;
+}
+.dark .text-primary-400 {
+  color: #22c55e !important;
+}
+.dark .text-primary-500 {
+  color: #4ade80 !important;
+}
+.dark .text-primary-600 {
+  color: #86efac !important;
+}
+.dark .text-primary-700 {
+  color: #bbf7d0 !important;
+}
+.dark .text-primary-800 {
+  color: #dcfce7 !important;
+}
+.dark .text-primary-900 {
+  color: #f0fdf4 !important;
+}
+
+/* Primary border colors */
+.border-primary-50 {
+  border-color: #f0fdf4 !important;
+}
+.border-primary-100 {
+  border-color: #dcfce7 !important;
+}
+.border-primary-200 {
+  border-color: #bbf7d0 !important;
+}
+.border-primary-300 {
+  border-color: #86efac !important;
+}
+.border-primary-400 {
+  border-color: #4ade80 !important;
+}
+.border-primary-500 {
+  border-color: #22c55e !important;
+}
+.border-primary-600 {
+  border-color: #16a34a !important;
+}
+.border-primary-700 {
+  border-color: #15803d !important;
+}
+.border-primary-800 {
+  border-color: #166534 !important;
+}
+.border-primary-900 {
+  border-color: #14532d !important;
+}
+
+/* Dark mode primary border colors */
+.dark .border-primary-50 {
+  border-color: #14532d !important;
+}
+.dark .border-primary-100 {
+  border-color: #166534 !important;
+}
+.dark .border-primary-200 {
+  border-color: #15803d !important;
+}
+.dark .border-primary-300 {
+  border-color: #16a34a !important;
+}
+.dark .border-primary-400 {
+  border-color: #22c55e !important;
+}
+.dark .border-primary-500 {
+  border-color: #4ade80 !important;
+}
+.dark .border-primary-600 {
+  border-color: #86efac !important;
+}
+.dark .border-primary-700 {
+  border-color: #bbf7d0 !important;
+}
+.dark .border-primary-800 {
+  border-color: #dcfce7 !important;
+}
+.dark .border-primary-900 {
+  border-color: #f0fdf4 !important;
+}
+
+/* Gradient backgrounds */
+.bg-gradient-to-r.from-primary-600.to-primary-800 {
+  background: linear-gradient(to right, #16a34a, #166534) !important;
+}
+.bg-gradient-to-r.from-primary-500.to-primary-700 {
+  background: linear-gradient(to right, #22c55e, #15803d) !important;
+}
+.bg-gradient-to-r.from-primary-400.to-primary-600 {
+  background: linear-gradient(to right, #4ade80, #16a34a) !important;
+}
+.bg-gradient-to-r.from-primary-300.to-primary-500 {
+  background: linear-gradient(to right, #86efac, #22c55e) !important;
+}
+
+.dark .bg-gradient-to-r.from-primary-600.to-primary-800 {
+  background: linear-gradient(to right, #86efac, #dcfce7) !important;
+}
+.dark .bg-gradient-to-r.from-primary-500.to-primary-700 {
+  background: linear-gradient(to right, #4ade80, #bbf7d0) !important;
+}
+.dark .bg-gradient-to-r.from-primary-400.to-primary-600 {
+  background: linear-gradient(to right, #22c55e, #86efac) !important;
+}
+.dark .bg-gradient-to-r.from-primary-300.to-primary-500 {
+  background: linear-gradient(to right, #16a34a, #4ade80) !important;
+}
+
+/* Hover states */
+.hover\:bg-primary-50:hover {
+  background-color: #f0fdf4 !important;
+}
+.hover\:bg-primary-100:hover {
+  background-color: #dcfce7 !important;
+}
+.hover\:bg-primary-200:hover {
+  background-color: #bbf7d0 !important;
+}
+.hover\:bg-primary-300:hover {
+  background-color: #86efac !important;
+}
+.hover\:bg-primary-400:hover {
+  background-color: #4ade80 !important;
+}
+.hover\:bg-primary-500:hover {
+  background-color: #22c55e !important;
+}
+.hover\:bg-primary-600:hover {
+  background-color: #16a34a !important;
+}
+.hover\:bg-primary-700:hover {
+  background-color: #15803d !important;
+}
+.hover\:bg-primary-800:hover {
+  background-color: #166534 !important;
+}
+.hover\:bg-primary-900:hover {
+  background-color: #14532d !important;
+}
+
+.dark .hover\:bg-primary-50:hover {
+  background-color: #14532d !important;
+}
+.dark .hover\:bg-primary-100:hover {
+  background-color: #166534 !important;
+}
+.dark .hover\:bg-primary-200:hover {
+  background-color: #15803d !important;
+}
+.dark .hover\:bg-primary-300:hover {
+  background-color: #16a34a !important;
+}
+.dark .hover\:bg-primary-400:hover {
+  background-color: #22c55e !important;
+}
+.dark .hover\:bg-primary-500:hover {
+  background-color: #4ade80 !important;
+}
+.dark .hover\:bg-primary-600:hover {
+  background-color: #86efac !important;
+}
+.dark .hover\:bg-primary-700:hover {
+  background-color: #bbf7d0 !important;
+}
+.dark .hover\:bg-primary-800:hover {
+  background-color: #dcfce7 !important;
+}
+.dark .hover\:bg-primary-900:hover {
+  background-color: #f0fdf4 !important;
+}
+
+.hover\:text-primary-50:hover {
+  color: #f0fdf4 !important;
+}
+.hover\:text-primary-100:hover {
+  color: #dcfce7 !important;
+}
+.hover\:text-primary-200:hover {
+  color: #bbf7d0 !important;
+}
+.hover\:text-primary-300:hover {
+  color: #86efac !important;
+}
+.hover\:text-primary-400:hover {
+  color: #4ade80 !important;
+}
+.hover\:text-primary-500:hover {
+  color: #22c55e !important;
+}
+.hover\:text-primary-600:hover {
+  color: #16a34a !important;
+}
+.hover\:text-primary-700:hover {
+  color: #15803d !important;
+}
+.hover\:text-primary-800:hover {
+  color: #166534 !important;
+}
+.hover\:text-primary-900:hover {
+  color: #14532d !important;
+}
+
+.dark .hover\:text-primary-50:hover {
+  color: #14532d !important;
+}
+.dark .hover\:text-primary-100:hover {
+  color: #166534 !important;
+}
+.dark .hover\:text-primary-200:hover {
+  color: #15803d !important;
+}
+.dark .hover\:text-primary-300:hover {
+  color: #16a34a !important;
+}
+.dark .hover\:text-primary-400:hover {
+  color: #22c55e !important;
+}
+.dark .hover\:text-primary-500:hover {
+  color: #4ade80 !important;
+}
+.dark .hover\:text-primary-600:hover {
+  color: #86efac !important;
+}
+.dark .hover\:text-primary-700:hover {
+  color: #bbf7d0 !important;
+}
+.dark .hover\:text-primary-800:hover {
+  color: #dcfce7 !important;
+}
+.dark .hover\:text-primary-900:hover {
+  color: #f0fdf4 !important;
+}
+
+.hover\:border-primary-50:hover {
+  border-color: #f0fdf4 !important;
+}
+.hover\:border-primary-100:hover {
+  border-color: #dcfce7 !important;
+}
+.hover\:border-primary-200:hover {
+  border-color: #bbf7d0 !important;
+}
+.hover\:border-primary-300:hover {
+  border-color: #86efac !important;
+}
+.hover\:border-primary-400:hover {
+  border-color: #4ade80 !important;
+}
+.hover\:border-primary-500:hover {
+  border-color: #22c55e !important;
+}
+.hover\:border-primary-600:hover {
+  border-color: #16a34a !important;
+}
+.hover\:border-primary-700:hover {
+  border-color: #15803d !important;
+}
+.hover\:border-primary-800:hover {
+  border-color: #166534 !important;
+}
+.hover\:border-primary-900:hover {
+  border-color: #14532d !important;
+}
+
+.dark .hover\:border-primary-50:hover {
+  border-color: #14532d !important;
+}
+.dark .hover\:border-primary-100:hover {
+  border-color: #166534 !important;
+}
+.dark .hover\:border-primary-200:hover {
+  border-color: #15803d !important;
+}
+.dark .hover\:border-primary-300:hover {
+  border-color: #16a34a !important;
+}
+.dark .hover\:border-primary-400:hover {
+  border-color: #22c55e !important;
+}
+.dark .hover\:border-primary-500:hover {
+  border-color: #4ade80 !important;
+}
+.dark .hover\:border-primary-600:hover {
+  border-color: #86efac !important;
+}
+.dark .hover\:border-primary-700:hover {
+  border-color: #bbf7d0 !important;
+}
+.dark .hover\:border-primary-800:hover {
+  border-color: #dcfce7 !important;
+}
+.dark .hover\:border-primary-900:hover {
+  border-color: #f0fdf4 !important;
+}
+
+/* Focus states */
+.focus\:ring-primary-50:focus {
+  --tw-ring-color: #f0fdf4 !important;
+}
+.focus\:ring-primary-100:focus {
+  --tw-ring-color: #dcfce7 !important;
+}
+.focus\:ring-primary-200:focus {
+  --tw-ring-color: #bbf7d0 !important;
+}
+.focus\:ring-primary-300:focus {
+  --tw-ring-color: #86efac !important;
+}
+.focus\:ring-primary-400:focus {
+  --tw-ring-color: #4ade80 !important;
+}
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: #22c55e !important;
+}
+.focus\:ring-primary-600:focus {
+  --tw-ring-color: #16a34a !important;
+}
+.focus\:ring-primary-700:focus {
+  --tw-ring-color: #15803d !important;
+}
+.focus\:ring-primary-800:focus {
+  --tw-ring-color: #166534 !important;
+}
+.focus\:ring-primary-900:focus {
+  --tw-ring-color: #14532d !important;
+}
+
+.dark .focus\:ring-primary-50:focus {
+  --tw-ring-color: #14532d !important;
+}
+.dark .focus\:ring-primary-100:focus {
+  --tw-ring-color: #166534 !important;
+}
+.dark .focus\:ring-primary-200:focus {
+  --tw-ring-color: #15803d !important;
+}
+.dark .focus\:ring-primary-300:focus {
+  --tw-ring-color: #16a34a !important;
+}
+.dark .focus\:ring-primary-400:focus {
+  --tw-ring-color: #22c55e !important;
+}
+.dark .focus\:ring-primary-500:focus {
+  --tw-ring-color: #4ade80 !important;
+}
+.dark .focus\:ring-primary-600:focus {
+  --tw-ring-color: #86efac !important;
+}
+.dark .focus\:ring-primary-700:focus {
+  --tw-ring-color: #bbf7d0 !important;
+}
+.dark .focus\:ring-primary-800:focus {
+  --tw-ring-color: #dcfce7 !important;
+}
+.dark .focus\:ring-primary-900:focus {
+  --tw-ring-color: #f0fdf4 !important;
+}
+
+.focus\:border-primary-50:focus {
+  border-color: #f0fdf4 !important;
+}
+.focus\:border-primary-100:focus {
+  border-color: #dcfce7 !important;
+}
+.focus\:border-primary-200:focus {
+  border-color: #bbf7d0 !important;
+}
+.focus\:border-primary-300:focus {
+  border-color: #86efac !important;
+}
+.focus\:border-primary-400:focus {
+  border-color: #4ade80 !important;
+}
+.focus\:border-primary-500:focus {
+  border-color: #22c55e !important;
+}
+.focus\:border-primary-600:focus {
+  border-color: #16a34a !important;
+}
+.focus\:border-primary-700:focus {
+  border-color: #15803d !important;
+}
+.focus\:border-primary-800:focus {
+  border-color: #166534 !important;
+}
+.focus\:border-primary-900:focus {
+  border-color: #14532d !important;
+}
+
+.dark .focus\:border-primary-50:focus {
+  border-color: #14532d !important;
+}
+.dark .focus\:border-primary-100:focus {
+  border-color: #166534 !important;
+}
+.dark .focus\:border-primary-200:focus {
+  border-color: #15803d !important;
+}
+.dark .focus\:border-primary-300:focus {
+  border-color: #16a34a !important;
+}
+.dark .focus\:border-primary-400:focus {
+  border-color: #22c55e !important;
+}
+.dark .focus\:border-primary-500:focus {
+  border-color: #4ade80 !important;
+}
+.dark .focus\:border-primary-600:focus {
+  border-color: #86efac !important;
+}
+.dark .focus\:border-primary-700:focus {
+  border-color: #bbf7d0 !important;
+}
+.dark .focus\:border-primary-800:focus {
+  border-color: #dcfce7 !important;
+}
+.dark .focus\:border-primary-900:focus {
+  border-color: #f0fdf4 !important;
+}
+
+/* Fix combined focus states */
+.focus\:ring-offset-2.focus\:ring-primary-500:focus {
+  --tw-ring-offset-width: 2px;
+  --tw-ring-color: #22c55e !important;
+}
+.dark .focus\:ring-offset-2.focus\:ring-primary-500:focus {
+  --tw-ring-offset-width: 2px;
+  --tw-ring-color: #4ade80 !important;
+}
+
+/* Dashboard-specific fixes */
+.dashboard-card .bg-primary-50,
+.landing-hero .bg-primary-50 {
+  background-color: #f0fdf4 !important;
+}
+
+.dashboard-stats .text-primary-500,
+.landing-cta .text-primary-500 {
+  color: #22c55e !important;
+}
+
+/* Add any additional component-specific fixes here if needed */

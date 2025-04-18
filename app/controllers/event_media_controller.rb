@@ -49,22 +49,36 @@ class EventMediaController < ApplicationController
 
   # DELETE /event_media/1 or /event_media/1.json
   def destroy
+    event = @event_medium.event
     @event_medium.destroy!
 
     respond_to do |format|
-      format.html { redirect_to event_media_path, status: :see_other, notice: "Event medium was successfully destroyed." }
+      format.html { redirect_to edit_event_path(event), status: :see_other, notice: "Image was successfully removed." }
       format.json { head :no_content }
     end
+  end
+
+  # POST /event_media/1/set_as_featured
+  def set_as_featured
+    event = @event_medium.event
+
+    # First, unset all other images as featured
+    event.event_media.update_all(is_featured: false)
+
+    # Then set this one as featured
+    @event_medium.update(is_featured: true)
+
+    redirect_to edit_event_path(event), notice: "Featured image has been updated."
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_event_medium
-      @event_medium = EventMedium.find(params.expect(:id))
+      @event_medium = EventMedium.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def event_medium_params
-      params.expect(event_medium: [ :event_id, :user_id, :media_type, :title, :description, :is_featured, :display_order ])
+      params.require(:event_medium).permit(:event_id, :user_id, :media_type, :title, :description, :is_featured, :display_order)
     end
 end

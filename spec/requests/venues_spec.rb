@@ -16,13 +16,27 @@ RSpec.describe "/venues", type: :request do
   # This should return the minimal set of attributes required to create a valid
   # Venue. As you add validations to Venue, be sure to
   # adjust the attributes here as well.
+  let(:user) { create(:user) }
+
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: "Test Venue",
+      address: "123 Test St",
+      city: "Test City",
+      country: "Test Country"
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: "",
+      address: ""
+    }
   }
+
+  before do
+    login_as(user, scope: :user)
+  end
 
   describe "GET /index" do
     it "renders a successful response" do

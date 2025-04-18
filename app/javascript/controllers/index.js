@@ -18,5 +18,35 @@ application.register("theme", ThemeController)
 import DropdownController from "./dropdown_controller"
 application.register("dropdown", DropdownController)
 
+import HeaderDropdownController from "./header_dropdown_controller"
+application.register("header-dropdown", HeaderDropdownController)
+
+import SimpleDropdownController from "./simple_dropdown_controller"
+application.register("simple-dropdown", SimpleDropdownController)
+
+// Import and register admin controllers
+import AdminSidebarController from "./admin_sidebar_controller"
+application.register("admin-sidebar", AdminSidebarController)
+
 import MobileDropdownController from "./mobile_dropdown_controller"
 application.register("mobile-dropdown", MobileDropdownController)
+
+// Import and register modal controller
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+// Import and register auto-dismiss controller
+import AutoDismissController from "./auto_dismiss_controller"
+application.register("auto-dismiss", AutoDismissController)
+
+// Import and register parallax controller
+import ParallaxController from "./parallax_controller"
+application.register("parallax", ParallaxController)
+
+// Import and register tabs controller
+import TabsController from "./tabs_controller"
+application.register("tabs", TabsController)
+
+// Import and register receive money controller
+import ReceiveMoneyController from "./receive_money_controller"
+application.register("receive-money", ReceiveMoneyController)

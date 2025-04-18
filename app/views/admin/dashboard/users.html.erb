@@ -1,0 +1,230 @@
+<% content_for :title, "Manage Users" %>
+
+<div class="space-y-6">
+  <!-- Header with Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Users</h2>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Manage user accounts and permissions
+      </p>
+    </div>
+
+    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+      <%= link_to new_user_registration_path, class: "btn btn-primary" do %>
+        <%= icon "user-plus", class: "w-5 h-5 mr-2" %>
+        Add User
+      <% end %>
+
+      <button type="button" class="btn btn-outline" data-controller="dropdown">
+        <%= icon "filter", class: "w-5 h-5 mr-2" %>
+        Filter
+        <%= icon "chevron-down", class: "w-4 h-4 ml-2" %>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+    <%= form_with url: admin_users_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "search", class: "h-5 w-5 text-gray-400" %>
+            </div>
+            <%= f.text_field :search, placeholder: "Search by username, email, or phone", class: "pl-10 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div class="sm:w-48">
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+          <%= f.select :status,
+              [
+                ["All Statuses", ""],
+                ["Active", "active"],
+                ["Suspended", "suspended"],
+                ["Locked", "locked"],
+                ["Closed", "closed"]
+              ],
+              {},
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }
+          %>
+        </div>
+
+        <div class="sm:w-48">
+          <label for="kyc_level" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">KYC Level</label>
+          <%= f.select :kyc_level,
+              [
+                ["All Levels", ""],
+                ["Basic", "basic"],
+                ["Verified", "verified"],
+                ["Advanced", "advanced"],
+                ["Business", "business"]
+              ],
+              {},
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }
+          %>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= link_to "Clear Filters", admin_users_path, class: "btn btn-outline mr-3" %>
+        <%= f.submit "Apply Filters", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Users Table -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              User
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Contact
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              KYC Level
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Joined
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% @users.each do |user| %>
+            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10">
+                    <% if user.respond_to?(:avatar) && user.avatar.attached? %>
+                      <%= image_tag user.avatar, class: "h-10 w-10 rounded-full", alt: "User avatar" %>
+                    <% else %>
+                      <div class="h-10 w-10 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold text-lg">
+                        <%= (user.username.presence || user.email[0]).first.upcase %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                      <%= user.username.presence || user.email %>
+                      <% if user.admin? %>
+                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
+                          Admin
+                        </span>
+                      <% end %>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      ID: <%= user.id %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-white"><%= user.email %></div>
+                <div class="text-sm text-gray-500 dark:text-gray-400"><%= user.phone %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= case user.status
+                      when 'active'
+                        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                      when 'suspended'
+                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                      when 'locked'
+                        'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                      else
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      end %>">
+                  <%= user.status.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= case user.kyc_level
+                      when 'basic'
+                        'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      when 'verified'
+                        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                      when 'advanced'
+                        'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300'
+                      when 'business'
+                        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                      end %>">
+                  <%= user.kyc_level.capitalize %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= user.created_at.strftime("%b %d, %Y") %>
+                <div class="text-xs"><%= time_ago_in_words(user.created_at) %> ago</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="flex justify-end space-x-2">
+                  <%= link_to "#", class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                    <%= icon "eye", class: "w-5 h-5" %>
+                  <% end %>
+
+                  <%= link_to "#", class: "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" do %>
+                    <%= icon "pencil", class: "w-5 h-5" %>
+                  <% end %>
+
+                  <button type="button" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                    <%= icon "trash", class: "w-5 h-5" %>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex items-center justify-between">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <% if @pagy.prev %>
+          <%= link_to "Previous", url_for(page: @pagy.prev), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+        <% else %>
+          <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Previous</span>
+        <% end %>
+
+        <% if @pagy.next %>
+          <%= link_to "Next", url_for(page: @pagy.next), class: "ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+        <% else %>
+          <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-800 cursor-not-allowed">Next</span>
+        <% end %>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            Showing <span class="font-medium"><%= @pagy.from %></span> to <span class="font-medium"><%= @pagy.to %></span> of <span class="font-medium"><%= @pagy.count %></span> users
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <% (1..@pagy.pages).each do |page| %>
+              <% if page == @pagy.page %>
+                <span class="relative inline-flex items-center px-4 py-2 border border-primary-500 bg-primary-50 text-sm font-medium text-primary-600 dark:bg-primary-900/20 dark:text-primary-400 dark:border-primary-500">
+                  <%= page %>
+                </span>
+              <% else %>
+                <%= link_to page, url_for(page: page), class: "relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" %>
+              <% end %>
+            <% end %>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

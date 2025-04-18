@@ -10,3 +10,11 @@ pin "@rails/actiontext", to: "actiontext.esm.js"
 # Theme system
 pin "theme_initializer", preload: true
 pin_all_from "app/javascript/theme", under: "theme"
+
+# Custom components
+pin "tabs"
+pin "lightbox"
+pin "test_tabs" # Temporary for debugging
+pin "components/tabs"
+pin "simple_tabs" # New simplified tabs implementation
+pin "admin_tabs" # Admin-specific tabs implementation
