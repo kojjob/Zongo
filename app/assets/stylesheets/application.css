@@ -23,7 +23,6 @@
 @import "landing_page_enhancements.css";
 @import "design_system.css";
 @import "visibility_fix.css"; /* Emergency fix for visibility issues */
-@import "color_system_fix.css"; /* Global fix for all color visibility issues */
 @import "content_spacing_fix.css"; /* Fix for header-content gap */
 @import "search_position_fix.css"; /* Override search positioning */
 @import "dashboard_spacing.css"; /* Balanced spacing for dashboard */

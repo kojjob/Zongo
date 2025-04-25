@@ -138,13 +138,13 @@ module TransactionsHelper
   # Get the CSS class for a transaction type header
   def transaction_type_header_class(type)
     case type
-    when "deposit"
+    when 'deposit'
       "bg-gradient-to-r from-green-500 to-green-600"
-    when "withdrawal"
+    when 'withdrawal'
       "bg-gradient-to-r from-red-500 to-red-600"
-    when "transfer"
+    when 'transfer'
       "bg-gradient-to-r from-blue-500 to-blue-600"
-    when "payment"
+    when 'payment'
       "bg-gradient-to-r from-purple-500 to-purple-600"
     else
       "bg-gradient-to-r from-gray-500 to-gray-600"
@@ -155,13 +155,13 @@ module TransactionsHelper
   def transaction_type_icon_class(type)
     base_class = "w-12 h-12 rounded-full flex items-center justify-center"
     case type
-    when "deposit"
+    when 'deposit'
       "#{base_class} bg-green-100 text-green-600"
-    when "withdrawal"
+    when 'withdrawal'
       "#{base_class} bg-red-100 text-red-600"
-    when "transfer"
+    when 'transfer'
       "#{base_class} bg-blue-100 text-blue-600"
-    when "payment"
+    when 'payment'
       "#{base_class} bg-purple-100 text-purple-600"
     else
       "#{base_class} bg-gray-100 text-gray-600"
@@ -171,13 +171,13 @@ module TransactionsHelper
   # Get the icon for a transaction type
   def transaction_type_icon(type)
     case type
-    when "deposit"
+    when 'deposit'
       icon("arrow-down-to-line", class: "w-6 h-6")
-    when "withdrawal"
+    when 'withdrawal'
       icon("arrow-up-from-line", class: "w-6 h-6")
-    when "transfer"
+    when 'transfer'
       icon("arrow-right-arrow-left", class: "w-6 h-6")
-    when "payment"
+    when 'payment'
       icon("credit-card", class: "w-6 h-6")
     else
       icon("question-mark-circle", class: "w-6 h-6")
@@ -187,13 +187,13 @@ module TransactionsHelper
   # Get the title for a transaction type
   def transaction_type_title(type)
     case type
-    when "deposit"
+    when 'deposit'
       "Deposit Money"
-    when "withdrawal"
+    when 'withdrawal'
       "Withdraw Money"
-    when "transfer"
+    when 'transfer'
       "Transfer Money"
-    when "payment"
+    when 'payment'
       "Make a Payment"
     else
       "New Transaction"
@@ -203,13 +203,13 @@ module TransactionsHelper
   # Get the description for a transaction type
   def transaction_type_description(type)
     case type
-    when "deposit"
+    when 'deposit'
       "Add money to your wallet from an external source."
-    when "withdrawal"
+    when 'withdrawal'
       "Withdraw money from your wallet to an external destination."
-    when "transfer"
+    when 'transfer'
       "Send money to another user's wallet."
-    when "payment"
+    when 'payment'
       "Pay for goods or services."
     else
       "Create a new transaction."
@@ -219,30 +219,30 @@ module TransactionsHelper
   # Get payment method options for select
   def payment_method_options
     [
-      [ "Mobile Money", "mobile_money" ],
-      [ "Bank Transfer", "bank_transfer" ],
-      [ "Card Payment", "card_payment" ],
-      [ "Cash", "cash" ]
+      ['Mobile Money', 'mobile_money'],
+      ['Bank Transfer', 'bank_transfer'],
+      ['Card Payment', 'card_payment'],
+      ['Cash', 'cash']
     ]
   end
 
   # Get provider options for select based on transaction type
   def provider_options_for(transaction_type)
     case transaction_type
-    when "deposit", "withdrawal"
+    when 'deposit', 'withdrawal'
       [
-        [ "MTN Mobile Money", "MTN" ],
-        [ "Vodafone Cash", "Vodafone" ],
-        [ "AirtelTigo Money", "AirtelTigo" ],
-        [ "Ghana Commercial Bank", "GCB" ],
-        [ "Ecobank", "Ecobank" ],
-        [ "Fidelity Bank", "Fidelity" ],
-        [ "Visa", "Visa" ],
-        [ "Mastercard", "Mastercard" ]
+        ['MTN Mobile Money', 'MTN'],
+        ['Vodafone Cash', 'Vodafone'],
+        ['AirtelTigo Money', 'AirtelTigo'],
+        ['Ghana Commercial Bank', 'GCB'],
+        ['Ecobank', 'Ecobank'],
+        ['Fidelity Bank', 'Fidelity'],
+        ['Visa', 'Visa'],
+        ['Mastercard', 'Mastercard']
       ]
     else
       [
-        [ "Select Provider", "" ]
+        ['Select Provider', '']
       ]
     end
   end
@@ -252,9 +252,9 @@ module TransactionsHelper
     # In a real application, this would fetch actual recipients
     # For now, we'll use dummy data
     [
-      [ "John Doe (Wallet ID: 12345)", 1 ],
-      [ "Jane Smith (Wallet ID: 67890)", 2 ],
-      [ "Kwame Nkrumah (Wallet ID: 24680)", 3 ]
+      ['John Doe (Wallet ID: 12345)', 1],
+      ['Jane Smith (Wallet ID: 67890)', 2],
+      ['Kwame Nkrumah (Wallet ID: 24680)', 3]
     ]
   end
 
@@ -263,10 +263,10 @@ module TransactionsHelper
     # In a real application, this would fetch actual merchants
     # For now, we'll use dummy data
     [
-      [ "Ghana Water Company", 4 ],
-      [ "Electricity Company of Ghana", 5 ],
-      [ "MTN Ghana", 6 ],
-      [ "Vodafone Ghana", 7 ]
+      ['Ghana Water Company', 4],
+      ['Electricity Company of Ghana', 5],
+      ['MTN Ghana', 6],
+      ['Vodafone Ghana', 7]
     ]
   end
 end

@@ -1,0 +1,261 @@
+<% content_for :title, "Admin Help Center" %>
+
+<div class="space-y-8">
+  <!-- Header with gradient background -->
+  <div class="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-800 rounded-xl shadow-lg overflow-hidden relative">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mt-32 -mr-32"></div>
+    <div class="absolute bottom-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -mb-20 -ml-20"></div>
+    
+    <div class="relative z-10 px-8 py-6 md:py-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center mb-4 md:mb-0">
+          <%= link_to admin_dashboard_path, class: "mr-4 text-white/80 hover:text-white transition-colors flex items-center" do %>
+            <%= icon "arrow-left", class: "w-5 h-5 mr-2" %>
+            Back to Dashboard
+          <% end %>
+          <h1 class="text-2xl md:text-3xl font-bold text-white">Admin Help Center</h1>
+        </div>
+      </div>
+      
+      <p class="mt-2 text-white/80 max-w-2xl">
+        Find answers to common questions and learn how to use the admin dashboard effectively.
+      </p>
+    </div>
+  </div>
+
+  <!-- Help Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Sidebar - Categories -->
+    <div class="lg:col-span-1">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden sticky top-4">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Help Categories</h3>
+        </div>
+        <div class="p-4">
+          <nav class="space-y-1">
+            <a href="#getting-started" class="flex items-center px-3 py-2 text-sm font-medium rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">
+              <%= icon "home", class: "mr-3 h-5 w-5 text-indigo-500 dark:text-indigo-400" %>
+              Getting Started
+            </a>
+            <a href="#user-management" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "user", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              User Management
+            </a>
+            <a href="#transactions" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "currency-dollar", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              Transactions
+            </a>
+            <a href="#scheduled-transactions" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "clock", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              Scheduled Transactions
+            </a>
+            <a href="#events" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "calendar", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              Events
+            </a>
+            <a href="#loans" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "credit-card", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              Loans
+            </a>
+            <a href="#system" class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700">
+              <%= icon "server", class: "mr-3 h-5 w-5 text-gray-400 dark:text-gray-500" %>
+              System Management
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Getting Started Section -->
+      <div id="getting-started" class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+            <%= icon "home", class: "mr-2 h-5 w-5 text-indigo-500 dark:text-indigo-400" %>
+            Getting Started
+          </h3>
+        </div>
+        <div class="p-6">
+          <div class="prose dark:prose-invert max-w-none">
+            <h4>Welcome to the Admin Dashboard</h4>
+            <p>
+              The admin dashboard provides a comprehensive set of tools to manage the Super Ghana platform. 
+              Here's a quick overview of what you can do:
+            </p>
+            
+            <ul>
+              <li><strong>Dashboard Overview:</strong> View key metrics and statistics about users, transactions, events, and more.</li>
+              <li><strong>User Management:</strong> Create, edit, and manage user accounts, including suspending or promoting users.</li>
+              <li><strong>Transaction Management:</strong> Monitor and manage all financial transactions on the platform.</li>
+              <li><strong>Scheduled Transactions:</strong> Set up and manage recurring transactions.</li>
+              <li><strong>Event Management:</strong> Create and manage events, approve event submissions, and track attendance.</li>
+              <li><strong>Loan Management:</strong> Review and process loan applications, manage loan disbursements and repayments.</li>
+              <li><strong>System Management:</strong> Monitor system health, database size, and other technical metrics.</li>
+            </ul>
+            
+            <h4>Quick Tips for New Admins</h4>
+            <ol>
+              <li>Use the sidebar navigation to access different sections of the admin dashboard.</li>
+              <li>The dashboard overview provides a quick snapshot of the platform's current state.</li>
+              <li>Use the search and filter options in each section to find specific information.</li>
+              <li>Check the "New Action" dropdown to quickly create new resources.</li>
+              <li>Always review changes carefully before saving, especially when managing user accounts or financial transactions.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management Section -->
+      <div id="user-management" class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+            <%= icon "user", class: "mr-2 h-5 w-5 text-indigo-500 dark:text-indigo-400" %>
+            User Management
+          </h3>
+        </div>
+        <div class="p-6">
+          <div class="prose dark:prose-invert max-w-none">
+            <h4>Managing User Accounts</h4>
+            <p>
+              The user management section allows you to view and manage all user accounts on the platform.
+              Here are some common tasks:
+            </p>
+            
+            <h5>Viewing User Details</h5>
+            <p>
+              Click on a user's name or email in the user list to view their detailed profile, including:
+            </p>
+            <ul>
+              <li>Personal information</li>
+              <li>Account status</li>
+              <li>Transaction history</li>
+              <li>Wallet information</li>
+              <li>Login history</li>
+            </ul>
+            
+            <h5>Modifying User Accounts</h5>
+            <p>
+              From a user's profile, you can:
+            </p>
+            <ul>
+              <li><strong>Edit Profile:</strong> Update user information</li>
+              <li><strong>Suspend Account:</strong> Temporarily disable a user's access</li>
+              <li><strong>Activate Account:</strong> Re-enable a suspended account</li>
+              <li><strong>Promote to Admin:</strong> Grant administrative privileges</li>
+              <li><strong>Demote from Admin:</strong> Remove administrative privileges</li>
+            </ul>
+            
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800/30 mt-4">
+              <h5 class="text-yellow-800 dark:text-yellow-300 flex items-center text-base font-medium">
+                <%= icon "exclamation", class: "mr-2 h-5 w-5 text-yellow-500" %>
+                Important Note
+              </h5>
+              <p class="text-yellow-700 dark:text-yellow-400 mt-1">
+                Be extremely careful when promoting users to admin status. Admin users have full access to the platform, including sensitive user data and financial information.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scheduled Transactions Section -->
+      <div id="scheduled-transactions" class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white flex items-center">
+            <%= icon "clock", class: "mr-2 h-5 w-5 text-indigo-500 dark:text-indigo-400" %>
+            Scheduled Transactions
+          </h3>
+        </div>
+        <div class="p-6">
+          <div class="prose dark:prose-invert max-w-none">
+            <h4>Managing Scheduled Transactions</h4>
+            <p>
+              Scheduled transactions allow users to set up recurring payments, transfers, deposits, or withdrawals.
+              As an admin, you can:
+            </p>
+            
+            <ul>
+              <li><strong>View All Scheduled Transactions:</strong> See a list of all scheduled transactions across the platform</li>
+              <li><strong>Create New Scheduled Transactions:</strong> Set up recurring transactions for users</li>
+              <li><strong>Edit Existing Schedules:</strong> Modify the frequency, amount, or other details</li>
+              <li><strong>Pause/Resume Schedules:</strong> Temporarily stop or restart a scheduled transaction</li>
+              <li><strong>Execute Manually:</strong> Trigger a scheduled transaction immediately, regardless of its next scheduled date</li>
+              <li><strong>Delete Schedules:</strong> Permanently remove a scheduled transaction</li>
+            </ul>
+            
+            <h5>Common Scheduled Transaction Types</h5>
+            <ul>
+              <li><strong>Transfers:</strong> Regular transfers between wallets</li>
+              <li><strong>Bill Payments:</strong> Recurring payments for utilities, rent, etc.</li>
+              <li><strong>Savings:</strong> Automatic transfers to savings accounts</li>
+              <li><strong>Loan Repayments:</strong> Scheduled payments for loan installments</li>
+            </ul>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800/30 mt-4">
+              <h5 class="text-blue-800 dark:text-blue-300 flex items-center text-base font-medium">
+                <%= icon "information-circle", class: "mr-2 h-5 w-5 text-blue-500" %>
+                Tip
+              </h5>
+              <p class="text-blue-700 dark:text-blue-400 mt-1">
+                When creating a scheduled transaction, make sure the source wallet has sufficient funds for the transaction. For recurring transactions, consider the user's typical balance patterns to avoid failed transactions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Need Help Section -->
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-6 border border-indigo-100 dark:border-indigo-800/30">
+        <div class="flex items-start">
+          <div class="flex-shrink-0 bg-indigo-100 dark:bg-indigo-800/50 rounded-full p-2">
+            <%= icon "support", class: "w-6 h-6 text-indigo-600 dark:text-indigo-400" %>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-lg font-medium text-indigo-800 dark:text-indigo-300">Need Additional Help?</h3>
+            <p class="mt-1 text-indigo-700 dark:text-indigo-400">
+              If you can't find the information you need in this help center, please contact the development team for assistance.
+            </p>
+            <div class="mt-4">
+              <a href="mailto:support@superghana.com" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <%= icon "mail", class: "mr-2 h-4 w-4" %>
+                Contact Support
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 20,
+            behavior: 'smooth'
+          });
+          
+          // Update active state
+          document.querySelectorAll('nav a').forEach(link => {
+            link.classList.remove('bg-indigo-50', 'text-indigo-700', 'dark:bg-indigo-900/50', 'dark:text-indigo-300');
+            link.classList.add('text-gray-700', 'hover:bg-gray-50', 'dark:text-gray-300', 'dark:hover:bg-gray-700');
+          });
+          
+          this.classList.remove('text-gray-700', 'hover:bg-gray-50', 'dark:text-gray-300', 'dark:hover:bg-gray-700');
+          this.classList.add('bg-indigo-50', 'text-indigo-700', 'dark:bg-indigo-900/50', 'dark:text-indigo-300');
+        }
+      });
+    });
+  });
+</script>

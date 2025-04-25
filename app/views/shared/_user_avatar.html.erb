@@ -2,26 +2,33 @@
 <% classes = local_assigns.fetch(:class, "") %>
 <% initials_classes = local_assigns.fetch(:initials_class, "text-primary-600 dark:text-primary-400") %>
 <% bg_classes = local_assigns.fetch(:bg_class, "bg-primary-100 dark:bg-primary-900") %>
+<% alt_text = local_assigns.fetch(:alt, "#{user.respond_to?(:display_name) ? user.display_name : 'User'}'s avatar") %>
 
 <div class="<%= "h-#{size} w-#{size}" %> rounded-full overflow-hidden <%= classes %>">
   <% if user.avatar.attached? %>
     <% begin %>
-      <% # First try with variant %>
-      <%= image_tag user.avatar.variant(resize_to_fill: [size * 4, size * 4]), class: "h-full w-full object-cover" %>
+      <% # Try with direct blob path first (most reliable) %>
+      <%= image_tag rails_blob_path(user.avatar),
+                    class: "h-full w-full object-cover",
+                    alt: alt_text,
+                    loading: "lazy" %>
     <% rescue Exception => e %>
-      <% # If variant fails, try direct URL %>
       <% begin %>
-        <%= image_tag url_for(user.avatar), class: "h-full w-full object-cover" %>
+        <% # Try with variant as fallback %>
+        <%= image_tag user.avatar.variant(resize_to_fill: [size * 4, size * 4]),
+                      class: "h-full w-full object-cover",
+                      alt: alt_text,
+                      loading: "lazy" %>
       <% rescue Exception => e %>
         <% # Fallback to initials if everything fails %>
         <div class="h-full w-full <%= bg_classes %> flex items-center justify-center <%= initials_classes %> font-bold">
-          <%= user.initials %>
+          <%= user.respond_to?(:initials) ? user.initials : (user.respond_to?(:email) ? user.email[0].upcase : 'U') %>
         </div>
       <% end %>
     <% end %>
   <% else %>
     <div class="h-full w-full <%= bg_classes %> flex items-center justify-center <%= initials_classes %> font-bold">
-      <%= user.initials %>
+      <%= user.respond_to?(:initials) ? user.initials : (user.respond_to?(:email) ? user.email[0].upcase : 'U') %>
     </div>
   <% end %>
 </div>

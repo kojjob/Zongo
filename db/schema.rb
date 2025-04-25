@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_16_000007) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -332,6 +332,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_000007) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "term_days"
+    t.jsonb "metadata", default: {}
+    t.decimal "processing_fee", precision: 10, scale: 2
+    t.decimal "amount_due", precision: 10, scale: 2
     t.index ["loan_type"], name: "index_loans_on_loan_type"
     t.index ["reference_number"], name: "index_loans_on_reference_number", unique: true
     t.index ["status"], name: "index_loans_on_status"
@@ -543,7 +546,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_000007) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.string "phone", default: "", null: false
+    t.string "phone"
     t.datetime "phone_verified_at"
     t.integer "kyc_level", default: 0
     t.integer "status", default: 0
@@ -568,7 +571,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_000007) do
     t.string "occupation"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["phone"], name: "index_users_on_phone", unique: true
+    t.index ["phone"], name: "index_users_on_phone", unique: true, where: "((phone IS NOT NULL) AND ((phone)::text <> ''::text))"
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["super_admin"], name: "index_users_on_super_admin"

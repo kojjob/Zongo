@@ -7,15 +7,63 @@
       <div class="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
       <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-700"></div>
 
-      <% if event.event_media.present? %>
+      <% if event.banner_image.attached? %>
         <!-- Enhanced image with multiple effects - shorter height -->
         <div class="relative h-44 overflow-hidden">
           <!-- Background blurred version for depth -->
-          <div class="absolute inset-0 blur-md transform scale-105" style="background-image: url('<%= event.event_media.first.image_url %>'); background-size: cover; background-position: center;"></div>
+          <div class="absolute inset-0 blur-md transform scale-105" style="background-image: url('<%= rails_blob_path(event.banner_image) %>'); background-size: cover; background-position: center;"></div>
 
           <!-- Main image -->
-          <img src="<%= event.event_media.first.image_url %>" alt="<%= event.title %>" class="relative z-10 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out">
+          <%= image_tag rails_blob_path(event.banner_image),
+                        alt: event.title,
+                        class: "relative z-10 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out",
+                        loading: "lazy" %>
         </div>
+      <% elsif event.event_media.images.present? %>
+        <% featured_image = event.event_media.featured.first || event.event_media.first %>
+        <% if featured_image.image.attached? %>
+          <!-- Enhanced image with multiple effects - shorter height -->
+          <div class="relative h-44 overflow-hidden">
+            <!-- Background blurred version for depth -->
+            <div class="absolute inset-0 blur-md transform scale-105" style="background-image: url('<%= rails_blob_path(featured_image.image) %>'); background-size: cover; background-position: center;"></div>
+
+            <!-- Main image -->
+            <%= image_tag rails_blob_path(featured_image.image),
+                          alt: event.title,
+                          class: "relative z-10 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out",
+                          loading: "lazy" %>
+          </div>
+        <% elsif featured_image.url.present? %>
+          <!-- Enhanced image with multiple effects - shorter height -->
+          <div class="relative h-44 overflow-hidden">
+            <!-- Background blurred version for depth -->
+            <div class="absolute inset-0 blur-md transform scale-105" style="background-image: url('<%= featured_image.url %>'); background-size: cover; background-position: center;"></div>
+
+            <!-- Main image -->
+            <img src="<%= featured_image.url %>"
+                 alt="<%= event.title %>"
+                 class="relative z-10 w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-out"
+                 loading="lazy">
+          </div>
+        <% else %>
+          <!-- Enhanced gradient background with animation - shorter height -->
+          <div class="w-full h-44 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800 animate-gradient-slow"></div>
+            <div class="absolute inset-0 opacity-20">
+              <svg width="100%" height="100%">
+                <defs>
+                  <pattern id="grid-<%= event.id %>" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="white" stroke-width="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid-<%= event.id %>)" />
+              </svg>
+            </div>
+            <div class="relative z-10 h-full flex items-center justify-center">
+              <%= icon "image", class: "w-16 h-16 text-white/80" %>
+            </div>
+          </div>
+        <% end %>
       <% else %>
         <!-- Enhanced gradient background with animation - shorter height -->
         <div class="w-full h-44 relative overflow-hidden">
@@ -232,12 +280,20 @@
         <div class="flex -space-x-2 group-hover:translate-x-1 transition-transform duration-500">
           <% event.attendances.includes(:user).limit(3).each_with_index do |attendance, index| %>
             <% begin %>
-              <% if attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
+              <% if attendance.user.avatar.attached? %>
+                <div class="relative transform transition-all duration-300 hover:scale-110 hover:z-10" style="transition-delay: <%= index * 50 %>ms">
+                  <%= image_tag rails_blob_path(attendance.user.avatar),
+                                alt: attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User',
+                                class: "h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm object-cover",
+                                loading: "lazy" %>
+                </div>
+              <% elsif attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
                 <div class="relative transform transition-all duration-300 hover:scale-110 hover:z-10" style="transition-delay: <%= index * 50 %>ms">
                   <img
                     src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>"
                     alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>"
                     class="h-6 w-6 rounded-full border-2 border-white dark:border-gray-800 shadow-sm object-cover"
+                    loading="lazy"
                   >
                 </div>
               <% else %>

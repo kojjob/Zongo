@@ -20,6 +20,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    # Sanitize the phone parameter to prevent uniqueness issues with empty strings
+    if params[:user] && params[:user][:phone].blank?
+      params[:user][:phone] = nil
+    end
+
     begin
       super do |resource|
         # Add any custom processing here

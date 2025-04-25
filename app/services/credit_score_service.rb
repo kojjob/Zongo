@@ -38,22 +38,24 @@ class CreditScoreService
     final_score = [ [ final_score, 850 ].min, 300 ].max
 
     # Save the credit score
+    score_factors = {
+      account_age: account_age_score,
+      transaction_history: transaction_score,
+      loan_history: loan_history_score,
+      verification: verification_score
+    }
+
     credit_score = @user.credit_scores.create!(
       score: final_score,
       calculated_at: Time.current,
-      score_factors: {
-        account_age: account_age_score,
-        transaction_history: transaction_score,
-        loan_history: loan_history_score,
-        verification: verification_score
-      },
+      factors: score_factors.to_json,
       is_current: true
     )
 
     # Return score data
     {
       score: final_score,
-      factors: credit_score.score_factors,
+      factors: score_factors,
       calculated_at: credit_score.calculated_at
     }
   end

@@ -11,7 +11,7 @@ module PaymentProcessors
     def verify_deposit(amount:, currency:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to MTN Mobile Money
       # to verify that the deposit was actually made
-
+      
       # For now, we'll simulate a successful verification
       result = simulate_mtn_response(
         operation: :verify_deposit,
@@ -19,14 +19,14 @@ module PaymentProcessors
         currency: currency,
         reference: reference
       )
-
+      
       log_operation("verify_deposit", {
         amount: amount,
         currency: currency,
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("MTN Mobile Money deposit verified successfully", reference, {
           provider_data: {
@@ -53,10 +53,10 @@ module PaymentProcessors
       unless destination && destination[:phone_number].present?
         return error_response("Phone number is required for MTN Mobile Money withdrawals", :missing_phone_number)
       end
-
+      
       # In a production environment, this would make an API call to MTN Mobile Money
       # to initiate the withdrawal to the destination phone number
-
+      
       # For now, we'll simulate a provider response
       result = simulate_mtn_response(
         operation: :process_withdrawal,
@@ -65,7 +65,7 @@ module PaymentProcessors
         phone_number: destination[:phone_number],
         reference: reference
       )
-
+      
       log_operation("process_withdrawal", {
         amount: amount,
         currency: currency,
@@ -73,7 +73,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("MTN Mobile Money withdrawal processed successfully", result[:mtn_transaction_id], {
           provider_data: {
@@ -100,10 +100,10 @@ module PaymentProcessors
       unless destination && (destination[:phone_number].present? || destination[:merchant_code].present?)
         return error_response("Phone number or merchant code is required for MTN Mobile Money payments", :missing_recipient_details)
       end
-
+      
       # In a production environment, this would make an API call to MTN Mobile Money
       # to process the payment to the destination
-
+      
       # For now, we'll simulate a provider response
       result = simulate_mtn_response(
         operation: :process_payment,
@@ -113,7 +113,7 @@ module PaymentProcessors
         merchant_code: destination[:merchant_code],
         reference: reference
       )
-
+      
       log_operation("process_payment", {
         amount: amount,
         currency: currency,
@@ -121,7 +121,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("MTN Mobile Money payment processed successfully", result[:mtn_transaction_id], {
           provider_data: {
@@ -149,15 +149,15 @@ module PaymentProcessors
     def simulate_mtn_response(operation:, amount:, currency:, reference:, phone_number: nil, merchant_code: nil)
       # Generate an MTN transaction ID
       mtn_transaction_id = "MTN#{Time.now.strftime('%Y%m%d%H%M%S')}#{rand(1000..9999)}"
-
+      
       # Simulate occasional failures (5% chance)
       if rand(100) < 5
         error_codes = {
-          verify_deposit: [ :invalid_reference, :amount_mismatch, :expired_reference ],
-          process_withdrawal: [ :insufficient_funds, :invalid_phone_number, :service_unavailable ],
-          process_payment: [ :payment_rejected, :invalid_merchant, :service_unavailable ]
+          verify_deposit: [:invalid_reference, :amount_mismatch, :expired_reference],
+          process_withdrawal: [:insufficient_funds, :invalid_phone_number, :service_unavailable],
+          process_payment: [:payment_rejected, :invalid_merchant, :service_unavailable]
         }
-
+        
         error_code = error_codes[operation].sample
         error_messages = {
           invalid_reference: "Invalid reference provided",
@@ -169,7 +169,7 @@ module PaymentProcessors
           payment_rejected: "Payment rejected by recipient",
           invalid_merchant: "Invalid merchant code"
         }
-
+        
         return {
           success: false,
           message: error_messages[error_code],
@@ -177,10 +177,10 @@ module PaymentProcessors
           mtn_transaction_id: mtn_transaction_id
         }
       end
-
+      
       # Calculate fee based on amount (MTN typically charges 1-2%)
       fee = (amount * 0.015).round(2) # 1.5% fee
-
+      
       # Simulate successful response
       response = {
         success: true,
@@ -190,7 +190,7 @@ module PaymentProcessors
         fee: fee,
         net_amount: (amount - fee).round(2)
       }
-
+      
       # Add operation-specific details
       case operation
       when :verify_deposit
@@ -200,7 +200,7 @@ module PaymentProcessors
       when :process_payment
         response[:recipient] = phone_number || merchant_code
       end
-
+      
       response
     end
   end

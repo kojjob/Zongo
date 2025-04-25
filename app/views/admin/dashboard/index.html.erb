@@ -1,5 +1,50 @@
 <%= content_for :title, "Super Ghana Admin Dashboard" %>
 
+<style>
+  /* Dropdown styling */
+  .dropdown-menu {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top right;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .dropdown-menu.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+    display: block !important;
+  }
+
+  /* Improve dropdown items styling */
+  .dropdown-menu a {
+    transition: all 0.15s ease;
+  }
+
+  .dropdown-menu a:hover {
+    background-color: rgba(79, 70, 229, 0.1);
+  }
+
+  .dropdown-menu a:active {
+    background-color: rgba(79, 70, 229, 0.2);
+  }
+
+  /* Dark mode adjustments */
+  .dark .dropdown-menu {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .dropdown-menu a:hover {
+    background-color: rgba(99, 102, 241, 0.15);
+  }
+
+  .dark .dropdown-menu a:active {
+    background-color: rgba(99, 102, 241, 0.25);
+  }
+</style>
+
 <!-- Admin Dashboard Header -->
 <div class="relative overflow-hidden bg-gradient-to-r from-primary-700 to-primary-900 dark:from-primary-900 dark:to-gray-900">
   <!-- Decorative Elements -->
@@ -21,21 +66,80 @@
         </p>
       </div>
       <div class="flex flex-col sm:flex-row gap-4">
-        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-lg text-primary-700 bg-white hover:bg-primary-50 shadow-sm transition-colors duration-200">
+        <%= link_to admin_help_path, class: "inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-lg text-primary-700 bg-white hover:bg-primary-50 shadow-sm transition-colors duration-200" do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="8" x2="12" y2="12"></line>
             <line x1="12" y1="16" x2="12.01" y2="16"></line>
           </svg>
           Help Center
-        </a>
-        <a href="#" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-500 shadow-sm transition-colors duration-200">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          New Action
-        </a>
+        <% end %>
+
+        <div class="relative dropdown-container">
+          <button type="button" id="new-action-button" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-500 shadow-sm transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New Action
+          </button>
+
+          <div id="new-action-dropdown" class="dropdown-menu absolute right-0 mt-2 w-72 rounded-lg bg-white dark:bg-gray-800 shadow-xl z-[100] hidden overflow-hidden">
+            <div class="py-2" role="menu" aria-orientation="vertical">
+              <%= link_to new_admin_user_path, class: "flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 focus:outline-none focus:bg-indigo-50 dark:focus:bg-indigo-900/20 focus:text-indigo-700 dark:focus:text-indigo-400" do %>
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center mr-3">
+                  <%= icon "user-add", class: "h-4 w-4 text-indigo-600 dark:text-indigo-400" %>
+                </div>
+                <div>
+                  <span>New User</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Create a new user account</p>
+                </div>
+              <% end %>
+
+              <%= link_to new_admin_event_path, class: "flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 focus:outline-none focus:bg-indigo-50 dark:focus:bg-indigo-900/20 focus:text-indigo-700 dark:focus:text-indigo-400" do %>
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
+                  <%= icon "calendar", class: "h-4 w-4 text-green-600 dark:text-green-400" %>
+                </div>
+                <div>
+                  <span>New Event</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Schedule a new event</p>
+                </div>
+              <% end %>
+
+              <%= link_to new_admin_product_path, class: "flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 focus:outline-none focus:bg-indigo-50 dark:focus:bg-indigo-900/20 focus:text-indigo-700 dark:focus:text-indigo-400" do %>
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3">
+                  <%= icon "shopping-bag", class: "h-4 w-4 text-blue-600 dark:text-blue-400" %>
+                </div>
+                <div>
+                  <span>New Product</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Add a new product</p>
+                </div>
+              <% end %>
+
+              <%= link_to new_admin_scheduled_transaction_path, class: "flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 focus:outline-none focus:bg-indigo-50 dark:focus:bg-indigo-900/20 focus:text-indigo-700 dark:focus:text-indigo-400" do %>
+                <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
+                  <%= icon "clock", class: "h-4 w-4 text-purple-600 dark:text-purple-400" %>
+                </div>
+                <div>
+                  <span>New Scheduled Transaction</span>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Create recurring payment</p>
+                </div>
+              <% end %>
+
+              <% if ActiveRecord::Base.connection.table_exists?(:loans) %>
+                <%= link_to new_admin_loan_path, class: "flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-700 dark:hover:text-indigo-400 focus:outline-none focus:bg-indigo-50 dark:focus:bg-indigo-900/20 focus:text-indigo-700 dark:focus:text-indigo-400" do %>
+                  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mr-3">
+                    <%= icon "credit-card", class: "h-4 w-4 text-amber-600 dark:text-amber-400" %>
+                  </div>
+                  <div>
+                    <span>New Loan</span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Create a new loan</p>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1614,6 +1718,79 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Enhanced dropdown functionality with animations
+  function setupDropdown() {
+    // Get the dropdown button and menu
+    const dropdownButton = document.getElementById('new-action-button');
+    const dropdownMenu = document.getElementById('new-action-dropdown');
+
+    if (dropdownButton && dropdownMenu) {
+      // Make sure the dropdown is initially hidden
+      dropdownMenu.classList.add('hidden');
+
+      // Toggle dropdown when button is clicked
+      dropdownButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Toggle the dropdown with animation
+        if (dropdownMenu.classList.contains('hidden')) {
+          // Show dropdown
+          dropdownMenu.classList.remove('hidden');
+
+          // Force a reflow to ensure the transition works
+          void dropdownMenu.offsetWidth;
+
+          // Add focus to the first menu item for accessibility
+          const firstItem = dropdownMenu.querySelector('a');
+          if (firstItem) setTimeout(() => firstItem.focus(), 100);
+        } else {
+          // Hide dropdown
+          dropdownMenu.classList.add('hidden');
+        }
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.add('hidden');
+        }
+      });
+
+      // Close dropdown when pressing Escape
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !dropdownMenu.classList.contains('hidden')) {
+          dropdownMenu.classList.add('hidden');
+          dropdownButton.focus(); // Return focus to button
+        }
+      });
+
+      // Handle keyboard navigation within dropdown
+      dropdownMenu.addEventListener('keydown', function(e) {
+        const items = Array.from(dropdownMenu.querySelectorAll('a'));
+        const currentIndex = items.indexOf(document.activeElement);
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+          items[nextIndex].focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+          items[prevIndex].focus();
+        }
+      });
+    }
+  }
+
+  // Set up on initial load
+  document.addEventListener('DOMContentLoaded', setupDropdown);
+
+  // Also handle Turbo navigation
+  document.addEventListener('turbo:load', setupDropdown);
+</script>
 </div>
 
 <!-- JavaScript for Tab Navigation -->

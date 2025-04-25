@@ -1,0 +1,221 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center mb-6">
+    <%= link_to admin_transactions_path, class: "mr-4 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+      <i class="fas fa-arrow-left"></i> Back to Transactions
+    <% end %>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">New Transaction</h1>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <%= form_with model: [:admin, @transaction], class: "space-y-6" do |f| %>
+      <% if @transaction.errors.any? %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 dark:bg-red-900 dark:text-red-200" role="alert">
+          <h2 class="font-bold">The following errors prevented the transaction from being saved:</h2>
+          <ul class="list-disc list-inside">
+            <% @transaction.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Transaction Type</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :transaction_type, "Type", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :transaction_type, 
+                [["Deposit", "deposit"], ["Withdrawal", "withdrawal"], ["Transfer", "transfer"], ["Payment", "payment"]], 
+                { include_blank: "Select transaction type" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="transaction-form-deposit hidden">
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Deposit Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :destination_wallet_id, "Destination Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :destination_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select destination wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :amount, "Amount", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "0", placeholder: "0.00", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :payment_method, "Payment Method", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :payment_method, 
+                [["Credit Card", "credit_card"], ["Bank Transfer", "bank_transfer"], ["Mobile Money", "mobile_money"]], 
+                { include_blank: "Select payment method" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :provider, "Provider", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :provider, placeholder: "e.g. Visa, MTN, Bank Name", class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="transaction-form-withdrawal hidden">
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Withdrawal Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :source_wallet_id, "Source Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :source_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select source wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :amount, "Amount", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "0", placeholder: "0.00", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :payment_method, "Payment Method", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :payment_method, 
+                [["Credit Card", "credit_card"], ["Bank Transfer", "bank_transfer"], ["Mobile Money", "mobile_money"]], 
+                { include_blank: "Select payment method" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :provider, "Provider", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :provider, placeholder: "e.g. Visa, MTN, Bank Name", class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="transaction-form-transfer hidden">
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Transfer Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :source_wallet_id, "Source Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :source_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select source wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :destination_wallet_id, "Destination Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :destination_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select destination wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :amount, "Amount", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "0", placeholder: "0.00", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :description, placeholder: "e.g. Payment for services", class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="transaction-form-payment hidden">
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Payment Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :source_wallet_id, "Source Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :source_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select source wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :destination_wallet_id, "Destination Wallet", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :destination_wallet_id, 
+                Wallet.all.map { |w| ["#{w.user.display_name} (#{w.wallet_id})", w.id] }, 
+                { include_blank: "Select destination wallet" }, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :amount, "Amount", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "0", placeholder: "0.00", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :description, placeholder: "e.g. Payment for services", class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= f.submit "Create Transaction", class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors" %>
+        <%= link_to "Cancel", admin_transactions_path, class: "ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const transactionTypeSelect = document.querySelector('#transaction_transaction_type');
+    const depositForm = document.querySelector('.transaction-form-deposit');
+    const withdrawalForm = document.querySelector('.transaction-form-withdrawal');
+    const transferForm = document.querySelector('.transaction-form-transfer');
+    const paymentForm = document.querySelector('.transaction-form-payment');
+    
+    function showRelevantForm() {
+      // Hide all forms first
+      depositForm.classList.add('hidden');
+      withdrawalForm.classList.add('hidden');
+      transferForm.classList.add('hidden');
+      paymentForm.classList.add('hidden');
+      
+      // Show the relevant form based on the selected transaction type
+      const selectedType = transactionTypeSelect.value;
+      if (selectedType === 'deposit') {
+        depositForm.classList.remove('hidden');
+      } else if (selectedType === 'withdrawal') {
+        withdrawalForm.classList.remove('hidden');
+      } else if (selectedType === 'transfer') {
+        transferForm.classList.remove('hidden');
+      } else if (selectedType === 'payment') {
+        paymentForm.classList.remove('hidden');
+      }
+    }
+    
+    // Show the relevant form on page load
+    showRelevantForm();
+    
+    // Show the relevant form when the transaction type changes
+    transactionTypeSelect.addEventListener('change', showRelevantForm);
+  });
+</script>

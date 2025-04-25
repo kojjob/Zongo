@@ -1,0 +1,301 @@
+<% content_for :title, "Scheduled Transactions" %>
+
+<div class="space-y-6">
+  <!-- Header with Actions -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Scheduled Transactions</h2>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Manage recurring payments and transfers
+      </p>
+    </div>
+
+    <div class="mt-4 md:mt-0 flex flex-col sm:flex-row gap-3">
+      <%= link_to new_admin_scheduled_transaction_path, class: "btn btn-primary" do %>
+        <%= icon "plus", class: "w-5 h-5 mr-2" %>
+        New Scheduled Transaction
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+    <%= form_with url: admin_scheduled_transactions_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+          <div class="relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= icon "search", class: "h-5 w-5 text-gray-400" %>
+            </div>
+            <%= f.text_field :search, value: params[:search], placeholder: "Search by description...", class: "pl-10 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" %>
+          </div>
+        </div>
+
+        <div>
+          <label for="transaction_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transaction Type</label>
+          <%= f.select :transaction_type,
+              [
+                ["All Types", ""],
+                ["Transfer", "transfer"],
+                ["Deposit", "deposit"],
+                ["Withdrawal", "withdrawal"],
+                ["Payment", "payment"]
+              ],
+              { selected: params[:transaction_type] },
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }
+          %>
+        </div>
+
+        <div>
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+          <%= f.select :status,
+              [
+                ["All Statuses", ""],
+                ["Active", "active"],
+                ["Paused", "paused"],
+                ["Completed", "completed"],
+                ["Cancelled", "cancelled"],
+                ["Failed", "failed"]
+              ],
+              { selected: params[:status] },
+              { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }
+          %>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= link_to "Clear Filters", admin_scheduled_transactions_path, class: "btn btn-outline mr-3" %>
+        <%= f.submit "Apply Filters", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Scheduled Transactions Stats -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white">
+          <%= icon "clock", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Scheduled</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= ScheduledTransaction.count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white">
+          <%= icon "check-circle", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= ScheduledTransaction.where(status: :active).count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white">
+          <%= icon "calendar", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Due Today</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white"><%= ScheduledTransaction.where(status: :active).where("next_occurrence <= ?", Date.current.end_of_day).count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center text-white">
+          <%= icon "currency-dollar", class: "w-6 h-6" %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Monthly Volume</h3>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">₵<%= number_with_delimiter(ScheduledTransaction.where(status: :active).sum(:amount).round(2)) %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scheduled Transactions Table -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Description
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Type
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              User
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Amount
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Frequency
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Next Occurrence
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @scheduled_transactions.any? %>
+            <% @scheduled_transactions.each do |scheduled| %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white"><%= scheduled.description %></div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">Created <%= time_ago_in_words(scheduled.created_at) %> ago</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case scheduled.transaction_type
+                        when 'deposit'
+                          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        when 'withdrawal'
+                          'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                        when 'transfer'
+                          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                        when 'payment'
+                          'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                        else
+                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        end %>">
+                    <%= scheduled.transaction_type.to_s.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <% if scheduled.user && scheduled.user.respond_to?(:avatar) && scheduled.user.avatar.attached? %>
+                      <%= image_tag scheduled.user.avatar.variant(resize_to_fill: [40, 40]), class: "h-8 w-8 rounded-full mr-3 object-cover" %>
+                    <% else %>
+                      <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                        <%= icon "user", class: "h-4 w-4 text-indigo-500" %>
+                      </div>
+                    <% end %>
+                    <div>
+                      <% if scheduled.user %>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white"><%= scheduled.user.respond_to?(:display_name) ? scheduled.user.display_name : scheduled.user.email %></div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400"><%= scheduled.user.email %></div>
+                      <% else %>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">Unknown User</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400">No user associated</div>
+                      <% end %>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    ₵<%= number_with_delimiter((scheduled.amount.nil? ? 0.0 : scheduled.amount.to_f).round(2)) %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <%= scheduled.occurrences_count %> of <%= scheduled.occurrences_limit || '∞' %> occurrences
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <%= scheduled.frequency.to_s.titleize %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white">
+                    <% if scheduled.next_occurrence %>
+                      <%= scheduled.next_occurrence.strftime("%b %d, %Y") %>
+                    <% else %>
+                      Not scheduled
+                    <% end %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400">
+                    <% if scheduled.next_occurrence %>
+                      <%= distance_of_time_in_words_to_now(scheduled.next_occurrence) %> from now
+                    <% else %>
+                      No upcoming occurrence
+                    <% end %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case scheduled.status
+                        when 'active'
+                          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+                        when 'paused'
+                          'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                        when 'completed'
+                          'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+                        when 'cancelled'
+                          'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                        when 'failed'
+                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        else
+                          'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                        end %>">
+                    <%= scheduled.status.to_s.capitalize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-2">
+                    <%= link_to admin_scheduled_transaction_path(scheduled), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                      <%= icon "eye", class: "w-5 h-5" %>
+                    <% end %>
+                    <%= link_to edit_admin_scheduled_transaction_path(scheduled), class: "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" do %>
+                      <%= icon "pencil", class: "w-5 h-5" %>
+                    <% end %>
+                    <% if scheduled.status == 'active' %>
+                      <%= button_to pause_admin_scheduled_transaction_path(scheduled), method: :post, class: "text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                        <%= icon "pause", class: "w-5 h-5" %>
+                      <% end %>
+                    <% elsif scheduled.status == 'paused' %>
+                      <%= button_to resume_admin_scheduled_transaction_path(scheduled), method: :post, class: "text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                        <%= icon "play", class: "w-5 h-5" %>
+                      <% end %>
+                    <% end %>
+                    <%= button_to admin_scheduled_transaction_path(scheduled), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this scheduled transaction?" } }, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                      <%= icon "trash", class: "w-5 h-5" %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="8" class="px-6 py-10 text-center">
+                <div class="flex flex-col items-center">
+                  <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 mb-4">
+                    <%= icon "clock", class: "w-8 h-8" %>
+                  </div>
+                  <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No Scheduled Transactions</h3>
+                  <p class="text-gray-500 dark:text-gray-400 mb-4">There are no scheduled transactions to display.</p>
+                  <%= link_to new_admin_scheduled_transaction_path, class: "btn btn-primary" do %>
+                    <%= icon "plus", class: "w-5 h-5 mr-2" %>
+                    Create New Scheduled Transaction
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <% if @pagy && defined?(pagy_nav) %>
+    <div class="mt-6">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+</div>

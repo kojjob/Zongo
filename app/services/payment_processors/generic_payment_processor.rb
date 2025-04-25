@@ -19,7 +19,7 @@ module PaymentProcessors
     def verify_deposit(amount:, currency:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to the payment provider
       # to verify that the deposit was actually made
-
+      
       # For now, we'll simulate a successful verification
       result = simulate_provider_response(
         operation: :verify_deposit,
@@ -27,14 +27,14 @@ module PaymentProcessors
         currency: currency,
         reference: reference
       )
-
+      
       log_operation("verify_deposit", {
         amount: amount,
         currency: currency,
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Deposit verified successfully", reference)
       else
@@ -53,7 +53,7 @@ module PaymentProcessors
     def process_withdrawal(amount:, currency:, destination:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to the payment provider
       # to initiate the withdrawal to the destination account
-
+      
       # For now, we'll simulate a provider response
       result = simulate_provider_response(
         operation: :process_withdrawal,
@@ -62,7 +62,7 @@ module PaymentProcessors
         destination: destination,
         reference: reference
       )
-
+      
       log_operation("process_withdrawal", {
         amount: amount,
         currency: currency,
@@ -70,7 +70,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Withdrawal processed successfully", result[:provider_reference])
       else
@@ -89,7 +89,7 @@ module PaymentProcessors
     def process_payment(amount:, currency:, destination:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to the payment provider
       # to process the payment to the destination
-
+      
       # For now, we'll simulate a provider response
       result = simulate_provider_response(
         operation: :process_payment,
@@ -98,7 +98,7 @@ module PaymentProcessors
         destination: destination,
         reference: reference
       )
-
+      
       log_operation("process_payment", {
         amount: amount,
         currency: currency,
@@ -106,7 +106,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Payment processed successfully", result[:provider_reference])
       else
@@ -127,15 +127,15 @@ module PaymentProcessors
     def simulate_provider_response(operation:, amount:, currency:, reference:, destination: nil)
       # Generate a provider reference if one doesn't exist
       provider_ref = reference || "PROV#{Time.now.to_i}#{rand(1000..9999)}"
-
+      
       # Simulate occasional failures (10% chance)
       if rand(100) < 10
         error_codes = {
-          verify_deposit: [ :invalid_reference, :amount_mismatch, :expired_reference ],
-          process_withdrawal: [ :insufficient_provider_funds, :invalid_destination, :service_unavailable ],
-          process_payment: [ :payment_rejected, :invalid_merchant, :service_unavailable ]
+          verify_deposit: [:invalid_reference, :amount_mismatch, :expired_reference],
+          process_withdrawal: [:insufficient_provider_funds, :invalid_destination, :service_unavailable],
+          process_payment: [:payment_rejected, :invalid_merchant, :service_unavailable]
         }
-
+        
         error_code = error_codes[operation].sample
         error_messages = {
           invalid_reference: "Invalid reference provided",
@@ -147,7 +147,7 @@ module PaymentProcessors
           payment_rejected: "Payment rejected by recipient",
           invalid_merchant: "Invalid merchant account"
         }
-
+        
         return {
           success: false,
           message: error_messages[error_code],
@@ -155,7 +155,7 @@ module PaymentProcessors
           provider_reference: provider_ref
         }
       end
-
+      
       # Simulate successful response
       {
         success: true,

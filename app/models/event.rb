@@ -9,6 +9,9 @@ class Event < ApplicationRecord
     # Fallback if FriendlyId is not available
     puts "Error setting up FriendlyId for Event: #{e.message}"
   end
+  # Active Storage attachments
+  has_one_attached :banner_image
+
   # Associations
   belongs_to :organizer, class_name: "User"
   belongs_to :venue, optional: true

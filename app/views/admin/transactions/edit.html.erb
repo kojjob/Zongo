@@ -1,0 +1,96 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center mb-6">
+    <%= link_to admin_transaction_path(@transaction), class: "mr-4 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+      <i class="fas fa-arrow-left"></i> Back to Transaction
+    <% end %>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Edit Transaction</h1>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <%= form_with model: [:admin, @transaction], class: "space-y-6" do |f| %>
+      <% if @transaction.errors.any? %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 dark:bg-red-900 dark:text-red-200" role="alert">
+          <h2 class="font-bold">The following errors prevented the transaction from being saved:</h2>
+          <ul class="list-disc list-inside">
+            <% @transaction.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Transaction Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <%= f.label :transaction_id, "Transaction ID", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :transaction_id, disabled: true, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-gray-100 dark:bg-gray-600" %>
+          </div>
+          
+          <div>
+            <%= f.label :transaction_type, "Type", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :transaction_type, disabled: true, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white bg-gray-100 dark:bg-gray-600" %>
+          </div>
+          
+          <div>
+            <%= f.label :status, "Status", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.select :status, 
+                [["Pending", "pending"], ["Completed", "completed"], ["Failed", "failed"], ["Reversed", "reversed"], ["Blocked", "blocked"]], 
+                {}, 
+                { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+          </div>
+          
+          <div>
+            <%= f.label :amount, "Amount", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :amount, step: "0.01", min: "0", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :fee, "Fee", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <div class="mt-1 relative rounded-md shadow-sm">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 sm:text-sm">$</span>
+              </div>
+              <%= f.number_field :fee, step: "0.01", min: "0", class: "pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+            </div>
+          </div>
+          
+          <div>
+            <%= f.label :currency, "Currency", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :currency, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+          
+          <div>
+            <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :description, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+          
+          <div>
+            <%= f.label :payment_method, "Payment Method", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :payment_method, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+          
+          <div>
+            <%= f.label :provider, "Provider", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :provider, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+          
+          <div>
+            <%= f.label :external_reference, "External Reference", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+            <%= f.text_field :external_reference, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= f.submit "Update Transaction", class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors" %>
+        <%= link_to "Cancel", admin_transaction_path(@transaction), class: "ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" %>
+      </div>
+    <% end %>
+  </div>
+</div>

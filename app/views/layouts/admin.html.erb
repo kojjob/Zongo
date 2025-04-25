@@ -130,7 +130,7 @@
   </style>
 </head>
 
-<body class="font-poppins antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex flex-col admin-layout" data-theme-target="body">
+<body class="font-poppins antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex flex-col admin-layout" data-theme-target="body" data-controller="icon">
   <%= render 'shared/icons' %>
   <div class="flex h-full">
     <!-- Admin Sidebar -->
@@ -178,7 +178,7 @@
           <span class="ml-3 sidebar-text">Scheduled</span>
         <% end %>
 
-        <%= link_to admin_events_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{current_page?(admin_events_path) ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+        <%= link_to admin_events_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'events' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
           <div class="flex items-center justify-center w-8 h-8">
             <%= icon "calendar", class: "w-6 h-6" %>
           </div>
@@ -192,6 +192,13 @@
             </div>
             <span class="ml-3 sidebar-text">Loans</span>
           <% end %>
+        <% end %>
+
+        <%= link_to admin_transactions_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'transactions' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "currency-dollar", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Transactions</span>
         <% end %>
 
         <%= link_to admin_system_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{current_page?(admin_system_path) ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>

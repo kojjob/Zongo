@@ -9,17 +9,34 @@
       <h2 class="mt-4 text-xl font-bold text-gray-800 dark:text-white">Check Your Email</h2>
       <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">We've sent password reset instructions to your email address.</p>
     </div>
-    
+
     <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-6">
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        <strong>Please note:</strong> The reset link will expire in 6 hours. If you don't see the email, please check your spam folder.
+        <strong>Next steps:</strong>
+      </p>
+      <ol class="text-sm text-left text-gray-600 dark:text-gray-400 mt-2 space-y-2">
+        <li>1. Check your email inbox (and spam folder)</li>
+        <li>2. Open the password reset email</li>
+        <li>3. Click the "Reset Password" button in the email</li>
+        <li>4. Create your new password on the page that opens</li>
+      </ol>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+        <strong>Note:</strong> The reset link will expire in 6 hours.
       </p>
     </div>
-    
+
     <div class="space-y-4">
       <%= link_to "Back to Sign In", new_user_session_path, class: "w-full inline-block py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-medium text-base transition-colors" %>
-      
-      <%= link_to "Didn't receive instructions?", new_user_password_path, class: "text-sm text-primary-600 hover:text-primary-500" %>
+
+      <%= link_to "Didn't receive the email?", new_user_password_path, class: "text-sm text-primary-600 hover:text-primary-500" %>
+
+      <% if Rails.env.development? && params[:email].present? %>
+        <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+          <p class="text-sm text-yellow-800 font-medium">Development Mode Only</p>
+          <p class="text-xs text-yellow-700 mb-2">Skip the email step and reset password directly:</p>
+          <%= link_to "Reset Password Directly", dev_reset_password_path(params[:email]), class: "text-xs bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded inline-block" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

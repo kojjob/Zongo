@@ -11,7 +11,8 @@ class User < ApplicationRecord
                       format: { with: /\A[a-zA-Z0-9_.]+\z/, message: "only allows letters, numbers, dots and underscores", allow_blank: true },
                       length: { minimum: 3, maximum: 30, allow_blank: true }
   validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :phone_number, uniqueness: { allow_blank: true }
+  validates :phone, uniqueness: { allow_blank: true, allow_nil: true }
+  validates :phone_number, uniqueness: { allow_blank: true, allow_nil: true }
   validates :website, format: { with: URI.regexp(%w[http https]), message: "must be a valid URL", allow_blank: true }
 
   # Associations
@@ -47,9 +48,18 @@ class User < ApplicationRecord
   has_many :loans, dependent: :restrict_with_error if ActiveRecord::Base.connection.table_exists?(:loans)
   has_many :credit_scores, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:credit_scores)
 
+  # Callbacks
+  before_save :normalize_phone_fields
+
   # Enums
   enum :status, { active: 0, suspended: 1, locked: 2, closed: 3 }, default: :active
   enum :kyc_level, { basic: 0, verified: 1, advanced: 2, business: 3 }, default: :basic
+
+  # Convert empty strings to nil for phone fields to avoid uniqueness constraint issues
+  def normalize_phone_fields
+    self.phone = nil if phone.blank?
+    self.phone_number = nil if phone_number.blank?
+  end
 
   # Add custom serialization methods to fix the issue
   def self.serialize_from_session(key, salt)
@@ -309,6 +319,14 @@ class User < ApplicationRecord
   # Check if user has admin privileges
   def has_admin_privileges?
     admin?
+  end
+
+  # Check if user has a specific role
+  # This is a compatibility method for role-based authorization systems
+  def has_role?(role_name)
+    return true if role_name.to_sym == :admin && admin?
+    return true if role_name.to_sym == :super_admin && super_admin?
+    false
   end
 
   # Check if user can manage the specified resource

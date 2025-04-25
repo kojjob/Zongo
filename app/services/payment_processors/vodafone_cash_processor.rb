@@ -11,7 +11,7 @@ module PaymentProcessors
     def verify_deposit(amount:, currency:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to Vodafone Cash
       # to verify that the deposit was actually made
-
+      
       # For now, we'll simulate a successful verification
       result = simulate_vodafone_response(
         operation: :verify_deposit,
@@ -19,14 +19,14 @@ module PaymentProcessors
         currency: currency,
         reference: reference
       )
-
+      
       log_operation("verify_deposit", {
         amount: amount,
         currency: currency,
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Vodafone Cash deposit verified successfully", reference, {
           provider_data: {
@@ -53,15 +53,15 @@ module PaymentProcessors
       unless destination && destination[:phone_number].present?
         return error_response("Phone number is required for Vodafone Cash withdrawals", :missing_phone_number)
       end
-
+      
       # Vodafone Cash requires a voucher code for withdrawals
       unless verification_data && verification_data[:voucher_code].present?
         return error_response("Voucher code is required for Vodafone Cash withdrawals", :missing_voucher_code)
       end
-
+      
       # In a production environment, this would make an API call to Vodafone Cash
       # to initiate the withdrawal to the destination phone number
-
+      
       # For now, we'll simulate a provider response
       result = simulate_vodafone_response(
         operation: :process_withdrawal,
@@ -71,7 +71,7 @@ module PaymentProcessors
         reference: reference,
         voucher_code: verification_data[:voucher_code]
       )
-
+      
       log_operation("process_withdrawal", {
         amount: amount,
         currency: currency,
@@ -79,7 +79,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Vodafone Cash withdrawal processed successfully", result[:vodafone_transaction_id], {
           provider_data: {
@@ -106,10 +106,10 @@ module PaymentProcessors
       unless destination && (destination[:phone_number].present? || destination[:merchant_code].present?)
         return error_response("Phone number or merchant code is required for Vodafone Cash payments", :missing_recipient_details)
       end
-
+      
       # In a production environment, this would make an API call to Vodafone Cash
       # to process the payment to the destination
-
+      
       # For now, we'll simulate a provider response
       result = simulate_vodafone_response(
         operation: :process_payment,
@@ -119,7 +119,7 @@ module PaymentProcessors
         merchant_code: destination[:merchant_code],
         reference: reference
       )
-
+      
       log_operation("process_payment", {
         amount: amount,
         currency: currency,
@@ -127,7 +127,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Vodafone Cash payment processed successfully", result[:vodafone_transaction_id], {
           provider_data: {
@@ -156,15 +156,15 @@ module PaymentProcessors
     def simulate_vodafone_response(operation:, amount:, currency:, reference:, phone_number: nil, merchant_code: nil, voucher_code: nil)
       # Generate a Vodafone transaction ID
       vodafone_transaction_id = "VOD#{Time.now.strftime('%Y%m%d%H%M%S')}#{rand(1000..9999)}"
-
+      
       # Simulate occasional failures (7% chance)
       if rand(100) < 7
         error_codes = {
-          verify_deposit: [ :invalid_reference, :amount_mismatch, :expired_reference ],
-          process_withdrawal: [ :insufficient_funds, :invalid_phone_number, :invalid_voucher, :service_unavailable ],
-          process_payment: [ :payment_rejected, :invalid_merchant, :service_unavailable ]
+          verify_deposit: [:invalid_reference, :amount_mismatch, :expired_reference],
+          process_withdrawal: [:insufficient_funds, :invalid_phone_number, :invalid_voucher, :service_unavailable],
+          process_payment: [:payment_rejected, :invalid_merchant, :service_unavailable]
         }
-
+        
         error_code = error_codes[operation].sample
         error_messages = {
           invalid_reference: "Invalid reference provided",
@@ -177,7 +177,7 @@ module PaymentProcessors
           payment_rejected: "Payment rejected by recipient",
           invalid_merchant: "Invalid merchant code"
         }
-
+        
         return {
           success: false,
           message: error_messages[error_code],
@@ -185,7 +185,7 @@ module PaymentProcessors
           vodafone_transaction_id: vodafone_transaction_id
         }
       end
-
+      
       # For withdrawals, validate the voucher code format (if provided)
       if operation == :process_withdrawal && voucher_code.present?
         unless voucher_code.match?(/^\d{6}$/)
@@ -197,10 +197,10 @@ module PaymentProcessors
           }
         end
       end
-
+      
       # Calculate fee based on amount (Vodafone typically charges 0.5-1.5%)
       fee = (amount * 0.01).round(2) # 1% fee
-
+      
       # Simulate successful response
       response = {
         success: true,
@@ -210,7 +210,7 @@ module PaymentProcessors
         fee: fee,
         net_amount: (amount - fee).round(2)
       }
-
+      
       # Add operation-specific details
       case operation
       when :verify_deposit
@@ -221,7 +221,7 @@ module PaymentProcessors
       when :process_payment
         response[:recipient] = phone_number || merchant_code
       end
-
+      
       response
     end
   end

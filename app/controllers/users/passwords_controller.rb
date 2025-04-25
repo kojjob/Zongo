@@ -1,6 +1,66 @@
 class Users::PasswordsController < Devise::PasswordsController
   # Add a before_action to ensure the Devise mapping is set for custom actions
-  before_action :set_devise_mapping, only: [ :reset_success, :instructions_sent ]
+  before_action :set_devise_mapping, only: [ :reset_success, :instructions_sent, :dev_reset ]
+
+  # Development-only method to generate a password reset token and show the reset link
+  # This bypasses the email step for easier testing
+  def dev_reset
+    raise "Not allowed in production" unless Rails.env.development?
+
+    # Find the user by email
+    email = params[:email]
+    user = User.find_by(email: email)
+
+    unless user
+      flash[:alert] = "User with email #{email} not found"
+      redirect_to new_user_session_path and return
+    end
+
+    # Generate a reset token
+    raw_token, hashed_token = Devise.token_generator.generate(User, :reset_password_token)
+    user.reset_password_token = hashed_token
+    user.reset_password_sent_at = Time.now.utc
+    user.save(validate: false)
+
+    # Create the reset link
+    reset_link = edit_password_url(user, reset_password_token: raw_token)
+
+    # Show the reset link in a view (for development only)
+    @email = email
+    @reset_link = reset_link
+    render 'devise/passwords/dev_reset_link'
+  end
+
+  # Simple JSON endpoint for resetting passwords via the console
+  # Only available in development mode
+  def console_reset
+    raise "Not allowed in production" unless Rails.env.development?
+
+    # Find the user by email
+    email = params[:email]
+    user = User.find_by(email: email)
+
+    unless user
+      render json: { error: "User with email #{email} not found" }, status: :not_found
+      return
+    end
+
+    # Generate a reset token
+    raw_token, hashed_token = Devise.token_generator.generate(User, :reset_password_token)
+    user.reset_password_token = hashed_token
+    user.reset_password_sent_at = Time.now.utc
+    user.save(validate: false)
+
+    # Create the reset link
+    reset_link = edit_password_url(user, reset_password_token: raw_token)
+
+    # Return the link as JSON
+    render json: {
+      email: email,
+      reset_link: reset_link,
+      expires_in: Devise.reset_password_within.inspect
+    }
+  end
 
   # GET /resource/password/new
   # def new
@@ -25,7 +85,13 @@ class Users::PasswordsController < Devise::PasswordsController
     # Always redirect to the same page with a success message
     # This prevents user enumeration attacks
     flash[:notice] = I18n.t("devise.passwords.send_instructions")
-    redirect_to after_sending_reset_password_instructions_path_for(resource_name)
+
+    # In development, pass the email to the instructions page for the direct reset link
+    if Rails.env.development?
+      redirect_to after_sending_reset_password_instructions_path_for(resource_name, email: resource_params[:email])
+    else
+      redirect_to after_sending_reset_password_instructions_path_for(resource_name)
+    end
   end
 
   # GET /resource/password/edit?reset_password_token=abcdef
@@ -86,8 +152,12 @@ class Users::PasswordsController < Devise::PasswordsController
   end
 
   # The path used after sending reset password instructions
-  def after_sending_reset_password_instructions_path_for(resource_name)
-    password_instructions_sent_path if is_navigational_format?
+  def after_sending_reset_password_instructions_path_for(resource_name, options = {})
+    if options[:email].present? && Rails.env.development?
+      password_instructions_sent_path(email: options[:email]) if is_navigational_format?
+    else
+      password_instructions_sent_path if is_navigational_format?
+    end
   end
 
   # The path used after resetting the password

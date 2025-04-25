@@ -18,7 +18,7 @@ module PaymentProcessors
     def verify_deposit(amount:, currency:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to the bank's API
       # to verify that the deposit was actually made
-
+      
       # For now, we'll simulate a successful verification
       result = simulate_bank_response(
         operation: :verify_deposit,
@@ -26,14 +26,14 @@ module PaymentProcessors
         currency: currency,
         reference: reference
       )
-
+      
       log_operation("verify_deposit", {
         amount: amount,
         currency: currency,
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Bank deposit verified successfully", reference, {
           provider_data: {
@@ -61,10 +61,10 @@ module PaymentProcessors
       unless destination && destination[:account_number].present? && destination[:account_name].present?
         return error_response("Account number and name are required for bank withdrawals", :missing_account_details)
       end
-
+      
       # In a production environment, this would make an API call to the bank's API
       # to initiate the withdrawal to the destination account
-
+      
       # For now, we'll simulate a provider response
       result = simulate_bank_response(
         operation: :process_withdrawal,
@@ -75,7 +75,7 @@ module PaymentProcessors
         bank_name: destination[:bank_name] || bank_name,
         reference: reference
       )
-
+      
       log_operation("process_withdrawal", {
         amount: amount,
         currency: currency,
@@ -83,7 +83,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Bank withdrawal processed successfully", result[:bank_transaction_id], {
           provider_data: {
@@ -113,10 +113,10 @@ module PaymentProcessors
       unless destination && destination[:account_number].present? && destination[:account_name].present?
         return error_response("Account number and name are required for bank payments", :missing_account_details)
       end
-
+      
       # In a production environment, this would make an API call to the bank's API
       # to process the payment to the destination account
-
+      
       # For now, we'll simulate a provider response
       result = simulate_bank_response(
         operation: :process_payment,
@@ -127,7 +127,7 @@ module PaymentProcessors
         bank_name: destination[:bank_name] || bank_name,
         reference: reference
       )
-
+      
       log_operation("process_payment", {
         amount: amount,
         currency: currency,
@@ -135,7 +135,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Bank payment processed successfully", result[:bank_transaction_id], {
           provider_data: {
@@ -167,15 +167,15 @@ module PaymentProcessors
     def simulate_bank_response(operation:, amount:, currency:, reference:, account_number: nil, account_name: nil, bank_name: nil)
       # Generate a bank transaction ID
       bank_transaction_id = "BNK#{Time.now.strftime('%Y%m%d%H%M%S')}#{rand(1000..9999)}"
-
+      
       # Simulate occasional failures (8% chance)
       if rand(100) < 8
         error_codes = {
-          verify_deposit: [ :invalid_reference, :amount_mismatch, :expired_reference ],
-          process_withdrawal: [ :insufficient_funds, :invalid_account, :service_unavailable, :daily_limit_exceeded ],
-          process_payment: [ :payment_rejected, :invalid_account, :service_unavailable, :daily_limit_exceeded ]
+          verify_deposit: [:invalid_reference, :amount_mismatch, :expired_reference],
+          process_withdrawal: [:insufficient_funds, :invalid_account, :service_unavailable, :daily_limit_exceeded],
+          process_payment: [:payment_rejected, :invalid_account, :service_unavailable, :daily_limit_exceeded]
         }
-
+        
         error_code = error_codes[operation].sample
         error_messages = {
           invalid_reference: "Invalid reference provided",
@@ -187,7 +187,7 @@ module PaymentProcessors
           payment_rejected: "Payment rejected by recipient bank",
           daily_limit_exceeded: "Daily transaction limit exceeded"
         }
-
+        
         return {
           success: false,
           message: error_messages[error_code],
@@ -195,16 +195,16 @@ module PaymentProcessors
           bank_transaction_id: bank_transaction_id
         }
       end
-
+      
       # Calculate fee based on amount (banks typically charge a flat fee or percentage)
-      fee = [ 5.0, (amount * 0.005).round(2) ].max # 0.5% fee with minimum of 5.0
-
+      fee = [5.0, (amount * 0.005).round(2)].max # 0.5% fee with minimum of 5.0
+      
       # Determine expected completion time (bank transfers can take time)
       # Same bank transfers are faster than inter-bank transfers
       is_same_bank = bank_name == self.bank_name
       completion_hours = is_same_bank ? rand(0..1) : rand(1..24)
       expected_completion_time = Time.now + completion_hours.hours
-
+      
       # Simulate successful response
       response = {
         success: true,
@@ -216,18 +216,18 @@ module PaymentProcessors
         expected_completion_time: expected_completion_time.iso8601,
         is_same_bank: is_same_bank
       }
-
+      
       # Add operation-specific details
       case operation
       when :verify_deposit
         response[:sender_account] = "XXXX" + rand(10**6).to_s # Random account number
-        response[:sender_name] = [ "John Doe", "Jane Smith", "Kwame Nkrumah", "Ama Ata Aidoo" ].sample
+        response[:sender_name] = ["John Doe", "Jane Smith", "Kwame Nkrumah", "Ama Ata Aidoo"].sample
       when :process_withdrawal, :process_payment
         response[:recipient_account] = account_number
         response[:recipient_name] = account_name
         response[:recipient_bank] = bank_name
       end
-
+      
       response
     end
   end

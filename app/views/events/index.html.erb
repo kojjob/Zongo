@@ -4,11 +4,26 @@
   <% if @featured_event.present? %>
   <section class="relative overflow-hidden min-h-[600px] flex items-center">
     <!-- Full-screen background image with parallax effect -->
-    <% if @featured_event.event_media.present? %>
+    <% if @featured_event.banner_image.attached? %>
       <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed transform scale-105"
-           style="background-image: url('<%= @featured_event.event_media.first.image_url %>');"
+           style="background-image: url('<%= rails_blob_path(@featured_event.banner_image) %>');"
            data-controller="parallax">
       </div>
+    <% elsif @featured_event.event_media.images.present? %>
+      <% featured_image = @featured_event.event_media.featured.first || @featured_event.event_media.first %>
+      <% if featured_image.image.attached? %>
+        <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed transform scale-105"
+             style="background-image: url('<%= rails_blob_path(featured_image.image) %>');"
+             data-controller="parallax">
+        </div>
+      <% elsif featured_image.url.present? %>
+        <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-fixed transform scale-105"
+             style="background-image: url('<%= featured_image.url %>');"
+             data-controller="parallax">
+        </div>
+      <% else %>
+        <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
+      <% end %>
     <% else %>
       <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"></div>
     <% end %>
@@ -144,12 +159,28 @@
 
             <!-- Enhanced Featured image with 3D effect -->
             <div class="relative bg-white/10 backdrop-blur-xl p-2 rounded-2xl border border-white/30 shadow-[0_35px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden transform rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105">
-              <% if @featured_event.event_media.present? %>
-                <img
-                  src="<%= @featured_event.event_media.first.image_url %>"
-                  alt="<%= @featured_event.title %>"
-                  class="w-full h-96 object-cover rounded-xl shadow-inner"
-                >
+              <% if @featured_event.banner_image.attached? %>
+                <%= image_tag rails_blob_path(@featured_event.banner_image),
+                              alt: @featured_event.title,
+                              class: "w-full h-96 object-cover rounded-xl shadow-inner",
+                              loading: "lazy" %>
+              <% elsif @featured_event.event_media.images.present? %>
+                <% featured_image = @featured_event.event_media.featured.first || @featured_event.event_media.first %>
+                <% if featured_image.image.attached? %>
+                  <%= image_tag rails_blob_path(featured_image.image),
+                                alt: @featured_event.title,
+                                class: "w-full h-96 object-cover rounded-xl shadow-inner",
+                                loading: "lazy" %>
+                <% elsif featured_image.url.present? %>
+                  <img src="<%= featured_image.url %>"
+                       alt="<%= @featured_event.title %>"
+                       class="w-full h-96 object-cover rounded-xl shadow-inner"
+                       loading="lazy">
+                <% else %>
+                  <div class="w-full h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center">
+                    <%= icon "image", class: "w-24 h-24 text-white/70" %>
+                  </div>
+                <% end %>
               <% else %>
                 <div class="w-full h-96 bg-gradient-to-br from-purple-600 to-blue-500 rounded-xl flex items-center justify-center">
                   <%= icon "image", class: "w-24 h-24 text-white/70" %>
@@ -343,8 +374,32 @@
             <% @popular_events.take(5).each do |event| %>
               <%= link_to event, class: "flex items-start p-2.5 -mx-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group" do %>
                 <div class="h-12 w-12 rounded-md bg-gray-200 dark:bg-gray-700 overflow-hidden flex-shrink-0">
-                  <% if event.event_media.present? %>
-                    <img src="<%= event.event_media.first.image_url %>" alt="<%= event.title %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                  <% if event.banner_image.attached? %>
+                    <%= image_tag rails_blob_path(event.banner_image),
+                                  alt: event.title,
+                                  class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300",
+                                  loading: "lazy" %>
+                  <% elsif event.event_media.images.present? %>
+                    <% featured_image = event.event_media.featured.first || event.event_media.first %>
+                    <% if featured_image.image.attached? %>
+                      <%= image_tag rails_blob_path(featured_image.image),
+                                    alt: event.title,
+                                    class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300",
+                                    loading: "lazy" %>
+                    <% elsif featured_image.url.present? %>
+                      <img src="<%= featured_image.url %>"
+                           alt="<%= event.title %>"
+                           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                           loading="lazy">
+                    <% else %>
+                      <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <%= icon "calendar", class: "w-6 h-6 text-gray-400 dark:text-gray-500" %>
+                      </div>
+                    <% end %>
+                  <% else %>
+                    <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <%= icon "calendar", class: "w-6 h-6 text-gray-400 dark:text-gray-500" %>
+                    </div>
                   <% end %>
                 </div>
                 <div class="ml-3 flex-1 min-w-0">

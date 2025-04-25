@@ -3,6 +3,10 @@ class Loan < ApplicationRecord
   belongs_to :wallet
   has_many :loan_repayments, dependent: :destroy
 
+  # Store credit score data, processing fee, and amount due as JSON in the metadata column if it exists
+  # or use instance variables if the columns don't exist
+  attr_accessor :_credit_score_data, :_processing_fee, :_amount_due
+
   enum :status, {
     pending: 0,
     approved: 1,
@@ -52,8 +56,43 @@ class Loan < ApplicationRecord
 
   # Get processing fee safely
   def get_processing_fee
-    return 0 unless respond_to?(:processing_fee)
-    processing_fee.presence || 0
+    return processing_fee if respond_to?(:processing_fee) && processing_fee.present?
+
+    # If the attribute doesn't exist or is nil, calculate based on loan type
+    fee_percentage = case loan_type
+                     when 'microloan' then 0.01
+                     when 'emergency' then 0.02
+                     when 'installment' then 0.015
+                     when 'business' then 0.02
+                     when 'agricultural' then 0.01
+                     when 'salary_advance' then 0.005
+                     else 0.02 # default
+                     end
+
+    (amount * fee_percentage).round(2)
+  end
+
+  # Method to handle processing_fee attribute
+  def processing_fee
+    if respond_to?(:read_attribute) && has_attribute?(:processing_fee)
+      read_attribute(:processing_fee)
+    elsif respond_to?(:metadata) && metadata.present?
+      metadata['processing_fee']
+    else
+      @_processing_fee
+    end
+  end
+
+  # Method to set processing_fee attribute
+  def processing_fee=(value)
+    if respond_to?(:write_attribute) && has_attribute?(:processing_fee)
+      write_attribute(:processing_fee, value)
+    elsif respond_to?(:metadata=)
+      self.metadata ||= {}
+      self.metadata['processing_fee'] = value
+    else
+      @_processing_fee = value
+    end
   end
 
   def calculate_amount_due
@@ -71,9 +110,32 @@ class Loan < ApplicationRecord
     amount + interest_amount + fee_amount
   end
 
+  # Method to handle amount_due attribute
+  def amount_due
+    if respond_to?(:read_attribute) && has_attribute?(:amount_due)
+      read_attribute(:amount_due)
+    elsif respond_to?(:metadata) && metadata.present?
+      metadata['amount_due']
+    else
+      @_amount_due
+    end
+  end
+
+  # Method to set amount_due attribute
+  def amount_due=(value)
+    if respond_to?(:write_attribute) && has_attribute?(:amount_due)
+      write_attribute(:amount_due, value)
+    elsif respond_to?(:metadata=)
+      self.metadata ||= {}
+      self.metadata['amount_due'] = value
+    else
+      @_amount_due = value
+    end
+  end
+
   # Get amount due safely
   def get_amount_due
-    return amount_due if respond_to?(:amount_due) && amount_due.present?
+    return amount_due if amount_due.present?
     # Calculate on the fly if not stored
     days = term_in_days
     interest_amount = (amount * interest_rate / 100) * (days / 365.0)
@@ -101,6 +163,31 @@ class Loan < ApplicationRecord
   def days_overdue
     return 0 unless overdue?
     (Time.current.to_date - due_date.to_date).to_i
+  end
+
+  # Method to store credit score data
+  # @param data [Hash] Credit score data to store
+  def credit_score_data=(data)
+    if respond_to?(:metadata=)
+      # Store in metadata column if it exists
+      self.metadata ||= {}
+      self.metadata['credit_score_data'] = data
+    else
+      # Otherwise use instance variable
+      @_credit_score_data = data
+    end
+  end
+
+  # Method to retrieve credit score data
+  # @return [Hash, nil] The stored credit score data or nil if not set
+  def credit_score_data
+    if respond_to?(:metadata) && metadata.present?
+      # Retrieve from metadata column if it exists
+      metadata['credit_score_data']
+    else
+      # Otherwise use instance variable
+      @_credit_score_data
+    end
   end
 
   def repayment_schedule

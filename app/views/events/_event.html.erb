@@ -5,26 +5,46 @@
   <div class="relative z-10 flex flex-col md:flex-row md:items-start gap-6">
     <!-- Event Image/Main Info -->
     <div class="w-full md:w-1/3">
-      <% if event.event_media.present? %>
-        <%= image_tag event.event_media.first, class: "w-full h-48 object-cover rounded-lg shadow-sm" %>
+      <% if event.banner_image.attached? %>
+        <%= image_tag rails_blob_path(event.banner_image),
+                      class: "w-full h-48 object-cover rounded-lg shadow-sm",
+                      alt: "#{event.title} banner image",
+                      loading: "lazy" %>
+      <% elsif event.event_media.images.present? %>
+        <% featured_image = event.event_media.featured.first || event.event_media.first %>
+        <% if featured_image.image.attached? %>
+          <%= image_tag rails_blob_path(featured_image.image),
+                        class: "w-full h-48 object-cover rounded-lg shadow-sm",
+                        alt: "#{event.title} image",
+                        loading: "lazy" %>
+        <% elsif featured_image.url.present? %>
+          <img src="<%= featured_image.url %>"
+               class="w-full h-48 object-cover rounded-lg shadow-sm"
+               alt="<%= event.title %> image"
+               loading="lazy">
+        <% else %>
+          <div class="w-full h-48 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg shadow-sm flex items-center justify-center text-white">
+            <%= icon "calendar-event", class: "w-16 h-16" %>
+          </div>
+        <% end %>
       <% else %>
         <div class="w-full h-48 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg shadow-sm flex items-center justify-center text-white">
           <%= icon "calendar-event", class: "w-16 h-16" %>
         </div>
       <% end %>
-      
+
       <div class="mt-4 flex flex-wrap gap-2">
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200">
           <%= event.event_category&.name || "Category ##{event.event_category_id}" %>
         </span>
-        
+
         <% if event.is_featured? %>
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
             <%= icon "star", class: "w-3 h-3 mr-1" %>
             Featured
           </span>
         <% end %>
-        
+
         <% if event.is_private? %>
           <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
             <%= icon "lock", class: "w-3 h-3 mr-1" %>
@@ -33,48 +53,48 @@
         <% end %>
       </div>
     </div>
-    
+
     <!-- Event Details -->
     <div class="w-full md:w-2/3">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2"><%= event.title %></h2>
-      
+
       <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-sm text-gray-500 dark:text-gray-400">
         <div class="flex items-center">
           <%= icon "calendar", class: "w-4 h-4 mr-1" %>
           <span><%= event.start_time.strftime("%b %d, %Y") %></span>
         </div>
-        
+
         <div class="flex items-center">
           <%= icon "clock", class: "w-4 h-4 mr-1" %>
           <span><%= event.start_time.strftime("%I:%M %p") %> - <%= event.end_time.strftime("%I:%M %p") %></span>
         </div>
-        
+
         <div class="flex items-center">
           <%= icon "location-marker", class: "w-4 h-4 mr-1" %>
           <span><%= event.venue&.name || "Venue ##{event.venue_id}" %></span>
         </div>
-        
+
         <div class="flex items-center">
           <%= icon "user-group", class: "w-4 h-4 mr-1" %>
           <span><%= event.capacity %> seats</span>
         </div>
       </div>
-      
+
       <p class="text-gray-700 dark:text-gray-300 mb-4"><%= event.short_description %></p>
-      
+
       <div class="mt-4 flex items-center justify-between">
         <div class="flex items-center gap-4">
           <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <%= icon "eye", class: "w-4 h-4 mr-1" %>
             <%= event.views_count %> views
           </div>
-          
+
           <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
             <%= icon "heart", class: "w-4 h-4 mr-1" %>
             <%= event.favorites_count %> favorites
           </div>
         </div>
-        
+
         <div class="text-sm text-gray-500 dark:text-gray-400">
           Organized by: <%= event.organizer&.username || "Organizer ##{event.organizer_id}" %>
         </div>

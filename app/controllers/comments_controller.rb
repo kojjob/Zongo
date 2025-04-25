@@ -28,7 +28,13 @@ class CommentsController < ApplicationController
   private
 
   def set_event
-    @event = Event.find(params[:event_id])
+    # Try to find by slug first, then by ID
+    @event = Event.find_by(slug: params[:event_id]) || Event.find_by(id: params[:event_id])
+
+    unless @event
+      flash[:alert] = "Event not found"
+      redirect_to events_path
+    end
   end
 
   def set_comment

@@ -1,0 +1,110 @@
+<% content_for :title, "Create New User" %>
+
+<div class="space-y-6">
+  <div class="flex items-center">
+    <%= link_to admin_users_path, class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-2" do %>
+      <%= icon "arrow-left", class: "w-5 h-5" %>
+    <% end %>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create New User</h1>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="p-6">
+      <%= form_with model: [:admin, @user], class: "space-y-6" do |f| %>
+        <% if @user.errors.any? %>
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-md p-4 mb-6">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <%= icon "exclamation-circle", class: "h-5 w-5 text-red-400" %>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+                  <%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:
+                </h3>
+                <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <% @user.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+          <div class="sm:col-span-3">
+            <%= f.label :username, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.text_field :username, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "johndoe" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.email_field :email, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "john.doe@example.com" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.telephone_field :phone, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "+233501234567" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :kyc_level, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.select :kyc_level, User.kyc_levels.keys.map { |k| [k.capitalize, k] }, { selected: 'basic' }, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+            </div>
+          </div>
+
+          <div class="sm:col-span-3">
+            <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+            <div class="mt-1">
+              <%= f.select :status, User.statuses.keys.map { |k| [k.capitalize, k] }, { selected: 'active' }, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+            </div>
+          </div>
+
+          <% if current_user.admin? %>
+            <div class="sm:col-span-3">
+              <%= f.label :admin, "Admin Privileges", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <div class="flex items-center">
+                  <%= f.check_box :admin, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+                  <label for="user_admin" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    Grant admin privileges to this user
+                  </label>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md mt-6">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <%= icon "information-circle", class: "h-5 w-5 text-blue-400" %>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Password Information</h3>
+              <div class="mt-2 text-sm text-blue-700 dark:text-blue-400">
+                <p>A random password will be generated for this user. You will see it once after the user is created.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-5 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex justify-end">
+            <%= link_to "Cancel", admin_users_path, class: "bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+            <%= f.submit "Create User", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

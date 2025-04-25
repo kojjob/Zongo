@@ -1,0 +1,308 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center">
+      <%= link_to admin_transactions_path, class: "mr-4 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+        <i class="fas fa-arrow-left"></i> Back to Transactions
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transaction Details</h1>
+    </div>
+    <div class="flex space-x-2">
+      <% if @transaction.status_pending? %>
+        <%= button_to approve_admin_transaction_path(@transaction), method: :post, class: "px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" do %>
+          <i class="fas fa-check mr-2"></i> Approve
+        <% end %>
+
+        <%= button_to reject_admin_transaction_path(@transaction), method: :post, class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" do %>
+          <i class="fas fa-times mr-2"></i> Reject
+        <% end %>
+      <% end %>
+
+      <% if @transaction.status_completed? %>
+        <%= button_to reverse_admin_transaction_path(@transaction), method: :post, form: { data: { turbo_confirm: "Are you sure you want to reverse this transaction?" } }, class: "px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors" do %>
+          <i class="fas fa-undo mr-2"></i> Reverse
+        <% end %>
+      <% end %>
+
+      <%= button_to admin_transaction_path(@transaction), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this transaction?" } }, class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" do %>
+        <i class="fas fa-trash mr-2"></i> Delete
+      <% end %>
+    </div>
+  </div>
+
+  <% if notice %>
+    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 dark:bg-green-900 dark:text-green-200" role="alert">
+      <p><%= notice %></p>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Transaction Details -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Transaction Information</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Transaction ID</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.transaction_id %></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</h3>
+            <p class="mt-1">
+              <% case @transaction.transaction_type %>
+              <% when "deposit" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Deposit</span>
+              <% when "withdrawal" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Withdrawal</span>
+              <% when "transfer" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Transfer</span>
+              <% when "payment" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Payment</span>
+              <% else %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= @transaction.transaction_type.titleize %></span>
+              <% end %>
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Amount</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.formatted_amount %></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Fee</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.currency %><%= @transaction.fee || "0.00" %></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h3>
+            <p class="mt-1">
+              <% case @transaction.status %>
+              <% when "pending" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>
+              <% when "completed" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+              <% when "failed" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Failed</span>
+              <% when "reversed" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Reversed</span>
+              <% when "blocked" %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Blocked</span>
+              <% else %>
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= @transaction.status.titleize %></span>
+              <% end %>
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Date</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Method</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.payment_method.presence || "N/A" %></p>
+          </div>
+
+          <div>
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Provider</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.provider.presence || "N/A" %></p>
+          </div>
+
+          <% if @transaction.external_reference.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">External Reference</h3>
+              <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.external_reference %></p>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @transaction.description.present? %>
+          <div class="mt-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</h3>
+            <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.description %></p>
+          </div>
+        <% end %>
+
+        <% if @transaction.metadata.present? %>
+          <div class="mt-4">
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Metadata</h3>
+            <pre class="mt-1 p-2 bg-gray-100 dark:bg-gray-700 rounded text-sm text-gray-900 dark:text-white overflow-auto"><%= JSON.pretty_generate(@transaction.metadata) rescue @transaction.metadata.to_s %></pre>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Security Logs -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Security Logs</h2>
+
+        <% if @security_logs.any? %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Event</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Severity</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">IP Address</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <% @security_logs.each do |log| %>
+                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 dark:text-white"><%= log.event_type.titleize %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <% case log.severity %>
+                      <% when "info" %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Info</span>
+                      <% when "warning" %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Warning</span>
+                      <% when "error" %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Error</span>
+                      <% else %>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= log.severity.titleize %></span>
+                      <% end %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 dark:text-white"><%= log.ip_address || "N/A" %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900 dark:text-white"><%= log.created_at.strftime("%b %d, %Y") %></div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400"><%= log.created_at.strftime("%I:%M %p") %></div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-gray-500 dark:text-gray-400">No security logs found for this transaction.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Source Information -->
+      <% if @transaction.source_wallet %>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Source</h2>
+
+          <% if @transaction.source_wallet.user %>
+            <div class="flex items-center mb-4">
+              <% if @transaction.source_wallet.user.avatar.attached? %>
+                <%= image_tag @transaction.source_wallet.user.avatar.variant(resize_to_fill: [60, 60]), class: "h-12 w-12 rounded-full mr-4 object-cover" %>
+              <% else %>
+                <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
+                  <i class="fas fa-user text-indigo-500"></i>
+                </div>
+              <% end %>
+              <div>
+                <div class="text-md font-medium text-gray-900 dark:text-white"><%= @transaction.source_wallet.user.display_name %></div>
+                <div class="text-sm text-gray-500 dark:text-gray-400"><%= @transaction.source_wallet.user.email %></div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Wallet ID</h3>
+                <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.source_wallet.wallet_id %></p>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Balance</h3>
+                <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.source_wallet.currency %><%= @transaction.source_wallet.balance %></p>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <%= link_to admin_user_path(@transaction.source_wallet.user), class: "w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-center block" do %>
+                View User Profile
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-500 dark:text-gray-400">No user associated with source wallet.</p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Destination Information -->
+      <% if @transaction.destination_wallet %>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Destination</h2>
+
+          <% if @transaction.destination_wallet.user %>
+            <div class="flex items-center mb-4">
+              <% if @transaction.destination_wallet.user.avatar.attached? %>
+                <%= image_tag @transaction.destination_wallet.user.avatar.variant(resize_to_fill: [60, 60]), class: "h-12 w-12 rounded-full mr-4 object-cover" %>
+              <% else %>
+                <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center mr-4">
+                  <i class="fas fa-user text-indigo-500"></i>
+                </div>
+              <% end %>
+              <div>
+                <div class="text-md font-medium text-gray-900 dark:text-white"><%= @transaction.destination_wallet.user.display_name %></div>
+                <div class="text-sm text-gray-500 dark:text-gray-400"><%= @transaction.destination_wallet.user.email %></div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Wallet ID</h3>
+                <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.destination_wallet.wallet_id %></p>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Balance</h3>
+                <p class="mt-1 text-gray-900 dark:text-white"><%= @transaction.destination_wallet.currency %><%= @transaction.destination_wallet.balance %></p>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <%= link_to admin_user_path(@transaction.destination_wallet.user), class: "w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-center block" do %>
+                View User Profile
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-gray-500 dark:text-gray-400">No user associated with destination wallet.</p>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Actions -->
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Actions</h2>
+
+        <div class="space-y-3">
+          <% if @transaction.status_pending? %>
+            <%= button_to approve_admin_transaction_path(@transaction), method: :post, class: "w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors" do %>
+              <i class="fas fa-check mr-2"></i> Approve Transaction
+            <% end %>
+
+            <%= button_to reject_admin_transaction_path(@transaction), method: :post, class: "w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" do %>
+              <i class="fas fa-times mr-2"></i> Reject Transaction
+            <% end %>
+          <% end %>
+
+          <% if @transaction.status_completed? %>
+            <%= button_to reverse_admin_transaction_path(@transaction), method: :post, form: { data: { turbo_confirm: "Are you sure you want to reverse this transaction?" } }, class: "w-full px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors" do %>
+              <i class="fas fa-undo mr-2"></i> Reverse Transaction
+            <% end %>
+          <% end %>
+
+          <%= link_to edit_admin_transaction_path(@transaction), class: "w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center block" do %>
+            <i class="fas fa-edit mr-2"></i> Edit Transaction
+          <% end %>
+
+          <%= button_to admin_transaction_path(@transaction), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this transaction?" } }, class: "w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" do %>
+            <i class="fas fa-trash mr-2"></i> Delete Transaction
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

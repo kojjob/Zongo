@@ -1,0 +1,168 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Transactions Management</h1>
+    <%= link_to new_admin_transaction_path, class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors" do %>
+      <i class="fas fa-plus mr-2"></i> New Transaction
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Filter Transactions</h2>
+    <%= form_with url: admin_transactions_path, method: :get, class: "space-y-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <%= f.label :status, "Status", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.select :status,
+              [["All", ""], ["Pending", "pending"], ["Completed", "completed"], ["Failed", "failed"], ["Reversed", "reversed"], ["Blocked", "blocked"]],
+              { selected: params[:status] },
+              { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+        </div>
+        <div>
+          <%= f.label :transaction_type, "Type", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.select :transaction_type,
+              [["All", ""], ["Deposit", "deposit"], ["Withdrawal", "withdrawal"], ["Transfer", "transfer"], ["Payment", "payment"]],
+              { selected: params[:transaction_type] },
+              { class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" } %>
+        </div>
+        <div>
+          <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.text_field :search, value: params[:search], placeholder: "Search by ID or description", class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <%= f.label :start_date, "Start Date", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.date_field :start_date, value: params[:start_date], class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+        <div>
+          <%= f.label :end_date, "End Date", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.date_field :end_date, value: params[:end_date], class: "w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <%= f.submit "Filter", class: "px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors" %>
+        <%= link_to "Clear", admin_transactions_path, class: "ml-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Transaction ID</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Type</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Parties</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if @transactions.any? %>
+            <% @transactions.each do |transaction| %>
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white"><%= transaction.transaction_id %></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% case transaction.transaction_type %>
+                  <% when "deposit" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Deposit</span>
+                  <% when "withdrawal" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Withdrawal</span>
+                  <% when "transfer" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">Transfer</span>
+                  <% when "payment" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">Payment</span>
+                  <% else %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= transaction.transaction_type.titleize %></span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white"><%= transaction.formatted_amount %></div>
+                  <% if transaction.fee.to_f > 0 %>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">Fee: <%= transaction.currency %><%= transaction.fee %></div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% case transaction.status %>
+                  <% when "pending" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Pending</span>
+                  <% when "completed" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Completed</span>
+                  <% when "failed" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Failed</span>
+                  <% when "reversed" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Reversed</span>
+                  <% when "blocked" %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">Blocked</span>
+                  <% else %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"><%= transaction.status.titleize %></span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900 dark:text-white"><%= transaction.created_at.strftime("%b %d, %Y") %></div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.created_at.strftime("%I:%M %p") %></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if transaction.source_wallet&.user %>
+                    <div class="text-sm text-gray-900 dark:text-white">
+                      From: <%= transaction.source_wallet.user.display_name %>
+                    </div>
+                  <% end %>
+                  <% if transaction.destination_wallet&.user %>
+                    <div class="text-sm text-gray-900 dark:text-white">
+                      To: <%= transaction.destination_wallet.user.display_name %>
+                    </div>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex space-x-2">
+                    <%= link_to admin_transaction_path(transaction), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
+                      <i class="fas fa-eye"></i>
+                    <% end %>
+
+                    <% if transaction.status_pending? %>
+                      <%= button_to approve_admin_transaction_path(transaction), method: :post, form: { class: "inline" }, class: "text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                        <i class="fas fa-check"></i>
+                      <% end %>
+
+                      <%= button_to reject_admin_transaction_path(transaction), method: :post, form: { class: "inline" }, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                        <i class="fas fa-times"></i>
+                      <% end %>
+                    <% end %>
+
+                    <% if transaction.status_completed? %>
+                      <%= button_to reverse_admin_transaction_path(transaction), method: :post, form: { class: "inline", data: { turbo_confirm: "Are you sure you want to reverse this transaction?" } }, class: "text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                        <i class="fas fa-undo"></i>
+                      <% end %>
+                    <% end %>
+
+                    <%= button_to admin_transaction_path(transaction), method: :delete, form: { class: "inline", data: { turbo_confirm: "Are you sure you want to delete this transaction?" } }, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 bg-transparent border-0 p-0 cursor-pointer" do %>
+                      <i class="fas fa-trash"></i>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                No transactions found.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+  </div>
+</div>

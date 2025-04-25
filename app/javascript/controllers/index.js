@@ -50,3 +50,7 @@ application.register("tabs", TabsController)
 // Import and register receive money controller
 import ReceiveMoneyController from "./receive_money_controller"
 application.register("receive-money", ReceiveMoneyController)
+
+// Import and register icon controller
+import IconController from "./icon_controller"
+application.register("icon", IconController)

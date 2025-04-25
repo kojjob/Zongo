@@ -26,6 +26,12 @@ Rails.application.routes.draw do
   devise_scope :user do
     get "users/password/reset_success", to: "users/passwords#reset_success", as: "password_reset_success"
     get "users/password/instructions_sent", to: "users/passwords#instructions_sent", as: "password_instructions_sent"
+
+    # Development-only routes for direct password reset (bypasses email)
+    if Rails.env.development?
+      get "dev/reset_password/:email", to: "users/passwords#dev_reset", as: "dev_reset_password"
+      get "dev/console_reset/:email", to: "users/passwords#console_reset", as: "console_reset_password"
+    end
   end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -198,11 +204,14 @@ Rails.application.routes.draw do
     # Admin Dashboard routes
     get "dashboard", to: "dashboard#index", as: "dashboard"
     get "dashboard/users", to: "dashboard#users", as: "users_dashboard"
-    get "dashboard/transactions", to: "dashboard#transactions", as: "transactions"
-    get "dashboard/scheduled_transactions", to: "dashboard#scheduled_transactions", as: "scheduled_transactions"
-    get "dashboard/events", to: "dashboard#events", as: "events"
+    get "dashboard/transactions", to: "dashboard#transactions", as: "transactions_dashboard"
+    get "dashboard/scheduled_transactions", to: "dashboard#scheduled_transactions", as: "scheduled_transactions_dashboard"
+    get "dashboard/events", to: "dashboard#events", as: "events_dashboard"
     get "dashboard/system", to: "dashboard#system", as: "system"
-    get "dashboard/loans", to: "dashboard#loans", as: "loans"
+    get "dashboard/loans", to: "dashboard#loans", as: "loans_dashboard"
+
+    # Admin Help Center
+    get "help", to: "help#index", as: "help"
 
     # Notifications
     resources :notifications, only: [:index]
@@ -218,7 +227,7 @@ Rails.application.routes.draw do
     end
 
     # Loan management
-    resources :loans, only: [ :index, :show ] do
+    resources :loans do
       member do
         post :approve
         post :reject
@@ -238,6 +247,45 @@ Rails.application.routes.draw do
     resources :contact_submissions do
       member do
         patch :mark_as_read
+      end
+    end
+
+    # Event management
+    resources :events do
+      member do
+        post :feature
+        post :unfeature
+        post :approve
+        post :reject
+      end
+    end
+
+    # Transaction management
+    resources :transactions do
+      member do
+        post :approve
+        post :reject
+        post :reverse
+      end
+    end
+
+    # Scheduled Transaction management
+    resources :scheduled_transactions do
+      member do
+        post :execute
+        post :pause
+        post :resume
+      end
+    end
+
+    # Beneficiary management
+    resources :beneficiaries
+
+    # Payment Method management
+    resources :payment_methods do
+      member do
+        post :verify
+        post :set_default
       end
     end
   end

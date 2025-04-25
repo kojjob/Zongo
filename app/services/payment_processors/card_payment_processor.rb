@@ -18,7 +18,7 @@ module PaymentProcessors
     def verify_deposit(amount:, currency:, reference:, metadata: {}, verification_data: {})
       # In a production environment, this would make an API call to the card processor
       # to verify that the deposit was actually made
-
+      
       # For now, we'll simulate a successful verification
       result = simulate_card_response(
         operation: :verify_deposit,
@@ -26,14 +26,14 @@ module PaymentProcessors
         currency: currency,
         reference: reference
       )
-
+      
       log_operation("verify_deposit", {
         amount: amount,
         currency: currency,
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Card deposit verified successfully", reference, {
           provider_data: {
@@ -61,10 +61,10 @@ module PaymentProcessors
       unless destination && destination[:card_token].present?
         return error_response("Card token is required for card withdrawals", :missing_card_details)
       end
-
+      
       # In a production environment, this would make an API call to the card processor
       # to initiate the withdrawal to the destination card
-
+      
       # For now, we'll simulate a provider response
       result = simulate_card_response(
         operation: :process_withdrawal,
@@ -74,7 +74,7 @@ module PaymentProcessors
         card_last_four: destination[:card_last_four],
         reference: reference
       )
-
+      
       log_operation("process_withdrawal", {
         amount: amount,
         currency: currency,
@@ -82,7 +82,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Card withdrawal processed successfully", result[:card_transaction_id], {
           provider_data: {
@@ -111,10 +111,10 @@ module PaymentProcessors
       unless destination && (destination[:merchant_id].present? || destination[:card_token].present?)
         return error_response("Merchant ID or card token is required for card payments", :missing_recipient_details)
       end
-
+      
       # In a production environment, this would make an API call to the card processor
       # to process the payment to the destination
-
+      
       # For now, we'll simulate a provider response
       result = simulate_card_response(
         operation: :process_payment,
@@ -125,7 +125,7 @@ module PaymentProcessors
         card_last_four: destination[:card_last_four],
         reference: reference
       )
-
+      
       log_operation("process_payment", {
         amount: amount,
         currency: currency,
@@ -133,7 +133,7 @@ module PaymentProcessors
         reference: reference,
         metadata: metadata
       }, result)
-
+      
       if result[:success]
         success_response("Card payment processed successfully", result[:card_transaction_id], {
           provider_data: {
@@ -164,20 +164,20 @@ module PaymentProcessors
     def simulate_card_response(operation:, amount:, currency:, reference:, card_token: nil, card_last_four: nil, merchant_id: nil)
       # Generate a card transaction ID
       card_transaction_id = "CRD#{Time.now.strftime('%Y%m%d%H%M%S')}#{rand(1000..9999)}"
-
+      
       # Generate card details if not provided
       card_last_four ||= rand(1000..9999).to_s
-      card_types = [ "Visa", "Mastercard", "American Express", "Discover" ]
+      card_types = ["Visa", "Mastercard", "American Express", "Discover"]
       card_type = card_types.sample
-
+      
       # Simulate occasional failures (10% chance)
       if rand(100) < 10
         error_codes = {
-          verify_deposit: [ :invalid_reference, :amount_mismatch, :expired_reference, :card_declined ],
-          process_withdrawal: [ :insufficient_funds, :card_declined, :service_unavailable, :daily_limit_exceeded ],
-          process_payment: [ :payment_rejected, :card_declined, :service_unavailable, :daily_limit_exceeded ]
+          verify_deposit: [:invalid_reference, :amount_mismatch, :expired_reference, :card_declined],
+          process_withdrawal: [:insufficient_funds, :card_declined, :service_unavailable, :daily_limit_exceeded],
+          process_payment: [:payment_rejected, :card_declined, :service_unavailable, :daily_limit_exceeded]
         }
-
+        
         error_code = error_codes[operation].sample
         error_messages = {
           invalid_reference: "Invalid reference provided",
@@ -189,7 +189,7 @@ module PaymentProcessors
           payment_rejected: "Payment rejected by recipient",
           daily_limit_exceeded: "Daily transaction limit exceeded"
         }
-
+        
         return {
           success: false,
           message: error_messages[error_code],
@@ -199,14 +199,14 @@ module PaymentProcessors
           card_type: card_type
         }
       end
-
+      
       # Calculate fee based on amount (card processors typically charge 1.5-3%)
       fee = (amount * 0.025).round(2) # 2.5% fee
-
+      
       # Determine expected completion time (card transactions can be instant or take time)
       completion_hours = operation == :process_withdrawal ? rand(24..72) : 0
       expected_completion_time = Time.now + completion_hours.hours
-
+      
       # Simulate successful response
       response = {
         success: true,
@@ -219,7 +219,7 @@ module PaymentProcessors
         card_type: card_type,
         expected_completion_time: expected_completion_time.iso8601
       }
-
+      
       # Add operation-specific details
       case operation
       when :verify_deposit
@@ -230,7 +230,7 @@ module PaymentProcessors
         response[:merchant_id] = merchant_id if merchant_id
         response[:authorization_code] = rand(100000..999999).to_s
       end
-
+      
       response
     end
   end

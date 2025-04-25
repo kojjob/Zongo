@@ -27,7 +27,12 @@ class Wallet < ApplicationRecord
 
   # Instance methods
 
-  # Instance methods
+  # Get a display name for the wallet
+  # @return [String] A display name for the wallet
+  def name
+    "#{user&.display_name || user&.email || 'Unknown'}'s Wallet (#{wallet_id})"
+  end
+
   def available_balance
     # This could be different from balance if there are pending transactions
     pending_outgoing = self.sent_transactions.where(status: 'pending').sum(:amount)

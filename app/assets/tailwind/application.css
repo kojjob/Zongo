@@ -1,4 +1,20 @@
 @import "tailwindcss";
+@import "../stylesheets/wallet.css";
+/* @import "../stylesheets/hero.css"; */
+/* @import "../stylesheets/events.css";
+@import "../stylesheets/application.css";
+@import "../stylesheets/color_system_fix.css";
+@import "../stylesheets/section_fixes.css";
+@import "../stylesheets/button_fixes.css";
+@import "../stylesheets/landing_page_enhancements.css";
+@import "../stylesheets/admin_dashboard.css";
+@import "../stylesheets/admin_custom.css";
+@import "../stylesheets/admin_fix.css";
+@import "../stylesheets/visibility_fix.css";
+@import "../stylesheets/content_spacing_fix.css";
+@import "../stylesheets/search_position_fix.css";
+@import "../stylesheets/dashboard_spacing.css";
+ */
 
 
 /* Custom animations */

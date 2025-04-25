@@ -1,9 +1,6 @@
 module Admin
-  class UsersController < ApplicationController
-    before_action :authenticate_user!
-    before_action :require_admin
-    before_action :set_user, only: [ :show, :edit, :update, :suspend, :activate, :promote, :demote ]
-    layout "admin"
+  class UsersController < BaseController
+    before_action :set_user, only: [ :show, :edit, :update, :destroy, :suspend, :activate, :promote, :demote ]
 
     def index
       @users = User.all.order(created_at: :desc)
@@ -42,6 +39,34 @@ module Admin
       @recent_logins = @user.security_logs.where(event_type: "login").order(created_at: :desc).limit(5)
     end
 
+    def new
+      @user = User.new
+    end
+
+    def create
+      @user = User.new(user_params)
+
+      # Generate a random password for the user
+      generated_password = SecureRandom.hex(8)
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+
+      if @user.save
+        # Log the user creation
+        SecurityLog.log_event(
+          @user,
+          :account_created,
+          severity: :info,
+          details: { created_by: current_user.id },
+          loggable: @user
+        )
+
+        redirect_to admin_user_path(@user), notice: "User was successfully created. The temporary password is: #{generated_password}"
+      else
+        render :new
+      end
+    end
+
     def edit
     end
 
@@ -50,6 +75,23 @@ module Admin
         redirect_to admin_user_path(@user), notice: "User was successfully updated."
       else
         render :edit
+      end
+    end
+
+    def destroy
+      if @user.destroy
+        # Log the user deletion
+        SecurityLog.log_event(
+          current_user,
+          :account_deleted,
+          severity: :warning,
+          details: { deleted_user_id: @user.id, deleted_user_email: @user.email },
+          ip_address: request.remote_ip
+        )
+
+        redirect_to admin_users_path, notice: "User was successfully deleted."
+      else
+        redirect_to admin_user_path(@user), alert: "Failed to delete user."
       end
     end
 
@@ -129,7 +171,15 @@ module Admin
 
     def user_params
       # Only allow certain parameters to be updated
-      params.require(:user).permit(:username, :email, :phone, :kyc_level, :status)
+      permitted_params = [:username, :email, :phone, :kyc_level, :status]
+
+      # Add admin parameter if the current user is an admin
+      permitted_params << :admin if current_user.admin?
+
+      # Add super_admin parameter if the current user is a super_admin
+      permitted_params << :super_admin if current_user.super_admin?
+
+      params.require(:user).permit(permitted_params)
     end
   end
 end

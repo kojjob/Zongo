@@ -1,5 +1,4 @@
 <%= content_for :title, "Showing event" %>
-
 <!-- Print-only content -->
 <div class="print-only hidden">
   <div class="p-8">
@@ -129,8 +128,15 @@
   <div class="relative bg-gradient-to-b from-blue-600 to-indigo-900 text-white">
     <!-- Event Cover Image -->
     <div class="h-[30vh] md:h-[50vh] w-full overflow-hidden relative">
-      <% if @event.event_media.present? %>
-        <div class="absolute inset-0 opacity-30 bg-center bg-cover transform hover:scale-105 transition-transform duration-7000" style="background-image: url('<%= @event.event_media.first.image_url %>');"></div>
+      <% if @event.banner_image.attached? %>
+        <div class="absolute inset-0 opacity-30 bg-center bg-cover transform hover:scale-105 transition-transform duration-7000" style="background-image: url('<%= rails_blob_path(@event.banner_image) %>');"></div>
+      <% elsif @event.event_media.images.present? %>
+        <% featured_image = @event.event_media.featured.first || @event.event_media.first %>
+        <% if featured_image.image.attached? %>
+          <div class="absolute inset-0 opacity-30 bg-center bg-cover transform hover:scale-105 transition-transform duration-7000" style="background-image: url('<%= rails_blob_path(featured_image.image) %>');"></div>
+        <% elsif featured_image.url.present? %>
+          <div class="absolute inset-0 opacity-30 bg-center bg-cover transform hover:scale-105 transition-transform duration-7000" style="background-image: url('<%= featured_image.url %>');"></div>
+        <% end %>
       <% end %>
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
@@ -1051,8 +1057,32 @@
               <% @similar_events.limit(3).each do |event| %>
                 <a href="<%= event_path(event) %>" class="flex group border-b border-gray-200 dark:border-gray-700 pb-4 last:border-0 last:pb-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 -mx-2 px-2 py-1 rounded-lg transition-colors">
                   <div class="h-16 w-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-200 dark:bg-gray-700">
-                    <% if event.event_media.present? %>
-                      <img src="<%= event.event_media.first.image_url %>" alt="<%= event.title %>" class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <% if event.banner_image.attached? %>
+                      <%= image_tag rails_blob_path(event.banner_image),
+                                    alt: event.title,
+                                    class: "h-full w-full object-cover group-hover:scale-105 transition-transform duration-300",
+                                    loading: "lazy" %>
+                    <% elsif event.event_media.images.present? %>
+                      <% featured_image = event.event_media.featured.first || event.event_media.first %>
+                      <% if featured_image.image.attached? %>
+                        <%= image_tag rails_blob_path(featured_image.image),
+                                      alt: event.title,
+                                      class: "h-full w-full object-cover group-hover:scale-105 transition-transform duration-300",
+                                      loading: "lazy" %>
+                      <% elsif featured_image.url.present? %>
+                        <img src="<%= featured_image.url %>"
+                             alt="<%= event.title %>"
+                             class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                             loading="lazy">
+                      <% else %>
+                        <div class="h-full w-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                          <%= icon "calendar", class: "w-6 h-6 text-gray-400 dark:text-gray-500" %>
+                        </div>
+                      <% end %>
+                    <% else %>
+                      <div class="h-full w-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                        <%= icon "calendar", class: "w-6 h-6 text-gray-400 dark:text-gray-500" %>
+                      </div>
                     <% end %>
                   </div>
                   <div class="ml-3 flex-1 min-w-0">
@@ -1108,11 +1138,17 @@
             <% @event.attendances.includes(:user).each do |attendance| %>
               <div class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors shadow-sm hover:shadow-md group">
                 <% begin %>
-                  <% if attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
+                  <% if attendance.user.avatar.attached? %>
+                    <%= image_tag rails_blob_path(attendance.user.avatar),
+                                  alt: attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User',
+                                  class: "w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 shadow-sm object-cover group-hover:scale-105 transition-transform duration-300",
+                                  loading: "lazy" %>
+                  <% elsif attendance.user.respond_to?(:profile_image) && attendance.user.profile_image %>
                     <img
                       src="<%= attendance.user.profile_image.url rescue '/assets/default-avatar.jpg' %>"
                       alt="<%= attendance.user.respond_to?(:full_name) ? attendance.user.full_name : 'User' %>"
                       class="w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 shadow-sm object-cover group-hover:scale-105 transition-transform duration-300"
+                      loading="lazy"
                     >
                   <% else %>
                     <div class="w-10 h-10 rounded-full mr-3 border border-gray-200 dark:border-gray-700 bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold shadow-sm group-hover:scale-105 transition-transform duration-300">
@@ -1181,9 +1217,16 @@
           <div class="space-y-4">
             <div class="flex">
               <div class="flex-shrink-0 mr-3">
-                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
-                  <%= current_user&.initials || "U" %>
-                </div>
+                <% if current_user&.avatar&.attached? %>
+                  <%= image_tag rails_blob_path(current_user.avatar),
+                                alt: "#{current_user.respond_to?(:display_name) ? current_user.display_name : 'User'}'s avatar",
+                                class: "w-10 h-10 rounded-full object-cover",
+                                loading: "lazy" %>
+                <% else %>
+                  <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
+                    <%= current_user&.initials || "U" %>
+                  </div>
+                <% end %>
               </div>
               <div class="flex-grow">
                 <textarea placeholder="Share your thoughts about this event..." class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400" rows="3"></textarea>
@@ -1204,9 +1247,16 @@
               <div class="border-b border-gray-200 dark:border-gray-700 pb-6 last:border-0 last:pb-0">
                 <div class="flex">
                   <div class="flex-shrink-0 mr-3">
-                    <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
-                      <%= comment.user.initials rescue "U" %>
-                    </div>
+                    <% if comment.user&.avatar&.attached? %>
+                      <%= image_tag rails_blob_path(comment.user.avatar),
+                                    alt: "#{comment.user.respond_to?(:display_name) ? comment.user.display_name : 'User'}'s avatar",
+                                    class: "w-10 h-10 rounded-full object-cover",
+                                    loading: "lazy" %>
+                    <% else %>
+                      <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-600 dark:text-gray-300">
+                        <%= comment.user.initials rescue "U" %>
+                      </div>
+                    <% end %>
                   </div>
                   <div class="flex-grow">
                     <div class="flex items-center mb-1">
@@ -1363,7 +1413,23 @@
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             <% @event.event_media.each_with_index do |media, index| %>
               <div class="<%= index == 0 ? 'sm:col-span-2 sm:row-span-2' : '' %> relative overflow-hidden rounded-lg group shadow-sm hover:shadow-md transition-shadow duration-300">
-                <img src="<%= media.url %>" alt="Event photo" class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-300 cursor-pointer" onclick="openLightbox(this.src)">
+                <% if media.image.attached? %>
+                  <%= image_tag rails_blob_path(media.image),
+                                alt: "Event photo",
+                                class: "w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-300 cursor-pointer",
+                                loading: "lazy",
+                                onclick: "openLightbox(this.src)" %>
+                <% elsif media.url.present? %>
+                  <img src="<%= media.url %>"
+                       alt="Event photo"
+                       class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                       loading="lazy"
+                       onclick="openLightbox(this.src)">
+                <% else %>
+                  <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <%= icon "photograph", class: "w-12 h-12 text-gray-400 dark:text-gray-500" %>
+                  </div>
+                <% end %>
                 <div class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <button class="p-2 bg-white/90 rounded-full text-gray-800">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
