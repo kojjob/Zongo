@@ -12,7 +12,7 @@
     <!-- Gradient overlay -->
     <div class="absolute inset-0 bg-gradient-to-r from-primary-900/80 to-primary-800/70"></div>
   </div>
-  
+
   <!-- Hero Content -->
   <div class="relative z-10 flex flex-col justify-center items-start h-full container mx-auto px-4 md:px-8">
     <div class="max-w-3xl" data-controller="parallax">
@@ -22,17 +22,17 @@
           Ghana's First All-In-One Super App
         </span>
       </div>
-      
+
       <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6 animate-fade-in">
         Your Complete Digital <br class="hidden md:block">
-        <span class="text-gradient bg-gradient-to-r from-accent-400 to-accent-300">Life Companion</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-300">Life Companion</span>
       </h1>
-      
-      <p class="text-xl text-white/90 mb-8 max-w-2xl animate-fade-in-delay">
+
+      <p class="text-xl text-white mb-8 max-w-2xl animate-fade-in">
         Simplify your daily life with Ghana's revolutionary super app. Send money, shop, pay bills, book rides, and connect with your community—all in one place.
       </p>
-      
-      <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-delay">
+
+      <div class="flex flex-col sm:flex-row gap-4 animate-fade-in">
         <a href="#download" class="btn-primary flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -46,9 +46,9 @@
           Explore Features
         </a>
       </div>
-      
+
       <!-- Social Proof -->
-      <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 animate-fade-in-delay-long">
+      <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 animate-fade-in">
         <div class="flex -space-x-2">
           <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user1.png') %>" alt="User">
           <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user2.png') %>" alt="User">
@@ -69,7 +69,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Floating Mobile App Preview -->
     <div class="hidden lg:block absolute right-8 top-1/2 transform -translate-y-1/2">
       <div class="relative">
@@ -77,7 +77,7 @@
         <div class="absolute -bottom-6 -left-6 w-full h-20 bg-gradient-to-r from-accent-500 to-secondary-500 rounded-full filter blur-xl opacity-30"></div>
       </div>
     </div>
-    
+
     <!-- Scroll Down Indicator -->
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
       <a href="#features" class="text-white">
@@ -96,30 +96,38 @@
       <span class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wider">Featured In</span>
     </div>
     <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
-        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
-          <path d="M0 0h24v24H0z" fill="none"/>
-          <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/>
-          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">GhanaNews</text>
-        </svg>
+      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
+        <div class="flex items-center">
+          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold">GhanaNews</span>
+        </div>
       </div>
-      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
-        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
-          <circle cx="15" cy="15" r="10" fill="currentColor"/>
-          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">TechAfrica</text>
-        </svg>
+      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
+        <div class="flex items-center">
+          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <circle cx="12" cy="12" r="10" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold">TechAfrica</span>
+        </div>
       </div>
-      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
-        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
-          <rect x="5" y="5" width="20" height="20" fill="currentColor"/>
-          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">BusinessGH</text>
-        </svg>
+      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
+        <div class="flex items-center">
+          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <rect x="2" y="2" width="20" height="20" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold">BusinessGH</span>
+        </div>
       </div>
-      <div class="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition">
-        <svg class="h-8 sm:h-10" viewBox="0 0 100 30" fill="currentColor">
-          <polygon points="15,5 25,15 15,25 5,15" fill="currentColor"/>
-          <text x="30" y="19" font-family="Arial" font-size="12" fill="currentColor">FinanceDaily</text>
-        </svg>
+      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
+        <div class="flex items-center">
+          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <polygon points="12,2 22,12 12,22 2,12" fill="currentColor"/>
+          </svg>
+          <span class="text-lg font-semibold">FinanceDaily</span>
+        </div>
       </div>
     </div>
   </div>
@@ -140,7 +148,7 @@
         Super Ghana brings together essential services that simplify your daily life, save you time, and help you manage your finances.
       </p>
     </div>
-    
+
     <!-- Feature Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Feature 1 -->
@@ -178,7 +186,7 @@
           </ul>
         </div>
       </div>
-      
+
       <!-- Feature 2 -->
       <div class="feature-card">
         <div class="h-3 w-full bg-secondary-500 rounded-t-2xl"></div>
@@ -214,7 +222,7 @@
           </ul>
         </div>
       </div>
-      
+
       <!-- Feature 3 -->
       <div class="feature-card">
         <div class="h-3 w-full bg-accent-500 rounded-t-2xl"></div>
@@ -251,7 +259,7 @@
           </ul>
         </div>
       </div>
-      
+
       <!-- Feature 4 -->
       <div class="feature-card">
         <div class="h-3 w-full bg-success-500 rounded-t-2xl"></div>
@@ -287,7 +295,7 @@
           </ul>
         </div>
       </div>
-      
+
       <!-- Feature 5 -->
       <div class="feature-card">
         <div class="h-3 w-full bg-warning-500 rounded-t-2xl"></div>
@@ -323,7 +331,7 @@
           </ul>
         </div>
       </div>
-      
+
       <!-- Feature 6 -->
       <div class="feature-card">
         <div class="h-3 w-full bg-info-500 rounded-t-2xl"></div>
@@ -366,7 +374,7 @@
 <!-- App Demo Section with Animated Screens -->
 <section class="py-20 bg-gradient-to-br from-primary-900 to-primary-700 text-white overflow-hidden relative">
   <div class="absolute inset-0 z-0 opacity-10 pattern-dots"></div>
-  
+
   <div class="container mx-auto px-4 relative z-10">
     <div class="text-center mb-16">
       <div class="inline-block p-3 rounded-full bg-white/10 text-white mb-4">
@@ -376,11 +384,11 @@
       </div>
       <h2 class="text-3xl sm:text-4xl font-bold mb-4">See the App in Action</h2>
       <div class="w-20 h-1 bg-white mx-auto mb-8"></div>
-      <p class="text-xl text-white/90 max-w-3xl mx-auto">
+      <p class="text-xl text-white max-w-3xl mx-auto">
         Experience the simplicity and power of Super Ghana through our interactive demo.
       </p>
     </div>
-    
+
     <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
       <!-- App Screenshots Slider -->
       <div class="lg:w-3/5 relative">
@@ -389,11 +397,11 @@
             <img src="<%= asset_path('app-screen-animation.gif') %>" alt="App Demo" class="w-full h-full object-cover rounded-3xl">
           </div>
         </div>
-        
+
         <div class="absolute -top-10 -left-10 w-20 h-20 bg-accent-500 rounded-full opacity-20 animate-pulse"></div>
         <div class="absolute -bottom-5 -right-5 w-16 h-16 bg-secondary-500 rounded-full opacity-20 animate-pulse delay-300"></div>
       </div>
-      
+
       <!-- Features List -->
       <div class="lg:w-2/5 space-y-8">
         <!-- Feature 1 -->
@@ -408,14 +416,14 @@
               </div>
               <div>
                 <h3 class="text-xl font-bold mb-2">Intuitive Interface</h3>
-                <p class="text-white/80">
+                <p class="text-white">
                   Designed for all users regardless of tech experience, with simple navigation and clear visuals.
                 </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Feature 2 -->
         <div class="feature-highlight" data-controller="hover-effect">
           <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
@@ -428,14 +436,14 @@
               </div>
               <div>
                 <h3 class="text-xl font-bold mb-2">Bank-Grade Security</h3>
-                <p class="text-white/80">
+                <p class="text-white">
                   Your data and money are protected with industry-leading encryption and security measures.
                 </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <!-- Feature 3 -->
         <div class="feature-highlight" data-controller="hover-effect">
           <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
@@ -448,14 +456,14 @@
               </div>
               <div>
                 <h3 class="text-xl font-bold mb-2">Works Offline</h3>
-                <p class="text-white/80">
+                <p class="text-white">
                   Continue using essential features even when your connection is unstable or unavailable.
                 </p>
               </div>
             </div>
           </div>
         </div>
-        
+
         <div class="mt-8">
           <a href="#download" class="btn-white flex items-center justify-center mx-auto">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -484,11 +492,11 @@
         Start using Super Ghana in just a few simple steps
       </p>
     </div>
-    
+
     <div class="relative">
       <!-- Steps connection line -->
       <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 transform -translate-y-1/2 z-0"></div>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
         <!-- Step 1 -->
         <div class="text-center flex flex-col items-center">
@@ -506,7 +514,7 @@
             <img src="<%= asset_path('step1-signup.png') %>" alt="Download app" class="h-32 mx-auto mt-4">
           </div>
         </div>
-        
+
         <!-- Step 2 -->
         <div class="text-center flex flex-col items-center">
           <div class="w-16 h-16 rounded-full bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-4 relative">
@@ -523,7 +531,7 @@
             <img src="<%= asset_path('step2-verify.png') %>" alt="Create account" class="h-32 mx-auto mt-4">
           </div>
         </div>
-        
+
         <!-- Step 3 -->
         <div class="text-center flex flex-col items-center">
           <div class="w-16 h-16 rounded-full bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-4 relative">
@@ -540,7 +548,7 @@
             <img src="<%= asset_path('step3-wallet.png') %>" alt="Add money" class="h-32 mx-auto mt-4">
           </div>
         </div>
-        
+
         <!-- Step 4 -->
         <div class="text-center flex flex-col items-center">
           <div class="w-16 h-16 rounded-full bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-4 relative">
@@ -577,7 +585,7 @@
         Join thousands of satisfied users who have transformed their daily lives with Super Ghana
       </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       <!-- Testimonial 1 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
@@ -607,7 +615,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Testimonial 2 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
         <div class="p-8">
@@ -636,7 +644,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Testimonial 3 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
         <div class="p-8">
@@ -666,7 +674,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="text-center mt-12">
       <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center justify-center">
         Read More Success Stories
@@ -692,15 +700,14 @@
         <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">
           Join thousands of Ghanaians who are simplifying their daily lives with our all-in-one super app. Available for Android and iOS devices.
         </p>
-        
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
           <!-- Download Button 1 -->
           <a href="#" class="download-button group">
             <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
               <div class="mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.9,2.4c-0.1,0-0.2,0-0.3,0.1c-0.7,0.4-1.2,0.9-1.5,1.5C15.6,5,15.3,6.2,15.3,7.4c0,1.1,0.3,2.1,1,2.9c0.7,0.8,1.5,1.3,2.5,1.3 c0.1,0,0.2,0,0.3-0.1c0.7-0.4,1.2-0.9,1.6-1.5c0
-.4-0.6,0.5-1.3,0.5-1.9C21.2,4.6,19.8,2.4,17.9,2.4z M7.3,11.8c-2.9,0-5.3,2.3-5.3,5.2c0,2.8,2.4,5.1,5.3,5.1c2.9,0,5.3-2.3,5.3-5.1C12.5,14.1,10.2,11.8,7.3,11.8z M17.7,11.8c-2.9,0-5.3,2.3-5.3,5.2 c0,2.8,2.4,5.1,5.3,5.1c2.9,0,5.3-2.3,5.3-5.1C23,14.1,20.6,11.8,17.7,11.8z"/>
+                  <path d="M3 3v18l8-8-8-10zm11 0l-2 9.5 2 9.5 8-9.5-8-9.5zm-7 4l4 4-4 4V7z"/>
                 </svg>
               </div>
               <div>
@@ -709,13 +716,13 @@
               </div>
             </div>
           </a>
-          
+
           <!-- Download Button 2 -->
           <a href="#" class="download-button group">
             <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
               <div class="mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.645 7.262c2.075.179 4.135 2.031 4.135 4.811 0 2.962-2.249 4.706-4.217 4.706-1.079 0-1.97-.305-2.681-.822-1.225-.892-1.891-2.446-1.891-4.504 0-1.204.207-2.207.732-3.102a3.928 3.928 0 0 1 3.272-1.618c.206.001.428.021.65.06v.469zm-2.917-6.062c1.978 0 4.322 1.194 5.688 3.132-1.955-.515-3.654.334-4.572 1.509-.878 1.089-1.128 2.619-1.086 3.927.012.362.068.731.157 1.049-1.875.125-2.983-.622-3.966-1.75-1.367-1.582-2.35-4.25-2.35-6.803 0-1.021.188-1.734.617-2.266.633-.824 1.731-1.101 3.114-1.101 1.298 0 2.35.338 3.261.972-.32.424-.503.946-.503 1.508 0 .826.34 1.751.64 2.823zm-5.239 1.414c1.285 1.011 2.554 1.96 2.554 4.407 0 3.145-2.522 4.248-4.617 4.248-2.116 0-4.426-1.04-4.426-3.573 0-1.331.766-2.911 2.089-3.957 1.239-.969 2.952-1.125 4.4-1.125z"></path>
+                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.92 14.56c-.146.26-.424.403-.718.403-.152 0-.304-.04-.44-.12l-3.72-2.18-3.72 2.18c-.136.08-.288.12-.44.12-.294 0-.572-.143-.718-.403-.29-.52-.12-1.174.38-1.468l3.74-2.19V8.3c0-.59.43-1.07.96-1.07s.96.48.96 1.07v4.602l3.74 2.19c.5.294.67.948.38 1.468z"/>
                 </svg>
               </div>
               <div>
@@ -725,7 +732,7 @@
             </div>
           </a>
         </div>
-        
+
         <div class="flex items-center justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400">
           <div class="flex mr-4">
             <% 5.times do %>
@@ -737,7 +744,7 @@
           <span>Rated 4.8/5 from over 2,000 users</span>
         </div>
       </div>
-      
+
       <div class="lg:w-2/5 mt-8 lg:mt-0">
         <!-- QR Code for App Download -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-sm mx-auto transform hover:scale-105 transition duration-300">
@@ -747,13 +754,14 @@
               Use your phone camera to scan this QR code
             </p>
           </div>
-          
+
           <div class="bg-white p-4 rounded-xl mx-auto max-w-xs">
-            <div class="aspect-square w-full bg-[url('/assets/qr-code.svg')] bg-contain bg-no-repeat bg-center">
-              <!-- QR Code placeholder -->
+            <div class="aspect-square w-full flex items-center justify-center">
+              <!-- QR Code -->
+              <img src="<%= asset_path('qr-code.svg') %>" alt="QR Code to download app" class="w-full h-full" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20fill%3D%22%23f8f9fa%22%20width%3D%22200%22%20height%3D%22200%22%2F%3E%3Cg%20fill%3D%22%23adb5bd%22%3E%3Crect%20x%3D%2250%22%20y%3D%2250%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Crect%20x%3D%2260%22%20y%3D%2260%22%20width%3D%2280%22%20height%3D%2280%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%2270%22%20y%3D%2270%22%20width%3D%2260%22%20height%3D%2260%22%2F%3E%3C%2Fg%3E%3Ctext%20x%3D%22100%22%20y%3D%22180%22%20font-family%3D%22Arial%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%20fill%3D%22%23495057%22%3EScan%20to%20download%3C%2Ftext%3E%3C%2Fsvg%3E'">
             </div>
           </div>
-          
+
           <div class="mt-4 text-center">
             <p class="text-xs text-gray-500 dark:text-gray-400">
               Or visit <span class="text-primary-600 dark:text-primary-400 font-semibold">superghanaglobal.com/download</span>
@@ -780,7 +788,7 @@
         Get answers to common questions about Super Ghana
       </p>
     </div>
-    
+
     <div class="max-w-4xl mx-auto" data-controller="accordion">
       <!-- FAQ Item 1 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
@@ -790,13 +798,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="hidden pb-6" data-accordion-target="content">
+        <div class="pb-6" data-accordion-target="content">
           <p class="text-gray-700 dark:text-gray-300">
             Super Ghana is a comprehensive digital platform that brings together essential services in one application. It includes mobile money transfers, bill payments, shopping, transportation services, agricultural tools, financial services, and community features - all designed specifically for the Ghanaian market.
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 2 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -805,13 +813,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="hidden pb-6" data-accordion-target="content">
+        <div class="pb-6" data-accordion-target="content">
           <p class="text-gray-700 dark:text-gray-300">
             Absolutely! We prioritize the security of your funds and personal information. Super Ghana employs industry-leading security measures, including encryption, secure authentication, and fraud detection systems. Additionally, we comply with all relevant financial regulations in Ghana to ensure your money is protected.
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 3 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -820,13 +828,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="hidden pb-6" data-accordion-target="content">
+        <div class="pb-6" data-accordion-target="content">
           <p class="text-gray-700 dark:text-gray-300">
             Yes! While the full app experience is available on smartphones, we've also designed basic services to be accessible via USSD codes on feature phones. This ensures that essential financial services are available to all Ghanaians, regardless of the type of phone they use.
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 4 -->
       <div>
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -835,14 +843,14 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="hidden pb-6" data-accordion-target="content">
+        <div class="pb-6" data-accordion-target="content">
           <p class="text-gray-700 dark:text-gray-300">
             To become a merchant, download the app and select "Become a Merchant" in the settings menu. You'll need to provide business details and documentation for verification. Once approved, you'll receive a merchant QR code for accepting payments and can set up your storefront in the marketplace to sell products and services.
           </p>
         </div>
       </div>
     </div>
-    
+
     <div class="text-center mt-12">
       <a href="#" class="btn-primary inline-flex items-center justify-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -862,14 +870,14 @@
       <p class="text-white/80 mb-8">
         Subscribe to our newsletter to receive updates, special offers, and exclusive tips.
       </p>
-      
+
       <form class="flex flex-col sm:flex-row gap-4">
         <input type="email" placeholder="Enter your email" class="flex-1 rounded-lg px-4 py-3 text-gray-900 border-0 focus:ring-2 focus:ring-white">
         <button type="submit" class="bg-white text-primary-600 font-medium rounded-lg px-6 py-3 hover:bg-white/90 transition">
           Subscribe
         </button>
       </form>
-      
+
       <p class="text-white/60 text-sm mt-4">
         We respect your privacy. Unsubscribe at any time.
       </p>
@@ -882,95 +890,97 @@
   .feature-card {
     @apply bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden transition transform hover:shadow-lg hover:-translate-y-1;
   }
-  
+
   /* Button Styling */
   .btn-primary {
     @apply px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition shadow-md;
   }
-  
+
   .btn-secondary {
     @apply px-6 py-3 bg-white hover:bg-gray-100 text-primary-600 font-medium rounded-lg border border-primary-500 transition shadow-md;
   }
-  
+
   .btn-white {
     @apply px-6 py-3 bg-white hover:bg-gray-100 text-gray-900 font-medium rounded-lg transition shadow-md;
   }
-  
+
   /* Phone Mockup Styling */
   .phone-mockup {
     @apply relative w-full max-w-xs mx-auto;
     aspect-ratio: 1/2;
   }
-  
+
   .phone-mockup::before {
     content: "";
     @apply absolute inset-0 bg-gray-900 rounded-[40px] border-4 border-gray-800 shadow-2xl;
     z-index: 1;
   }
-  
+
   .phone-screen {
     @apply absolute top-2 right-2 bottom-2 left-2 bg-white rounded-[32px] overflow-hidden;
     z-index: 2;
   }
-  
+
   /* Text Gradient */
   .text-gradient {
     @apply text-transparent bg-clip-text;
     -webkit-background-clip: text;
   }
-  
+
   /* Pattern Styling */
   .pattern-dots {
     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
-  
+
   /* Animations */
   .animate-fade-in {
     animation: fadeIn 1s ease-out;
+    opacity: 1; /* Make sure text is visible by default */
+    animation-fill-mode: forwards;
   }
-  
+
   .animate-fade-in-delay {
     animation: fadeIn 1s ease-out 0.3s;
-    opacity: 0;
+    opacity: 1; /* Make sure text is visible by default */
     animation-fill-mode: forwards;
   }
-  
+
   .animate-fade-in-delay-long {
     animation: fadeIn 1s ease-out 0.6s;
-    opacity: 0;
+    opacity: 1; /* Make sure text is visible by default */
     animation-fill-mode: forwards;
   }
-  
+
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
-  
+
   .animate-pulse {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
-  
+
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0.8; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  
+
   @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
     100% { transform: translateY(0px); }
   }
-  
+
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
   }
-  
+
   /* Download Button Hover Effect */
   .download-button:hover svg {
     @apply animate-pulse;
   }
-  
+
   /* Responsive Adjustments */
   @media (max-width: 640px) {
     .phone-mockup {
@@ -986,15 +996,15 @@
     if (typeof Alpine !== 'undefined') {
       Alpine.start();
     }
-    
+
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         const targetId = this.getAttribute('href');
         if (targetId === '#') return;
-        
+
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
           window.scrollTo({
@@ -1004,10 +1014,16 @@
         }
       });
     });
-    
+
     // Intersection Observer for animations
     const animateElements = document.querySelectorAll('.feature-card, .feature-highlight');
-    
+
+    // First make sure all elements are visible by default
+    animateElements.forEach(el => {
+      el.style.opacity = '1';
+      el.classList.add('animate-fade-in');
+    });
+
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -1017,18 +1033,16 @@
           }
         });
       }, { threshold: 0.1 });
-      
+
       animateElements.forEach(el => {
         observer.observe(el);
-        // Initially hide
-        el.style.opacity = '0';
       });
     }
-    
+
     // Theme toggle functionality
     const themeToggleBtn = document.getElementById('theme-toggle');
     const htmlElement = document.documentElement;
-    
+
     if (themeToggleBtn) {
       themeToggleBtn.addEventListener('click', function() {
         if (htmlElement.classList.contains('dark')) {
@@ -1040,39 +1054,49 @@
         }
       });
     }
-    
+
     // Set initial theme
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       htmlElement.classList.add('dark');
     } else {
       htmlElement.classList.remove('dark');
     }
-    
+
     // Accordion functionality
     const accordionButtons = document.querySelectorAll('[data-action="accordion#toggle"]');
-    
+
+    // Initialize accordion icons to show expanded state
+    document.querySelectorAll('[data-accordion-target="icon"]').forEach(icon => {
+      icon.classList.add('rotate-180');
+    });
+
+    // Make sure all accordion contents are visible by default
+    document.querySelectorAll('[data-accordion-target="content"]').forEach(content => {
+      content.style.display = 'block';
+    });
+
     accordionButtons.forEach(button => {
       button.addEventListener('click', function() {
         const content = this.nextElementSibling;
         const icon = this.querySelector('[data-accordion-target="icon"]');
-        
-        if (content.classList.contains('hidden')) {
-          content.classList.remove('hidden');
+
+        if (content.style.display === 'none') {
+          content.style.display = 'block';
           icon.classList.add('rotate-180');
         } else {
-          content.classList.add('hidden');
+          content.style.display = 'none';
           icon.classList.remove('rotate-180');
         }
       });
     });
-    
+
     // Parallax effect for hero section
     const parallaxElements = document.querySelectorAll('[data-controller="parallax"]');
-    
+
     if (parallaxElements.length > 0) {
       window.addEventListener('scroll', function() {
         const scrollPosition = window.pageYOffset;
-        
+
         parallaxElements.forEach(element => {
           const image = element.querySelector('[data-parallax-target="image"]');
           if (image) {
@@ -1082,11 +1106,11 @@
         });
       });
     }
-    
+
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    
+
     if (mobileMenuButton && mobileMenu) {
       mobileMenuButton.addEventListener('click', function() {
         mobileMenu.classList.toggle('hidden');
