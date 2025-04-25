@@ -7,6 +7,9 @@ class ScheduledTransaction < ApplicationRecord
   belongs_to :source_wallet, class_name: "Wallet", foreign_key: "source_wallet_id"
   belongs_to :destination_wallet, class_name: "Wallet", foreign_key: "destination_wallet_id", optional: true
 
+  # Association with transactions
+  has_many :transactions, foreign_key: "scheduled_transaction_id", primary_key: "id", class_name: "Transaction"
+
   # Define a method to get the user through the source wallet if user_id column doesn't exist
   def user
     if self.class.table_exists? && self.class.column_names.include?("user_id") && respond_to?(:user_id) && user_id.present?
@@ -144,13 +147,25 @@ class ScheduledTransaction < ApplicationRecord
         }
       )
     when "payment"
+      # For payment transactions, we need to find or create a destination wallet
+      # This could be a merchant wallet or a system wallet for bill payments
+      destination_wallet = if payment_destination.present? && payment_destination.match?(/^\d+$/)
+                            # If payment_destination is a numeric ID, try to find a wallet
+                            Wallet.find_by(id: payment_destination)
+                          else
+                            # Otherwise, use a system wallet or create a placeholder
+                            Wallet.find_by(wallet_id: "SYSTEM") ||
+                            source_wallet # Fallback to source wallet for testing
+                          end
+
       transaction = Transaction.create_payment(
-        wallet: source_wallet,
+        source_wallet: source_wallet,
+        destination_wallet: destination_wallet,
         amount: amount,
-        recipient: payment_destination,
-        description: description || "Scheduled payment",
+        description: description || "Scheduled payment: #{payment_destination}",
         metadata: {
-          scheduled_transaction_id: id
+          scheduled_transaction_id: id,
+          payment_destination: payment_destination
         }
       )
     end
@@ -165,6 +180,98 @@ class ScheduledTransaction < ApplicationRecord
         self.status = :completed
       else
         self.last_occurrence = next_occurrence
+        self.next_occurrence = calculate_next_occurrence
+      end
+
+      save
+      true
+    else
+      self.status = :failed
+      save
+      false
+    end
+  end
+
+  # Execute the scheduled transaction immediately, regardless of next_occurrence
+  def execute_now!
+    # Skip the next_occurrence check that's in execute_transaction
+    return false unless active?
+
+    transaction = nil
+
+    case transaction_type
+    when "transfer"
+      transaction = Transaction.create_transfer(
+        source_wallet: source_wallet,
+        destination_wallet: destination_wallet,
+        amount: amount,
+        description: description || "Scheduled transfer (manual execution)",
+        metadata: {
+          scheduled_transaction_id: id,
+          sender_name: source_wallet.user.display_name,
+          recipient_name: recipient_name,
+          manual_execution: true
+        }
+      )
+    when "deposit"
+      transaction = Transaction.create_deposit(
+        wallet: source_wallet,
+        amount: amount,
+        payment_method: payment_method,
+        provider: payment_provider,
+        metadata: {
+          scheduled_transaction_id: id,
+          description: description || "Scheduled deposit (manual execution)",
+          manual_execution: true
+        }
+      )
+    when "withdrawal"
+      transaction = Transaction.create_withdrawal(
+        wallet: source_wallet,
+        amount: amount,
+        payment_method: payment_method,
+        provider: payment_provider,
+        metadata: {
+          scheduled_transaction_id: id,
+          description: description || "Scheduled withdrawal (manual execution)",
+          manual_execution: true
+        }
+      )
+    when "payment"
+      # For payment transactions, we need to find or create a destination wallet
+      # This could be a merchant wallet or a system wallet for bill payments
+      destination_wallet = if payment_destination.present? && payment_destination.match?(/^\d+$/)
+                            # If payment_destination is a numeric ID, try to find a wallet
+                            Wallet.find_by(id: payment_destination)
+                          else
+                            # Otherwise, use a system wallet or create a placeholder
+                            Wallet.find_by(wallet_id: "SYSTEM") ||
+                            source_wallet # Fallback to source wallet for testing
+                          end
+
+      transaction = Transaction.create_payment(
+        source_wallet: source_wallet,
+        destination_wallet: destination_wallet,
+        amount: amount,
+        description: description || "Scheduled payment: #{payment_destination} (manual execution)",
+        metadata: {
+          scheduled_transaction_id: id,
+          payment_destination: payment_destination,
+          manual_execution: true
+        }
+      )
+    end
+
+    if transaction&.persisted?
+      transaction.complete!
+
+      # Update scheduled transaction
+      self.occurrences_count += 1
+      self.last_occurrence = Time.current
+
+      if occurrences_limit.present? && occurrences_count >= occurrences_limit
+        self.status = :completed
+      else
         self.next_occurrence = calculate_next_occurrence
       end
 

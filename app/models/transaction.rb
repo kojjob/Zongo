@@ -2,8 +2,8 @@ class Transaction < ApplicationRecord
   # Relationships
   belongs_to :source_wallet, class_name: "Wallet", optional: true
   belongs_to :destination_wallet, class_name: "Wallet", optional: true
+  belongs_to :scheduled_transaction, optional: true
   has_many :wallet_transactions, dependent: :destroy
-  has_many :scheduled_transactions, dependent: :destroy
   has_many :bill_payments, foreign_key: "transaction_id", dependent: :destroy
   has_many :security_logs, as: :loggable, dependent: :destroy
 

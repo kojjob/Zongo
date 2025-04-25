@@ -33,7 +33,14 @@ module Admin
 
     def show
       # Load transaction history
-      @transaction_history = @scheduled_transaction.transactions.order(created_at: :desc)
+      # First try to get transactions through the association
+      if @scheduled_transaction.respond_to?(:transactions)
+        @transaction_history = @scheduled_transaction.transactions.order(created_at: :desc)
+      else
+        # Fallback: Find transactions that have this scheduled transaction's ID in their metadata
+        @transaction_history = Transaction.where("metadata->>'scheduled_transaction_id' = ?", @scheduled_transaction.id.to_s)
+                                        .order(created_at: :desc)
+      end
     end
 
     def new
