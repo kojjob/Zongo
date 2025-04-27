@@ -13,30 +13,44 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <%# Important: theme.css must be loaded first to establish base CSS variables %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "dark_mode_overrides", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dark_mode_refinements", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "light_mode_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "section_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "animations", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "loading_states", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "button_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "header_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dropdown_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col <%= controller_name %>-<%= action_name %>" data-controller="debug icon">
+  <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col dark-mode-transition <%= controller_name %>-<%= action_name %> <%= yield(:body_class) %>" data-controller="debug icon">
+    <%# Accessibility features %>
+    <%= render 'shared/skip_links' %>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" data-accessibility-target="announcement"></div>
 
     <%= render 'shared/header' %>
     <%= render 'shared/toast_template' %>
     <%= render 'shared/icons' %>
     <%= render 'shared/dropdown_fix' %>
+    <%= render 'shared/scroll_progress' %>
+    <%= render 'shared/accessibility_settings' %>
 
 
-    <main id="main-content" class="" tabindex="-1">
+    <main id="main-content" class="page-enter page-enter-active" tabindex="-1" data-controller="animation">
       <%= render 'shared/flash' if flash.any? %>
-      <%= yield %>
+      <div class="reveal-on-scroll" data-animation-target="reveal">
+        <%= yield %>
+      </div>
     </main>
 
     <%= render 'shared/footer' %>

@@ -1,0 +1,84 @@
+/**
+ * Dropdown Fixes - Critical fixes for dropdown visibility in dark mode
+ * These styles ensure that dropdown menus are visible in dark mode
+ */
+
+/* Force text colors in dark mode for all dropdown text elements */
+.dark [data-dropdown-target="menu"] .text-gray-500,
+.dark [data-dropdown-target="menu"] .text-gray-600,
+.dark [data-dropdown-target="menu"] .text-gray-700,
+.dark [data-dropdown-target="menu"] .text-gray-800,
+.dark [data-dropdown-target="menu"] .text-gray-900 {
+  color: #e5e7eb !important; /* light gray for dark mode */
+}
+
+/* Force background colors in dark mode for dropdown menus */
+.dark [data-dropdown-target="menu"] {
+  background-color: #1f2937 !important; /* dark gray for dark mode */
+}
+
+.dark [data-dropdown-target="menu"] .bg-white,
+.dark [data-dropdown-target="menu"] .bg-gray-50,
+.dark [data-dropdown-target="menu"] .bg-gray-100 {
+  background-color: #1f2937 !important; /* dark gray for dark mode */
+}
+
+/* Force border colors in dark mode */
+.dark [data-dropdown-target="menu"] .border-gray-100,
+.dark [data-dropdown-target="menu"] .border-gray-200,
+.dark [data-dropdown-target="menu"] .border-gray-300 {
+  border-color: #374151 !important; /* medium gray for dark mode */
+}
+
+/* Fix for dropdown menu items */
+.dark [data-dropdown-target="menu"] a,
+.dark [data-dropdown-target="menu"] button,
+.dark [data-dropdown-target="menu"] span {
+  color: #e5e7eb !important;
+}
+
+/* Fix for dropdown menu item hover states */
+.dark [data-dropdown-target="menu"] a:hover,
+.dark [data-dropdown-target="menu"] button:hover {
+  background-color: #374151 !important;
+}
+
+/* Fix for dropdown menu item icons */
+.dark [data-dropdown-target="menu"] svg {
+  color: #9ca3af !important;
+}
+
+/* Fix for dropdown menu item icons on hover */
+.dark [data-dropdown-target="menu"] a:hover svg,
+.dark [data-dropdown-target="menu"] button:hover svg {
+  color: #e5e7eb !important;
+}
+
+/* Fix for shop dropdown items */
+.dark [data-dropdown-target="menu"] .text-base.font-bold.text-gray-900 {
+  color: #ffffff !important;
+}
+
+.dark [data-dropdown-target="menu"] .text-sm.text-gray-600 {
+  color: #9ca3af !important;
+}
+
+/* Fix for dropdown menu background in dark mode */
+.dark [data-dropdown-target="menu"] .bg-white\/90 {
+  background-color: rgba(31, 41, 55, 0.95) !important;
+}
+
+/* Fix for dropdown menu footer in dark mode */
+.dark [data-dropdown-target="menu"] .bg-gray-50 {
+  background-color: rgba(17, 24, 39, 0.8) !important;
+}
+
+/* Fix for dropdown menu border in dark mode */
+.dark [data-dropdown-target="menu"] .border-white\/20 {
+  border-color: rgba(75, 85, 99, 0.3) !important;
+}
+
+/* Fix for dropdown menu shadow in dark mode */
+.dark [data-dropdown-target="menu"] {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4) !important;
+}
