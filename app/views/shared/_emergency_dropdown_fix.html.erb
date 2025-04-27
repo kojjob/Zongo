@@ -1,0 +1,131 @@
+<!-- EMERGENCY DROPDOWN FIX -->
+<script>
+  // Wait for the page to fully load
+  window.addEventListener('load', function() {
+    console.log('🚨 EMERGENCY DROPDOWN FIX ACTIVATED');
+    
+    // Find all dropdown buttons
+    const userDropdownButton = document.querySelector('.relative button[data-action*="dropdown#toggle"]');
+    const shopDropdownButton = document.querySelector('button[data-action*="dropdown#toggle"][aria-label="Shop"]');
+    const servicesDropdownButton = document.querySelector('button[data-action*="dropdown#toggle"][aria-label="Services"]');
+    
+    // Find all dropdown menus
+    const userDropdownMenu = document.querySelector('.relative [data-dropdown-target="menu"]');
+    const shopDropdownMenu = document.querySelector('button[aria-label="Shop"] + [data-dropdown-target="menu"]');
+    const servicesDropdownMenu = document.querySelector('button[aria-label="Services"] + [data-dropdown-target="menu"]');
+    
+    // Function to toggle a dropdown
+    function toggleDropdown(button, menu) {
+      if (!button || !menu) return;
+      
+      // Remove existing click listeners by cloning
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      // Set initial state
+      menu.style.display = 'none';
+      
+      // Add new click listener
+      newButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close all dropdowns first
+        if (userDropdownMenu) userDropdownMenu.style.display = 'none';
+        if (shopDropdownMenu) shopDropdownMenu.style.display = 'none';
+        if (servicesDropdownMenu) servicesDropdownMenu.style.display = 'none';
+        
+        // Toggle this dropdown
+        if (menu.style.display === 'none') {
+          menu.style.display = 'block';
+          
+          // Position the dropdown
+          if (menu === userDropdownMenu) {
+            menu.style.position = 'absolute';
+            menu.style.top = '100%';
+            menu.style.right = '0';
+            menu.style.left = 'auto';
+            menu.style.marginTop = '0.75rem';
+            menu.style.zIndex = '9999';
+          } else {
+            menu.style.position = 'absolute';
+            menu.style.top = '100%';
+            menu.style.left = '0';
+            menu.style.right = 'auto';
+            menu.style.marginTop = '0.5rem';
+            menu.style.zIndex = '9999';
+          }
+        } else {
+          menu.style.display = 'none';
+        }
+      });
+    }
+    
+    // Set up each dropdown
+    toggleDropdown(userDropdownButton, userDropdownMenu);
+    toggleDropdown(shopDropdownButton, shopDropdownMenu);
+    toggleDropdown(servicesDropdownButton, servicesDropdownMenu);
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (userDropdownMenu && userDropdownMenu.style.display !== 'none') {
+        if (!userDropdownButton.contains(e.target) && !userDropdownMenu.contains(e.target)) {
+          userDropdownMenu.style.display = 'none';
+        }
+      }
+      
+      if (shopDropdownMenu && shopDropdownMenu.style.display !== 'none') {
+        if (!shopDropdownButton.contains(e.target) && !shopDropdownMenu.contains(e.target)) {
+          shopDropdownMenu.style.display = 'none';
+        }
+      }
+      
+      if (servicesDropdownMenu && servicesDropdownMenu.style.display !== 'none') {
+        if (!servicesDropdownButton.contains(e.target) && !servicesDropdownMenu.contains(e.target)) {
+          servicesDropdownMenu.style.display = 'none';
+        }
+      }
+    });
+    
+    // Close dropdowns when pressing Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (userDropdownMenu) userDropdownMenu.style.display = 'none';
+        if (shopDropdownMenu) shopDropdownMenu.style.display = 'none';
+        if (servicesDropdownMenu) servicesDropdownMenu.style.display = 'none';
+      }
+    });
+    
+    console.log('✅ EMERGENCY DROPDOWN FIX COMPLETE');
+  });
+</script>
+
+<!-- Fix dropdown styling -->
+<style>
+  /* Reset all dropdown styles */
+  [data-dropdown-target="menu"] {
+    display: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    transition: none !important;
+  }
+  
+  /* Dark mode fixes */
+  .dark [data-dropdown-target="menu"] {
+    background-color: #1f2937 !important;
+    color: white !important;
+  }
+  
+  .dark [data-dropdown-target="menu"] a,
+  .dark [data-dropdown-target="menu"] button,
+  .dark [data-dropdown-target="menu"] span {
+    color: #e5e7eb !important;
+  }
+  
+  .dark [data-dropdown-target="menu"] a:hover,
+  .dark [data-dropdown-target="menu"] button:hover {
+    background-color: #374151 !important;
+  }
+</style>
