@@ -60,13 +60,28 @@ export default class extends Controller {
     // Position the dropdown correctly
     this._positionDropdown();
 
+    // Make sure the parent element has the dropdown-container class
+    this.element.classList.add('dropdown-container');
+
     // Show the dropdown
-    this.menuTarget.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+    this.menuTarget.style.display = 'block';
+    this.menuTarget.classList.add('open');
+    this.menuTarget.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
     this.menuTarget.classList.add('opacity-100', 'scale-100');
+
+    // Ensure proper z-index
+    this.menuTarget.style.zIndex = '50';
 
     // Update button state
     if (this.hasButtonTarget) {
       this.buttonTarget.setAttribute('data-dropdown-open', '');
+      this.buttonTarget.setAttribute('aria-expanded', 'true');
+
+      // Rotate arrow if it exists
+      const arrow = this.buttonTarget.querySelector('[data-dropdown-target="arrow"]');
+      if (arrow) {
+        arrow.classList.add('open');
+      }
     }
   }
 
@@ -74,12 +89,21 @@ export default class extends Controller {
     if (!this.hasMenuTarget) return;
 
     // Hide the dropdown
+    this.menuTarget.style.display = 'none';
+    this.menuTarget.classList.remove('open');
     this.menuTarget.classList.remove('opacity-100', 'scale-100');
-    this.menuTarget.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+    this.menuTarget.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
 
     // Update button state
     if (this.hasButtonTarget) {
       this.buttonTarget.removeAttribute('data-dropdown-open');
+      this.buttonTarget.setAttribute('aria-expanded', 'false');
+
+      // Rotate arrow back if it exists
+      const arrow = this.buttonTarget.querySelector('[data-dropdown-target="arrow"]');
+      if (arrow) {
+        arrow.classList.remove('open');
+      }
     }
   }
 
@@ -92,18 +116,37 @@ export default class extends Controller {
     const buttonRect = this.buttonTarget.getBoundingClientRect();
     const menuWidth = this.menuTarget.offsetWidth;
     const windowWidth = window.innerWidth;
+    const isMobile = windowWidth < 640;
 
-    // Check if the dropdown would go off the right edge of the screen
-    if (buttonRect.left + menuWidth > windowWidth) {
-      this.menuTarget.classList.add('right-0');
-      this.menuTarget.classList.remove('left-0');
+    // Reset positioning classes
+    this.menuTarget.classList.remove('right-0', 'left-0', 'top-full', 'bottom-0', 'fixed', 'absolute');
+
+    if (isMobile) {
+      // Mobile positioning (bottom sheet)
+      this.menuTarget.classList.add('fixed', 'bottom-0', 'left-0', 'right-0', 'w-full');
+      this.menuTarget.style.maxHeight = '80vh';
+      this.menuTarget.style.overflowY = 'auto';
+      this.menuTarget.style.borderRadius = '1rem 1rem 0 0';
+      this.menuTarget.style.transform = 'translateY(0)';
     } else {
-      this.menuTarget.classList.add('left-0');
-      this.menuTarget.classList.remove('right-0');
-    }
+      // Desktop positioning
+      this.menuTarget.classList.add('absolute');
 
-    // Ensure the dropdown appears below the button
-    this.menuTarget.classList.add('top-full');
+      // Check if the dropdown would go off the right edge of the screen
+      if (buttonRect.left + menuWidth > windowWidth) {
+        this.menuTarget.classList.add('right-0');
+      } else {
+        this.menuTarget.classList.add('left-0');
+      }
+
+      // Ensure the dropdown appears below the button
+      this.menuTarget.classList.add('top-full');
+      this.menuTarget.style.marginTop = '0.75rem';
+      this.menuTarget.style.maxHeight = '';
+      this.menuTarget.style.overflowY = '';
+      this.menuTarget.style.borderRadius = '';
+      this.menuTarget.style.transform = '';
+    }
   }
 
   _handleClickOutside(event) {
