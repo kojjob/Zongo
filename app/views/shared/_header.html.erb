@@ -691,9 +691,6 @@
 
   /* Fix dropdown positioning and visibility */
   [data-dropdown-target="menu"] {
-    opacity: 1 !important;
-    transform: none !important;
-    pointer-events: auto !important;
     transition: opacity 0.2s ease, transform 0.2s ease;
     z-index: 9999 !important;
   }
@@ -715,13 +712,13 @@
     margin-top: 0.5rem !important;
   }
 
-  /* Hide by default, show when open class is added */
-  [data-dropdown-target="menu"]:not(.open) {
-    display: none !important;
+  /* Remove any forced display properties that might interfere with the controller */
+  [data-dropdown-target="menu"] {
+    display: none;
   }
 
   [data-dropdown-target="menu"].open {
-    display: block !important;
+    display: block;
   }
 </style>
 

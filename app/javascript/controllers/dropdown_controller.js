@@ -36,7 +36,7 @@ export default class extends Controller {
     if (!this.hasMenuTarget) return;
 
     // Check if the dropdown is currently open
-    const isOpen = !this.menuTarget.classList.contains('opacity-0');
+    const isOpen = this.menuTarget.classList.contains('open');
 
     if (isOpen) {
       // If open, close it
@@ -159,7 +159,7 @@ export default class extends Controller {
     }
 
     // Close the dropdown if it's open
-    if (!this.menuTarget.classList.contains('opacity-0')) {
+    if (this.menuTarget.classList.contains('open')) {
       this.close();
     }
   }
