@@ -1,0 +1,206 @@
+<!-- FINAL DROPDOWN FIX - This overrides all other dropdown implementations -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔄 Applying FINAL dropdown fix...');
+    
+    // Find all dropdown buttons and menus
+    const dropdownButtons = document.querySelectorAll('[data-dropdown-target="button"]');
+    const dropdownMenus = document.querySelectorAll('[data-dropdown-target="menu"]');
+    
+    // Reset all dropdowns to a clean state
+    dropdownMenus.forEach(menu => {
+      // Remove all display-related classes and styles
+      menu.style.display = 'none';
+      menu.classList.remove('open', 'opacity-0', 'opacity-100', 'scale-95', 'scale-100', 'pointer-events-none', 'pointer-events-auto');
+      
+      // Ensure proper positioning
+      if (menu.closest('.relative')) {
+        // User dropdown
+        menu.style.position = 'absolute';
+        menu.style.top = '100%';
+        menu.style.right = '0';
+        menu.style.left = 'auto';
+        menu.style.bottom = 'auto';
+        menu.style.marginTop = '0.75rem';
+        menu.style.zIndex = '9999';
+      } else {
+        // Shop/services dropdown
+        menu.style.position = 'absolute';
+        menu.style.top = '100%';
+        menu.style.left = '0';
+        menu.style.right = 'auto';
+        menu.style.bottom = 'auto';
+        menu.style.marginTop = '0.5rem';
+        menu.style.zIndex = '9999';
+      }
+    });
+    
+    // Remove all existing click handlers by cloning and replacing
+    dropdownButtons.forEach(button => {
+      const newButton = button.cloneNode(true);
+      button.parentNode.replaceChild(newButton, button);
+      
+      // Find the associated menu
+      const container = newButton.closest('[data-controller="dropdown"]');
+      if (!container) return;
+      
+      const menu = container.querySelector('[data-dropdown-target="menu"]');
+      if (!menu) return;
+      
+      // Add new click handler
+      newButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Close all other dropdowns
+        dropdownMenus.forEach(otherMenu => {
+          if (otherMenu !== menu && otherMenu.style.display !== 'none') {
+            otherMenu.style.display = 'none';
+            
+            // Reset arrow if it exists
+            const otherContainer = otherMenu.closest('[data-controller="dropdown"]');
+            if (otherContainer) {
+              const otherButton = otherContainer.querySelector('[data-dropdown-target="button"]');
+              if (otherButton) {
+                const arrow = otherButton.querySelector('[data-dropdown-target="arrow"]');
+                if (arrow) {
+                  arrow.style.transform = '';
+                }
+              }
+            }
+          }
+        });
+        
+        // Toggle this dropdown
+        if (menu.style.display === 'none') {
+          menu.style.display = 'block';
+          
+          // Rotate arrow if it exists
+          const arrow = newButton.querySelector('[data-dropdown-target="arrow"]');
+          if (arrow) {
+            arrow.style.transform = 'rotate(180deg)';
+          }
+        } else {
+          menu.style.display = 'none';
+          
+          // Reset arrow if it exists
+          const arrow = newButton.querySelector('[data-dropdown-target="arrow"]');
+          if (arrow) {
+            arrow.style.transform = '';
+          }
+        }
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      dropdownMenus.forEach(menu => {
+        if (menu.style.display !== 'none') {
+          const container = menu.closest('[data-controller="dropdown"]');
+          if (container && !container.contains(e.target)) {
+            menu.style.display = 'none';
+            
+            // Reset arrow if it exists
+            const button = container.querySelector('[data-dropdown-target="button"]');
+            if (button) {
+              const arrow = button.querySelector('[data-dropdown-target="arrow"]');
+              if (arrow) {
+                arrow.style.transform = '';
+              }
+            }
+          }
+        }
+      });
+    });
+    
+    // Close dropdowns when pressing Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        dropdownMenus.forEach(menu => {
+          menu.style.display = 'none';
+          
+          // Reset all arrows
+          const arrows = document.querySelectorAll('[data-dropdown-target="arrow"]');
+          arrows.forEach(arrow => {
+            arrow.style.transform = '';
+          });
+        });
+      }
+    });
+    
+    console.log('✅ FINAL dropdown fix applied successfully');
+  });
+</script>
+
+<style>
+  /* FINAL DROPDOWN FIX - This overrides all other dropdown styles */
+  
+  /* Reset all dropdown styles */
+  [data-dropdown-target="menu"] {
+    display: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+    transition: none !important;
+    z-index: 9999 !important;
+  }
+  
+  /* Only show when explicitly set to display:block by JavaScript */
+  [data-dropdown-target="menu"][style*="display: block"] {
+    display: block !important;
+  }
+  
+  /* User dropdown specific positioning */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-top: 0.75rem !important;
+  }
+  
+  /* Shop and Services dropdown positioning */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin-top: 0.5rem !important;
+  }
+  
+  /* Dark mode fixes */
+  .dark [data-dropdown-target="menu"] {
+    background-color: #1f2937 !important;
+  }
+  
+  .dark [data-dropdown-target="menu"] a,
+  .dark [data-dropdown-target="menu"] button,
+  .dark [data-dropdown-target="menu"] span,
+  .dark [data-dropdown-target="menu"] p {
+    color: #e5e7eb !important;
+  }
+  
+  .dark [data-dropdown-target="menu"] .text-gray-900 {
+    color: #ffffff !important;
+  }
+  
+  .dark [data-dropdown-target="menu"] .text-gray-600,
+  .dark [data-dropdown-target="menu"] .text-gray-500,
+  .dark [data-dropdown-target="menu"] .text-gray-400 {
+    color: #9ca3af !important;
+  }
+  
+  /* Ensure dropdown menus have a shadow */
+  [data-dropdown-target="menu"] {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 0.75rem !important;
+  }
+  
+  /* Fix for dropdown arrow rotation */
+  [data-dropdown-target="arrow"][style*="transform: rotate(180deg)"] {
+    transform: rotate(180deg) !important;
+  }
+</style>
