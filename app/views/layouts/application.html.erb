@@ -31,6 +31,7 @@
     <%= stylesheet_link_tag "dropdown_fixes", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script src="<%= asset_path('dropdown_emergency_fix.js') %>" defer></script>
   </head>
 
   <body class="font-poppins antialiased bg-white dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col dark-mode-transition <%= controller_name %>-<%= action_name %> <%= yield(:body_class) %>" data-controller="debug icon">

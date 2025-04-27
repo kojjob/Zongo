@@ -1,5 +1,27 @@
 <!-- Dropdown Fix - No Dependencies -->
 <style>
+  /* Fix for user dropdown positioning */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    bottom: auto !important;
+    margin-top: 0.75rem !important;
+    z-index: 50 !important;
+  }
+
+  /* Fix for shop/services dropdown positioning */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin-top: 0.5rem !important;
+    z-index: 50 !important;
+  }
+
   /* Improved mobile dropdown styles */
   @media (max-width: 640px) {
     [data-dropdown-target="menu"] {
@@ -59,10 +81,38 @@
 <script>
   (function() {
     console.log('🔄 Applying dropdown fix...');
-    
+
     // Helper function to show dropdown menu with animation
     function showDropdownMenu(menu) {
+      // Get the dropdown container
+      const dropdown = menu.closest('[data-controller*="dropdown"]');
+
+      // Apply specific positioning based on dropdown type
+      if (dropdown) {
+        if (dropdown.classList.contains('relative')) {
+          // User dropdown
+          menu.style.position = 'absolute';
+          menu.style.top = '100%';
+          menu.style.right = '0';
+          menu.style.left = 'auto';
+          menu.style.bottom = 'auto';
+          menu.style.marginTop = '0.75rem';
+          menu.style.zIndex = '50';
+        } else if (dropdown.classList.contains('dropdown-container')) {
+          // Shop/services dropdown
+          menu.style.position = 'absolute';
+          menu.style.top = '100%';
+          menu.style.left = '0';
+          menu.style.right = 'auto';
+          menu.style.bottom = 'auto';
+          menu.style.marginTop = '0.5rem';
+          menu.style.zIndex = '50';
+        }
+      }
+
+      // Show the menu
       menu.classList.remove('hidden');
+
       // Use setTimeout to ensure the transition happens after the display change
       setTimeout(() => {
         menu.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
@@ -80,49 +130,70 @@
         menu.classList.add('hidden');
       }, 150);
     }
-    
+
     // Function to fix all dropdowns
     function fixDropdowns() {
       // Find all dropdown elements
       const dropdowns = document.querySelectorAll('[data-controller*="dropdown"]');
       console.log(`Found ${dropdowns.length} dropdowns to fix`);
-      
+
       // Process each dropdown
       dropdowns.forEach((dropdown, index) => {
         // Find toggle button and menu
         const toggle = dropdown.querySelector('[data-action*="dropdown#toggle"]');
         const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
-        
+
         if (!toggle || !menu) {
           console.log('Skipping dropdown - missing toggle or menu');
           return;
         }
-        
+
         // Generate a truly unique ID for this dropdown
         const uniqueId = `dropdown-${index}-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
-        
+
         // Remove existing event listeners by cloning the toggle
         const toggleClone = toggle.cloneNode(true);
         if (toggle.parentNode) {
           toggle.parentNode.replaceChild(toggleClone, toggle);
         }
-        
+
         // Set unique IDs to track relationships
         dropdown.dataset.dropdownId = uniqueId;
         toggleClone.dataset.dropdownId = uniqueId;
         menu.dataset.dropdownId = uniqueId;
-        
+
         // Ensure menu is initially hidden
         if (!menu.classList.contains('hidden')) {
           menu.classList.add('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
           menu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
         }
-        
+
+        // Apply specific positioning based on dropdown type
+        if (dropdown.classList.contains('relative')) {
+          // User dropdown
+          menu.style.position = 'absolute';
+          menu.style.top = '100%';
+          menu.style.right = '0';
+          menu.style.left = 'auto';
+          menu.style.bottom = 'auto';
+          menu.style.marginTop = '0.75rem';
+          menu.style.zIndex = '50';
+        } else if (dropdown.classList.contains('dropdown-container')) {
+          // Shop/services dropdown
+          menu.style.position = 'absolute';
+          menu.style.top = '100%';
+          menu.style.left = '0';
+          menu.style.right = 'auto';
+          menu.style.bottom = 'auto';
+          menu.style.marginTop = '0.5rem';
+          menu.style.zIndex = '50';
+        }
+
         // Add isolated click handler
         toggleClone.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           // Close all other dropdowns first
           document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
             if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
@@ -132,7 +203,7 @@
               }
             }
           });
-          
+
           // Toggle only this specific dropdown
           if (menu.classList.contains('hidden')) {
             showDropdownMenu(menu);
@@ -140,12 +211,12 @@
             hideDropdownMenu(menu);
           }
         });
-        
+
         // Add touch event for better mobile support
         toggleClone.addEventListener('touchend', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           // Close all other dropdowns first
           document.querySelectorAll('[data-dropdown-target="menu"]').forEach(otherMenu => {
             if (otherMenu !== menu && !otherMenu.classList.contains('hidden')) {
@@ -155,7 +226,7 @@
               }
             }
           });
-          
+
           // Toggle only this specific dropdown
           if (menu.classList.contains('hidden')) {
             showDropdownMenu(menu);
@@ -163,7 +234,7 @@
             hideDropdownMenu(menu);
           }
         });
-        
+
         // Make all links in the dropdown responsive to touch
         menu.querySelectorAll('a, button').forEach(element => {
           // Clone to remove existing listeners
@@ -207,10 +278,10 @@
         });
       });
     }
-    
+
     // Run the fix
     fixDropdowns();
-    
+
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
       document.querySelectorAll('[data-dropdown-target="menu"]').forEach(menu => {
