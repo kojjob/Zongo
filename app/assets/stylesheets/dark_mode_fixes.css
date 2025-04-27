@@ -1,0 +1,80 @@
+/**
+ * Dark Mode Fixes - Critical fixes for text visibility in dark mode
+ * These styles ensure that text is visible in dark mode
+ */
+
+/* Force text colors in dark mode for all text elements */
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700,
+.dark .text-gray-800,
+.dark .text-gray-900 {
+  color: #e5e7eb !important; /* light gray for dark mode */
+}
+
+/* Force background colors in dark mode */
+.dark .bg-white,
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important; /* dark gray for dark mode */
+}
+
+/* Force border colors in dark mode */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: #374151 !important; /* medium gray for dark mode */
+}
+
+/* Specific fixes for dropdown menus */
+.dark [data-dropdown-target="menu"] {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark [data-dropdown-target="menu"] .text-gray-500,
+.dark [data-dropdown-target="menu"] .text-gray-600,
+.dark [data-dropdown-target="menu"] .text-gray-700,
+.dark [data-dropdown-target="menu"] .text-gray-800,
+.dark [data-dropdown-target="menu"] .text-gray-900 {
+  color: #e5e7eb !important;
+}
+
+/* Fix for admin dropdown */
+.dark .admin-dropdown .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+/* Fix for mobile menu */
+.dark #mobile-menu .text-gray-700 {
+  color: #e5e7eb !important;
+}
+
+/* Fix for user profile dropdown */
+.dark [data-dropdown-target="menu"] .text-gray-900 {
+  color: #f9fafb !important;
+}
+
+/* Fix for dropdown menu items */
+.dark [data-dropdown-target="menu"] a,
+.dark [data-dropdown-target="menu"] button,
+.dark [data-dropdown-target="menu"] span {
+  color: #e5e7eb !important;
+}
+
+/* Fix for dropdown menu item hover states */
+.dark [data-dropdown-target="menu"] a:hover,
+.dark [data-dropdown-target="menu"] button:hover {
+  background-color: #374151 !important;
+}
+
+/* Fix for dropdown menu item icons */
+.dark [data-dropdown-target="menu"] svg {
+  color: #9ca3af !important;
+}
+
+/* Fix for dropdown menu item icons on hover */
+.dark [data-dropdown-target="menu"] a:hover svg,
+.dark [data-dropdown-target="menu"] button:hover svg {
+  color: #e5e7eb !important;
+}

@@ -4,10 +4,14 @@ class Wallet < ApplicationRecord
   has_many :sent_transactions, class_name: 'Transaction', foreign_key: 'source_wallet_id'
   has_many :received_transactions, class_name: 'Transaction', foreign_key: 'destination_wallet_id'
   has_many :loans, dependent: :restrict_with_error
-  has_many :transactions, dependent: :restrict_with_error
+
+  # Combined transactions (both sent and received)
+  def transactions
+    Transaction.where("source_wallet_id = ? OR destination_wallet_id = ?", id, id).distinct
+  end
 
   # Enums
-  enum :status, { active: 0, suspended: 1, locked: 2, closed: 3 }
+  enum :status, { active: 0, suspended: 1, locked: 2, closed: 3 }, default: :active
 
   # Callbacks
   before_validation :generate_wallet_id, on: :create
@@ -155,6 +159,19 @@ class Wallet < ApplicationRecord
     Transaction.where("source_wallet_id = ? OR destination_wallet_id = ?", id, id)
                .order(created_at: :desc)
                .limit(limit)
+  end
+
+  # Get transaction history for a specific period
+  # @param start_date [Date] The start date of the period
+  # @param end_date [Date] The end date of the period
+  # @return [ActiveRecord::Relation] Transactions within the period
+  def transaction_history(start_date: 90.days.ago.to_date, end_date: Date.current)
+    # Ensure id is present to avoid SQL errors
+    return Transaction.none unless id.present?
+
+    Transaction.where("(source_wallet_id = ? OR destination_wallet_id = ?) AND created_at BETWEEN ? AND ?",
+                     id, id, start_date.beginning_of_day, end_date.end_of_day)
+               .order(created_at: :desc)
   end
 
   # Get the transaction history for a specific time period

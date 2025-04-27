@@ -21,13 +21,13 @@ class SecurityLog < ApplicationRecord
     device_change: 9,
     verification_success: 10,
     verification_failure: 11
-  }
+  }, default: :login_attempt
 
   enum :severity, {
     info: 0,
     warning: 1,
     critical: 2
-  }
+  }, default: :info
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }

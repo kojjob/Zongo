@@ -11,8 +11,8 @@ class BillPayment < ApplicationRecord
   validates :status, presence: true
 
   # Enums
-  enum bill_type: { electricity: 0, water: 1, internet: 2, airtime: 3, tv: 4, gas: 5, insurance: 6, other: 7 }
-  enum status: { pending: 0, processing: 1, completed: 2, failed: 3 }
+  enum :bill_type, { electricity: 0, water: 1, internet: 2, airtime: 3, tv: 4, gas: 5, insurance: 6, other: 7 }, default: :other
+  enum :status, { pending: 0, processing: 1, completed: 2, failed: 3 }, default: :pending
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }

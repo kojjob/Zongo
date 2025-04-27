@@ -10,7 +10,7 @@ class Beneficiary < ApplicationRecord
   validates :phone_number, presence: true, if: :is_mobile_money?
   # Ensure each user can only have one beneficiary with a specific account number
   validates :account_number, uniqueness: { scope: :user_id }
-  
+
 
 
   # Scopes

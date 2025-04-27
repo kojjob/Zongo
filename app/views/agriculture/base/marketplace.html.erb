@@ -1,0 +1,208 @@
+<%# Agricultural Marketplace Page %>
+<% content_for :title, "Agricultural Marketplace" %>
+
+<!-- Header Section -->
+<section class="bg-gradient-to-r from-amber-600 to-yellow-500 py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-white mb-2">Farmer's Marketplace</h1>
+        <p class="text-white/90">
+          Buy and sell agricultural products directly with farmers and buyers
+        </p>
+      </div>
+      <div class="mt-4 md:mt-0 flex gap-3">
+        <a href="<%= agriculture_path %>" class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors duration-300">
+          <%= icon "arrow-left", class: "w-4 h-4 mr-2" %>
+          Back to Agriculture
+        </a>
+
+        <% if user_signed_in? %>
+          <a href="<%= new_crop_listing_path %>" class="inline-flex items-center px-4 py-2 bg-white text-amber-700 font-medium rounded-lg hover:bg-white/90 transition-colors duration-300">
+            <%= icon "plus-circle", class: "w-4 h-4 mr-2" %>
+            Create Listing
+          </a>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Filters Sidebar -->
+    <div class="w-full lg:w-1/4">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 sticky top-24">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Filters</h2>
+
+        <%= form_with url: agriculture_marketplace_path, method: :get, class: "space-y-6" do |f| %>
+          <!-- Listing Type -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Listing Type</h3>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <%= f.radio_button :listing_type, 'all', checked: params[:listing_type].blank? || params[:listing_type] == 'all', class: "h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 dark:border-gray-600" %>
+                <label for="listing_type_all" class="ml-3 text-sm text-gray-700 dark:text-gray-300">All Listings</label>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :listing_type, 'selling', checked: params[:listing_type] == 'selling', class: "h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 dark:border-gray-600" %>
+                <label for="listing_type_selling" class="ml-3 text-sm text-gray-700 dark:text-gray-300">Items for Sale</label>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :listing_type, 'buying', checked: params[:listing_type] == 'buying', class: "h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 dark:border-gray-600" %>
+                <label for="listing_type_buying" class="ml-3 text-sm text-gray-700 dark:text-gray-300">Buying Requests</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Crop Type -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Crop Type</h3>
+            <%= f.select :crop_id,
+                        [["All Crops", ""]] + @crops.map { |c| [c.name, c.id] },
+                        { selected: params[:crop_id] },
+                        { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" } %>
+          </div>
+
+          <!-- Region -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Region</h3>
+            <%= f.select :region_id,
+                        [["All Regions", ""]] + @regions.map { |r| [r.name, r.id] },
+                        { selected: params[:region_id] },
+                        { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" } %>
+          </div>
+
+          <!-- Price Range -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Price Range (GHS)</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <%= f.number_field :min_price, value: params[:min_price], placeholder: "Min", min: 0, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+              </div>
+              <div>
+                <%= f.number_field :max_price, value: params[:max_price], placeholder: "Max", min: 0, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sort By -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Sort By</h3>
+            <%= f.select :sort,
+                        [
+                          ["Newest First", "newest"],
+                          ["Oldest First", "oldest"],
+                          ["Price: Low to High", "price_asc"],
+                          ["Price: High to Low", "price_desc"]
+                        ],
+                        { selected: params[:sort] || "newest" },
+                        { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" } %>
+          </div>
+
+          <!-- Apply Filters Button -->
+          <div>
+            <%= f.submit "Apply Filters", class: "w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+
+            <% if params[:crop_id].present? || params[:region_id].present? || params[:listing_type].present? || params[:min_price].present? || params[:max_price].present? || params[:sort].present? && params[:sort] != "newest" %>
+              <div class="mt-3 text-center">
+                <%= link_to "Clear All Filters", agriculture_marketplace_path, class: "text-sm text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Listings Grid -->
+    <div class="w-full lg:w-3/4">
+      <% if @listings.present? %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 mb-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+              <%= pluralize(@listings.total_count, 'Listing') %> Found
+            </h2>
+
+            <% if user_signed_in? %>
+              <div class="mt-4 md:mt-0">
+                <a href="<%= my_listings_crop_listings_path %>" class="inline-flex items-center text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 font-medium">
+                  <%= icon "list", class: "w-4 h-4 mr-2" %>
+                  My Listings
+                </a>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @listings.each do |listing| %>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <% if listing.images.attached? %>
+                <div class="h-48 overflow-hidden">
+                  <%= image_tag listing.images.first, class: "w-full h-full object-cover" %>
+                </div>
+              <% else %>
+                <div class="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                  <%= icon "shopping-bag", class: "w-12 h-12 text-gray-400 dark:text-gray-500" %>
+                </div>
+              <% end %>
+
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= listing.listing_type == 'selling' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' %>">
+                    <%= listing.listing_type.titleize %>
+                  </span>
+                  <span class="text-sm text-gray-500 dark:text-gray-400"><%= time_ago_in_words(listing.created_at) %> ago</span>
+                </div>
+
+                <h3 class="font-bold text-gray-900 dark:text-white mb-1 truncate"><%= listing.title %></h3>
+                <div class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  <%= listing.crop.name %> • <%= listing.region&.name || 'Location not specified' %>
+                </div>
+
+                <div class="flex items-center justify-between mt-3">
+                  <div class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= listing.price %></div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400"><%= listing.quantity %> <%= listing.unit %></div>
+                </div>
+
+                <a href="<%= crop_listing_path(listing) %>" class="mt-4 block w-full text-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors duration-300">
+                  View Details
+                </a>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <% if @listings.total_pages > 1 %>
+          <div class="mt-8 flex justify-center">
+            <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <%= paginate @listings %>
+            </nav>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center border border-gray-100 dark:border-gray-700">
+          <div class="w-20 h-20 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+            <%= icon "search", class: "w-10 h-10 text-gray-400 dark:text-gray-500" %>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No Listings Found</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-6">No listings match your current filter criteria. Try adjusting your filters or create a new listing.</p>
+
+          <% if user_signed_in? %>
+            <a href="<%= new_crop_listing_path %>" class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+              <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+              Create New Listing
+            </a>
+          <% else %>
+            <a href="<%= new_user_registration_path %>" class="inline-flex items-center px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300">
+              <%= icon "user-plus", class: "w-5 h-5 mr-2" %>
+              Sign Up to Create Listings
+            </a>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

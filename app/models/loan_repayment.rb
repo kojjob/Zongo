@@ -6,7 +6,7 @@ class LoanRepayment < ApplicationRecord
     pending: 0,
     successful: 1,
     failed: 2
-  }
+  }, default: :pending
 
   validates :amount, presence: true, numericality: { greater_than: 0 }
 

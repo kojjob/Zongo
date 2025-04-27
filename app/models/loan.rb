@@ -16,7 +16,7 @@ class Loan < ApplicationRecord
     defaulted: 5,
     rejected: 6,
     cancelled: 7
-  }
+  }, default: :pending
 
   enum :loan_type, {
     microloan: 0,
@@ -25,7 +25,7 @@ class Loan < ApplicationRecord
     business: 3,
     agricultural: 4,
     salary_advance: 5
-  }
+  }, default: :microloan
 
   validates :amount, :interest_rate, :due_date, presence: true
   validates :amount, numericality: { greater_than: 0 }

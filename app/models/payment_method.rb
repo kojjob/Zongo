@@ -161,6 +161,23 @@ class PaymentMethod < ApplicationRecord
     end
   end
 
+  def method_type_color
+    return "gray-500" if method_type.blank?
+
+    case method_type.to_s
+    when "bank"
+      "blue-500"
+    when "card"
+      "purple-500"
+    when "mobile_money"
+      "green-500"
+    when "wallet"
+      "amber-500"
+    else
+      "gray-500"
+    end
+  end
+
   private
 
   # Encrypt the account number and store it in account_number_digest

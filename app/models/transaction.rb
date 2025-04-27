@@ -230,7 +230,9 @@ class Transaction < ApplicationRecord
   def complete!(external_reference: nil)
     return false unless status_pending?
 
-    transaction do
+    # Use TransactionIsolationService to handle the transaction with proper isolation
+    isolation_service = TransactionIsolationService.new
+    result = isolation_service.transaction(:serializable, lock_for_update: true) do |_|
       # Process based on transaction type
       case transaction_type
       when "deposit"
@@ -239,8 +241,22 @@ class Transaction < ApplicationRecord
         result = source_wallet.debit(amount, transaction_id: transaction_id)
       when "transfer"
         # For transfers, debit source and credit destination
-        debit_result = source_wallet.debit(amount, transaction_id: transaction_id)
-        credit_result = destination_wallet.credit(amount, transaction_id: transaction_id)
+        # Lock both wallets in consistent order to prevent deadlocks
+        source_wallet_id, destination_wallet_id = [source_wallet.id, destination_wallet.id].sort
+        locked_source = source_wallet_id == source_wallet.id ?
+                       Wallet.where(id: source_wallet_id).lock("FOR UPDATE").first :
+                       Wallet.where(id: destination_wallet_id).lock("FOR UPDATE").first
+
+        locked_destination = source_wallet_id == source_wallet.id ?
+                            Wallet.where(id: destination_wallet_id).lock("FOR UPDATE").first :
+                            Wallet.where(id: source_wallet_id).lock("FOR UPDATE").first
+
+        # Need to make sure we're using the right wallets
+        debit_wallet = locked_source.id == source_wallet.id ? locked_source : locked_destination
+        credit_wallet = locked_destination.id == destination_wallet.id ? locked_destination : locked_source
+
+        debit_result = debit_wallet.debit(amount, transaction_id: transaction_id)
+        credit_result = credit_wallet.credit(amount, transaction_id: transaction_id)
         result = debit_result && credit_result
       when "payment"
         # Similar to transfer but may involve different logic
@@ -259,7 +275,7 @@ class Transaction < ApplicationRecord
         user = source_wallet&.user || destination_wallet.user
         SecurityLog.log_event(
           user,
-          :transaction_check,
+          :transaction_completed,
           severity: :info,
           details: {
             transaction_id: id,
@@ -269,9 +285,9 @@ class Transaction < ApplicationRecord
             status: :completed
           },
           loggable: self
-        )
+        ) if defined?(SecurityLog)
 
-        return true
+        true
       else
         # Mark as failed if wallet operations didn't succeed
         self.update(
@@ -280,25 +296,30 @@ class Transaction < ApplicationRecord
         )
 
         # Log failed transaction
-        user = source_wallet&.user || destination_wallet.user
-        SecurityLog.log_event(
-          user,
-          :transaction_check,
-          severity: :warning,
-          details: {
-            transaction_id: id,
-            transaction_type: transaction_type,
-            amount: amount,
-            currency: currency,
-            status: :failed,
-            reason: "Wallet operation failed"
-          },
-          loggable: self
-        )
+        user = source_wallet&.user || destination_wallet&.user
+        if defined?(SecurityLog) && user.present?
+          SecurityLog.log_event(
+            user,
+            :transaction_failed,
+            severity: :warning,
+            details: {
+              transaction_id: id,
+              transaction_type: transaction_type,
+              amount: amount,
+              currency: currency,
+              status: :failed,
+              reason: "Wallet operation failed"
+            },
+            loggable: self
+          )
+        end
 
-        return false
+        false
       end
     end
+
+    # Return the result - will be true if successful, false if failed
+    return result.success? && result.data ? true : false
   rescue => e
     Rails.logger.error("Error completing transaction #{transaction_id}: #{e.message}")
     self.update(
@@ -308,10 +329,10 @@ class Transaction < ApplicationRecord
 
     # Log error
     user = source_wallet&.user || destination_wallet&.user
-    if user
+    if user && defined?(SecurityLog)
       SecurityLog.log_event(
         user,
-        :transaction_check,
+        :transaction_error,
         severity: :warning,
         details: {
           transaction_id: id,
@@ -370,17 +391,37 @@ class Transaction < ApplicationRecord
   def reverse!(reason: nil)
     return false unless status_completed?
 
-    transaction do
+    # Use TransactionIsolationService to handle the transaction with proper isolation
+    isolation_service = TransactionIsolationService.new
+    result = isolation_service.transaction(:serializable, lock_for_update: true) do |_|
       # Process reversal based on transaction type
       case transaction_type
       when "deposit"
-        result = destination_wallet.debit(amount, transaction_id: "REV-#{transaction_id}")
+        # Lock the wallet before operation
+        locked_wallet = isolation_service.lock_wallet(destination_wallet)
+        result = locked_wallet.debit(amount, transaction_id: "REV-#{transaction_id}")
       when "withdrawal"
-        result = source_wallet.credit(amount, transaction_id: "REV-#{transaction_id}")
+        # Lock the wallet before operation
+        locked_wallet = isolation_service.lock_wallet(source_wallet)
+        result = locked_wallet.credit(amount, transaction_id: "REV-#{transaction_id}")
       when "transfer", "payment"
         # Reverse transfer: credit source, debit destination
-        credit_result = source_wallet.credit(amount, transaction_id: "REV-#{transaction_id}")
-        debit_result = destination_wallet.debit(amount, transaction_id: "REV-#{transaction_id}")
+        # Lock both wallets in consistent order to prevent deadlocks
+        source_wallet_id, destination_wallet_id = [source_wallet.id, destination_wallet.id].sort
+        locked_source = source_wallet_id == source_wallet.id ?
+                       Wallet.where(id: source_wallet_id).lock("FOR UPDATE").first :
+                       Wallet.where(id: destination_wallet_id).lock("FOR UPDATE").first
+
+        locked_destination = source_wallet_id == source_wallet.id ?
+                            Wallet.where(id: destination_wallet_id).lock("FOR UPDATE").first :
+                            Wallet.where(id: source_wallet_id).lock("FOR UPDATE").first
+
+        # Need to make sure we're using the right wallets
+        source_locked = locked_source.id == source_wallet.id ? locked_source : locked_destination
+        destination_locked = locked_destination.id == destination_wallet.id ? locked_destination : locked_source
+
+        credit_result = source_locked.credit(amount, transaction_id: "REV-#{transaction_id}")
+        debit_result = destination_locked.debit(amount, transaction_id: "REV-#{transaction_id}")
         result = credit_result && debit_result
       end
 
@@ -395,10 +436,10 @@ class Transaction < ApplicationRecord
         # Log reversal
         if update_result
           user = source_wallet&.user || destination_wallet&.user
-          if user
+          if user && defined?(SecurityLog)
             SecurityLog.log_event(
               user,
-              :transaction_check,
+              :transaction_reversed,
               severity: :info,
               details: {
                 transaction_id: id,
@@ -413,20 +454,23 @@ class Transaction < ApplicationRecord
           end
         end
 
-        return update_result
+        update_result
       else
-        return false
+        false
       end
     end
+
+    # Return the result - will be true if successful, false if failed
+    return result.success? && result.data ? true : false
   rescue => e
     Rails.logger.error("Error reversing transaction #{transaction_id}: #{e.message}")
 
     # Log error
     user = source_wallet&.user || destination_wallet&.user
-    if user
+    if user && defined?(SecurityLog)
       SecurityLog.log_event(
         user,
-        :transaction_check,
+        :transaction_reversal_error,
         severity: :warning,
         details: {
           transaction_id: id,

@@ -1,468 +1,517 @@
 <% content_for :title, "Super Ghana App" %>
 <header
-  class="bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md transition-all duration-300"
-  data-controller="header menu dropdown"
-  data-header-target="wrapper">
+  class="relative z-50 transition-all duration-300"
+  data-controller="header menu dropdown scroll-header"
+  data-header-target="wrapper"
+  data-action="scroll@window->scroll-header#onScroll">
 
-  <!-- Top navigation bar -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-      <!-- Logo and brand name -->
-      <div class="flex-shrink-0 flex items-center">
-        <a href="/" class="flex items-center space-x-2">
-          <div class="h-10 w-10 bg-white rounded-lg flex items-center justify-center">
-            <span class="text-primary-600 text-xl font-bold">SG</span>
-          </div>
-          <span class="font-bold text-xl tracking-tight text-white">Super Ghana</span>
-        </a>
-      </div>
+  <!-- Top navigation bar - with glass morphism effect -->
+  <div class="absolute inset-0 w-full backdrop-blur-lg bg-gradient-to-r from-primary-900/95 to-primary-800/95 shadow-lg header-background" style="z-index: -1;"></div>
+  
+  <!-- Main Header Content -->
+  <div class="relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo and brand name with enhanced animation -->
+        <div class="flex-shrink-0 flex items-center">
+          <a href="/" class="flex items-center space-x-3 group">
+            <div class="relative h-12 w-12 bg-white rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 bg-gradient-to-tr from-primary-600 to-secondary-500 opacity-0 group-hover:opacity-100 rounded-xl transition-opacity duration-300"></div>
+              <span class="relative text-primary-600 group-hover:text-white text-xl font-bold transition-colors duration-300">SG</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-bold text-2xl tracking-tight text-white">Super Ghana</span>
+              <span class="text-xs font-medium tracking-wider text-white/90 header-tagline">SIMPLIFY YOUR LIFE</span>
+            </div>
+          </a>
+        </div>
 
-      <!-- Main Navigation - Desktop -->
-      <nav class="hidden md:flex space-x-8" aria-label="Main navigation">
-        <% menu_items =
-          if current_user
-            [
-              { name: "Dashboard", path: "/dashboard", icon: "home" },
-              { name: "Send Money", path: "/transfers/new", icon: "send" },
-              { name: "Pay Bills", path: "/bills", icon: "credit-card" },
-              { name: "Shop", path: "/marketplace", icon: "shopping-bag", has_dropdown: true },
-              { name: "Services", path: "/services", icon: "settings", has_dropdown: true },
-              { name: "Wallet", path: "/wallet", icon: "wallet" }
-            ]
-          else
-            [
-              { name: "Home", path: "/", icon: "home" },
-              { name: "Features", path: "/features", icon: "star" },
-              { name: "Pricing", path: "/pricing", icon: "tag" },
-              { name: "About", path: "/about", icon: "info" },
-              { name: "Contact", path: "/contact", icon: "mail" }
-            ]
-          end
-        %>
+        <!-- Main Navigation - Desktop -->
+        <nav class="hidden lg:flex space-x-1" aria-label="Main navigation">
+          <% menu_items =
+            if current_user
+              [
+                { name: "Dashboard", path: "/dashboard", icon: "home" },
+                { name: "Send Money", path: "/transfers/new", icon: "send" },
+                { name: "Pay Bills", path: "/bills", icon: "credit-card" },
+                { name: "Shop", path: "/marketplace", icon: "shopping-bag", has_dropdown: true },
+                { name: "Services", path: "/services", icon: "settings", has_dropdown: true },
+                { name: "Wallet", path: "/wallet", icon: "wallet" }
+              ]
+            else
+              [
+                { name: "Home", path: "/", icon: "home" },
+                { name: "Features", path: "/#features", icon: "star" },
+                { name: "Solutions", path: "/#solutions", icon: "bolt" },
+                { name: "Pricing", path: "/pricing", icon: "tag" },
+                { name: "About", path: "/about", icon: "info" },
+                { name: "Contact", path: "/contact", icon: "mail" }
+              ]
+            end
+          %>
 
-        <% menu_items.each do |item| %>
-          <% if item[:has_dropdown] %>
-            <!-- Menu item with dropdown -->
-            <div class="relative" data-controller="dropdown">
-              <button
-                class="flex items-center text-white rounded-md px-3 py-2 text-sm font-medium hover:bg-primary-600 focus:outline-none transition-colors group"
-                data-action="dropdown#toggle"
-                data-dropdown-target="button">
+          <% menu_items.each do |item| %>
+            <% if item[:has_dropdown] %>
+              <!-- Menu item with dropdown -->
+              <div class="relative group dropdown-container" data-controller="dropdown">
+                <button
+                  class="flex items-center text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-1 focus:ring-offset-primary-600 transition-all duration-300"
+                  data-action="dropdown#toggle"
+                  data-dropdown-target="button">
+                  <%= render partial: "shared/icons/#{item[:icon]}" %>
+                  <span class="ml-2 text-white"><%= item[:name] %></span>
+                  <!-- Dropdown arrow - with animated transition -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="ml-1.5 h-4 w-4 transition-transform duration-300" viewBox="0 0 20 20" fill="white" data-dropdown-target="arrow">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+
+                <!-- Dropdown menu - with improved animation and styling -->
+                <div
+                  class="absolute left-0 z-50 mt-2 w-screen max-w-md px-2 top-full transform origin-top-left"
+                  data-dropdown-target="menu">
+                  <div class="overflow-hidden rounded-2xl shadow-2xl backdrop-blur-xl bg-white/90 dark:bg-gray-900/95 border border-white/20 dark:border-gray-700/30">
+                    <div class="relative grid gap-6 p-6 sm:gap-8 sm:p-8 lg:grid-cols-2">
+                      <% if item[:name] == "Shop" %>
+                        <!-- Shop dropdown content -->
+                        <a href="/marketplace/electronics" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/device-mobile" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Electronics</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Browse phones, computers, and accessories</p>
+                          </div>
+                        </a>
+                        <a href="/marketplace/fashion" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/shirt" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Fashion</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Shop clothing, shoes, and accessories</p>
+                          </div>
+                        </a>
+                        <a href="/marketplace/groceries" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/shopping-cart" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Groceries</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Fresh food and household essentials</p>
+                          </div>
+                        </a>
+                        <a href="/marketplace/local" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/home" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Local Marketplace</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Support local businesses and artisans</p>
+                          </div>
+                        </a>
+                      <% elsif item[:name] == "Services" %>
+                        <!-- Services dropdown content -->
+                        <a href="/services/transportation" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/truck" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Transportation</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Book rides & travel tickets</p>
+                          </div>
+                        </a>
+                        <a href="/services/agriculture" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/plant" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Agriculture</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Crop prices, weather & marketplace</p>
+                          </div>
+                        </a>
+                        <a href="/services/education" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/book-open" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Education</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">School fees & learning resources</p>
+                          </div>
+                        </a>
+                        <a href="/services/community" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/users" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Community</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Local groups & gatherings</p>
+                          </div>
+                        </a>
+                        <a href="/events" class="group -m-3 p-3 flex items-start rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transform hover:scale-[1.02] transition-all duration-200">
+                          <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                            <%= render partial: "shared/icons/calendar" %>
+                          </div>
+                          <div class="ml-4">
+                            <p class="text-base font-bold text-gray-900 dark:text-white">Events</p>
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Find & attend local activities</p>
+                          </div>
+                        </a>
+                      <% end %>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-800/50 p-5 sm:p-8">
+                      <a href="<%= item[:path] %>" class="flow-root rounded-xl p-3 transition duration-150 ease-in-out hover:bg-white dark:hover:bg-gray-700/30">
+                        <span class="flex items-center">
+                          <span class="text-base font-medium text-gray-900 dark:text-white">View All <%= item[:name] %></span>
+                          <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-5 w-5 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                          </svg>
+                        </span>
+                        <span class="block text-sm text-gray-500 dark:text-gray-400 mt-1">Browse all <%= item[:name].downcase %> categories and options</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <!-- Standard menu item - with improved hover effect -->
+              <a href="<%= item[:path] %>" class="flex items-center text-white rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-1 focus:ring-offset-primary-600 transition-all duration-300">
                 <%= render partial: "shared/icons/#{item[:icon]}" %>
-                <span class="ml-2 text-white"><%= item[:name] %></span>
-                <!-- Dropdown arrow -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-4 w-4 transition-transform duration-200 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <span class="ml-2"><%= item[:name] %></span>
+              </a>
+            <% end %>
+          <% end %>
+        </nav>
+
+        <!-- Right side actions -->
+        <div class="hidden lg:flex items-center space-x-3">
+          <% if current_user %>
+            <!-- Notification bell with improved indicator -->
+            <div class="relative dropdown-container" data-controller="dropdown">
+              <button class="text-white p-2.5 rounded-xl hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300 relative"
+                      data-dropdown-target="button"
+                      data-action="dropdown#toggle">
+                <%= render partial: "shared/icons/bell" %>
+                <% if current_user.unread_notifications_count > 0 %>
+                  <span class="absolute -top-1 -right-1 bg-secondary-500 text-white rounded-full text-xs flex items-center justify-center h-5 w-5 animate-pulse-soft shadow-lg shadow-secondary-500/20">
+                    <%= current_user.unread_notifications_count %>
+                  </span>
+                <% end %>
+              </button>
+
+              <!-- Notifications dropdown - redesigned -->
+              <div class="absolute right-0 mt-3 w-80 rounded-2xl bg-white dark:bg-gray-900 shadow-2xl focus:outline-none z-50 top-full transition-all duration-200 ease-out transform origin-top-right overflow-hidden backdrop-blur-xl border border-white/20 dark:border-gray-700/30"
+                   data-dropdown-target="menu">
+                <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30">
+                  <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-gray-900 dark:text-white">Notifications</h3>
+                    <span class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-white/70 dark:bg-gray-800/70 px-2.5 py-1 rounded-full shadow-sm">
+                      <%= pluralize(current_user.unread_notifications_count, 'new') %>
+                    </span>
+                  </div>
+                </div>
+                <div class="max-h-[400px] overflow-y-auto">
+                  <% if current_user.unread_notifications_count > 0 %>
+                    <% # Sample notifications - replace with actual data %>
+                    <a href="#" class="block px-4 py-3 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200 border-b border-gray-100 dark:border-gray-800 group">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-800 rounded-xl p-2.5 shadow-sm">
+                          <%= render partial: "shared/icons/credit-card", locals: { classes: "h-5 w-5 text-primary-600 dark:text-primary-400" } %>
+                        </div>
+                        <div class="ml-3 w-0 flex-1">
+                          <div class="flex items-center gap-2">
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white">Payment Received</p>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-300">Payment</span>
+                          </div>
+                          <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">You received ₵200 from Kwame Asante</p>
+                          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse-soft"></div>
+                            5 minutes ago
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                    <a href="#" class="block px-4 py-3 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200 group">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 bg-red-100 dark:bg-red-900/30 rounded-xl p-2.5 shadow-sm">
+                          <%= render partial: "shared/icons/shield", locals: { classes: "h-5 w-5 text-red-600 dark:text-red-400" } %>
+                        </div>
+                        <div class="ml-3 w-0 flex-1">
+                          <div class="flex items-center gap-2">
+                            <p class="text-sm font-semibold text-gray-900 dark:text-white">Security Alert</p>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">Security</span>
+                          </div>
+                          <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">New device login from Accra, Ghana</p>
+                          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1 flex items-center gap-1">
+                            <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse-soft"></div>
+                            1 hour ago
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  <% else %>
+                    <div class="px-4 py-8 text-center">
+                      <div class="mx-auto w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+                        <%= render partial: "shared/icons/bell", locals: { classes: "h-6 w-6 text-gray-400 dark:text-gray-500" } %>
+                      </div>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">No new notifications</p>
+                    </div>
+                  <% end %>
+                </div>
+                <a href="/notifications" class="block text-center text-sm font-medium bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 px-4 py-3 border-t border-gray-100 dark:border-gray-800 transition-colors">
+                  View all notifications
+                </a>
+              </div>
+            </div>
+
+            <!-- User profile dropdown - enhanced -->
+            <div class="relative" data-controller="dropdown">
+              <button class="flex items-center space-x-2 text-white focus:outline-none hover:bg-white/10 rounded-xl px-3 py-2 transition-colors duration-300"
+                      data-dropdown-target="button"
+                      data-action="dropdown#toggle">
+                <% if current_user.avatar.attached? %>
+                  <%= image_tag current_user.avatar, class: "h-9 w-9 rounded-xl object-cover border-2 border-white/30 shadow-lg" %>
+                <% else %>
+                  <div class="h-9 w-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center text-white font-bold shadow-lg border-2 border-white/30">
+                    <%= current_user.initials %>
+                  </div>
+                <% end %>
+                <div class="flex flex-col items-start">
+                  <span class="font-medium text-sm text-white leading-tight"><%= current_user.username %></span>
+                  <!-- User status or balance -->
+                  <% if current_user.wallet.present? %>
+                    <span class="text-xs text-primary-200">₵<%= current_user.wallet.balance %></span>
+                  <% else %>
+                    <span class="text-xs text-primary-200">Member</span>
+                  <% end %>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor" data-dropdown-target="arrow">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
               </button>
 
-              <!-- Dropdown menu -->
-              <div
-                class="absolute left-0 z-50 mt-2 w-screen max-w-md px-2 opacity-0 scale-95 pointer-events-none top-full bg-white rounded-lg shadow-xl transition-all duration-100 ease-out transform origin-top-left"
-                data-dropdown-target="menu">
-                <div class="rounded-lg shadow-xl overflow-hidden">
-                  <div class="relative grid gap-6 bg-gradient-to-br from-white to-gray-50 p-6 sm:gap-8 sm:p-8 lg:grid-cols-2">
-                    <% if item[:name] == "Shop" %>
-                      <!-- Shop dropdown content -->
-                      <a href="/marketplace/electronics" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/device-mobile" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-blue-900 group-hover:text-blue-700">Electronics</p>
-                          <p class="mt-1 text-sm text-blue-600">Browse phones, computers, and accessories</p>
-                        </div>
-                      </a>
-                      <a href="/marketplace/fashion" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/shirt" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-pink-900 group-hover:text-pink-700">Fashion</p>
-                          <p class="mt-1 text-sm text-pink-600">Shop clothing, shoes, and accessories</p>
-                        </div>
-                      </a>
-                      <a href="/marketplace/groceries" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/shopping-cart" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-green-900 group-hover:text-green-700">Groceries</p>
-                          <p class="mt-1 text-sm text-green-600">Fresh food and household essentials</p>
-                        </div>
-                      </a>
-                      <a href="/marketplace/local" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-amber-50 to-yellow-50 hover:from-amber-100 hover:to-yellow-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/home" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-amber-900 group-hover:text-amber-700">Local Marketplace</p>
-                          <p class="mt-1 text-sm text-amber-600">Support local businesses and artisans</p>
-                        </div>
-                      </a>
-                    <% elsif item[:name] == "Services" %>
-                      <!-- Services dropdown content -->
-                      <a href="/services/transportation" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-purple-50 to-violet-50 hover:from-purple-100 hover:to-violet-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/truck" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-purple-900 group-hover:text-purple-700">Transportation</p>
-                          <p class="mt-1 text-sm text-purple-600">Book rides & travel tickets</p>
-                        </div>
-                      </a>
-                      <a href="/services/agriculture" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-lime-50 to-green-50 hover:from-lime-100 hover:to-green-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-lime-500 to-green-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/book-open" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-lime-900 group-hover:text-lime-700">Agriculture</p>
-                          <p class="mt-1 text-sm text-lime-600">Crop prices & farming tools</p>
-                        </div>
-                      </a>
-                      <a href="/services/education" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-cyan-50 to-sky-50 hover:from-cyan-100 hover:to-sky-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-cyan-500 to-sky-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/plant" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-cyan-900 group-hover:text-cyan-700">Education</p>
-                          <p class="mt-1 text-sm text-cyan-600">School fees & learning resources</p>
-                        </div>
-                      </a>
-                      <a href="/services/community" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-orange-50 to-red-50 hover:from-orange-100 hover:to-red-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/users" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-orange-900 group-hover:text-orange-700">Community</p>
-                          <p class="mt-1 text-sm text-orange-600">Local groups & gatherings</p>
-                        </div>
-                      </a>
-                      <a href="/events" class="group -m-3 p-3 flex items-start rounded-xl bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md">
-                        <div class="flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg group-hover:shadow-xl transition-all duration-200">
-                          <%= render partial: "shared/icons/calendar" %>
-                        </div>
-                        <div class="ml-4">
-                          <p class="text-lg font-bold text-pink-900 group-hover:text-pink-700">Events</p>
-                          <p class="mt-1 text-sm text-pink-600">Find & attend local activities</p>
-                        </div>
-                      </a>
-                    <% end %>
+              <!-- Profile dropdown menu - completely redesigned -->
+              <div class="absolute right-0 mt-3 w-80 rounded-2xl bg-white dark:bg-gray-900 shadow-2xl focus:outline-none z-50 top-full transform origin-top-right overflow-hidden backdrop-blur-xl border border-white/20 dark:border-gray-700/30"
+                   data-dropdown-target="menu">
+                <!-- User Info Section -->
+                <div class="px-5 py-5 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30 relative overflow-hidden">
+                  <!-- Background pattern -->
+                  <div class="absolute inset-0 opacity-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                      <defs>
+                        <pattern id="profile-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                          <path d="M0 20 L40 20 M20 0 L20 40" stroke="currentColor" stroke-width="1" />
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill="url(#profile-pattern)" />
+                    </svg>
                   </div>
-                  <div class="bg-gray-50 p-5 sm:p-8">
-                    <a href="<%= item[:path] %>" class="flow-root rounded-md p-3 transition duration-150 ease-in-out hover:bg-gray-100">
-                      <span class="flex items-center">
-                        <span class="text-base font-medium text-gray-900">View All <%= item[:name] %></span>
-                      </span>
-                      <span class="block text-sm text-gray-500 mt-1">Browse all <%= item[:name].downcase %> categories and options</span>
+                  
+                  <div class="relative flex items-start space-x-4">
+                    <div class="relative">
+                      <% if current_user.avatar.attached? %>
+                        <%= image_tag current_user.avatar, class: "h-16 w-16 rounded-xl object-cover ring-2 ring-white dark:ring-primary-500 shadow-lg" %>
+                      <% else %>
+                        <div class="h-16 w-16 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold shadow-lg ring-2 ring-white dark:ring-primary-500">
+                          <%= current_user.initials %>
+                        </div>
+                      <% end %>
+                      <% if current_user.admin? || current_user.has_role?(:admin) %>
+                        <div class="absolute -bottom-2 -right-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs rounded-lg py-1 px-2 flex items-center justify-center shadow-lg" title="Admin User">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                          </svg>
+                          Admin
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="flex-1">
+                      <div class="flex flex-col">
+                        <div class="text-xl font-bold text-gray-900 dark:text-white leading-tight"><%= current_user.username %></div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400"><%= current_user.email %></div>
+                      </div>
+                      
+                      <div class="mt-3 flex items-center space-x-2">
+                        <% badge_color = case current_user.kyc_level
+                          when 'business' then 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                          when 'advanced' then 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
+                          when 'verified' then 'bg-gradient-to-r from-primary-500 to-primary-600 text-white'
+                          else 'bg-gradient-to-r from-gray-500 to-gray-600 text-white'
+                          end %>
+                        <span class="<%= badge_color %> text-xs px-3 py-1.5 rounded-lg font-medium shadow-md capitalize flex items-center">
+                          <% icon_class = case current_user.kyc_level
+                            when 'business' then 'building-office'
+                            when 'advanced' then 'shield-check'
+                            when 'verified' then 'check-badge'
+                            else 'user'
+                            end %>
+                          <%= render partial: "shared/icons/#{icon_class}", locals: { classes: "h-3 w-3 mr-1" } %>
+                          <%= current_user.kyc_level %>
+                        </span>
+                        <!-- Profile completion indicator -->
+                        <div class="flex items-center bg-white/70 dark:bg-gray-800/70 rounded-lg px-2 py-1 space-x-1.5 shadow-sm">
+                          <div class="h-2 w-2 rounded-full <%= current_user.profile_complete? ? 'bg-green-500' : 'bg-amber-500' %>"></div>
+                          <span class="text-xs text-gray-700 dark:text-gray-300 font-medium"><%= current_user.profile_complete? ? 'Complete' : 'Incomplete' %></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Menu Items - with enhanced styling -->
+                <div class="p-2 space-y-1">
+                  <%= link_to user_settings_profile_path, class: "flex items-center px-3 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-colors group" do %>
+                    <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/30 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      <%= render partial: "shared/icons/user", locals: { classes: "h-5 w-5" } %>
+                    </div>
+                    <span class="ml-3 font-medium">Your Profile</span>
+                  <% end %>
+                  
+                  <a href="/wallet" class="flex items-center px-3 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-colors group">
+                    <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/30 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      <%= render partial: "shared/icons/wallet", locals: { classes: "h-5 w-5" } %>
+                    </div>
+                    <span class="ml-3 font-medium">Your Wallet</span>
+                    <span class="ml-auto bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg px-3 py-1 text-xs font-medium shadow-md">
+                      <%= current_user.wallet.present? ? current_user.wallet.formatted_balance : "₵0.00" %>
+                    </span>
+                  </a>
+                  
+                  <%= link_to my_events_events_path, class: "flex items-center px-3 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-colors group" do %>
+                    <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/30 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                    <span class="ml-3 font-medium">My Events</span>
+                  <% end %>
+
+                  <a href="/settings" class="flex items-center px-3 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-700 dark:hover:text-primary-300 rounded-xl transition-colors group">
+                    <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 group-hover:bg-primary-100 dark:group-hover:bg-primary-800/30 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      <%= render partial: "shared/icons/settings", locals: { classes: "h-5 w-5" } %>
+                    </div>
+                    <span class="ml-3 font-medium">Settings</span>
+                  </a>
+                </div>
+
+                <!-- Admin Controls (Only visible for admin users) -->
+                <% if current_user.admin? || current_user.has_role?(:admin) %>
+                  <%= render partial: "shared/admin_dropdown" %>
+                <% end %>
+                
+                <!-- Footer Actions -->
+                <div class="p-2 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-800">
+                  <div class="grid grid-cols-2 gap-2">
+                    <a href="/security" class="flex items-center justify-center px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm transition-all hover:shadow">
+                      <%= render partial: "shared/icons/shield-check", locals: { classes: "h-4 w-4 mr-2 text-gray-400 dark:text-gray-500" } %>
+                      Security
+                    </a>
+                    <a href="/help" class="flex items-center justify-center px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white bg-white dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 shadow-sm transition-all hover:shadow">
+                      <%= render partial: "shared/icons/question-mark-circle", locals: { classes: "h-4 w-4 mr-2 text-gray-400 dark:text-gray-500" } %>
+                      Help
                     </a>
                   </div>
+                  <%= button_to destroy_user_session_path, method: :delete, class: "w-full mt-2 flex items-center justify-center px-3 py-2.5 text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl transition-colors" do %>
+                    <%= render partial: "shared/icons/logout", locals: { classes: "h-4 w-4 mr-2" } %>
+                    Sign Out
+                  <% end %>
                 </div>
               </div>
             </div>
           <% else %>
-            <!-- Standard menu item -->
-            <a href="<%= item[:path] %>" class="flex items-center text-white hover:bg-primary-600 rounded-md px-3 py-2 text-sm font-medium transition-colors">
-              <%= render partial: "shared/icons/#{item[:icon]}" %>
-              <span class="ml-2 text-white"><%= item[:name] %></span>
-            </a>
+            <!-- Login/Signup buttons for guests - enhanced -->
+            <a href="/users/sign_in" class="text-white hover:bg-white/10 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-1 focus:ring-offset-primary-600">Log in</a>
+            <a href="/users/sign_up" class="bg-white text-primary-600 hover:bg-white/90 px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-1 focus:ring-offset-primary-600 hover:shadow-lg transform hover:-translate-y-0.5">Sign up</a>
           <% end %>
-        <% end %>
-      </nav>
+        </div>
 
-      <!-- Right side actions -->
-      <div class="hidden md:flex items-center space-x-4">
-        <% if current_user %>
-          <!-- Notification bell with indicator -->
-          <div class="relative" data-controller="dropdown">
-            <button class="text-white p-2 rounded-full hover:bg-primary-600 focus:outline-none transition-colors relative"
-                    data-dropdown-target="button"
-                    data-action="dropdown#toggle">
-              <%= render partial: "shared/icons/bell" %>
-              <% if current_user.unread_notifications_count > 0 %>
-                <span class="absolute top-0 right-0 bg-secondary-500 text-white rounded-full text-xs flex items-center justify-center h-5 w-5 animate-pulse">
-                  <%= current_user.unread_notifications_count %>
-                </span>
-              <% end %>
-            </button>
-
-            <!-- Notifications dropdown -->
-            <div class="absolute right-0 mt-2 w-80 rounded-xl shadow-xl bg-white focus:outline-none z-50 opacity-0 scale-95 pointer-events-none top-full transition-all duration-200 ease-out transform origin-top-right overflow-hidden"
-                 data-dropdown-target="menu">
-              <div class="px-4 py-3 bg-gradient-to-br from-indigo-50 to-purple-50 border-b border-gray-100/50">
-                <div class="flex items-center justify-between">
-                  <h3 class="text-base font-bold text-gray-900">Notifications</h3>
-                  <span class="text-xs font-medium text-gray-600 bg-white/50 px-2 py-1 rounded-full">
-                    <%= pluralize(current_user.unread_notifications_count, 'new') %>
-                  </span>
-                </div>
-              </div>
-              <div class="max-h-[320px] overflow-y-auto">
-                <% if current_user.unread_notifications_count > 0 %>
-                  <% # Sample notifications - replace with actual data %>
-                  <a href="#" class="block px-4 py-3 hover:bg-gray-50/80 transition-all duration-200 border-b border-gray-100/50 group">
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full p-2 shadow-sm group-hover:shadow transition-all duration-200">
-                        <%= render partial: "shared/icons/credit-card", locals: { classes: "h-5 w-5 text-emerald-600" } %>
-                      </div>
-                      <div class="ml-3 w-0 flex-1">
-                        <div class="flex items-center gap-2">
-                          <p class="text-sm font-semibold text-gray-900">Payment Received</p>
-                          <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">Payment</span>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-0.5">You received ₵200 from Kwame Asante</p>
-                        <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                          <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                          5 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-3 hover:bg-gray-50/80 transition-all duration-200 group">
-                    <div class="flex items-start">
-                      <div class="flex-shrink-0 bg-gradient-to-br from-amber-100 to-red-100 rounded-full p-2 shadow-sm group-hover:shadow transition-all duration-200">
-                        <%= render partial: "shared/icons/shield", locals: { classes: "h-5 w-5 text-red-600" } %>
-                      </div>
-                      <div class="ml-3 w-0 flex-1">
-                        <div class="flex items-center gap-2">
-                          <p class="text-sm font-semibold text-gray-900">Security Alert</p>
-                          <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Security</span>
-                        </div>
-                        <p class="text-sm text-gray-600 mt-0.5">New device login from Accra, Ghana</p>
-                        <p class="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                          <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                          1 hour ago
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                <% else %>
-                  <div class="px-4 py-8 text-center">
-                    <div class="mx-auto w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-                      <%= render partial: "shared/icons/bell", locals: { classes: "h-6 w-6 text-gray-400" } %>
-                    </div>
-                    <p class="text-sm text-gray-500">No new notifications</p>
-                  </div>
-                <% end %>
-              </div>
-              <a href="/notifications" class="block text-center text-sm font-medium bg-gradient-to-br from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 text-primary-600 hover:text-primary-700 px-4 py-3 border-t border-gray-100/50 transition-colors">
-                View all notifications
-              </a>
-            </div>
-          </div>
-
-          <!-- User profile dropdown -->
-          <div class="relative ml-3" data-controller="dropdown">
-            <button class="flex items-center space-x-2 text-white focus:outline-none"
-                    data-dropdown-target="button"
-                    data-action="dropdown#toggle">
-              <% if current_user.avatar.attached? %>
-                <%= image_tag current_user.avatar, class: "h-8 w-8 rounded-full object-cover border-2 border-white shadow-sm" %>
-              <% else %>
-                <div class="h-8 w-8 rounded-full bg-primary-300 flex items-center justify-center text-primary-800 font-bold shadow-sm border-2 border-white">
-                  <%= current_user.initials %>
-                </div>
-              <% end %>
-              <span class="font-medium text-white"><%= current_user.username %></span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
-
-            <!-- Profile dropdown menu -->
-            <div class="absolute right-0 mt-2 w-72 rounded-xl bg-white shadow-xl focus:outline-none z-50 opacity-0 scale-95 pointer-events-none top-full transition-all duration-100 ease-out transform origin-top-right overflow-hidden"
-                 data-dropdown-target="menu">
-              <!-- User Info Section -->
-              <div class="px-4 py-4 bg-gradient-to-br from-indigo-50 to-purple-50">
-                <div class="flex items-start space-x-3">
-                  <div class="relative">
-                    <% if current_user.avatar.attached? %>
-                      <%= image_tag current_user.avatar, class: "h-12 w-12 rounded-full object-cover ring-2 ring-white shadow-md" %>
-                    <% else %>
-                      <div class="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white">
-                        <%= current_user.initials %>
-                      </div>
-                    <% end %>
-                    <% if current_user.admin? || current_user.has_role?(:admin) %>
-                      <div class="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-md" title="Admin User">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                    <% end %>
-                  </div>
-                  <div class="flex-1">
-                    <div class="flex items-center">
-                      <div class="font-bold text-gray-900 text-lg leading-tight"><%= current_user.username %></div>
-                      <% if current_user.admin? || current_user.has_role?(:admin) %>
-                        <span class="ml-2 px-2 py-0.5 text-xs font-bold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-full shadow-sm">Admin</span>
-                      <% end %>
-                    </div>
-                    <div class="text-sm text-gray-600"><%= current_user.email %></div>
-                    <div class="mt-2 flex items-center space-x-2">
-                      <% badge_color = case current_user.kyc_level
-                        when 'business' then 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
-                        when 'advanced' then 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                        when 'verified' then 'bg-gradient-to-r from-green-500 to-green-600 text-white'
-                        else 'bg-gradient-to-r from-gray-500 to-gray-600 text-white'
-                        end %>
-                      <span class="<%= badge_color %> text-xs px-3 py-1 rounded-full font-medium shadow-sm capitalize flex items-center">
-                        <% icon_class = case current_user.kyc_level
-                          when 'business' then 'building-office'
-                          when 'advanced' then 'shield-check'
-                          when 'verified' then 'check-badge'
-                          else 'user'
-                          end %>
-                        <%= render partial: "shared/icons/#{icon_class}", locals: { classes: "h-3 w-3 mr-1" } %>
-                        <%= current_user.kyc_level %>
-                      </span>
-                      <!-- Profile completion indicator -->
-                      <div class="flex items-center bg-white/50 rounded-full px-2 py-1 space-x-1">
-                        <div class="h-2 w-2 rounded-full <%= current_user.profile_complete? ? 'bg-green-500' : 'bg-amber-500' %>"></div>
-                        <span class="text-xs text-gray-600 font-medium"><%= current_user.profile_complete? ? 'Complete' : 'Incomplete' %></span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Menu Items -->
-              <div class="p-2 space-y-1">
-                <%= link_to profile_path, class: "flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 rounded-lg transition-colors group" do %>
-                  <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100 transition-colors">
-                    <%= render partial: "shared/icons/user", locals: { classes: "h-4 w-4" } %>
-                  </div>
-                  <span class="ml-3 font-medium">Your Profile</span>
-                <% end %>
-                <a href="/wallet" class="flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-colors group">
-                  <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-green-50 text-green-600 group-hover:bg-green-100 transition-colors">
-                    <%= render partial: "shared/icons/wallet", locals: { classes: "h-4 w-4" } %>
-                  </div>
-                  <span class="ml-3 font-medium">Your Wallet</span>
-                  <span class="ml-auto bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full px-2.5 py-1 text-xs font-medium shadow-sm">
-                    <%= current_user.wallet.present? ? current_user.wallet.formatted_balance : "₵0.00" %>
-                  </span>
-                </a>
-                <%= link_to my_events_events_path, class: "flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-colors group" do %>
-                  <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-100 transition-colors">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                  </div>
-                  <span class="ml-3 font-medium">My Events</span>
-                <% end %>
-
-                <a href="/settings" class="flex items-center px-3 py-2.5 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-700 rounded-lg transition-colors group">
-                  <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-purple-50 text-purple-600 group-hover:bg-purple-100 transition-colors">
-                    <%= render partial: "shared/icons/settings", locals: { classes: "h-4 w-4" } %>
-                  </div>
-                  <span class="ml-3 font-medium">Settings</span>
-                </a>
-              </div>
-
-              <!-- Admin Controls (Only visible for admin users) -->
-              <% if current_user.admin? || current_user.has_role?(:admin) %>
-                <%= render partial: "shared/admin_dropdown" %>
-              <% end %>
-              <!-- Footer Actions -->
-              <div class="p-2 bg-gray-50 border-t border-gray-100">
-                <div class="grid grid-cols-2 gap-2">
-                  <a href="/security" class="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white rounded-lg border border-gray-200 hover:border-gray-300 shadow-sm transition-all hover:shadow group">
-                    <%= render partial: "shared/icons/shield-check", locals: { classes: "h-4 w-4 mr-2 text-gray-400 group-hover:text-gray-600" } %>
-                    Security
-                  </a>
-                  <a href="/help" class="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 bg-white rounded-lg border border-gray-200 hover:border-gray-300 shadow-sm transition-all hover:shadow group">
-                    <%= render partial: "shared/icons/question-mark-circle", locals: { classes: "h-4 w-4 mr-2 text-gray-400 group-hover:text-gray-600" } %>
-                    Help
-                  </a>
-                </div>
-                <%= button_to destroy_user_session_path, method: :delete, class: "w-full mt-2 flex items-center justify-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-lg transition-colors group" do %>
-                  <%= render partial: "shared/icons/logout", locals: { classes: "h-4 w-4 mr-2" } %>
-                  Sign Out
-                <% end %>
-              </div>
-            </div>
-          </div>
-        <% else %>
-          <!-- Login/Signup buttons for guests -->
-          <a href="/users/sign_in" class="text-white hover:bg-primary-600 px-3 py-2 rounded-md text-sm font-bold transition-colors">Log in</a>
-          <a href="/users/sign_up" class="bg-white text-primary-600 hover:bg-gray-100 px-4 py-2 rounded-md text-sm font-bold shadow-sm transition-colors">Sign up</a>
-        <% end %>
-      </div>
-
-      <!-- Mobile menu button -->
-      <div class="md:hidden">
-        <button
-          type="button"
-          class="text-white hover:bg-primary-600 p-2 rounded-md focus:outline-none transition-colors"
-          aria-controls="mobile-menu"
-          aria-expanded="false"
-          data-action="click->menu#toggle"
-          data-menu-target="button">
-          <span class="sr-only">Open main menu</span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="block h-6 w-6" data-menu-target="iconMenu" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" class="hidden h-6 w-6" data-menu-target="iconClose" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+        <!-- Mobile menu button - enhanced -->
+        <div class="lg:hidden">
+          <button
+            type="button"
+            class="text-white hover:bg-white/10 p-2.5 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-white/30 transition-all duration-300"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            data-action="click->menu#toggle"
+            data-menu-target="button">
+            <span class="sr-only">Open main menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="block h-6 w-6" data-menu-target="iconMenu" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="hidden h-6 w-6" data-menu-target="iconClose" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Mobile menu -->
+  <!-- Mobile menu - completely redesigned -->
   <div
     id="mobile-menu"
-    class="md:hidden hidden bg-primary-800 transition-all duration-300 ease-in-out"
+    class="lg:hidden hidden bg-primary-700 transform transition-all duration-300 ease-in-out origin-top shadow-xl w-full absolute z-40"
     data-menu-target="content">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+    <div class="px-3 pt-4 pb-5 space-y-2">
       <% menu_items.each do |item| %>
         <% if item[:has_dropdown] %>
           <!-- Mobile dropdown section -->
           <div data-controller="accordion">
             <button
-              class="w-full flex justify-between items-center text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors"
+              class="w-full flex justify-between items-center text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300"
               data-action="click->accordion#toggle"
               data-accordion-target="control">
               <span class="flex items-center">
                 <%= render partial: "shared/icons/#{item[:icon]}" %>
                 <span class="ml-3 text-white"><%= item[:name] %></span>
               </span>
-              <svg data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <svg data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-white" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>
             </button>
             <div
               data-accordion-target="content"
-              class="hidden overflow-hidden transition-all duration-300 ease-in-out max-h-0 mt-1">
-              <div class="bg-primary-700 rounded-md py-2 shadow-inner">
+              class="hidden overflow-hidden transition-all duration-500 ease-in-out max-h-0 mt-1">
+              <div class="bg-primary-800 rounded-xl py-2 shadow-inner">
                 <% if item[:name] == "Shop" %>
-                  <a href="/marketplace/electronics" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/marketplace/electronics" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Electronics
                   </a>
-                  <a href="/marketplace/fashion" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/marketplace/fashion" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Fashion
                   </a>
-                  <a href="/marketplace/groceries" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/marketplace/groceries" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Groceries
                   </a>
-                  <a href="/marketplace/local" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/marketplace/local" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Local Marketplace
                   </a>
                 <% elsif item[:name] == "Services" %>
-                  <a href="/services/transportation" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/services/transportation" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Transportation
                   </a>
-                  <a href="/services/agriculture" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/services/agriculture" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Agriculture
                   </a>
-                  <a href="/services/education" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/agriculture/crop_prices" class="flex items-center pl-16 pr-4 py-2 text-xs text-white/80 hover:bg-primary-700 transition-colors">
+                    Crop Prices
+                  </a>
+                  <a href="/agriculture/weather" class="flex items-center pl-16 pr-4 py-2 text-xs text-white/80 hover:bg-primary-700 transition-colors">
+                    Weather Forecasts
+                  </a>
+                  <a href="/agriculture/marketplace" class="flex items-center pl-16 pr-4 py-2 text-xs text-white/80 hover:bg-primary-700 transition-colors">
+                    Marketplace
+                  </a>
+                  <a href="/agriculture/resources" class="flex items-center pl-16 pr-4 py-2 text-xs text-white/80 hover:bg-primary-700 transition-colors">
+                    Resources
+                  </a>
+                  <a href="/services/education" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Education
                   </a>
-                  <a href="/services/community" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/services/community" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Community
                   </a>
-                  <a href="/events" class="flex items-center pl-10 pr-4 py-2 text-sm text-white hover:bg-primary-600 transition-colors">
+                  <a href="/events" class="flex items-center pl-12 pr-4 py-2.5 text-sm text-white hover:bg-primary-700 transition-colors">
                     Events
                   </a>
                 <% end %>
@@ -471,7 +520,7 @@
           </div>
         <% else %>
           <!-- Standard mobile menu item -->
-          <a href="<%= item[:path] %>" class="flex items-center text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+          <a href="<%= item[:path] %>" class="flex items-center text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300">
             <%= render partial: "shared/icons/#{item[:icon]}" %>
             <span class="ml-3 text-white"><%= item[:name] %></span>
           </a>
@@ -481,80 +530,116 @@
 
     <!-- Mobile user actions -->
     <% if current_user %>
-      <div class="pt-4 pb-3 border-t border-primary-700">
+      <div class="pt-4 pb-3 border-t border-primary-800">
         <div class="flex items-center px-5">
           <div class="flex-shrink-0">
             <% if current_user.avatar.attached? %>
-              <%= image_tag current_user.avatar, class: "h-10 w-10 rounded-full object-cover border-2 border-primary-300" %>
+              <%= image_tag current_user.avatar, class: "h-12 w-12 rounded-xl object-cover border-2 border-primary-300/30 shadow-lg" %>
             <% else %>
-              <div class="h-10 w-10 rounded-full bg-primary-300 flex items-center justify-center text-primary-800 font-bold border-2 border-primary-300">
+              <div class="h-12 w-12 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold shadow-lg border-2 border-primary-300/30">
                 <%= current_user.initials %>
               </div>
             <% end %>
           </div>
-          <div class="ml-3">
+          <div class="ml-4">
             <div class="text-base font-bold text-white"><%= current_user.username %></div>
-            <div class="text-sm font-medium text-white"><%= current_user.email %></div>
+            <div class="text-sm font-medium text-primary-200"><%= current_user.email %></div>
           </div>
           <div class="ml-auto flex items-center space-x-4">
-            <button class="text-white p-1 rounded-full hover:bg-primary-600 focus:outline-none transition-colors relative">
+            <button class="text-white p-2 rounded-xl hover:bg-primary-600 focus:outline-none transition-colors relative">
               <%= render partial: "shared/icons/bell" %>
               <% if current_user.unread_notifications_count > 0 %>
-                <span class="absolute top-0 right-0 bg-secondary-500 text-white rounded-full text-xs flex items-center justify-center h-4 w-4 animate-pulse">
+                <span class="absolute -top-1 -right-1 bg-secondary-500 text-white rounded-full text-xs flex items-center justify-center h-5 w-5 animate-pulse-soft shadow-md">
                   <%= current_user.unread_notifications_count %>
                 </span>
               <% end %>
             </button>
           </div>
         </div>
-        <div class="mt-3 px-2 space-y-1">
-          <%= link_to profile_path, class: "flex items-center text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" do %>
+        <div class="mt-4 px-3 space-y-1.5">
+          <%= link_to user_settings_profile_path, class: "flex items-center text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300" do %>
             <%= render partial: "shared/icons/user" %>
-            <span class="ml-3 text-white font-bold">Your Profile</span>
+            <span class="ml-3 text-white">Your Profile</span>
           <% end %>
-          <a href="/wallet" class="flex items-center justify-between text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+          <a href="/wallet" class="flex items-center justify-between text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300">
             <div class="flex items-center">
               <%= render partial: "shared/icons/wallet" %>
-              <span class="ml-3 text-white font-bold">Your Wallet</span>
+              <span class="ml-3 text-white">Your Wallet</span>
             </div>
-            <span class="bg-primary-600 rounded-full px-2 py-0.5 text-xs font-medium text-white">
+            <span class="bg-white/10 backdrop-blur-sm rounded-xl px-3 py-1 text-sm font-medium text-white">
               <%= current_user.wallet.present? ? current_user.wallet.formatted_balance : "₵0.00" %>
             </span>
           </a>
-          <%= link_to my_events_events_path, class: "flex items-center text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" do %>
+          <%= link_to my_events_events_path, class: "flex items-center text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300" do %>
             <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
-            <span class="ml-3 text-white font-bold">My Events</span>
+            <span class="ml-3 text-white">My Events</span>
           <% end %>
 
-          <a href="/settings" class="flex items-center text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors">
+          <a href="/settings" class="flex items-center text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300">
             <%= render partial: "shared/icons/settings" %>
-            <span class="ml-3 text-white font-bold">Settings</span>
+            <span class="ml-3 text-white">Settings</span>
           </a>
-          <%= button_to "/users/sign_out", method: :delete, class: "w-full flex items-center text-left text-white hover:bg-primary-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" do %>
+          <%= button_to "/users/sign_out", method: :delete, class: "w-full flex items-center text-left text-white hover:bg-primary-600 block px-4 py-3 rounded-xl text-base font-medium transition-all duration-300" do %>
             <%= render partial: "shared/icons/logout" %>
-            <span class="ml-3 text-white font-bold">Sign out</span>
+            <span class="ml-3 text-white">Sign out</span>
           <% end %>
         </div>
       </div>
     <% else %>
-      <div class="pt-4 pb-3 border-t border-primary-700 px-5 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-        <a href="/users/sign_in" class="w-full sm:w-auto flex justify-center items-center text-white border border-white hover:bg-primary-600 px-4 py-2 rounded-md text-base font-bold transition-colors">
+      <div class="pt-4 pb-6 border-t border-primary-800 px-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a href="/users/sign_in" class="w-full flex justify-center items-center text-white border border-white/20 hover:bg-primary-600 px-5 py-3 rounded-xl text-base font-medium transition-all duration-300">
           Log in
         </a>
-        <a href="/users/sign_up" class="w-full sm:w-auto flex justify-center items-center bg-white text-primary-600 hover:bg-gray-100 px-4 py-2 rounded-md text-base font-bold transition-colors">
+        <a href="/users/sign_up" class="w-full flex justify-center items-center bg-white text-primary-600 hover:bg-white/90 px-5 py-3 rounded-xl text-base font-bold shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg">
           Sign up
         </a>
       </div>
     <% end %>
   </div>
 
+  <!-- Sticky Header on Scroll - redesigned -->
+  <div
+    class="fixed top-0 left-0 right-0 transform -translate-y-full transition-transform duration-300 z-50 opacity-0"
+    data-scroll-header-target="header">
+    <div class="bg-gradient-to-r from-primary-600/95 to-primary-700/95 backdrop-blur-lg shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center">
+            <a href="/" class="flex items-center space-x-2">
+              <div class="h-9 w-9 bg-white rounded-lg flex items-center justify-center shadow-md">
+                <span class="text-primary-600 text-sm font-bold">SG</span>
+              </div>
+              <span class="font-bold text-white text-lg">Super Ghana</span>
+            </a>
+          </div>
+
+          <% if current_user && current_user.wallet.present? %>
+            <div class="flex items-center space-x-4">
+              <div class="hidden sm:flex items-center bg-primary-700/50 rounded-xl px-4 py-2">
+                <span class="text-white text-xs mr-2 font-medium">Balance:</span>
+                <span class="text-white text-sm font-bold"><%= current_user.wallet.formatted_balance %></span>
+              </div>
+              <a href="/transfers/new" class="flex items-center text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8z" />
+                  <path d="M12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
+                </svg>
+                <span class="text-white font-bold">Send Money</span>
+              </a>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Optional Announcement Banner -->
   <% if false # Toggle this condition to show/hide the banner %>
-    <div class="bg-secondary-500 text-white px-4 py-2 text-center text-sm md:text-base animate-fadeIn" data-controller="banner">
+    <div class="relative bg-gradient-to-r from-secondary-500 to-secondary-600 text-white px-4 py-3 text-center text-sm md:text-base shadow-md" data-controller="banner">
       <div class="max-w-7xl mx-auto flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
         </svg>
         <p>New feature: Send money to any mobile number in Ghana! <a href="/features/mobile-transfer" class="underline font-bold hover:text-white">Learn more</a></p>
@@ -567,41 +652,100 @@
       </div>
     </div>
   <% end %>
-
-  <!-- Sticky Notification on Scroll (appears when scrolling down) -->
-  <div
-    class="fixed top-0 left-0 right-0 bg-primary-600 shadow-md transform -translate-y-full transition-transform duration-300 z-50"
-    data-controller="sticky-header"
-    data-action="scroll@window->sticky-header#toggleVisibility"
-    data-sticky-header-target="header"
-    data-sticky-header-offset-value="100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-14">
-        <div class="flex items-center">
-          <a href="/" class="flex items-center space-x-2">
-            <div class="h-8 w-8 bg-white rounded-lg flex items-center justify-center">
-              <span class="text-primary-600 text-sm font-bold">SG</span>
-            </div>
-            <span class="font-bold text-white text-lg">Super Ghana</span>
-          </a>
-        </div>
-
-        <% if current_user && current_user.wallet.present? %>
-          <div class="flex items-center space-x-4">
-            <div class="hidden sm:flex items-center bg-primary-700 rounded-lg px-3 py-1.5">
-              <span class="text-white text-xs mr-1 font-medium">Balance:</span>
-              <span class="text-white text-sm font-bold"><%= current_user.wallet.formatted_balance %></span>
-            </div>
-            <a href="/transfers/new" class="flex items-center text-white hover:bg-primary-500 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8z" />
-                <path d="M12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z" />
-              </svg>
-              <span class="text-white font-bold">Send Money</span>
-            </a>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
 </header>
+
+<!-- Add these custom animations to your CSS file -->
+<style>
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .animate-pulse-soft {
+    animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes slideDown {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-slideDown {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+  
+  /* Styles specifically for the scroll header animation */
+  [data-scroll-header-target="header"] {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  
+  [data-scroll-header-target="header"].visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  /* Dropdown animations */
+  [data-dropdown-target="arrow"].open {
+    transform: rotate(180deg);
+  }
+  
+  /* Fix dropdown positioning and visibility */
+  [data-dropdown-target="menu"] {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: block !important;
+    visibility: visible !important;
+    z-index: 9999 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+  }
+  
+  /* Hide by default, show when open class is added */
+  .dropdown-container:not(:hover) [data-dropdown-target="menu"] {
+    display: none !important;
+  }
+  
+  .dropdown-container:hover [data-dropdown-target="menu"] {
+    display: block !important;
+  }
+</style>
+
+<!-- JavaScript for enhanced scroll header functionality -->
+<script>
+  // This will be processed by Stimulus controller, but we're providing the implementation 
+  // for reference on how the scroll-header controller should work
+  document.addEventListener('turbo:load', function() {
+    if (typeof Stimulus !== 'undefined') {
+      // Stimulus will handle this through scroll-header controller
+      // This is just a reference implementation
+    } else {
+      // Fallback for non-Stimulus environments
+      const header = document.querySelector('[data-scroll-header-target="header"]');
+      if (header) {
+        let lastScrollTop = 0;
+        
+        window.addEventListener('scroll', function() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          if (scrollTop > 150) {
+            if (scrollTop > lastScrollTop) {
+              // Scrolling down
+              header.classList.remove('visible');
+            } else {
+              // Scrolling up
+              header.classList.add('visible');
+            }
+          } else {
+            // At the top
+            header.classList.remove('visible');
+          }
+          
+          lastScrollTop = scrollTop;
+        });
+      }
+    }
+  });
+</script>

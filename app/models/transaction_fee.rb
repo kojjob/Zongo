@@ -10,19 +10,19 @@ class TransactionFee < ApplicationRecord
   validate :validate_fee_configuration
 
   # Enums
-  enum transaction_type: {
+  enum :transaction_type, {
     deposit: 0,
     withdrawal: 1,
     transfer: 2,
     payment: 3,
     all: 4 # Applies to all transaction types
-  }
+  }, default: :all
 
-  enum fee_type: {
+  enum :fee_type, {
     fixed: 0,      # Fixed amount fee
     percentage: 1, # Percentage of transaction amount
     hybrid: 2      # Percentage with min/max limits
-  }
+  }, default: :fixed
 
   # Scopes
   scope :active, -> { where(active: true) }

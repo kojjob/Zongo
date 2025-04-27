@@ -20,14 +20,14 @@ class WalletTransaction < ApplicationRecord
     payment: 4,
     refund: 5,
     reversal: 6
-  }
+  }, default: :deposit
 
   enum :status, {
     pending: 0,
     completed: 1,
     failed: 2,
     reversed: 3
-  }
+  }, default: :pending
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }

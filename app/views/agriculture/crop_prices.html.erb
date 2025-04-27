@@ -1,0 +1,339 @@
+<% content_for :title, "Crop Prices" %>
+
+<!-- Header Section -->
+<section class="bg-gradient-to-r from-green-600 to-lime-500 py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-white mb-2">Crop Price Tracker</h1>
+        <p class="text-white/90">
+          Real-time market prices for agricultural products across Ghana
+        </p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <a href="<%= agriculture_path %>" class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors duration-300">
+          <%= icon "arrow-left", class: "w-4 h-4 mr-2" %>
+          Back to Agriculture
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <!-- Filters Section -->
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8 border border-gray-100 dark:border-gray-700">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Filter Prices</h2>
+    
+    <%= form_with url: crop_prices_agriculture_path, method: :get, class: "grid grid-cols-1 md:grid-cols-3 gap-6", data: { turbo_frame: "price_results" } do |f| %>
+      <div>
+        <label for="crop_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Crop</label>
+        <%= f.select :crop_id, 
+                    @crops.map { |c| [c.name, c.id] }, 
+                    { selected: params[:crop_id] || @selected_crop&.id },
+                    { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50" } %>
+      </div>
+      
+      <div>
+        <label for="region_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Region (Optional)</label>
+        <%= f.select :region_id, 
+                    @regions.map { |r| [r.name, r.id] },
+                    { include_blank: "All Regions", selected: params[:region_id] },
+                    { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50" } %>
+      </div>
+      
+      <div class="flex items-end">
+        <%= f.submit "Apply Filters", class: "px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+        
+        <% if params[:crop_id].present? || params[:region_id].present? %>
+          <%= link_to "Clear Filters", crop_prices_agriculture_path, class: "ml-4 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  
+  <!-- Results Section -->
+  <div id="price_results">
+    <% if @selected_crop.present? %>
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div class="flex items-center">
+              <% if @selected_crop.image.attached? %>
+                <%= image_tag @selected_crop.image, class: "w-12 h-12 rounded-full object-cover mr-4" %>
+              <% else %>
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-lime-500 flex items-center justify-center text-white mr-4">
+                  <%= icon "plant", class: "w-6 h-6" %>
+                </div>
+              <% end %>
+              
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @selected_crop.name %></h2>
+                <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                  <span><%= @selected_crop.category.titleize %></span>
+                  <% if @selected_region.present? %>
+                    <span class="mx-2">•</span>
+                    <span><%= @selected_region.name %> Region</span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4 md:mt-0">
+              <% if @selected_crop.in_season? %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                  <%= icon "calendar", class: "w-4 h-4 mr-1.5" %>
+                  Currently In Season
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  <%= icon "calendar", class: "w-4 h-4 mr-1.5" %>
+                  Out of Season
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Price Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+          <div class="p-6 text-center">
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Current Price</div>
+            <div class="text-3xl font-bold text-gray-900 dark:text-white">GHS <%= @current_price %></div>
+            <div class="mt-2 flex items-center justify-center">
+              <% if @price_change != 0 %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= @price_change > 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' %>">
+                  <%= icon @price_change > 0 ? "trending-up" : "trending-down", class: "w-3 h-3 mr-1" %>
+                  <%= @price_change > 0 ? '+' : '' %><%= @price_change_percentage %>%
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                  No Change
+                </span>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="p-6 text-center">
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Average Price</div>
+            <div class="text-3xl font-bold text-gray-900 dark:text-white">GHS <%= @avg_price %></div>
+            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">Last 30 days</div>
+          </div>
+          
+          <div class="p-6 text-center">
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Lowest Price</div>
+            <div class="text-3xl font-bold text-gray-900 dark:text-white">GHS <%= @min_price %></div>
+            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">Last 30 days</div>
+          </div>
+          
+          <div class="p-6 text-center">
+            <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Highest Price</div>
+            <div class="text-3xl font-bold text-gray-900 dark:text-white">GHS <%= @max_price %></div>
+            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">Last 30 days</div>
+          </div>
+        </div>
+        
+        <!-- Price Chart -->
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Price Trend (Last 30 Days)</h3>
+          
+          <% if @chart_data.present? %>
+            <div class="h-80 w-full">
+              <!-- Chart will be rendered here using JavaScript -->
+              <canvas id="priceChart" data-chart='<%= @chart_data.to_json %>'></canvas>
+            </div>
+          <% else %>
+            <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-8 text-center">
+              <p class="text-gray-500 dark:text-gray-400">No price data available for the selected period.</p>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Price Table -->
+        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Recent Price Data</h3>
+          
+          <% if @prices.present? %>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead>
+                  <tr>
+                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Price (GHS)</th>
+                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Unit</th>
+                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Market</th>
+                    <th class="px-6 py-3 bg-gray-50 dark:bg-gray-800 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Region</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <% @prices.each do |price| %>
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150">
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white"><%= price.date.strftime("%b %d, %Y") %></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"><%= price.price %></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"><%= price.unit %></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"><%= price.market %></td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400"><%= price.region&.name || 'N/A' %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-8 text-center">
+              <p class="text-gray-500 dark:text-gray-400">No price data available for the selected crop.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Crop Information -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white">About <%= @selected_crop.name %></h3>
+        </div>
+        
+        <div class="p-6">
+          <div class="prose prose-green dark:prose-invert max-w-none">
+            <p><%= @selected_crop.description %></p>
+            
+            <% if @selected_crop.scientific_name.present? %>
+              <p><strong>Scientific Name:</strong> <em><%= @selected_crop.scientific_name %></em></p>
+            <% end %>
+            
+            <h4>Growing Information</h4>
+            <ul>
+              <li><strong>Growing Season:</strong> <%= @selected_crop.growing_season %></li>
+              <li><strong>Average Growing Time:</strong> <%= @selected_crop.growing_time %> days to maturity</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Related Resources -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white">Related Resources</h3>
+        </div>
+        
+        <div class="p-6">
+          <% resources = AgricultureResource.published.by_crop(@selected_crop.id).limit(3) %>
+          
+          <% if resources.present? %>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <% resources.each do |resource| %>
+                <a href="<%= agriculture_resource_path(resource) %>" class="block bg-gray-50 dark:bg-gray-700/30 rounded-xl p-4 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors duration-300">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+                        <%= icon resource.resource_type == 'article' ? 'document-text' : (resource.resource_type == 'video' ? 'video-camera' : 'book-open'), class: "w-5 h-5" %>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <h4 class="text-base font-medium text-gray-900 dark:text-white"><%= resource.title %></h4>
+                      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2"><%= resource.content.truncate(80) %></p>
+                    </div>
+                  </div>
+                </a>
+              <% end %>
+            </div>
+            
+            <div class="mt-6 text-center">
+              <a href="<%= resources_agriculture_path(crop_id: @selected_crop.id) %>" class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+                View All Resources for <%= @selected_crop.name %>
+                <%= icon "arrow-right", class: "w-4 h-4 ml-2" %>
+              </a>
+            </div>
+          <% else %>
+            <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-8 text-center">
+              <p class="text-gray-500 dark:text-gray-400">No resources available for this crop yet.</p>
+              <a href="<%= resources_agriculture_path %>" class="mt-4 inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium">
+                Browse All Resources
+                <%= icon "arrow-right", class: "w-4 h-4 ml-1" %>
+              </a>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 text-center border border-gray-100 dark:border-gray-700">
+        <div class="w-20 h-20 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4">
+          <%= icon "search", class: "w-10 h-10 text-gray-400 dark:text-gray-500" %>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No Crop Selected</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">Please select a crop from the filter options above to view price information.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- JavaScript for Chart -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const chartCanvas = document.getElementById('priceChart');
+    
+    if (chartCanvas) {
+      const chartData = JSON.parse(chartCanvas.dataset.chart);
+      
+      if (chartData && chartData.length > 0) {
+        const ctx = chartCanvas.getContext('2d');
+        
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: chartData.map(item => item.date),
+            datasets: [{
+              label: 'Price (GHS)',
+              data: chartData.map(item => item.price),
+              borderColor: '#16a34a',
+              backgroundColor: 'rgba(22, 163, 74, 0.1)',
+              borderWidth: 2,
+              pointBackgroundColor: '#16a34a',
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleColor: '#fff',
+                bodyColor: '#fff',
+                bodyFont: {
+                  size: 14
+                },
+                padding: 12,
+                displayColors: false
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                beginAtZero: false,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)'
+                },
+                ticks: {
+                  callback: function(value) {
+                    return 'GHS ' + value;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+</script>
