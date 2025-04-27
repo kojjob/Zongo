@@ -2,38 +2,67 @@ module Admin
   class ProductsController < ApplicationController
     before_action :authenticate_user!
     before_action :require_admin
-    before_action :set_product, only: [ :show, :edit, :update, :destroy, :suspend, :activate ]
+    before_action :set_product, only: [ :show, :edit, :update, :destroy, :feature, :unfeature, :approve, :reject ]
     layout "admin"
 
     def index
-      @products = Product.all.order(created_at: :desc)
+      products_query = Product.all
 
-      # Filter by status if provided
-      if params[:status].present?
-        @products = @products.where(status: params[:status])
-      end
-
-      # Filter by category if provided
+      # Apply filters
       if params[:category_id].present?
-        @products = @products.where(category_id: params[:category_id])
+        products_query = products_query.where(shop_category_id: params[:category_id])
       end
 
-      # Filter by search term if provided
+      if params[:status].present?
+        products_query = products_query.where(status: params[:status])
+      end
+
+      if params[:featured].present?
+        products_query = products_query.where(featured: params[:featured] == "true")
+      end
+
+      if params[:min_price].present? && params[:max_price].present?
+        products_query = products_query.where(price: params[:min_price]..params[:max_price])
+      end
+
       if params[:search].present?
-        @products = @products.where("name LIKE ? OR description LIKE ?",
-                                  "%#{params[:search]}%",
-                                  "%#{params[:search]}%")
+        products_query = products_query.where("name ILIKE ? OR description ILIKE ? OR sku ILIKE ?",
+                                            "%#{params[:search]}%",
+                                            "%#{params[:search]}%",
+                                            "%#{params[:search]}%")
       end
 
-      # Paginate results
-      @pagy, @products = pagy(@products, items: 10)
+      # Apply sorting
+      case params[:sort]
+      when "price_asc"
+        products_query = products_query.order(price: :asc)
+      when "price_desc"
+        products_query = products_query.order(price: :desc)
+      when "name_asc"
+        products_query = products_query.order(name: :asc)
+      when "name_desc"
+        products_query = products_query.order(name: :desc)
+      when "newest"
+        products_query = products_query.order(created_at: :desc)
+      when "oldest"
+        products_query = products_query.order(created_at: :asc)
+      else
+        products_query = products_query.order(created_at: :desc)
+      end
+
+      @pagy, @products = pagy(products_query, items: 20)
+      @categories = ShopCategory.all.order(:name)
     end
 
     def show
+      @reviews = @product.reviews.order(created_at: :desc).limit(5)
+      @orders = Order.joins(:order_items).where(order_items: { product_id: @product.id }).distinct.order(created_at: :desc).limit(5)
     end
 
     def new
       @product = Product.new
+      @categories = ShopCategory.all.order(:name)
+      @sellers = User.all.order(:username)
     end
 
     def create
@@ -42,40 +71,54 @@ module Admin
       if @product.save
         redirect_to admin_product_path(@product), notice: "Product was successfully created."
       else
+        @categories = ShopCategory.all.order(:name)
+        @sellers = User.all.order(:username)
         render :new
       end
     end
 
     def edit
+      @categories = ShopCategory.all.order(:name)
+      @sellers = User.all.order(:username)
     end
 
     def update
       if @product.update(product_params)
         redirect_to admin_product_path(@product), notice: "Product was successfully updated."
       else
+        @categories = ShopCategory.all.order(:name)
+        @sellers = User.all.order(:username)
         render :edit
       end
     end
 
     def destroy
-      @product.destroy
-      redirect_to admin_products_path, notice: "Product was successfully deleted."
-    end
-
-    def suspend
-      if @product.update(status: :suspended)
-        redirect_to admin_product_path(@product), notice: "Product has been suspended."
+      if @product.order_items.exists?
+        redirect_to admin_products_path, alert: "Cannot delete product with associated orders."
       else
-        redirect_to admin_product_path(@product), alert: "Failed to suspend product."
+        @product.destroy
+        redirect_to admin_products_path, notice: "Product was successfully deleted."
       end
     end
 
-    def activate
-      if @product.update(status: :active)
-        redirect_to admin_product_path(@product), notice: "Product has been activated."
-      else
-        redirect_to admin_product_path(@product), alert: "Failed to activate product."
-      end
+    def feature
+      @product.update(featured: true)
+      redirect_to admin_product_path(@product), notice: "Product is now featured."
+    end
+
+    def unfeature
+      @product.update(featured: false)
+      redirect_to admin_product_path(@product), notice: "Product is no longer featured."
+    end
+
+    def approve
+      @product.update(status: :active)
+      redirect_to admin_product_path(@product), notice: "Product has been approved and is now active."
+    end
+
+    def reject
+      @product.update(status: :inactive)
+      redirect_to admin_product_path(@product), notice: "Product has been rejected and is now inactive."
     end
 
     private
@@ -85,7 +128,12 @@ module Admin
     end
 
     def product_params
-      params.require(:product).permit(:name, :description, :price, :category_id, :status, :featured)
+      params.require(:product).permit(
+        :name, :description, :price, :original_price, :stock_quantity, :sku,
+        :shop_category_id, :user_id, :status, :featured, :brand,
+        :weight, :weight_unit, :length, :width, :height, :dimension_unit,
+        specifications: {}, tags: [], images: []
+      )
     end
   end
 end

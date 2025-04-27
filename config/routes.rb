@@ -89,8 +89,11 @@ Rails.application.routes.draw do
   get "wallet/pay_bill/:type", to: "wallet#pay_bill", as: "pay_bill"
   post "wallet/pay_bill", to: "wallet#process_bill_payment", as: "process_bill_payment"
   get "wallet/bills", to: "wallet#bills", as: "wallet_bills"
+  get "wallet/airtime", to: "wallet#airtime", as: "wallet_airtime"
   # Redirect /bills to /wallet/bills for convenience
   get "bills", to: redirect("/wallet/bills")
+  # Redirect /airtime to /wallet/airtime for convenience
+  get "airtime", to: redirect("/wallet/airtime")
   # Payment link route
   get "pay/:wallet_id", to: "wallet#payment_page", as: "payment_page"
   get "wallet/beneficiaries", to: "wallet#beneficiaries", as: "beneficiaries"
@@ -128,6 +131,7 @@ Rails.application.routes.draw do
   get "dashboard", to: "dashboard#index"
   get "dashboard/refresh_balance", to: "dashboard#refresh_balance"
   get "dashboard/refresh_transactions", to: "dashboard#refresh_transactions"
+  get "dashboard/transaction_details/:id", to: "dashboard#transaction_details", as: "dashboard_transaction_details"
 
   # Scheduled Transactions routes
   resources :scheduled_transactions do
@@ -295,6 +299,130 @@ Rails.application.routes.draw do
 
   # Flash message management
   post "clear_flash", to: "flash#clear", as: :clear_flash
+
+  # Agricultural Services routes
+  get "services/agriculture", to: "agriculture#index", as: "agriculture"
+
+  # Agriculture namespace for all agriculture-related routes
+  namespace :agriculture do
+    get "crop_prices", to: "base#crop_prices"
+    get "weather", to: "base#weather"
+    get "marketplace", to: "base#marketplace"
+    get "resources", to: "base#resources"
+  end
+
+  # Crop Listings routes
+  resources :crop_listings do
+    collection do
+      get "my_listings"
+    end
+
+    member do
+      post "mark_as_sold"
+      post "renew"
+    end
+
+    resources :crop_listing_inquiries, only: [:create]
+  end
+
+  # Crop Listing Inquiries routes
+  resources :crop_listing_inquiries, only: [:show] do
+    collection do
+      get "my_inquiries"
+    end
+
+    member do
+      post "respond"
+      post "accept"
+      post "reject"
+    end
+  end
+
+  # Agriculture Resources routes
+  resources :agriculture_resources
+
+  # Admin Agriculture routes
+  namespace :admin do
+    resources :crops
+    resources :crop_prices
+    resources :regions
+    resources :weather_forecasts
+    resources :crop_listings do
+      member do
+        post :feature
+        post :unfeature
+        post :approve
+        post :reject
+      end
+    end
+    resources :agriculture_resources do
+      member do
+        post :publish
+        post :unpublish
+        post :feature
+        post :unfeature
+      end
+    end
+
+    # Admin Shop routes
+    resources :shop_categories do
+      member do
+        post :feature
+        post :unfeature
+      end
+    end
+
+    resources :products do
+      member do
+        post :feature
+        post :unfeature
+        post :approve
+        post :reject
+      end
+    end
+
+    resources :reviews, only: [:index, :show, :edit, :update, :destroy] do
+      member do
+        post :approve
+        post :reject
+      end
+    end
+
+    resources :orders, only: [:index, :show, :edit, :update] do
+      member do
+        post :process_order
+        post :ship
+        post :deliver
+        post :cancel
+        post :refund
+      end
+    end
+  end
+
+  # Shop routes
+  get 'shop', to: 'shop#index', as: :shop
+  get 'shop/category/:slug', to: 'shop#category', as: :shop_category
+  get 'shop/product/:id', to: 'shop#product', as: :product
+  get 'shop/search', to: 'shop#search', as: :shop_search
+
+  # Cart routes
+  get 'cart', to: 'carts#show', as: :cart
+  post 'cart/add', to: 'carts#add_item', as: :add_to_cart
+  patch 'cart/update', to: 'carts#update_item', as: :update_cart_item
+  delete 'cart/remove', to: 'carts#remove_item', as: :remove_from_cart
+  delete 'cart/clear', to: 'carts#clear', as: :clear_cart
+
+  # Order routes
+  resources :orders, only: [:index, :show, :new, :create] do
+    member do
+      patch :cancel
+    end
+  end
+
+  # Review routes
+  resources :products, only: [] do
+    resources :reviews, only: [:new, :create, :edit, :update, :destroy]
+  end
 
   # Defines the root path route ("/")
   root "pages#home"
