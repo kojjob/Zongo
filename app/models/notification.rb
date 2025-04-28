@@ -1,12 +1,17 @@
 class Notification < ApplicationRecord
   # Relationships
   belongs_to :user
+  has_many :notification_deliveries, dependent: :destroy
+  has_many :notification_channels, through: :notification_deliveries
 
   # Validations
   validates :title, presence: true
   validates :message, presence: true
   validates :severity, presence: true
   validates :category, presence: true
+
+  # Callbacks
+  before_create :set_sent_at
 
   # Enums
   enum :severity, {
@@ -92,7 +97,71 @@ class Notification < ApplicationRecord
     action_text.presence || default_action_text
   end
 
+  # Deliver notification through specified channels
+  # @param channels [Array<Symbol>] List of channel types to deliver through (:email, :sms, :push)
+  # @return [Array<NotificationDelivery>] Created delivery records
+  def deliver_through(channels = [:in_app])
+    return [] unless user
+
+    deliveries = []
+
+    channels.each do |channel_type|
+      next if channel_type == :in_app # In-app is always delivered
+
+      # Find enabled channels of this type for the user
+      user_channels = user.notification_channels.where(channel_type: channel_type, enabled: true)
+
+      user_channels.each do |channel|
+        # Create delivery record
+        delivery = notification_deliveries.create!(
+          notification_channel: channel,
+          status: 'pending'
+        )
+
+        # Queue delivery job
+        NotificationDeliveryJob.perform_later(delivery.id)
+
+        deliveries << delivery
+      end
+    end
+
+    # Broadcast in-app notification
+    broadcast_to_user if channels.include?(:in_app)
+
+    deliveries
+  end
+
+  # Broadcast notification to user via ActionCable
+  def broadcast_to_user
+    return unless user
+
+    # Broadcast notification to user's channel
+    NotificationsChannel.broadcast_to(
+      user,
+      {
+        id: id,
+        title: title,
+        message: message,
+        severity: severity,
+        category: category,
+        action_url: action_url,
+        action_text: action_button_text,
+        icon: icon_name,
+        created_at: created_at.iso8601,
+        html: ApplicationController.render(
+          partial: 'notifications/notification',
+          locals: { notification: self }
+        )
+      }
+    )
+  end
+
   private
+
+  # Set sent_at timestamp
+  def set_sent_at
+    self.sent_at ||= Time.current
+  end
 
   # Get default action text based on category
   # @return [String] Default action text

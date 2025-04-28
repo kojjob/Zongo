@@ -300,6 +300,41 @@ Rails.application.routes.draw do
   # Flash message management
   post "clear_flash", to: "flash#clear", as: :clear_flash
 
+  # Notification routes
+  resources :notifications, only: [:index, :show] do
+    collection do
+      get :unread
+      post :mark_all_as_read
+      delete :clear
+    end
+
+    member do
+      post :mark_as_read
+      post :mark_as_unread
+      delete :dismiss
+    end
+  end
+
+  # Notification preferences routes
+  resource :notification_preferences, only: [:show, :update] do
+    post :add_channel
+    delete :remove_channel
+    post :verify_channel
+    post :resend_verification
+    post :toggle_channel
+  end
+
+  # Notification channels routes
+  resources :notification_channels, only: [:create, :destroy] do
+    member do
+      patch :toggle
+      post :resend_verification
+    end
+    collection do
+      get :verify
+    end
+  end
+
   # Services main route
   get "services", to: "services#index", as: "services"
 

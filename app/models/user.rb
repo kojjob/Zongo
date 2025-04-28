@@ -18,7 +18,12 @@ class User < ApplicationRecord
   # Associations
   has_one :wallet, dependent: :destroy
   has_one :user_settings, dependent: :destroy
+  has_one :notification_preference, dependent: :destroy
   has_one :cart, dependent: :destroy
+
+  # Notification associations
+  has_many :notifications, dependent: :destroy
+  has_many :notification_channels, dependent: :destroy
 
   # Alias for user_settings to handle legacy code
   def setting
@@ -180,10 +185,55 @@ class User < ApplicationRecord
   end
 
   # Notifications methods
+
+  # Get count of unread notifications
+  # @return [Integer] Number of unread notifications
   def unread_notifications_count
-    # This is a placeholder method that should be replaced with actual notification logic
-    # For now, we'll return 0 to avoid errors
-    0
+    notifications.unread.count
+  end
+
+  # Get unread notifications
+  # @param limit [Integer] Maximum number of notifications to return
+  # @return [ActiveRecord::Relation] Collection of unread notifications
+  def unread_notifications(limit = nil)
+    scope = notifications.unread.recent_first
+    limit ? scope.limit(limit) : scope
+  end
+
+  # Get recent notifications
+  # @param limit [Integer] Maximum number of notifications to return
+  # @return [ActiveRecord::Relation] Collection of recent notifications
+  def recent_notifications(limit = 10)
+    notifications.recent_first.limit(limit)
+  end
+
+  # Mark all notifications as read
+  # @return [Integer] Number of notifications marked as read
+  def mark_all_notifications_as_read!
+    notifications.unread.update_all(read: true, read_at: Time.current)
+  end
+
+  # Create a notification for this user
+  # @param attributes [Hash] Notification attributes
+  # @return [Notification] The created notification
+  def create_notification(attributes = {})
+    notification = notifications.create!(attributes)
+    notification.broadcast_to_user if attributes[:broadcast] != false
+    notification
+  end
+
+  # Get notification channels of a specific type
+  # @param type [String] Channel type (email, sms, push)
+  # @return [ActiveRecord::Relation] Collection of notification channels
+  def notification_channels_by_type(type)
+    notification_channels.where(channel_type: type)
+  end
+
+  # Get primary notification channel of a specific type
+  # @param type [String] Channel type (email, sms, push)
+  # @return [NotificationChannel, nil] Primary notification channel or nil
+  def primary_notification_channel(type)
+    notification_channels_by_type(type).first
   end
 
   # Event-related methods

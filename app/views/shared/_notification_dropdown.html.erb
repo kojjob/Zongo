@@ -1,0 +1,150 @@
+<%# Notification Dropdown Component %>
+<div class="relative" data-controller="notifications" data-notifications-user-id-value="<%= current_user.id %>">
+  <%# Notification Bell Button %>
+  <button type="button" class="p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 relative" data-action="notifications#toggle">
+    <span class="sr-only">View notifications</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+    
+    <%# Notification Badge %>
+    <% if current_user.unread_notifications_count > 0 %>
+      <span data-notifications-target="badge" class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800"></span>
+    <% else %>
+      <span data-notifications-target="badge" class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-800 hidden"></span>
+    <% end %>
+  </button>
+  
+  <%# Notification Count (Hidden) %>
+  <span data-notifications-target="count" class="hidden"><%= current_user.unread_notifications_count %></span>
+  
+  <%# Notification Panel %>
+  <div data-notifications-target="panel" class="hidden origin-top-right absolute right-0 mt-2 w-80 sm:w-96 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="notification-menu">
+    <div class="py-1" role="none">
+      <%# Header %>
+      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white">Notifications</h3>
+          <div class="flex space-x-2">
+            <% if current_user.unread_notifications_count > 0 %>
+              <button type="button" class="text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300" data-action="notifications#markAllAsRead">
+                Mark all as read
+              </button>
+            <% end %>
+            <a href="<%= notifications_path %>" class="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-300">
+              View all
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <%# Notification List %>
+      <div data-notifications-target="list" class="max-h-96 overflow-y-auto">
+        <% if current_user.recent_notifications(5).any? %>
+          <% current_user.recent_notifications(5).each do |notification| %>
+            <div class="border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+              <a href="<%= notification_path(notification) %>" class="block hover:bg-gray-50 dark:hover:bg-gray-700 <%= notification.read? ? '' : 'bg-blue-50 dark:bg-blue-900/20' %>" data-action="notifications#markAsRead" data-notification-id="<%= notification.id %>">
+                <div class="px-4 py-3">
+                  <div class="flex items-start">
+                    <%# Icon %>
+                    <div class="flex-shrink-0 mr-3">
+                      <% case notification.category.to_sym %>
+                      <% when :security %>
+                        <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600 dark:text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      <% when :transaction %>
+                        <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-600 dark:text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      <% when :account %>
+                        <div class="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-purple-600 dark:text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      <% else %>
+                        <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600 dark:text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      <% end %>
+                    </div>
+                    
+                    <%# Content %>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                        <%= notification.title %>
+                      </p>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
+                        <%= notification.message %>
+                      </p>
+                      <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                        <%= time_ago_in_words(notification.created_at) %> ago
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          <% end %>
+        <% else %>
+          <%# Empty State %>
+          <div data-notifications-target="emptyState" class="py-6 px-4 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No notifications</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              You don't have any notifications yet.
+            </p>
+          </div>
+        <% end %>
+      </div>
+      
+      <%# Footer %>
+      <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
+        <a href="<%= notification_preferences_path %>" class="block text-xs text-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+          Manage notification preferences
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <%# Toast Template (Hidden) %>
+  <div data-notifications-target="toast" class="hidden fixed top-4 right-4 max-w-sm w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg pointer-events-auto border border-gray-200 dark:border-gray-700 overflow-hidden z-50 transform transition-all duration-300 ease-in-out" data-toast>
+    <div class="p-4">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="ml-3 w-0 flex-1 pt-0.5">
+          <p class="text-sm font-medium text-gray-900 dark:text-white" data-notification-title></p>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400" data-notification-message></p>
+          <div class="mt-3 flex space-x-3">
+            <a href="#" class="hidden bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 px-2 py-1.5 rounded-md text-sm font-medium" data-notification-action></a>
+          </div>
+        </div>
+        <div class="ml-4 flex-shrink-0 flex">
+          <button type="button" class="bg-white dark:bg-gray-800 rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" data-action="notifications#dismissToast">
+            <span class="sr-only">Close</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%# Toast Container %>
+  <div data-notifications-target="toastContainer" class="fixed top-4 right-4 space-y-4 z-50"></div>
+</div>

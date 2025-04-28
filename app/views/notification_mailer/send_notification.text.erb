@@ -1,0 +1,28 @@
+<%= @notification.title %>
+<%= "=" * @notification.title.length %>
+
+<% if @notification.severity == 'critical' %>
+URGENT: This notification requires your immediate attention.
+<% elsif @notification.severity == 'warning' %>
+IMPORTANT: Please review this notification as soon as possible.
+<% end %>
+
+<%= @notification.message %>
+
+<% if @notification.metadata.present? %>
+    Additional Information:
+    <% @notification.metadata.each do |key, value| %>
+    - <%= key.to_s.humanize %>: <%= value %>
+    <% end %>
+<% end %>
+
+<% if @notification.action_url.present? %>
+    To <%= @notification.action_text.presence || 'view details' %>, visit:
+    <%= @notification.action_url %>
+<% end %>
+
+---
+This email was sent to <%= @user.email %> because you have notifications enabled for your account.
+To update your notification preferences, visit: <%= user_settings_notifications_url %>
+
+© <%= Date.current.year %> Zongo. All rights reserved.
