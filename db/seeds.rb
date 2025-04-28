@@ -28,4 +28,10 @@ if defined?(Crop) && defined?(Region) && defined?(CropPrice) && defined?(Weather
   load Rails.root.join('db/seeds/agriculture_data.rb')
 end
 
+# Load notification system data
+if defined?(Notification) && defined?(NotificationChannel) && defined?(NotificationPreference)
+  puts "Loading notification system data..."
+  load Rails.root.join('db/seeds/notifications.rb')
+end
+
 puts "Seed data loaded successfully!"
