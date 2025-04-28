@@ -287,19 +287,28 @@ weather_conditions = WeatherForecast.weather_conditions.keys
     # Random daily variations
     temp_variation = rand(-2.0..2.0)
 
-    WeatherForecast.create!(
-      region: region,
-      forecast_date: date,
-      temperature_high: (base_high + temp_variation).round(1),
-      temperature_low: (base_low + temp_variation).round(1),
-      precipitation_chance: precipitation_chance,
-      precipitation_amount: precipitation_amount,
-      weather_condition: condition,
-      wind_speed: rand(5..20),
-      wind_direction: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].sample,
-      humidity: rand(50..95),
-      notes: "Forecast for #{region.name} region"
-    )
+    # Check if a forecast already exists for this region and date
+    existing_forecast = WeatherForecast.find_by(region: region, forecast_date: date)
+
+    if existing_forecast
+      # Skip or update existing forecast
+      puts "  Skipping existing forecast for #{region.name} on #{date}"
+    else
+      # Create new forecast
+      WeatherForecast.create!(
+        region: region,
+        forecast_date: date,
+        temperature_high: (base_high + temp_variation).round(1),
+        temperature_low: (base_low + temp_variation).round(1),
+        precipitation_chance: precipitation_chance,
+        precipitation_amount: precipitation_amount,
+        weather_condition: condition,
+        wind_speed: rand(5..20),
+        wind_direction: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'].sample,
+        humidity: rand(50..95),
+        notes: "Forecast for #{region.name} region"
+      )
+    end
   end
 end
 
