@@ -1,10 +1,10 @@
-<%# Calendar dropdown component 
+<%# Calendar dropdown component
   Expects: event (Event object)
 %>
 
 <div class="relative" data-controller="calendar-dropdown">
-  <button 
-    type="button" 
+  <button
+    type="button"
     data-action="calendar-dropdown#toggle click@window->calendar-dropdown#hide"
     class="px-6 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center shadow-sm"
     aria-label="Add to calendar"
@@ -16,19 +16,19 @@
     </svg>
     Add to Calendar
   </button>
-  
-  <div 
+
+  <div
     data-calendar-dropdown-target="menu"
-    class="absolute z-50 mt-2 w-64 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right"
+    class="absolute z-50 mt-2 w-64 rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right hidden"
     role="menu"
     aria-orientation="vertical"
     aria-labelledby="calendar-menu-button"
   >
     <div class="py-1" role="none">
       <%# Google Calendar %>
-      <a 
+      <a
         href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=<%= CGI.escape(event.title) %>&dates=<%= event.start_time.utc.strftime('%Y%m%dT%H%M%SZ') %>/<%= event.end_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&details=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&location=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
-        target="_blank" 
+        target="_blank"
         rel="noopener noreferrer"
         class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
         data-action="calendar-dropdown#selected"
@@ -45,9 +45,9 @@
           <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Most popular calendar service</span>
         </div>
       </a>
-      
+
       <%# ICS File (works with Apple Calendar, Outlook desktop, etc.) %>
-      <a 
+      <a
         href="<%= calendar_event_path(event) %>"
         download="<%= event.title.parameterize %>-event.ics"
         class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
@@ -65,12 +65,12 @@
           <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Download .ics file</span>
         </div>
       </a>
-      
+
       <%# Outlook %>
-      <a 
+      <a
         href="https://outlook.office.com/calendar/0/deeplink/compose?subject=<%= CGI.escape(event.title) %>&body=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&startdt=<%= event.start_time.iso8601 %>&enddt=<%= event.end_time.iso8601 %>&location=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
         target="_blank"
-        rel="noopener noreferrer" 
+        rel="noopener noreferrer"
         class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
         data-action="calendar-dropdown#selected"
         data-calendar-service="Outlook"
@@ -86,12 +86,12 @@
           <span class="text-xs block text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">Microsoft's calendar service</span>
         </div>
       </a>
-      
+
       <%# Yahoo Calendar %>
-      <a 
+      <a
         href="https://calendar.yahoo.com/?v=60&title=<%= CGI.escape(event.title) %>&st=<%= event.start_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&et=<%= event.end_time.utc.strftime('%Y%m%dT%H%M%SZ') %>&desc=<%= CGI.escape(event.short_description) %>%0A%0A<%= CGI.escape(event_url(event)) %>&in_loc=<%= CGI.escape(event.venue&.name.to_s) %>+<%= CGI.escape(event.venue&.address.to_s) %>"
         target="_blank"
-        rel="noopener noreferrer" 
+        rel="noopener noreferrer"
         class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
         data-action="calendar-dropdown#selected"
         data-calendar-service="Yahoo Calendar"
@@ -109,11 +109,11 @@
       </a>
     </div>
   </div>
-  
+
   <%# Success notification %>
-  <div 
+  <div
     data-calendar-dropdown-target="notification"
-    class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right z-50 border border-green-200 dark:border-green-900"
+    class="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transform opacity-0 scale-95 pointer-events-none transition-all origin-top-right z-50 border border-green-200 dark:border-green-900 hidden"
   >
     <div class="p-4 flex items-start">
       <div class="flex-shrink-0 mr-3">
