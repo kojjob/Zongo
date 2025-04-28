@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -817,8 +817,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.decimal "destination_longitude", precision: 10, scale: 6
     t.datetime "pickup_time", null: false
     t.datetime "dropoff_time"
-    t.string "status", default: "pending"
-    t.string "ride_type"
+    t.string "status_string", default: "pending"
+    t.string "ride_type_string"
     t.string "driver_name"
     t.string "driver_phone"
     t.string "vehicle_model"
@@ -829,6 +829,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.string "payment_status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "origin_location_id"
+    t.bigint "destination_location_id"
+    t.integer "status", default: 0, null: false
+    t.integer "ride_type", default: 1, null: false
+    t.decimal "distance_km", precision: 8, scale: 2
+    t.integer "duration_minutes"
+    t.string "driver_id"
+    t.string "vehicle_id"
+    t.text "notes"
+    t.json "metadata"
+    t.index ["destination_location_id"], name: "index_ride_bookings_on_destination_location_id"
+    t.index ["origin_location_id"], name: "index_ride_bookings_on_origin_location_id"
+    t.index ["pickup_time"], name: "index_ride_bookings_on_pickup_time"
+    t.index ["ride_type"], name: "index_ride_bookings_on_ride_type"
+    t.index ["status"], name: "index_ride_bookings_on_status"
     t.index ["user_id"], name: "index_ride_bookings_on_user_id"
   end
 
@@ -836,10 +851,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.string "origin", null: false
     t.string "destination", null: false
     t.decimal "distance", precision: 10, scale: 2, null: false
-    t.string "transport_type"
+    t.string "transport_type_string"
     t.integer "bookings_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "transport_company_id"
+    t.integer "duration_minutes"
+    t.decimal "base_price", precision: 10, scale: 2
+    t.string "currency", default: "GHS"
+    t.boolean "popular", default: false
+    t.boolean "active", default: true
+    t.json "schedule"
+    t.json "amenities"
+    t.json "metadata"
+    t.integer "transport_type", default: 0
+    t.index ["active"], name: "index_routes_on_active"
+    t.index ["popular"], name: "index_routes_on_popular"
+    t.index ["transport_company_id"], name: "index_routes_on_transport_company_id"
+    t.index ["transport_type"], name: "index_routes_on_transport_type"
   end
 
   create_table "scheduled_transactions", force: :cascade do |t|
@@ -969,11 +998,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.bigint "user_id", null: false
     t.bigint "route_id", null: false
     t.string "company_name"
-    t.string "transport_type", null: false
+    t.string "transport_type_string", null: false
     t.datetime "departure_time", null: false
     t.datetime "arrival_time", null: false
     t.integer "passengers", default: 1
-    t.string "status", default: "confirmed"
+    t.string "status_string", default: "confirmed"
     t.decimal "price", precision: 10, scale: 2, null: false
     t.string "payment_method"
     t.string "payment_status", default: "paid"
@@ -981,7 +1010,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "transport_company_id"
+    t.string "booking_reference"
+    t.integer "status", default: 0, null: false
+    t.integer "transport_type", default: 0, null: false
+    t.string "seat_numbers"
+    t.json "amenities"
+    t.json "metadata"
+    t.index ["booking_reference"], name: "index_ticket_bookings_on_booking_reference", unique: true
+    t.index ["departure_time"], name: "index_ticket_bookings_on_departure_time"
     t.index ["route_id"], name: "index_ticket_bookings_on_route_id"
+    t.index ["status"], name: "index_ticket_bookings_on_status"
+    t.index ["transport_company_id"], name: "index_ticket_bookings_on_transport_company_id"
+    t.index ["transport_type"], name: "index_ticket_bookings_on_transport_type"
     t.index ["user_id"], name: "index_ticket_bookings_on_user_id"
   end
 
@@ -1050,6 +1091,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
     t.index ["status"], name: "index_transactions_on_status"
     t.index ["transaction_id"], name: "index_transactions_on_transaction_id", unique: true
     t.index ["transaction_type"], name: "index_transactions_on_transaction_type"
+  end
+
+  create_table "transport_companies", force: :cascade do |t|
+    t.string "name", null: false
+    t.integer "transport_type", default: 0, null: false
+    t.string "logo_url"
+    t.string "website"
+    t.string "phone"
+    t.string "email"
+    t.text "description"
+    t.boolean "active", default: true
+    t.json "amenities"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_transport_companies_on_active"
+    t.index ["name"], name: "index_transport_companies_on_name", unique: true
+    t.index ["transport_type"], name: "index_transport_companies_on_transport_type"
   end
 
   create_table "user_settings", force: :cascade do |t|
@@ -1261,7 +1320,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
   add_foreign_key "recent_locations", "users"
   add_foreign_key "reviews", "products"
   add_foreign_key "reviews", "users"
+  add_foreign_key "ride_bookings", "recent_locations", column: "destination_location_id"
+  add_foreign_key "ride_bookings", "recent_locations", column: "origin_location_id"
   add_foreign_key "ride_bookings", "users"
+  add_foreign_key "routes", "transport_companies"
   add_foreign_key "scheduled_transactions", "users"
   add_foreign_key "scheduled_transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "scheduled_transactions", "wallets", column: "source_wallet_id"
@@ -1271,6 +1333,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
   add_foreign_key "security_logs", "users"
   add_foreign_key "shop_categories", "shop_categories", column: "parent_id"
   add_foreign_key "ticket_bookings", "routes"
+  add_foreign_key "ticket_bookings", "transport_companies"
   add_foreign_key "ticket_bookings", "users"
   add_foreign_key "ticket_types", "events"
   add_foreign_key "transactions", "scheduled_transactions"
