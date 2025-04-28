@@ -405,6 +405,13 @@ Rails.application.routes.draw do
   get 'shop/product/:id', to: 'shop#product', as: :product
   get 'shop/search', to: 'shop#search', as: :shop_search
 
+  # Marketplace routes
+  get 'marketplace', to: 'marketplace#index', as: :marketplace
+  get 'marketplace/electronics', to: 'marketplace#electronics', as: :marketplace_electronics
+  get 'marketplace/fashion', to: 'marketplace#fashion', as: :marketplace_fashion
+  get 'marketplace/groceries', to: 'marketplace#groceries', as: :marketplace_groceries
+  get 'marketplace/local', to: 'marketplace#local', as: :marketplace_local
+
   # Cart routes
   get 'cart', to: 'carts#show', as: :cart
   post 'cart/add', to: 'carts#add_item', as: :add_to_cart
