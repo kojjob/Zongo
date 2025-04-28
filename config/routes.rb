@@ -413,6 +413,20 @@ Rails.application.routes.draw do
   get 'marketplace/local', to: 'marketplace#local', as: :marketplace_local
   get 'marketplace/:category/:subcategory', to: 'marketplace#subcategory', as: :marketplace_subcategory
 
+  # My Products routes (for sellers)
+  resources :my_products do
+    collection do
+      get 'bulk_new'
+      post 'bulk_create'
+      get 'bulk_edit'
+      patch 'bulk_update'
+      get 'download_csv_template'
+    end
+  end
+
+  # User actions
+  patch 'become_seller', to: 'users#become_seller', as: 'become_seller'
+
   # Cart routes
   get 'cart', to: 'carts#show', as: :cart
   post 'cart/add', to: 'carts#add_item', as: :add_to_cart
@@ -427,9 +441,37 @@ Rails.application.routes.draw do
     end
   end
 
+  # Digital downloads
+  resources :digital_downloads, only: [] do
+    collection do
+      get 'download/:id', to: 'digital_downloads#download', as: 'download'
+    end
+  end
+
   # Review routes
   resources :products, only: [] do
     resources :reviews, only: [:new, :create, :edit, :update, :destroy]
+  end
+
+  # Seller namespace for seller-specific functionality
+  namespace :seller do
+    get 'dashboard', to: 'dashboard#index', as: 'dashboard'
+
+    resources :products do
+      collection do
+        get 'bulk_new'
+        post 'bulk_create'
+        get 'bulk_edit'
+        patch 'bulk_update'
+        get 'download_csv_template'
+      end
+    end
+
+    resources :orders, only: [:index, :show] do
+      member do
+        patch 'update_status'
+      end
+    end
   end
 
   # Defines the root path route ("/")

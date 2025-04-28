@@ -1,267 +1,936 @@
-<%# Enhanced Dashboard Component for Ghana Super App %>
+<%# Redesigned Dashboard Component for Ghana Super App %>
 <%# Optimized for less literate users with strong visual cues, simplified layout, and clear iconography %>
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="dashboard">
-  <!-- Main Header with Greeting and User Info - Enhanced with more visual elements -->
-  <div class="relative mb-8 bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl shadow-xl overflow-hidden">
-    <!-- Decorative elements for visual interest - good for all literacy levels -->
-    <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mt-32 -mr-32 blur-3xl"></div>
-    <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full -mb-24 -ml-24 blur-2xl"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-controller="dashboard animation">
+  <!-- Main Header with Greeting and User Info - Redesigned with beautiful visuals following design system -->
+  <div class="relative mb-8 bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl shadow-md overflow-hidden animate-gradient-shift">
+    <!-- Decorative elements -->
+    <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -mt-24 -mr-24 blur-2xl" data-animation-target="parallax" data-speed="0.05"></div>
+    <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -mb-16 -ml-16 blur-xl" data-animation-target="parallax" data-speed="0.08"></div>
     <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
 
-    <div class="relative p-6 md:p-8 flex flex-col md:flex-row md:items-center md:justify-between">
+    <div class="relative p-6 md:p-7 flex flex-col md:flex-row md:items-center md:justify-between">
       <div class="flex items-center mb-6 md:mb-0">
-        <!-- User avatar with larger size for better visibility -->
-        <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mr-4 shadow-lg border-2 border-white/30">
-          <% if current_user.respond_to?(:avatar) && current_user.avatar.present? %>
-            <%= image_tag current_user.avatar, class: "w-full h-full rounded-full object-cover" %>
-          <% else %>
-            <%= icon "user", class: "w-10 h-10 text-white" %>
-          <% end %>
+        <!-- User avatar with subtle glow effect - clickable for profile dropdown -->
+        <div class="relative">
+          <button data-action="dashboard#toggleProfileDropdown" class="w-20 h-20 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center mr-5 shadow-md border border-white/20 transition-all duration-300 hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-teal-600">
+            <% if current_user.respond_to?(:avatar) && current_user.avatar.present? %>
+              <%= image_tag current_user.avatar, class: "w-full h-full rounded-full object-cover" %>
+            <% else %>
+              <%= icon "user", class: "w-10 h-10 text-white" %>
+            <% end %>
+            <div class="absolute bottom-0 right-0 w-6 h-6 bg-teal-500 rounded-full border-2 border-white flex items-center justify-center">
+              <%= icon "chevron-down", class: "w-3 h-3 text-white" %>
+            </div>
+          </button>
+
+          <!-- Profile Dropdown Menu -->
+          <div data-dashboard-target="profileDropdown" class="hidden absolute left-0 mt-2 w-72 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700 z-50 transform origin-top-left transition-all duration-300">
+            <!-- User info section -->
+            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center mr-3 shadow-sm">
+                  <% if current_user.respond_to?(:avatar) && current_user.avatar.present? %>
+                    <%= image_tag current_user.avatar, class: "w-full h-full rounded-full object-cover" %>
+                  <% else %>
+                    <%= icon "user", class: "w-6 h-6 text-white" %>
+                  <% end %>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-900 dark:text-white">
+                    <%= current_user.respond_to?(:username) ? current_user.username : (current_user[:username] || current_user[:name] || 'Friend') %>
+                  </h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= current_user.respond_to?(:email) ? current_user.email : (current_user[:email] || '') %>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Account status -->
+              <div class="mt-3 flex items-center">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300">
+                  <% if current_user.respond_to?(:admin?) && current_user.admin? %>
+                    Admin Account
+                  <% else %>
+                    Active Account
+                  <% end %>
+                </span>
+                <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                  Member since <%= Time.now.strftime("%b %Y") %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Menu items -->
+            <div class="p-2">
+              <!-- Profile -->
+              <a href="<%= edit_user_registration_path %>" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                <%= icon "user", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                <span>My Profile</span>
+              </a>
+
+              <!-- Wallet -->
+              <a href="<%= wallet_path %>" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                <%= icon "wallet", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                <span>My Wallet</span>
+              </a>
+
+              <!-- Payment Methods -->
+              <a href="<%= payment_methods_path %>" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                <%= icon "credit-card", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                <span>Payment Methods</span>
+              </a>
+
+              <!-- Settings -->
+              <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                <%= icon "settings", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                <span>Settings</span>
+              </a>
+
+              <% if current_user.respond_to?(:admin?) && current_user.admin? %>
+                <!-- Admin Dashboard -->
+                <% if respond_to?(:admin_root_path) %>
+                  <a href="<%= admin_root_path %>" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                    <%= icon "shield", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                    <span>Admin Dashboard</span>
+                  </a>
+                <% else %>
+                  <a href="/admin" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                    <%= icon "shield", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                    <span>Admin Dashboard</span>
+                  </a>
+                <% end %>
+              <% end %>
+
+              <% if current_user.respond_to?(:seller?) && current_user.seller? %>
+                <!-- Seller/Trader Product Management -->
+                <a href="<%= my_products_path %>" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                  <%= icon "shopping-bag", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                  <span>My Products</span>
+                </a>
+              <% end %>
+
+              <!-- Divider -->
+              <div class="my-1 border-t border-gray-200 dark:border-gray-700"></div>
+
+              <!-- Help & Support -->
+              <a href="#" class="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+                <%= icon "help-circle", class: "w-5 h-5 mr-3 text-gray-500 dark:text-gray-400" %>
+                <span>Help & Support</span>
+              </a>
+
+              <!-- Sign Out -->
+              <%= button_to destroy_user_session_path, method: :delete, class: "w-full flex items-center px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors duration-200" do %>
+                <%= icon "log-out", class: "w-5 h-5 mr-3" %>
+                <span>Sign Out</span>
+              <% end %>
+            </div>
+          </div>
         </div>
 
         <div>
-          <!-- More prominent welcome text with simplified language -->
-          <h1 class="text-3xl md:text-4xl font-bold text-white">Hello!</h1>
-          <p class="mt-1 text-xl text-white/90 font-medium">
+          <!-- Welcome text with typewriter animation -->
+          <div class="flex items-center">
+            <h1 class="text-2xl md:text-3xl font-bold text-white animate-text-fade-in">Hello!</h1>
+            <div class="ml-2 text-xl transform origin-bottom-right animate-subtle-bounce">
+              👋
+            </div>
+          </div>
+          <p class="mt-1 text-lg text-white/90 font-medium" data-animation-target="typewriter" data-text="<%= current_user.respond_to?(:username) ? current_user.username : (current_user[:username] || current_user[:name] || 'Friend') %>" data-speed="50">
             <%= current_user.respond_to?(:username) ? current_user.username : (current_user[:username] || current_user[:name] || 'Friend') %>
           </p>
-          <div class="mt-2 flex items-center">
-            <!-- Simple date display -->
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white">
+          <div class="mt-3 flex items-center space-x-3">
+            <!-- Date display with subtle glass effect -->
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/15 text-white backdrop-blur-sm">
               <%= icon "calendar", class: "w-4 h-4 mr-2" %>
               <%= Time.now.strftime("%A, %d %B") %>
+            </span>
+
+            <!-- Weather indicator with subtle glass effect -->
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/15 text-white backdrop-blur-sm">
+              <%= icon "sun", class: "w-4 h-4 mr-2" %>
+              28°C
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Quick action button with clear icon and text -->
-      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <button data-action="click->dashboard#toggleQuickActions" class="bg-white hover:bg-white/90 text-primary-700 px-5 py-3 rounded-xl font-bold shadow-md flex items-center transition-all hover:shadow-lg">
-          <%= icon "plus-circle", class: "w-6 h-6 mr-2" %>
+      <!-- Quick action buttons with enhanced animations -->
+      <div class="flex flex-col sm:flex-row gap-3 sm:gap-4" data-animation-target="stagger">
+        <!-- Notifications button with subtle glass effect -->
+        <button data-animation-target="staggerItem" data-action="click->dashboard#toggleNotifications" class="relative bg-white/15 hover:bg-white/25 text-white px-3 py-2.5 rounded-lg flex items-center transition-all duration-300 backdrop-blur-sm ripple btn-press">
+          <%= icon "bell", class: "w-5 h-5 animate-subtle-pulse" %>
+          <!-- Notification indicator with subtle animation -->
+          <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center border border-white/30 animate-subtle-pulse">3</span>
+        </button>
+
+        <!-- Quick actions button with improved styling and animations -->
+        <button data-animation-target="staggerItem" data-action="click->dashboard#toggleQuickActions" class="bg-white/90 hover:bg-white text-teal-700 px-4 py-2.5 rounded-lg font-medium flex items-center transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 btn-press btn-hover-animation">
+          <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
           Quick Actions
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Quick Actions Panel - Hidden by default, toggled by button -->
-  <div data-dashboard-target="quickActionsPanel" class="hidden mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 transform transition-all duration-300">
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      <!-- Send Money - Action with clear icon and label -->
-      <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center justify-center p-5 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800/30 hover:shadow-lg transition-all duration-300">
-        <div class="w-16 h-16 rounded-full bg-red-500 flex items-center justify-center text-white mb-3 shadow-md">
-          <%= icon "money-out", class: "w-8 h-8" %>
+  <!-- Notifications Panel - Beautiful design with categorized notifications -->
+  <div data-dashboard-target="notificationsPanel" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transform transition-all duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+      <!-- Header -->
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+            <%= icon "bell", class: "w-6 h-6 mr-2 text-teal-500" %>
+            Notifications
+          </h3>
+          <button data-action="click->dashboard#toggleNotifications" class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-all duration-300">
+            <%= icon "x", class: "w-5 h-5" %>
+          </button>
         </div>
-        <span class="text-base font-bold text-gray-900 dark:text-white">Send Money</span>
-      </a>
 
-      <!-- Add Money -->
-      <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center justify-center p-5 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-lg transition-all duration-300">
-        <div class="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white mb-3 shadow-md">
-          <%= icon "money-in", class: "w-8 h-8" %>
+        <!-- Notification filters -->
+        <div class="flex space-x-2 mt-4">
+          <button class="px-3 py-1.5 bg-teal-500 text-white rounded-full text-sm font-medium">
+            All
+          </button>
+          <button class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+            Unread
+          </button>
+          <button class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300">
+            Important
+          </button>
         </div>
-        <span class="text-base font-bold text-gray-900 dark:text-white">Add Money</span>
-      </a>
+      </div>
 
-      <!-- Buy Airtime -->
-      <a href="#" class="flex flex-col items-center justify-center p-5 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300">
-        <div class="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center text-white mb-3 shadow-md">
-          <%= icon "mobile-screen", class: "w-8 h-8" %>
-        </div>
-        <span class="text-base font-bold text-gray-900 dark:text-white">Buy Airtime</span>
-      </a>
+      <!-- Notifications list -->
+      <div class="flex-1 overflow-y-auto">
+        <div class="p-4 border-b border-gray-100 dark:border-gray-800">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Today</div>
 
-      <!-- Pay Bills -->
-      <a href="#" class="flex flex-col items-center justify-center p-5 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800/30 hover:shadow-lg transition-all duration-300">
-        <div class="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center text-white mb-3 shadow-md">
-          <%= icon "file-invoice", class: "w-8 h-8" %>
+          <!-- New notification - Transaction -->
+          <div class="bg-teal-50 dark:bg-teal-900/10 p-4 rounded-xl mb-3 border-l-4 border-teal-500">
+            <div class="flex">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center text-white">
+                  <%= icon "money-in", class: "w-5 h-5" %>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">Money Received</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">You received GHS 500.00 from John Doe.</p>
+                <div class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                  <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                  10 minutes ago
+                </div>
+              </div>
+              <div class="ml-2">
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "dots-vertical", class: "w-5 h-5" %>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- New notification - System -->
+          <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 border border-gray-200 dark:border-gray-700">
+            <div class="flex">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white">
+                  <%= icon "shield-check", class: "w-5 h-5" %>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">Security Alert</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Your account password was changed successfully.</p>
+                <div class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                  <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                  2 hours ago
+                </div>
+              </div>
+              <div class="ml-2">
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "dots-vertical", class: "w-5 h-5" %>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <span class="text-base font-bold text-gray-900 dark:text-white">Pay Bills</span>
-      </a>
+
+        <div class="p-4 border-b border-gray-100 dark:border-gray-800">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Yesterday</div>
+
+          <!-- Older notification - Transaction -->
+          <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 border border-gray-200 dark:border-gray-700">
+            <div class="flex">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white">
+                  <%= icon "money-out", class: "w-5 h-5" %>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">Money Sent</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">You sent GHS 200.00 to Jane Smith.</p>
+                <div class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                  <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                  Yesterday, 4:30 PM
+                </div>
+              </div>
+              <div class="ml-2">
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "dots-vertical", class: "w-5 h-5" %>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Older notification - Promotion -->
+          <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 border border-gray-200 dark:border-gray-700">
+            <div class="flex">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white">
+                  <%= icon "gift", class: "w-5 h-5" %>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">Special Offer</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Get 50% bonus on airtime purchases this weekend!</p>
+                <div class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                  <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                  Yesterday, 10:15 AM
+                </div>
+              </div>
+              <div class="ml-2">
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "dots-vertical", class: "w-5 h-5" %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Earlier</div>
+
+          <!-- Older notification - System -->
+          <div class="bg-white dark:bg-gray-800 p-4 rounded-xl mb-3 border border-gray-200 dark:border-gray-700">
+            <div class="flex">
+              <div class="flex-shrink-0 mr-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white">
+                  <%= icon "mobile-screen", class: "w-5 h-5" %>
+                </div>
+              </div>
+              <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900 dark:text-white">Airtime Purchase</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">You purchased GHS 20.00 airtime for +233 55 123 4567.</p>
+                <div class="mt-2 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                  <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                  2 days ago
+                </div>
+              </div>
+              <div class="ml-2">
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "dots-vertical", class: "w-5 h-5" %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer with actions -->
+      <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <div class="flex justify-between">
+          <button class="text-sm text-teal-600 dark:text-teal-400 font-medium flex items-center">
+            <%= icon "check-circle", class: "w-4 h-4 mr-1.5" %>
+            Mark all as read
+          </button>
+          <a href="#" class="text-sm text-gray-600 dark:text-gray-400 font-medium flex items-center hover:text-gray-900 dark:hover:text-white">
+            View all notifications
+            <%= icon "chevron-right", class: "w-4 h-4 ml-1.5" %>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Main Balance Card - Very prominent with strong visual design -->
+  <!-- Quick Actions Panel - Redesigned with enhanced visuals, categories, and search -->
+  <div data-dashboard-target="quickActionsPanel" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transform transition-all duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <!-- Header with search -->
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+            <%= icon "lightning-bolt", class: "w-6 h-6 mr-2 text-amber-500" %>
+            Quick Actions
+          </h3>
+          <button data-action="click->dashboard#toggleQuickActions" class="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 p-2 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-all duration-300">
+            <%= icon "x", class: "w-5 h-5" %>
+          </button>
+        </div>
+
+        <!-- Search bar -->
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <%= icon "search", class: "w-5 h-5 text-gray-400" %>
+          </div>
+          <input type="text" class="block w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 focus:border-transparent transition-all duration-300" placeholder="Search for actions...">
+        </div>
+      </div>
+
+      <!-- Content area with scrolling -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <!-- Recently Used Section -->
+        <div class="mb-8">
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "clock", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Recently Used
+          </h4>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- Send Money -->
+            <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "money-out", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Send Money</span>
+            </a>
+
+            <!-- Add Money -->
+            <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "money-in", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Add Money</span>
+            </a>
+
+            <!-- Buy Airtime -->
+            <a href="<%= wallet_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "mobile-screen", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Buy Airtime</span>
+            </a>
+          </div>
+        </div>
+
+        <% if current_user.respond_to?(:seller?) && current_user.seller? %>
+        <!-- Seller Section -->
+        <div class="mb-8">
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "shopping-bag", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Seller Tools
+          </h4>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- Manage Products -->
+            <a href="<%= my_products_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "shopping-bag", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">My Products</span>
+            </a>
+
+            <!-- Add New Product -->
+            <a href="<%= new_my_product_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "plus-circle", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Add Product</span>
+            </a>
+
+            <!-- Bulk Upload -->
+            <a href="<%= bulk_new_my_products_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "upload", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Bulk Upload</span>
+            </a>
+          </div>
+        </div>
+        <% end %>
+
+        <% unless current_user.seller? %>
+        <!-- Become a Seller Section -->
+        <div class="mb-8">
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "shopping-bag", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Sell on Super Ghana
+          </h4>
+
+          <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl border border-primary-200 dark:border-primary-800/30 p-6 mb-6">
+            <div class="flex flex-col md:flex-row items-center">
+              <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white shadow-lg">
+                  <%= icon "store", class: "w-8 h-8" %>
+                </div>
+              </div>
+              <div class="flex-grow text-center md:text-left">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Start selling today!</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">List your products and reach thousands of customers across Ghana.</p>
+                <%= button_to become_seller_path, method: :patch, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                  <%= icon "check-circle", class: "w-5 h-5 mr-2" %>
+                  Become a Seller
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+        <!-- Money & Payments Section -->
+        <div class="mb-8">
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "credit-card", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Money & Payments
+          </h4>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- Send Money -->
+            <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "money-out", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Send Money</span>
+            </a>
+
+            <!-- Add Money -->
+            <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "money-in", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Add Money</span>
+            </a>
+
+            <!-- Transfer Money -->
+            <a href="<%= new_transaction_wallet_path(type: 'transfer') %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl border border-teal-200 dark:border-teal-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "transfer", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Transfer Money</span>
+            </a>
+
+            <!-- Pay Bills -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-xl border border-purple-200 dark:border-purple-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "file-invoice", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Pay Bills</span>
+            </a>
+
+            <!-- Scan to Pay -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "qrcode", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Scan to Pay</span>
+            </a>
+
+            <!-- Request Money -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-blue-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "hand", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Request Money</span>
+            </a>
+
+            <!-- Payment Link -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20 rounded-xl border border-pink-200 dark:border-pink-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "link", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Payment Link</span>
+            </a>
+
+            <!-- View Transactions -->
+            <a href="<%= transactions_wallet_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl border border-gray-200 dark:border-gray-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gray-500 to-slate-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "history", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Transactions</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile & Internet Section -->
+        <div class="mb-8">
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "mobile-screen", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Mobile & Internet
+          </h4>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- Buy Airtime -->
+            <a href="<%= wallet_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "mobile-screen", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Buy Airtime</span>
+            </a>
+
+            <!-- Buy Data -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "wifi", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Buy Data</span>
+            </a>
+
+            <!-- TV Subscription -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "tv", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">TV Subscription</span>
+            </a>
+
+            <!-- Internet Bundle -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "globe", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Internet Bundle</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Other Services Section -->
+        <div>
+          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+            <%= icon "grid", class: "w-4 h-4 mr-2 text-gray-400" %>
+            Other Services
+          </h4>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- My Events -->
+            <a href="<%= my_events_events_path %>" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl border border-rose-200 dark:border-rose-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "calendar", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">My Events</span>
+            </a>
+
+            <!-- Find ATM -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "location-point", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Find ATM</span>
+            </a>
+
+            <!-- Help & Support -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-sky-50 dark:from-blue-900/20 dark:to-sky-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-sky-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "help-circle", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Help & Support</span>
+            </a>
+
+            <!-- Settings -->
+            <a href="#" class="flex flex-col items-center justify-center p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl border border-gray-200 dark:border-gray-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gray-500 to-slate-500 flex items-center justify-center text-white mb-3 shadow-md">
+                <%= icon "settings", class: "w-7 h-7" %>
+              </div>
+              <span class="text-sm font-bold text-gray-900 dark:text-white">Settings</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Balance Card - Redesigned with beautiful visuals following design system -->
   <div class="mb-8">
-    <div class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 rounded-2xl shadow-xl text-white relative overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-      <!-- Decorative elements for visual appeal - subtle pattern to make card distinctive -->
+    <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-2xl shadow-md text-white relative overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <!-- Enhanced decorative elements -->
       <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
       <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-lg"></div>
 
+      <!-- Card pattern overlay -->
+      <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
       <!-- Card content with enhanced styling and clear layout -->
-      <div class="p-6 relative z-10">
+      <div class="p-6 md:p-7 relative z-10">
         <div class="flex justify-between items-start">
           <div>
-            <!-- Clear label with icon for balance -->
-            <h2 class="text-xl font-medium flex items-center">
-              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
+            <!-- Enhanced label with icon for balance -->
+            <h2 class="text-xl font-bold flex items-center">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center mr-3 shadow-sm backdrop-blur-sm">
                 <%= icon "wallet", class: "w-6 h-6" %>
               </div>
-              <span>Your Money</span>
+              <span>Your Balance</span>
             </h2>
 
-            <!-- Extra large balance display for visibility -->
-            <div class="mt-4 flex items-baseline" data-dashboard-target="balanceContainer">
+            <!-- Enhanced balance display with subtle animation -->
+            <div class="mt-5 flex items-baseline" data-dashboard-target="balanceContainer">
               <% if @show_balance != false %>
-                <span class="text-5xl font-extrabold tracking-tight" data-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
+                <span class="text-5xl font-bold tracking-tight" data-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
                 <span class="ml-2 text-xl opacity-90 font-medium"><%= @wallet.currency %></span>
               <% else %>
-                <span class="text-5xl font-extrabold tracking-tight">•••••</span>
+                <span class="text-5xl font-bold tracking-tight">•••••</span>
               <% end %>
             </div>
 
-            <!-- Security badge for trust -->
-            <div class="mt-2 text-sm text-white/80">
-              <span class="inline-flex items-center bg-white/20 px-3 py-1.5 rounded-full">
-                <%= icon "shield-check", class: "w-4 h-4 mr-1" %>
+            <!-- Enhanced security badge with glass effect -->
+            <div class="mt-3 text-sm text-white/90">
+              <span class="inline-flex items-center bg-white/15 px-3 py-1 rounded-full backdrop-blur-sm">
+                <%= icon "shield-check", class: "w-4 h-4 mr-2" %>
                 <span>Secure Balance</span>
+              </span>
+
+              <!-- Last updated indicator with subtle styling -->
+              <span class="inline-flex items-center ml-3 text-white/80">
+                <%= icon "clock", class: "w-3.5 h-3.5 mr-1" %>
+                <span>Updated just now</span>
               </span>
             </div>
           </div>
 
-          <!-- Balance visibility toggle and refresh with clear icons -->
+          <!-- Enhanced balance visibility toggle and refresh -->
           <div class="flex space-x-2">
-            <button type="button" class="bg-white/20 hover:bg-white/30 transition-all duration-300 p-3 rounded-full shadow-md hover:shadow-lg" data-action="dashboard#toggleBalance" aria-label="Show/Hide Balance">
+            <button type="button" class="bg-white/15 hover:bg-white/25 transition-all duration-300 p-3 rounded-lg backdrop-blur-sm" data-action="dashboard#toggleBalance" aria-label="Show/Hide Balance">
               <% if @show_balance != false %>
-                <%= icon "eye-off", class: "w-6 h-6" %>
+                <%= icon "eye-off", class: "w-5 h-5" %>
               <% else %>
-                <%= icon "eye", class: "w-6 h-6" %>
+                <%= icon "eye", class: "w-5 h-5" %>
               <% end %>
             </button>
-            <button type="button" class="bg-white/20 hover:bg-white/30 transition-all duration-300 p-3 rounded-full shadow-md hover:shadow-lg" data-dashboard-target="refreshButton" data-action="dashboard#refreshBalance" aria-label="Refresh balance">
-              <%= icon "refresh", class: "w-6 h-6" %>
+            <button type="button" class="bg-white/15 hover:bg-white/25 transition-all duration-300 p-3 rounded-lg backdrop-blur-sm" data-dashboard-target="refreshButton" data-action="dashboard#refreshBalance" aria-label="Refresh balance">
+              <%= icon "refresh", class: "w-5 h-5" %>
             </button>
           </div>
         </div>
 
-        <!-- Action buttons with strong visual cues -->
-        <div class="flex justify-between space-x-4 mt-8">
-          <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex-1 flex items-center justify-center bg-white hover:bg-white/90 text-primary-700 px-4 py-4 rounded-xl font-bold shadow-md text-base transition-all duration-300 hover:shadow-lg">
-            <%= icon "money-in", class: "w-6 h-6 mr-2" %>
+        <!-- Enhanced action buttons with improved styling -->
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex items-center justify-center bg-white/90 hover:bg-white text-teal-700 px-4 py-3 rounded-lg font-medium text-base transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+            <%= icon "money-in", class: "w-5 h-5 mr-2" %>
             Add Money
           </a>
-          <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex-1 flex items-center justify-center bg-white/20 hover:bg-white/30 text-white px-4 py-4 rounded-xl font-bold text-base border border-white/30 transition-all duration-300 hover:border-white/50 hover:shadow-lg">
-            <%= icon "money-out", class: "w-6 h-6 mr-2" %>
+          <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex items-center justify-center bg-white/15 hover:bg-white/25 text-white px-4 py-3 rounded-lg font-medium text-base border border-white/20 transition-all duration-300 backdrop-blur-sm hover:border-white/30 transform hover:-translate-y-0.5">
+            <%= icon "money-out", class: "w-5 h-5 mr-2" %>
             Send Money
           </a>
         </div>
+
+        <!-- Enhanced quick action shortcuts with improved styling -->
+        <div class="flex justify-between mt-5">
+          <a href="<%= new_transaction_wallet_path(type: 'transfer') %>" class="flex flex-col items-center justify-center px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-0.5">
+            <%= icon "transfer", class: "w-5 h-5 mb-1" %>
+            <span class="text-xs font-medium">Transfer</span>
+          </a>
+
+          <a href="#" class="flex flex-col items-center justify-center px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-0.5">
+            <%= icon "qrcode", class: "w-5 h-5 mb-1" %>
+            <span class="text-xs font-medium">Scan</span>
+          </a>
+
+          <a href="#" class="flex flex-col items-center justify-center px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-0.5">
+            <%= icon "history", class: "w-5 h-5 mb-1" %>
+            <span class="text-xs font-medium">History</span>
+          </a>
+
+          <a href="#" class="flex flex-col items-center justify-center px-3 py-2 bg-white/15 hover:bg-white/25 rounded-lg transition-all duration-300 backdrop-blur-sm transform hover:-translate-y-0.5">
+            <%= icon "more-horizontal", class: "w-5 h-5 mb-1" %>
+            <span class="text-xs font-medium">More</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Main Features Grid - Visual-centric grid with clear functions -->
-  <div class="mb-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-    <%
-      # Define main features with clear icons and colors
-      main_features = [
-        {
-          name: "Pay Bills",
-          icon: "file-invoice",
-          color: "bg-blue-500",
-          bg: "bg-blue-50 dark:bg-blue-900/20",
-          border: "border-blue-200 dark:border-blue-800/30",
-          path: "#"
-        },
-        {
-          name: "Buy Airtime",
-          icon: "mobile-screen",
-          color: "bg-purple-500",
-          bg: "bg-purple-50 dark:bg-purple-900/20",
-          border: "border-purple-200 dark:border-purple-800/30",
-          path: "#"
-        },
-        {
-          name: "Transfer Money",
-          icon: "transfer",
-          color: "bg-green-500",
-          bg: "bg-green-50 dark:bg-green-900/20",
-          border: "border-green-200 dark:border-green-800/30",
-          path: new_transaction_wallet_path(type: 'transfer')
-        },
-        {
-          name: "Scan to Pay",
-          icon: "qrcode",
-          color: "bg-amber-500",
-          bg: "bg-amber-50 dark:bg-amber-900/20",
-          border: "border-amber-200 dark:border-amber-800/30",
-          path: "#"
-        },
-        {
-          name: "My Events",
-          icon: "calendar",
-          color: "bg-pink-500",
-          bg: "bg-pink-50 dark:bg-pink-900/20",
-          border: "border-pink-200 dark:border-pink-800/30",
-          path: my_events_events_path
-        },
-        {
-          name: "Find ATM",
-          icon: "location-point",
-          color: "bg-teal-500",
-          bg: "bg-teal-50 dark:bg-teal-900/20",
-          border: "border-teal-200 dark:border-teal-800/30",
-          path: "#"
-        },
-        {
-          name: "Help",
-          icon: "question-circle",
-          color: "bg-indigo-500",
-          bg: "bg-indigo-50 dark:bg-indigo-900/20",
-          border: "border-indigo-200 dark:border-indigo-800/30",
-          path: "#"
-        },
-        {
-          name: "More",
-          icon: "dots-horizontal",
-          color: "bg-gray-500",
-          bg: "bg-gray-50 dark:bg-gray-900/20",
-          border: "border-gray-200 dark:border-gray-800/30",
-          path: "#"
-        }
-      ]
-    %>
+  <!-- Main Features Grid - Redesigned with enhanced visuals, categorization, and animations -->
+  <div class="mb-8">
+    <!-- Section header with category tabs -->
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center animate-text-fade-in">
+        <%= icon "grid", class: "w-5 h-5 mr-2 text-indigo-500 animate-icon-pulse" %>
+        Services & Features
+      </h2>
 
-    <% main_features.each do |feature| %>
-      <a href="<%= feature[:path] %>" class="flex flex-col items-center justify-center p-4 <%= feature[:bg] %> rounded-xl border <%= feature[:border] %> hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-        <div class="w-16 h-16 rounded-full <%= feature[:color] %> flex items-center justify-center text-white mb-3 shadow-md">
-          <%= icon feature[:icon], class: "w-8 h-8" %>
-        </div>
-        <span class="text-base font-bold text-gray-900 dark:text-white text-center"><%= feature[:name] %></span>
-      </a>
-    <% end %>
+      <!-- Category tabs -->
+      <div class="flex space-x-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+        <button class="px-4 py-1.5 rounded-md bg-white dark:bg-gray-700 shadow-sm text-sm font-medium text-gray-900 dark:text-white" data-target="dashboard.categoryTab">
+          All
+        </button>
+        <button class="px-4 py-1.5 rounded-md text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" data-target="dashboard.categoryTab">
+          Payments
+        </button>
+        <button class="px-4 py-1.5 rounded-md text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" data-target="dashboard.categoryTab">
+          Services
+        </button>
+      </div>
+    </div>
+
+    <!-- Enhanced features grid with staggered animations -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" data-animation-target="stagger">
+      <%
+        # Define main features with enhanced visuals and descriptions
+        main_features = [
+          {
+            name: "Pay Bills",
+            description: "Utilities & services",
+            icon: "file-invoice",
+            gradient: "from-blue-500 to-indigo-500",
+            bg: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20",
+            border: "border-blue-200 dark:border-blue-800/30",
+            path: "#",
+            badge: nil
+          },
+          {
+            name: "Buy Airtime",
+            description: "Mobile & data",
+            icon: "mobile-screen",
+            gradient: "from-purple-500 to-violet-500",
+            bg: "from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
+            border: "border-purple-200 dark:border-purple-800/30",
+            path: wallet_path,
+            badge: "Popular"
+          },
+          {
+            name: "Transfer Money",
+            description: "To bank accounts",
+            icon: "transfer",
+            gradient: "from-green-500 to-emerald-500",
+            bg: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+            border: "border-green-200 dark:border-green-800/30",
+            path: new_transaction_wallet_path(type: 'transfer'),
+            badge: nil
+          },
+          {
+            name: "Scan to Pay",
+            description: "Quick payments",
+            icon: "qrcode",
+            gradient: "from-amber-500 to-yellow-500",
+            bg: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20",
+            border: "border-amber-200 dark:border-amber-800/30",
+            path: "#",
+            badge: "New"
+          },
+          {
+            name: "My Events",
+            description: "Tickets & bookings",
+            icon: "calendar",
+            gradient: "from-pink-500 to-rose-500",
+            bg: "from-pink-50 to-rose-50 dark:from-pink-900/20 dark:to-rose-900/20",
+            border: "border-pink-200 dark:border-pink-800/30",
+            path: my_events_events_path,
+            badge: nil
+          },
+          {
+            name: "Find ATM",
+            description: "Nearby locations",
+            icon: "location-point",
+            gradient: "from-teal-500 to-cyan-500",
+            bg: "from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20",
+            border: "border-teal-200 dark:border-teal-800/30",
+            path: "#",
+            badge: nil
+          },
+          {
+            name: "Help Center",
+            description: "Support & guides",
+            icon: "question-circle",
+            gradient: "from-indigo-500 to-blue-500",
+            bg: "from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20",
+            border: "border-indigo-200 dark:border-indigo-800/30",
+            path: "#",
+            badge: nil
+          },
+          {
+            name: "More Services",
+            description: "View all options",
+            icon: "dots-horizontal",
+            gradient: "from-gray-500 to-slate-500",
+            bg: "from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20",
+            border: "border-gray-200 dark:border-gray-800/30",
+            path: "#",
+            badge: nil
+          }
+        ]
+      %>
+
+      <% main_features.each do |feature| %>
+        <a href="<%= feature[:path] %>" class="group flex flex-col p-5 bg-gradient-to-br <%= feature[:bg] %> rounded-xl border <%= feature[:border] %> hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden card-hover-animation" data-target="dashboard.featureCard" data-animation-target="staggerItem" data-animation-target="reveal">
+          <!-- Feature badge (if present) -->
+          <% if feature[:badge].present? %>
+            <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium <%= feature[:badge] == 'New' ? 'bg-green-500 text-white' : 'bg-amber-500 text-white' %>">
+              <%= feature[:badge] %>
+            </span>
+          <% end %>
+
+          <!-- Enhanced icon with gradient and animations -->
+          <div class="w-16 h-16 rounded-full bg-gradient-to-br <%= feature[:gradient] %> flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110 hover-glow-teal">
+            <%= icon feature[:icon], class: "w-8 h-8 animate-subtle-pulse" %>
+          </div>
+
+          <!-- Feature name and description -->
+          <div>
+            <span class="text-base font-bold text-gray-900 dark:text-white block"><%= feature[:name] %></span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 mt-1 block"><%= feature[:description] %></span>
+          </div>
+        </a>
+      <% end %>
+    </div>
   </div>
 
-  <!-- Recent Transactions with visual indicators and simplified presentation -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <!-- Header with distinctive color and clear title -->
-    <div class="bg-gradient-to-r from-secondary-600 to-secondary-700 p-5 text-white">
+  <!-- Recent Transactions - Redesigned with enhanced visuals and filtering -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+    <!-- Enhanced header with beautiful gradient following design system -->
+    <div class="bg-gradient-to-r from-teal-600 to-emerald-600 p-6 text-white">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-            <%= icon "history", class: "w-5 h-5" %>
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center mr-4 shadow-sm backdrop-blur-sm">
+            <%= icon "history", class: "w-6 h-6" %>
           </div>
-          <h2 class="text-xl font-bold">Recent Activity</h2>
+          <div>
+            <h2 class="text-xl font-bold">Recent Activity</h2>
+            <p class="text-white/80 text-sm mt-1">Your latest transactions</p>
+          </div>
         </div>
-        <a href="<%= transactions_wallet_path %>" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium flex items-center transition-all duration-300">
-          <span>See All</span>
-          <%= icon "chevron-right", class: "w-4 h-4 ml-2" %>
-        </a>
+
+        <!-- Enhanced action buttons with improved styling -->
+        <div class="flex space-x-2">
+          <button data-action="dashboard#refreshTransactions" class="bg-white/15 hover:bg-white/25 p-3 rounded-lg text-sm flex items-center justify-center transition-all duration-300 backdrop-blur-sm" aria-label="Refresh transactions">
+            <%= icon "refresh", class: "w-4 h-4" %>
+          </button>
+          <a href="<%= transactions_wallet_path %>" class="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm">
+            <span>View All</span>
+            <%= icon "chevron-right", class: "w-4 h-4 ml-2" %>
+          </a>
+        </div>
+      </div>
+
+      <!-- Enhanced transaction filters with improved styling -->
+      <div class="flex items-center space-x-3 mt-5 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="bg-white/20 hover:bg-white/30 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap shadow-sm">
+          All Transactions
+        </button>
+        <button class="bg-white/15 hover:bg-white/25 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "money-in", class: "w-4 h-4 mr-2 text-green-300" %>
+          Money In
+        </button>
+        <button class="bg-white/15 hover:bg-white/25 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "money-out", class: "w-4 h-4 mr-2 text-red-300" %>
+          Money Out
+        </button>
+        <button class="bg-white/15 hover:bg-white/25 px-4 py-1.5 rounded-lg text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "calendar", class: "w-4 h-4 mr-2" %>
+          Date Range
+        </button>
       </div>
     </div>
 
-    <!-- Transactions list with visual distinction between transaction types -->
-    <div class="p-5 relative max-h-[500px] overflow-y-auto" data-dashboard-target="recentTransactions">
+    <!-- Enhanced transactions list with improved visual distinction -->
+    <div class="p-6 relative max-h-[500px] overflow-y-auto" data-dashboard-target="recentTransactions">
       <% if @recent_transactions.empty? %>
-        <!-- Empty state with clear visual cue -->
+        <!-- Enhanced empty state with better visuals -->
         <div class="p-8 text-center">
-          <div class="w-24 h-24 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-4 text-gray-400 dark:text-gray-500">
-            <%= icon "empty-wallet", class: "w-12 h-12" %>
+          <div class="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center mb-5 shadow-inner">
+            <%= icon "empty-wallet", class: "w-14 h-14 text-gray-400 dark:text-gray-500" %>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No Activity Yet</h3>
-          <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">Your transactions will show up here</p>
-          <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="inline-flex items-center px-6 py-3 rounded-xl font-bold shadow-lg bg-secondary-600 hover:bg-secondary-700 text-white transition-all duration-300">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">No Activity Yet</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">Your financial transactions will appear here once you start using your wallet.</p>
+          <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="inline-flex items-center px-6 py-3 rounded-xl font-bold shadow-lg bg-gradient-to-r from-teal-600 to-emerald-600 text-white transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
             <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
             Add Money Now
           </a>
@@ -270,53 +939,60 @@
         <div class="space-y-4">
           <% @recent_transactions.first(5).each do |transaction| %>
             <%
-              # Set visual parameters based on transaction type for clear distinction
+              # Enhanced visual parameters for transaction types
               tx_type = transaction.transaction_type.to_s.downcase
               tx_label = ""
               icon_name = ""
+              gradient = ""
               tx_bg = ""
               text_color = ""
               amount_color = ""
               is_incoming = transaction.direction_for_user(current_user.respond_to?(:id) ? current_user.id : current_user[:id]) == :incoming
 
-              # Configure visual elements based on transaction type
+              # Configure enhanced visual elements based on transaction type
               if tx_type == 'deposit' || is_incoming
                 icon_name = "money-in"
-                tx_bg = "bg-green-100 dark:bg-green-900/30"
+                gradient = "from-green-500 to-emerald-500"
+                tx_bg = "from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30"
                 tx_label = "Money Received"
                 text_color = "text-green-600 dark:text-green-400"
                 amount_color = "text-green-600 dark:text-green-400"
               elsif tx_type == 'withdrawal' || !is_incoming
                 icon_name = "money-out"
-                tx_bg = "bg-red-100 dark:bg-red-900/30"
+                gradient = "from-red-500 to-pink-500"
+                tx_bg = "from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30"
                 tx_label = "Money Sent"
                 text_color = "text-red-600 dark:text-red-400"
                 amount_color = "text-red-600 dark:text-red-400"
               elsif tx_type == 'transfer'
                 icon_name = "transfer"
-                tx_bg = "bg-blue-100 dark:bg-blue-900/30"
+                gradient = "from-blue-500 to-indigo-500"
+                tx_bg = "from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/30"
                 tx_label = "Transfer"
                 text_color = "text-blue-600 dark:text-blue-400"
                 amount_color = is_incoming ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
               else
                 icon_name = "credit-card"
-                tx_bg = "bg-purple-100 dark:bg-purple-900/30"
+                gradient = "from-purple-500 to-violet-500"
+                tx_bg = "from-purple-100 to-violet-100 dark:from-purple-900/30 dark:to-violet-900/30"
                 tx_label = "Payment"
                 text_color = "text-purple-600 dark:text-purple-400"
                 amount_color = is_incoming ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
               end
             %>
 
-            <!-- Transaction card with strong visual cues for transaction type -->
-            <a href="<%= transaction_path(id: transaction.id) %>" class="block bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-4 rounded-xl hover:shadow-md transition-all duration-300">
+            <!-- Enhanced transaction card with improved visuals -->
+            <a href="#" data-transaction-id="<%= transaction.id %>" data-action="dashboard#showTransactionDetails" class="group block bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-5 rounded-xl hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
               <div class="flex items-center justify-between">
                 <div class="flex items-center">
-                  <!-- Transaction type icon with distinctive color -->
-                  <div class="flex-shrink-0 h-14 w-14 rounded-full <%= tx_bg %> flex items-center justify-center shadow-md mr-4">
-                    <%= icon icon_name, class: "h-7 w-7 #{text_color}" %>
+                  <!-- Enhanced transaction type icon with gradient -->
+                  <div class="flex-shrink-0 h-16 w-16 rounded-full bg-gradient-to-br <%= tx_bg %> flex items-center justify-center shadow-md mr-4 group-hover:shadow-lg transition-all duration-300">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br <%= gradient %> flex items-center justify-center">
+                      <%= icon icon_name, class: "h-6 w-6 text-white" %>
+                    </div>
                   </div>
                   <div>
-                    <!-- Clear transaction label with description -->
+                    <!-- Enhanced transaction label with improved typography -->
                     <div class="text-base font-bold text-gray-900 dark:text-white <%= text_color %>">
                       <%= tx_label %>
                     </div>
@@ -327,26 +1003,42 @@
                         <%= transaction.transaction_type_description %>
                       <% end %>
                     </div>
-                    <!-- Simple date format -->
-                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <!-- Enhanced date format with icon -->
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
+                      <%= icon "clock", class: "w-3.5 h-3.5 mr-1.5 opacity-70" %>
                       <%= transaction.created_at.strftime("%d %b, %I:%M %p") %>
                     </div>
                   </div>
                 </div>
-                <!-- Amount with visual indicator (+ or -) -->
+                <!-- Enhanced amount display with sign indicator -->
                 <div class="text-right">
-                  <div class="text-xl font-bold <%= amount_color %>">
+                  <div class="text-xl font-bold <%= amount_color %> flex items-center justify-end">
+                    <% if is_incoming %>
+                      <span class="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-1.5">
+                        <%= icon "plus", class: "w-3 h-3 text-green-600 dark:text-green-400" %>
+                      </span>
+                    <% else %>
+                      <span class="w-5 h-5 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mr-1.5">
+                        <%= icon "minus", class: "w-3 h-3 text-red-600 dark:text-red-400" %>
+                      </span>
+                    <% end %>
                     <%= transaction.signed_amount_for_user(current_user.respond_to?(:id) ? current_user.id : current_user[:id]) %>
+                  </div>
+
+                  <!-- Transaction status indicator -->
+                  <div class="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                    <%= icon "check-circle", class: "w-3 h-3 mr-1" %>
+                    Completed
                   </div>
                 </div>
               </div>
             </a>
           <% end %>
 
-          <!-- Clear "See All" button at bottom -->
-          <div class="text-center pt-2">
-            <a href="<%= transactions_wallet_path %>" class="inline-flex items-center px-5 py-2 rounded-xl bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-300">
-              See All Transactions
+          <!-- Enhanced "See All" button -->
+          <div class="text-center pt-4">
+            <a href="<%= transactions_wallet_path %>" class="inline-flex items-center px-6 py-3 rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/10 dark:to-emerald-900/10 border border-teal-200 dark:border-teal-800/30 text-teal-700 dark:text-teal-300 font-medium hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+              View All Transactions
               <%= icon "arrow-right", class: "h-4 w-4 ml-2" %>
             </a>
           </div>
@@ -355,532 +1047,1203 @@
     </div>
   </div>
 
-  <!-- Promotional Offers/Tips with strong visual elements - good for all literacy levels -->
+  <!-- Special Offers - Redesigned with enhanced visuals, carousel, and animations -->
   <div class="mb-8">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Special Offers</h2>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center animate-text-fade-in">
+        <%= icon "gift", class: "w-5 h-5 mr-2 text-indigo-500 animate-icon-bounce" %>
+        Special Offers
+      </h2>
+
+      <!-- Carousel navigation -->
+      <div class="flex items-center space-x-2">
+        <button class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300">
+          <%= icon "chevron-left", class: "w-5 h-5" %>
+        </button>
+        <div class="flex space-x-1">
+          <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
+          <div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+          <div class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+        </div>
+        <button class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300">
+          <%= icon "chevron-right", class: "w-5 h-5" %>
+        </button>
+      </div>
     </div>
 
-    <div class="overflow-x-auto">
-      <div class="flex space-x-4 pb-2" style="min-width: max-content;">
-        <!-- Offer 1 -->
-        <div class="w-80 h-40 rounded-2xl overflow-hidden shadow-lg relative">
-          <!-- Visual background with gradient for contrast with text -->
-          <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-800"></div>
-          <!-- Decorative circular elements -->
-          <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-white/10 -mr-8 -mt-8"></div>
-          <div class="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-white/10 -ml-4 -mb-4"></div>
+    <div class="overflow-x-auto pb-4 scrollbar-hide">
+      <div class="flex space-x-5 stagger-fade-in" style="min-width: max-content;" data-animation-target="stagger">
+        <!-- Offer 1 - Enhanced with better visuals and animations -->
+        <div class="w-80 h-48 rounded-2xl overflow-hidden shadow-xl relative group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" data-animation-target="staggerItem reveal" data-animation-target="parallax" data-speed="0.03">
+          <!-- Enhanced background with animated gradient -->
+          <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-primary-600 to-purple-600"></div>
 
-          <!-- Content with large icon and simple text -->
-          <div class="absolute inset-0 p-4 flex flex-col justify-between">
-            <div class="flex items-start justify-between">
+          <!-- Enhanced decorative elements -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -mr-10 -mt-10 blur-xl"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-6 -mb-6 blur-lg"></div>
+
+          <!-- Animated particle effects -->
+          <div class="absolute top-1/4 right-1/3 w-3 h-3 rounded-full bg-white/30 animate-pulse-slow"></div>
+          <div class="absolute bottom-1/3 left-1/4 w-2 h-2 rounded-full bg-white/20 animate-pulse-slower"></div>
+
+          <!-- Pattern overlay -->
+          <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+          <!-- Enhanced content with better typography and layout -->
+          <div class="absolute inset-0 p-5 flex flex-col justify-between">
+            <!-- Limited time badge -->
+            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm w-fit">
+              <%= icon "clock", class: "w-3.5 h-3.5 mr-1.5" %>
+              Limited Time Offer
+            </div>
+
+            <div class="flex items-start justify-between mt-2">
               <div>
-                <h3 class="text-xl font-bold text-white">50% Bonus Airtime</h3>
-                <p class="text-white/80 text-sm mt-1 max-w-[200px]">Buy airtime this weekend and get 50% extra!</p>
+                <h3 class="text-2xl font-bold text-white">50% Bonus Airtime</h3>
+                <p class="text-white/90 text-sm mt-2 max-w-[200px]">Buy airtime this weekend and get 50% extra on all networks!</p>
               </div>
-              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                <%= icon "mobile-screen", class: "w-6 h-6 text-white" %>
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-sm flex items-center justify-center shadow-md">
+                <%= icon "mobile-screen", class: "w-7 h-7 text-white" %>
               </div>
             </div>
-            <button class="w-full mt-2 py-2 bg-white text-primary-700 rounded-lg font-bold">
-              Get Offer
-            </button>
+
+            <a href="<%= wallet_path %>" class="w-full mt-3 py-2.5 bg-white hover:bg-white/90 text-indigo-700 rounded-xl font-bold shadow-md transition-all duration-300 text-center transform group-hover:scale-105">
+              Get Offer Now
+            </a>
           </div>
         </div>
 
-        <!-- Offer 2 -->
-        <div class="w-80 h-40 rounded-2xl overflow-hidden shadow-lg relative">
-          <div class="absolute inset-0 bg-gradient-to-r from-secondary-600 to-secondary-800"></div>
-          <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-white/10 -mr-8 -mt-8"></div>
-          <div class="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-white/10 -ml-4 -mb-4"></div>
+        <!-- Offer 2 - Enhanced with better visuals and animations -->
+        <div class="w-80 h-48 rounded-2xl overflow-hidden shadow-xl relative group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" data-animation-target="staggerItem reveal" data-animation-target="parallax" data-speed="0.05">
+          <!-- Enhanced background with animated gradient -->
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-800"></div>
 
-          <div class="absolute inset-0 p-4 flex flex-col justify-between">
-            <div class="flex items-start justify-between">
+          <!-- Enhanced decorative elements -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -mr-10 -mt-10 blur-xl"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-6 -mb-6 blur-lg"></div>
+
+          <!-- Animated particle effects -->
+          <div class="absolute top-1/3 right-1/4 w-3 h-3 rounded-full bg-white/30 animate-pulse-slow"></div>
+          <div class="absolute bottom-1/4 left-1/3 w-2 h-2 rounded-full bg-white/20 animate-pulse-slower"></div>
+
+          <!-- Pattern overlay -->
+          <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+          <!-- Enhanced content with better typography and layout -->
+          <div class="absolute inset-0 p-5 flex flex-col justify-between">
+            <!-- New badge -->
+            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-500 text-white w-fit">
+              <%= icon "star", class: "w-3.5 h-3.5 mr-1.5" %>
+              New Offer
+            </div>
+
+            <div class="flex items-start justify-between mt-2">
               <div>
-                <h3 class="text-xl font-bold text-white">No Fees on Transfers</h3>
-                <p class="text-white/80 text-sm mt-1 max-w-[200px]">Send money for free until 30 April!</p>
+                <h3 class="text-2xl font-bold text-white">No Fees on Transfers</h3>
+                <p class="text-white/90 text-sm mt-2 max-w-[200px]">Send money to any bank for free until 30 April!</p>
               </div>
-              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                <%= icon "transfer", class: "w-6 h-6 text-white" %>
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-sm flex items-center justify-center shadow-md">
+                <%= icon "transfer", class: "w-7 h-7 text-white" %>
               </div>
             </div>
-            <button class="w-full mt-2 py-2 bg-white text-secondary-700 rounded-lg font-bold">
-              Send Now
-            </button>
+
+            <a href="<%= wallet_path %>" class="w-full mt-3 py-2.5 bg-white hover:bg-white/90 text-blue-700 rounded-xl font-bold shadow-md transition-all duration-300 text-center transform group-hover:scale-105">
+              Send Money Now
+            </a>
           </div>
         </div>
 
-        <!-- Offer 3 -->
-        <div class="w-80 h-40 rounded-2xl overflow-hidden shadow-lg relative">
-          <div class="absolute inset-0 bg-gradient-to-r from-accent-600 to-accent-800"></div>
-          <div class="absolute top-0 right-0 w-24 h-24 rounded-full bg-white/10 -mr-8 -mt-8"></div>
-          <div class="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-white/10 -ml-4 -mb-4"></div>
+        <!-- Offer 3 - Enhanced with better visuals and animations -->
+        <div class="w-80 h-48 rounded-2xl overflow-hidden shadow-xl relative group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" data-animation-target="staggerItem reveal" data-animation-target="parallax" data-speed="0.07">
+          <!-- Enhanced background with animated gradient -->
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-500 via-orange-600 to-amber-700"></div>
 
-          <div class="absolute inset-0 p-4 flex flex-col justify-between">
-            <div class="flex items-start justify-between">
+          <!-- Enhanced decorative elements -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -mr-10 -mt-10 blur-xl"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-6 -mb-6 blur-lg"></div>
+
+          <!-- Animated particle effects -->
+          <div class="absolute top-1/4 right-1/4 w-3 h-3 rounded-full bg-white/30 animate-pulse-slow"></div>
+          <div class="absolute bottom-1/3 left-1/4 w-2 h-2 rounded-full bg-white/20 animate-pulse-slower"></div>
+
+          <!-- Pattern overlay -->
+          <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+          <!-- Enhanced content with better typography and layout -->
+          <div class="absolute inset-0 p-5 flex flex-col justify-between">
+            <!-- Popular badge -->
+            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/20 text-white backdrop-blur-sm w-fit">
+              <%= icon "trending-up", class: "w-3.5 h-3.5 mr-1.5" %>
+              Popular Offer
+            </div>
+
+            <div class="flex items-start justify-between mt-2">
               <div>
-                <h3 class="text-xl font-bold text-white">10% Cashback</h3>
-                <p class="text-white/80 text-sm mt-1 max-w-[200px]">Get 10% back on bill payments!</p>
+                <h3 class="text-2xl font-bold text-white">10% Cashback</h3>
+                <p class="text-white/90 text-sm mt-2 max-w-[200px]">Get 10% back on all utility bill payments this month!</p>
               </div>
-              <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
-                <%= icon "file-invoice", class: "w-6 h-6 text-white" %>
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-sm flex items-center justify-center shadow-md">
+                <%= icon "file-invoice", class: "w-7 h-7 text-white" %>
               </div>
             </div>
-            <button class="w-full mt-2 py-2 bg-white text-accent-700 rounded-lg font-bold">
-              Pay Bills
-            </button>
+
+            <a href="#" class="w-full mt-3 py-2.5 bg-white hover:bg-white/90 text-amber-700 rounded-xl font-bold shadow-md transition-all duration-300 text-center transform group-hover:scale-105">
+              Pay Bills Now
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Savings Goals with Visual Progress Indicators -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <!-- Header with distinct color -->
-    <div class="bg-gradient-to-r from-teal-600 to-teal-700 p-5 text-white">
+  <!-- Savings Goals - Redesigned with enhanced visuals, interactions, and animations -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 reveal-on-scroll" data-animation-target="reveal">
+    <!-- Enhanced header with gradient and improved layout -->
+    <div class="bg-gradient-to-r from-teal-600 to-cyan-600 p-6 text-white">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-            <%= icon "piggy-bank", class: "w-5 h-5" %>
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+            <%= icon "piggy-bank", class: "w-6 h-6" %>
           </div>
-          <h2 class="text-xl font-bold">Savings Goals</h2>
+          <div>
+            <h2 class="text-2xl font-bold">Savings Goals</h2>
+            <p class="text-white/80 text-sm mt-1">Track your progress towards financial targets</p>
+          </div>
         </div>
-        <button class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium flex items-center transition-all duration-300">
-          <span>Add New</span>
+        <button class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+          <span>Create Goal</span>
           <%= icon "plus", class: "w-4 h-4 ml-2" %>
         </button>
       </div>
     </div>
 
-    <div class="p-5">
+    <div class="p-6">
       <%
-        # Sample savings goals
+        # Enhanced sample savings goals with more details
         savings_goals = [
-          { name: "Emergency Fund", target: 2000, current: 800, icon: "shield", color: "bg-red-500", progress_color: "bg-red-500", bg_color: "bg-red-100 dark:bg-red-900/30" },
-          { name: "New Phone", target: 1200, current: 950, icon: "mobile-screen", color: "bg-blue-500", progress_color: "bg-blue-500", bg_color: "bg-blue-100 dark:bg-blue-900/30" },
-          { name: "School Fees", target: 1500, current: 400, icon: "school", color: "bg-amber-500", progress_color: "bg-amber-500", bg_color: "bg-amber-100 dark:bg-amber-900/30" }
+          {
+            name: "Emergency Fund",
+            description: "For unexpected expenses",
+            target: 2000,
+            current: 800,
+            icon: "shield",
+            gradient: "from-red-500 to-pink-500",
+            progress_gradient: "from-red-500 to-pink-500",
+            bg_gradient: "from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20",
+            deadline: "No deadline",
+            status: "On track"
+          },
+          {
+            name: "New Phone",
+            description: "Latest smartphone model",
+            target: 1200,
+            current: 950,
+            icon: "mobile-screen",
+            gradient: "from-blue-500 to-indigo-500",
+            progress_gradient: "from-blue-500 to-indigo-500",
+            bg_gradient: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20",
+            deadline: "June 15, 2023",
+            status: "Almost there!"
+          },
+          {
+            name: "School Fees",
+            description: "Next semester tuition",
+            target: 1500,
+            current: 400,
+            icon: "school",
+            gradient: "from-amber-500 to-yellow-500",
+            progress_gradient: "from-amber-500 to-yellow-500",
+            bg_gradient: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20",
+            deadline: "August 30, 2023",
+            status: "Needs attention"
+          }
         ]
       %>
 
       <% if savings_goals.empty? %>
-        <!-- Empty state with clear visual cue -->
-        <div class="p-6 text-center">
-          <div class="w-20 h-20 mx-auto rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-4 text-teal-600 dark:text-teal-400">
-            <%= icon "piggy-bank", class: "w-10 h-10" %>
+        <!-- Enhanced empty state with better visuals -->
+        <div class="p-8 text-center">
+          <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-teal-100 to-cyan-100 dark:from-teal-900/30 dark:to-cyan-900/30 flex items-center justify-center mb-5 shadow-inner">
+            <%= icon "piggy-bank", class: "w-12 h-12 text-teal-600 dark:text-teal-400" %>
           </div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No Savings Goals Yet</h3>
-          <p class="text-gray-500 dark:text-gray-400 mb-4">Create a savings goal to start saving for what matters</p>
-          <button class="px-5 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-medium transition-all duration-300">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">No Savings Goals Yet</h3>
+          <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">Create a savings goal to start saving for what matters to you. Track your progress and reach your financial targets.</p>
+          <button class="px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             Create Your First Goal
           </button>
         </div>
       <% else %>
+        <!-- Enhanced goals list with tabs -->
+        <div class="mb-5 flex space-x-2 border-b border-gray-200 dark:border-gray-700 pb-2">
+          <button class="px-4 py-2 text-sm font-medium text-teal-600 dark:text-teal-400 border-b-2 border-teal-500 dark:border-teal-400" data-target="dashboard.categoryTab">
+            All Goals
+          </button>
+          <button class="px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-target="dashboard.categoryTab">
+            Active
+          </button>
+          <button class="px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" data-target="dashboard.categoryTab">
+            Completed
+          </button>
+        </div>
+
         <div class="space-y-5">
           <% savings_goals.each do |goal| %>
             <% percentage = ((goal[:current].to_f / goal[:target]) * 100).round %>
 
-            <!-- Card-like goal with icon and visual progress bar -->
-            <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-xl <%= goal[:bg_color] %>">
-              <div class="flex items-center">
-                <!-- Goal icon with distinctive color -->
-                <div class="h-12 w-12 rounded-full <%= goal[:color] %> flex items-center justify-center shadow-md mr-4 text-white">
-                  <%= icon goal[:icon], class: "h-6 w-6" %>
+            <!-- Enhanced goal card with improved visuals and interactions -->
+            <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-xl bg-gradient-to-br <%= goal[:bg_gradient] %> hover:shadow-md transition-all duration-300 group">
+              <div class="flex items-start">
+                <!-- Enhanced goal icon with gradient -->
+                <div class="h-14 w-14 rounded-full bg-gradient-to-br <%= goal[:gradient] %> flex items-center justify-center shadow-md mr-4 text-white transform transition-all duration-300 group-hover:scale-110">
+                  <%= icon goal[:icon], class: "h-7 w-7" %>
                 </div>
 
                 <div class="flex-1">
-                  <!-- Goal name and visual progress -->
-                  <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-base font-bold text-gray-900 dark:text-white"><%= goal[:name] %></h3>
-                    <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <!-- Enhanced goal name and description -->
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 class="text-base font-bold text-gray-900 dark:text-white"><%= goal[:name] %></h3>
+                      <p class="text-sm text-gray-500 dark:text-gray-400"><%= goal[:description] %></p>
+                    </div>
+                    <div class="text-sm font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 px-2.5 py-1 rounded-full">
                       <%= percentage %>%
                     </div>
                   </div>
 
-                  <!-- Progress bar with clear visual indicator -->
-                  <div class="h-2.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div class="h-full <%= goal[:progress_color] %> rounded-full" style="width: <%= percentage %>%"></div>
+                  <!-- Enhanced progress bar with gradient and animation -->
+                  <div class="h-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2 shadow-inner">
+                    <div class="h-full bg-gradient-to-r <%= goal[:progress_gradient] %> rounded-full transition-all duration-1000 ease-out animate-pulse-slow" style="width: 0%" data-animation-target="counter" data-count-to="<%= percentage %>" data-count-from="0" data-duration="1500"></div>
                   </div>
 
-                  <!-- Monetary values with clear formatting -->
-                  <div class="flex justify-between items-center mt-2">
-                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                      ₵<%= number_with_delimiter(goal[:current]) %> of ₵<%= number_with_delimiter(goal[:target]) %>
+                  <!-- Enhanced monetary values and deadline -->
+                  <div class="flex justify-between items-center mt-3">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">
+                        ₵<%= number_with_delimiter(goal[:current]) %> of ₵<%= number_with_delimiter(goal[:target]) %>
+                      </div>
+                      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
+                        <%= icon "calendar", class: "w-3.5 h-3.5 mr-1" %>
+                        <%= goal[:deadline] %>
+                      </div>
                     </div>
-                    <button class="text-sm px-3 py-1 rounded-lg <%= goal[:color] %> text-white font-medium">
-                      Add Money
-                    </button>
+
+                    <!-- Enhanced action buttons -->
+                    <div class="flex space-x-2">
+                      <button class="text-sm px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-300">
+                        Details
+                      </button>
+                      <button class="text-sm px-3 py-1.5 rounded-lg bg-gradient-to-r <%= goal[:gradient] %> text-white font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                        Add Money
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           <% end %>
+
+          <!-- Add new goal card -->
+          <button class="p-5 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 hover:border-teal-400 dark:hover:border-teal-500 hover:bg-teal-50 dark:hover:bg-teal-900/10 transition-all duration-300 w-full text-center">
+            <div class="flex flex-col items-center justify-center">
+              <div class="w-14 h-14 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-3 text-teal-600 dark:text-teal-400">
+                <%= icon "plus", class: "w-7 h-7" %>
+              </div>
+              <span class="font-medium text-gray-900 dark:text-white">Create New Savings Goal</span>
+              <span class="text-sm text-gray-500 dark:text-gray-400 mt-1">Set up a new target to save for</span>
+            </div>
+          </button>
         </div>
       <% end %>
     </div>
   </div>
 
-  <!-- Financial Health Card - Simplified visual representation -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-5 text-white">
-      <div class="flex items-center">
-        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-          <%= icon "chart-bar", class: "w-5 h-5" %>
+  <!-- Financial Health - Redesigned with enhanced visuals, insights, and animations -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 reveal-on-scroll" data-animation-target="reveal">
+    <!-- Enhanced header with gradient and improved layout -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+            <%= icon "chart-bar", class: "w-6 h-6" %>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold">Financial Health</h2>
+            <p class="text-white/80 text-sm mt-1">Your personal finance insights</p>
+          </div>
         </div>
-        <h2 class="text-xl font-bold">Financial Health</h2>
+        <button class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+          <span>View Details</span>
+          <%= icon "arrow-right", class: "w-4 h-4 ml-2" %>
+        </button>
       </div>
     </div>
 
-    <div class="p-5">
-      <!-- Credit card style visual elements -->
-      <div class="mb-6 relative bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-5 h-44 shadow-lg overflow-hidden">
-        <!-- Decorative card elements mimicking credit card design -->
-        <div class="absolute top-3 right-3 w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white">
-          <%= icon "shield-check", class: "w-6 h-6" %>
-        </div>
-        <div class="absolute bottom-6 left-5 right-5 flex items-center justify-between">
+    <div class="p-6">
+      <!-- Enhanced credit score card with better visuals -->
+      <div class="mb-8 relative bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 rounded-2xl p-6 shadow-xl overflow-hidden group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
+        <!-- Enhanced decorative elements -->
+        <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/10 -mr-20 -mt-20 blur-xl"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/10 -ml-10 -mb-10 blur-lg"></div>
+
+        <!-- Animated particle effects -->
+        <div class="absolute top-1/4 right-1/3 w-3 h-3 rounded-full bg-white/30 animate-pulse-slow"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-2 h-2 rounded-full bg-white/20 animate-pulse-slower"></div>
+
+        <!-- Pattern overlay -->
+        <div class="absolute inset-0 bg-pattern-circuit opacity-5"></div>
+
+        <!-- Enhanced credit score content -->
+        <div class="relative flex items-center justify-between">
           <div>
-            <div class="text-xs text-white/70 uppercase">Your Score</div>
-            <div class="text-2xl font-bold text-white mt-1">720</div>
+            <div class="flex items-center mb-4">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-sm flex items-center justify-center shadow-md mr-3">
+                <%= icon "shield-check", class: "w-6 h-6 text-white" %>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-white">Credit Score</h3>
+                <p class="text-white/80 text-sm">Updated yesterday</p>
+              </div>
+            </div>
+
+            <div class="flex items-end">
+              <div class="text-4xl font-bold text-white" data-animation-target="counter" data-count-from="0" data-count-to="720" data-duration="2000" data-formatter="number">0</div>
+              <div class="ml-2 text-sm text-white/80 mb-1.5 flex items-center">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-300 backdrop-blur-sm animate-subtle-pulse">
+                  <%= icon "trending-up", class: "w-3 h-3 mr-1" %>
+                  +15 pts
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-2 flex items-center">
+              <div class="w-full max-w-xs h-2 bg-white/20 rounded-full overflow-hidden shadow-inner">
+                <div class="h-full bg-gradient-to-r from-yellow-400 via-green-400 to-green-500 rounded-full animate-gradient-shift" style="width: 0%" data-animation-target="counter" data-count-to="72" data-count-from="0" data-duration="1500"></div>
+              </div>
+              <span class="ml-3 text-sm text-white font-medium animate-text-fade-in">Good</span>
+            </div>
           </div>
-          <div class="w-14 h-10 rounded border border-white/30 bg-white/10"></div>
+
+          <!-- Enhanced credit score visual -->
+          <div class="hidden md:block relative w-32 h-32">
+            <svg viewBox="0 0 100 100" class="w-full h-full">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8" />
+              <circle cx="50" cy="50" r="45" fill="none" stroke="url(#creditGradient)" stroke-width="8" stroke-dasharray="282.6" stroke-dashoffset="79.128" transform="rotate(-90 50 50)" />
+              <defs>
+                <linearGradient id="creditGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#34D399" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center flex-col">
+              <span class="text-white text-xs font-medium">SCORE</span>
+              <span class="text-white text-xl font-bold">720</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Simulated chip for credit card feel -->
-        <div class="absolute top-5 left-5 w-10 h-8 rounded-md bg-yellow-300/80 flex items-center justify-center shadow">
-          <div class="w-8 h-1 bg-yellow-600/60 rounded mb-1"></div>
-          <div class="w-8 h-1 bg-yellow-600/60 rounded"></div>
-        </div>
-
-        <div class="absolute top-5 right-20 text-white font-mono text-sm">
-          Super Ghana
+        <!-- Credit score categories -->
+        <div class="mt-6 grid grid-cols-4 gap-2">
+          <div class="text-center">
+            <div class="w-full h-1 bg-red-400 rounded-full mb-1"></div>
+            <span class="text-xs text-white/70">Poor</span>
+          </div>
+          <div class="text-center">
+            <div class="w-full h-1 bg-orange-400 rounded-full mb-1"></div>
+            <span class="text-xs text-white/70">Fair</span>
+          </div>
+          <div class="text-center">
+            <div class="w-full h-1 bg-green-400 rounded-full mb-1 ring-2 ring-white/30 ring-offset-1 ring-offset-purple-600"></div>
+            <span class="text-xs text-white font-medium">Good</span>
+          </div>
+          <div class="text-center">
+            <div class="w-full h-1 bg-green-500 rounded-full mb-1"></div>
+            <span class="text-xs text-white/70">Excellent</span>
+          </div>
         </div>
       </div>
 
-      <!-- Visual health indicators with simple gauge charts -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Spending Health -->
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-          <div class="flex items-center mb-3">
-            <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center mr-3">
-              <%= icon "chart-bar", class: "w-5 h-5" %>
+      <!-- Enhanced financial health indicators with better visuals -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Enhanced spending health card -->
+        <div class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border border-green-200 dark:border-green-800/30 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center shadow-md mr-3 text-white transform transition-all duration-300 group-hover:scale-110">
+              <%= icon "chart-bar", class: "w-6 h-6" %>
             </div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">Spending</div>
+            <div>
+              <div class="text-base font-bold text-gray-900 dark:text-white">Spending Health</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Monthly analysis</div>
+            </div>
           </div>
 
-          <!-- Simple visual gauge - easier to understand than complex charts -->
-          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
-            <div class="h-full bg-green-500 rounded-full" style="width: 65%"></div>
+          <!-- Enhanced visual gauge with gradient and animation -->
+          <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-3 shadow-inner">
+            <div class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full transition-all duration-1000 ease-out animate-gradient-shift" style="width: 0%" data-animation-target="counter" data-count-to="65" data-count-from="0" data-duration="1500"></div>
           </div>
 
-          <div class="flex justify-between text-sm">
-            <span class="text-green-600 dark:text-green-400 font-medium">Good</span>
-            <span class="text-gray-500 dark:text-gray-400">65% of income</span>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <div class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-2 text-green-600 dark:text-green-400">
+                <%= icon "check-circle", class: "w-4 h-4" %>
+              </div>
+              <span class="text-sm font-medium text-green-600 dark:text-green-400">Good</span>
+            </div>
+            <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">65% of income</span>
+          </div>
+
+          <!-- Spending breakdown -->
+          <div class="mt-4 grid grid-cols-3 gap-2">
+            <div class="text-center">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Essentials</div>
+              <div class="text-sm font-medium text-gray-900 dark:text-white">40%</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Lifestyle</div>
+              <div class="text-sm font-medium text-gray-900 dark:text-white">15%</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xs text-gray-500 dark:text-gray-400">Other</div>
+              <div class="text-sm font-medium text-gray-900 dark:text-white">10%</div>
+            </div>
           </div>
         </div>
 
-        <!-- Savings Health -->
-        <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-          <div class="flex items-center mb-3">
-            <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mr-3">
-              <%= icon "piggy-bank", class: "w-5 h-5" %>
+        <!-- Enhanced savings health card -->
+        <div class="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 border border-amber-200 dark:border-amber-800/30 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center mb-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center shadow-md mr-3 text-white transform transition-all duration-300 group-hover:scale-110">
+              <%= icon "piggy-bank", class: "w-6 h-6" %>
             </div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">Savings</div>
+            <div>
+              <div class="text-base font-bold text-gray-900 dark:text-white">Savings Rate</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Monthly analysis</div>
+            </div>
           </div>
 
-          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-2">
-            <div class="h-full bg-blue-500 rounded-full" style="width: 15%"></div>
+          <!-- Enhanced visual gauge with gradient and animation -->
+          <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-3 shadow-inner">
+            <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-1000 ease-out animate-gradient-shift" style="width: 0%" data-animation-target="counter" data-count-to="15" data-count-from="0" data-duration="1500"></div>
           </div>
 
-          <div class="flex justify-between text-sm">
-            <span class="text-yellow-600 dark:text-yellow-400 font-medium">Needs Attention</span>
-            <span class="text-gray-500 dark:text-gray-400">15% of income</span>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <div class="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mr-2 text-amber-600 dark:text-amber-400">
+                <%= icon "alert-triangle", class: "w-4 h-4" %>
+              </div>
+              <span class="text-sm font-medium text-amber-600 dark:text-amber-400">Needs Attention</span>
+            </div>
+            <span class="text-sm text-gray-600 dark:text-gray-400 font-medium">15% of income</span>
+          </div>
+
+          <!-- Savings goal -->
+          <div class="mt-4 flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-2 text-blue-600 dark:text-blue-400">
+                <%= icon "target", class: "w-4 h-4" %>
+              </div>
+              <span class="text-sm text-gray-600 dark:text-gray-400">Recommended</span>
+            </div>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">20-30%</span>
           </div>
         </div>
       </div>
 
-      <!-- Simple financial tips with icons -->
-      <div class="mt-5 p-4 border border-yellow-200 dark:border-yellow-800/30 rounded-xl bg-yellow-50 dark:bg-yellow-900/20">
-        <div class="flex">
+      <!-- Enhanced financial tips with better visuals and actionable content -->
+      <div class="mt-6 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 rounded-xl p-5 border border-amber-200 dark:border-amber-800/30 shadow-sm">
+        <div class="flex items-start">
           <div class="flex-shrink-0">
-            <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-400 flex items-center justify-center">
-              <%= icon "light-bulb", class: "w-5 h-5" %>
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center shadow-md text-white">
+              <%= icon "light-bulb", class: "w-6 h-6" %>
             </div>
           </div>
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-300">Tip: Save more, spend less</h3>
-            <p class="mt-1 text-sm text-yellow-700 dark:text-yellow-400">Try to save at least 20% of your income each month</p>
+          <div class="ml-4">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Financial Tip</h3>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Try the 50/30/20 rule: Spend 50% on needs, 30% on wants, and save 20% of your income.</p>
+
+            <div class="mt-3 flex space-x-3">
+              <button class="text-sm px-3 py-1.5 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-300">
+                More Tips
+              </button>
+              <button class="text-sm px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-medium shadow-sm hover:shadow-md transition-all duration-300">
+                Create Budget
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Quick Access Payment Methods with Card Visuals -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <div class="bg-gradient-to-r from-gray-700 to-gray-800 p-5 text-white">
+  <!-- Upcoming Bills Widget -->
+  <%= render 'upcoming_bills' %>
+
+  <!-- Payment Methods - Redesigned with enhanced card visuals and interactions -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+    <!-- Enhanced header with gradient and improved layout -->
+    <div class="bg-gradient-to-r from-gray-700 via-gray-800 to-gray-900 p-6 text-white">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-            <%= icon "credit-card", class: "w-5 h-5" %>
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+            <%= icon "credit-card", class: "w-6 h-6" %>
           </div>
-          <h2 class="text-xl font-bold">Payment Methods</h2>
+          <div>
+            <h2 class="text-2xl font-bold">Payment Methods</h2>
+            <p class="text-white/80 text-sm mt-1">Your saved payment options</p>
+          </div>
         </div>
-        <a href="<%= payment_methods_path %>" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium flex items-center transition-all duration-300">
+        <a href="<%= payment_methods_path %>" class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
           <span>Add New</span>
           <%= icon "plus", class: "w-4 h-4 ml-2" %>
         </a>
       </div>
+
+      <!-- Payment method tabs -->
+      <div class="flex items-center space-x-2 mt-5 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="bg-white/20 hover:bg-white/30 px-4 py-1.5 rounded-full text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          All Methods
+        </button>
+        <button class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "credit-card", class: "w-4 h-4 mr-2" %>
+          Cards
+        </button>
+        <button class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "mobile-screen", class: "w-4 h-4 mr-2" %>
+          Mobile Money
+        </button>
+        <button class="bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-full text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm whitespace-nowrap">
+          <%= icon "bank", class: "w-4 h-4 mr-2" %>
+          Bank Accounts
+        </button>
+      </div>
     </div>
 
-    <div class="p-5">
-      <div class="space-y-4">
-        <!-- Credit/Debit Card Visual -->
-        <div class="relative h-48 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-5 overflow-hidden shadow-lg">
-          <!-- Card visual elements -->
-          <div class="absolute top-3 right-3 flex space-x-1">
-            <div class="w-8 h-8 rounded-full bg-red-500 opacity-80"></div>
-            <div class="w-8 h-8 rounded-full bg-yellow-500 opacity-80"></div>
+    <div class="p-6">
+      <!-- Payment methods grid with smaller, more realistic cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Credit Card 1 - Visa -->
+        <div class="relative h-44 bg-gradient-to-br from-blue-800 via-blue-900 to-blue-950 rounded-xl p-4 overflow-hidden shadow-lg group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl perspective">
+          <!-- Card pattern overlay -->
+          <div class="absolute inset-0 bg-pattern-circuit opacity-10"></div>
+
+          <!-- Bank logo -->
+          <div class="absolute top-3 left-3 text-white/90 font-semibold text-sm">
+            GHANA BANK
           </div>
 
-          <!-- Card chip visual -->
-          <div class="absolute top-5 left-5 w-10 h-8 rounded-md bg-yellow-300/80 flex flex-col justify-center items-center">
-            <div class="w-8 h-1 bg-yellow-600/60 rounded-sm mb-1"></div>
-            <div class="w-8 h-1 bg-yellow-600/60 rounded-sm"></div>
+          <!-- Card type logo -->
+          <div class="absolute top-3 right-3">
+            <svg class="h-6 w-10" viewBox="0 0 48 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.4401 15.2H13.7601L16.0001 0.800003H19.6801L17.4401 15.2Z" fill="white"/>
+              <path d="M32.2401 1.04C31.4401 0.720003 30.2401 0.400003 28.8001 0.400003C25.2001 0.400003 22.6401 2.32 22.6401 5.12C22.6401 7.28 24.4801 8.48 25.9201 9.2C27.3601 9.92 27.8401 10.4 27.8401 11.04C27.8401 12 26.6401 12.48 25.5201 12.48C24.0801 12.48 23.2801 12.24 22.0801 11.76L21.6001 11.52L21.1201 14.72C22.0801 15.2 23.7601 15.6 25.5201 15.6C29.3601 15.6 31.8401 13.68 31.8401 10.72C31.8401 9.04 30.8801 7.76 28.7201 6.72C27.4401 6.08 26.6401 5.6 26.6401 4.96C26.6401 4.4 27.2801 3.84 28.7201 3.84C29.9201 3.84 30.8001 4.08 31.4401 4.4L31.7601 4.56L32.2401 1.04Z" fill="white"/>
+              <path d="M37.2801 9.92C37.6001 8.96 38.8001 5.44 38.8001 5.44C38.8001 5.44 39.0401 4.72 39.2001 4.32L39.4401 5.28C39.4401 5.28 40.1601 9.04 40.3201 9.92H37.2801ZM42.4001 0.800003H39.6001C38.8001 0.800003 38.1601 1.04 37.8401 1.92L32.4001 15.2H36.2401C36.2401 15.2 36.8801 13.44 37.0401 13.04H41.6001C41.7601 13.6 42.0801 15.2 42.0801 15.2H45.6001L42.4001 0.800003Z" fill="white"/>
+              <path d="M11.6801 0.800003L8.08008 10.8L7.76008 9.36L6.64008 1.92C6.48008 1.04 5.84008 0.800003 5.04008 0.800003H0.0800781L0.0000781 1.12C1.28008 1.44 2.40008 1.92 3.36008 2.48L7.04008 15.2H10.8801L16.8001 0.800003H11.6801Z" fill="white"/>
+            </svg>
+          </div>
+
+          <!-- Enhanced card chip visual -->
+          <div class="absolute top-10 left-3 w-10 h-7 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-400 flex flex-col justify-center items-center shadow-sm transform group-hover:rotate-3 transition-transform duration-500">
+            <div class="w-7 h-1 bg-yellow-600/60 rounded-sm mb-1"></div>
+            <div class="w-7 h-1 bg-yellow-600/60 rounded-sm"></div>
           </div>
 
           <!-- Card number with masked format -->
-          <div class="absolute bottom-16 left-5 right-5">
-            <div class="text-xs text-white/70 uppercase mb-1">Card Number</div>
-            <div class="font-mono text-white text-lg tracking-wider">•••• •••• •••• 1234</div>
+          <div class="absolute top-20 left-3 right-3">
+            <div class="font-mono text-white text-base tracking-widest">•••• •••• •••• 4321</div>
           </div>
 
-          <!-- Cardholder info -->
-          <div class="absolute bottom-5 left-5">
-            <div class="text-xs text-white/70 uppercase">Cardholder</div>
-            <div class="text-white"><%= current_user.respond_to?(:name) ? current_user.name : (current_user[:name] || "Card Holder") %></div>
+          <!-- Cardholder and expiry info -->
+          <div class="absolute bottom-3 left-0 right-0 flex justify-between px-3">
+            <div>
+              <div class="text-xs text-white/70 uppercase">Cardholder</div>
+              <div class="text-white text-sm font-medium"><%= current_user.respond_to?(:name) ? current_user.name : (current_user[:name] || "Card Holder") %></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-white/70 uppercase">Expires</div>
+              <div class="text-white text-sm font-medium">05/25</div>
+            </div>
           </div>
 
-          <!-- Card expiry -->
-          <div class="absolute bottom-5 right-5">
-            <div class="text-xs text-white/70 uppercase">Expires</div>
-            <div class="text-white">05/25</div>
+          <!-- Card actions on hover -->
+          <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+            <button class="bg-white/20 hover:bg-white/30 w-9 h-9 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300 transform hover:scale-110">
+              <%= icon "edit", class: "w-4 h-4" %>
+            </button>
+            <button class="bg-white/20 hover:bg-white/30 w-9 h-9 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300 transform hover:scale-110">
+              <%= icon "trash", class: "w-4 h-4" %>
+            </button>
           </div>
         </div>
 
-        <!-- Mobile Money Visual Card -->
-        <div class="relative h-24 bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl p-5 overflow-hidden shadow-lg">
-          <div class="flex justify-between items-center h-full">
-            <div class="flex items-center">
-              <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md mr-3">
-                <%= icon "mobile-screen", class: "w-6 h-6 text-amber-500" %>
+        <!-- Credit Card 2 - Mastercard -->
+        <div class="relative h-44 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-xl p-4 overflow-hidden shadow-lg group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl perspective">
+          <!-- Card pattern overlay -->
+          <div class="absolute inset-0 bg-pattern-circuit opacity-10"></div>
+
+          <!-- Bank logo -->
+          <div class="absolute top-3 left-3 text-white/90 font-semibold text-sm">
+            PREMIUM BANK
+          </div>
+
+          <!-- Card type logo -->
+          <div class="absolute top-3 right-3 flex space-x-1">
+            <div class="w-6 h-6 rounded-full bg-red-500 opacity-90"></div>
+            <div class="w-6 h-6 rounded-full bg-yellow-500 opacity-90"></div>
+          </div>
+
+          <!-- Enhanced card chip visual -->
+          <div class="absolute top-10 left-3 w-10 h-7 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-400 flex flex-col justify-center items-center shadow-sm transform group-hover:rotate-3 transition-transform duration-500">
+            <div class="w-7 h-1 bg-yellow-600/60 rounded-sm mb-1"></div>
+            <div class="w-7 h-1 bg-yellow-600/60 rounded-sm"></div>
+          </div>
+
+          <!-- Card number with masked format -->
+          <div class="absolute top-20 left-3 right-3">
+            <div class="font-mono text-white text-base tracking-widest">•••• •••• •••• 1234</div>
+          </div>
+
+          <!-- Cardholder and expiry info -->
+          <div class="absolute bottom-3 left-0 right-0 flex justify-between px-3">
+            <div>
+              <div class="text-xs text-white/70 uppercase">Cardholder</div>
+              <div class="text-white text-sm font-medium"><%= current_user.respond_to?(:name) ? current_user.name : (current_user[:name] || "Card Holder") %></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-white/70 uppercase">Expires</div>
+              <div class="text-white text-sm font-medium">09/24</div>
+            </div>
+          </div>
+
+          <!-- Card actions on hover -->
+          <div class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+            <button class="bg-white/20 hover:bg-white/30 w-9 h-9 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300 transform hover:scale-110">
+              <%= icon "edit", class: "w-4 h-4" %>
+            </button>
+            <button class="bg-white/20 hover:bg-white/30 w-9 h-9 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300 transform hover:scale-110">
+              <%= icon "trash", class: "w-4 h-4" %>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Money Account -->
+        <div class="relative h-44 bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 rounded-xl p-4 overflow-hidden shadow-lg group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+          <!-- Decorative elements -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -mr-10 -mt-10 blur-xl"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-6 -mb-6 blur-lg"></div>
+
+          <!-- Provider logo and name -->
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md mr-3">
+              <%= icon "mobile-screen", class: "w-5 h-5 text-amber-500" %>
+            </div>
+            <div>
+              <div class="text-white font-bold text-base">MTN Mobile Money</div>
+              <div class="text-white/90 text-xs">Mobile Payment Account</div>
+            </div>
+            <div class="ml-auto bg-white/20 px-2 py-0.5 rounded-full text-xs text-white font-medium backdrop-blur-sm">
+              Primary
+            </div>
+          </div>
+
+          <!-- Account details -->
+          <div class="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-3">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs text-white/70">Account Number</div>
+              <div class="text-xs text-white/70">Verified</div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-white font-medium flex items-center">
+                <%= icon "phone", class: "w-4 h-4 mr-1.5" %>
+                +233 55 123 4567
               </div>
-              <div>
-                <div class="text-white font-bold text-lg">MTN Mobile Money</div>
-                <div class="text-white/80">+233 55 123 4567</div>
+              <div class="text-white">
+                <%= icon "check-circle", class: "w-4 h-4" %>
               </div>
             </div>
-            <div class="bg-white/20 px-3 py-1 rounded-full text-sm text-white font-medium">
-              Primary
+          </div>
+
+          <!-- Balance info -->
+          <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+            <div>
+              <div class="text-xs text-white/70">Last Used</div>
+              <div class="text-white text-sm">Yesterday</div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex space-x-2">
+              <button class="bg-white/20 hover:bg-white/30 w-8 h-8 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300">
+                <%= icon "edit", class: "w-4 h-4" %>
+              </button>
+              <button class="bg-white/20 hover:bg-white/30 w-8 h-8 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300">
+                <%= icon "trash", class: "w-4 h-4" %>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Account -->
+        <div class="relative h-44 bg-gradient-to-br from-blue-600 via-indigo-600 to-blue-700 rounded-xl p-4 overflow-hidden shadow-lg group transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+          <!-- Decorative elements -->
+          <div class="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 -mr-10 -mt-10 blur-xl"></div>
+          <div class="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-white/10 -ml-6 -mb-6 blur-lg"></div>
+
+          <!-- Bank logo and name -->
+          <div class="flex items-center">
+            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md mr-3">
+              <%= icon "bank", class: "w-5 h-5 text-blue-600" %>
+            </div>
+            <div>
+              <div class="text-white font-bold text-base">Ghana National Bank</div>
+              <div class="text-white/90 text-xs">Savings Account</div>
+            </div>
+          </div>
+
+          <!-- Account details -->
+          <div class="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-3">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs text-white/70">Account Number</div>
+              <div class="text-xs text-white/70">Branch</div>
+            </div>
+            <div class="flex justify-between items-center">
+              <div class="text-white font-medium">•••• 5678</div>
+              <div class="text-white text-sm">Accra Main</div>
+            </div>
+          </div>
+
+          <!-- Balance info -->
+          <div class="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+            <div>
+              <div class="text-xs text-white/70">Last Used</div>
+              <div class="text-white text-sm">3 days ago</div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex space-x-2">
+              <button class="bg-white/20 hover:bg-white/30 w-8 h-8 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300">
+                <%= icon "edit", class: "w-4 h-4" %>
+              </button>
+              <button class="bg-white/20 hover:bg-white/30 w-8 h-8 rounded-full flex items-center justify-center text-white backdrop-blur-sm transition-all duration-300">
+                <%= icon "trash", class: "w-4 h-4" %>
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Add New Payment Method Button -->
-        <a href="<%= payment_methods_path %>" class="flex items-center justify-center h-20 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300">
-          <span class="flex items-center">
-            <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
-            Add New Payment Method
-          </span>
+        <a href="<%= payment_methods_path %>" class="flex items-center justify-center h-44 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-700/50 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 group">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-2 transform transition-all duration-300 group-hover:scale-110">
+              <%= icon "plus-circle", class: "w-6 h-6" %>
+            </div>
+            <span class="text-gray-700 dark:text-gray-300 font-medium group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300">Add New Payment Method</span>
+          </div>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Simplified Help & Support Section -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <div class="bg-gradient-to-r from-green-600 to-green-700 p-5 text-white">
-      <div class="flex items-center">
-        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-          <%= icon "help-circle", class: "w-5 h-5" %>
-        </div>
-        <h2 class="text-xl font-bold">Help & Support</h2>
-      </div>
-    </div>
-
-    <div class="p-5">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Visual help cards with icons -->
-        <a href="#" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
-          <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mr-3">
-            <%= icon "phone", class: "w-6 h-6" %>
-          </div>
-          <div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">Call Support</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Talk to a representative</div>
-          </div>
-        </a>
-
-        <a href="#" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
-          <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center mr-3">
-            <%= icon "message-circle", class: "w-6 h-6" %>
-          </div>
-          <div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">Chat Support</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Message with support team</div>
-          </div>
-        </a>
-
-        <a href="#" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
-          <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center mr-3">
-            <%= icon "book-open", class: "w-6 h-6" %>
-          </div>
-          <div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">How to Guides</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Learn how to use the app</div>
-          </div>
-        </a>
-
-        <a href="#" class="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
-          <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center mr-3">
-            <%= icon "map-pin", class: "w-6 h-6" %>
-          </div>
-          <div>
-            <div class="text-base font-bold text-gray-900 dark:text-white">Find Branch</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">Locate nearest office</div>
-          </div>
-        </a>
-      </div>
-
-      <!-- Emergency Support Button - Prominent Color -->
-      <div class="mt-5">
-        <a href="tel:+233000000000" class="flex items-center justify-center p-4 bg-red-500 hover:bg-red-600 rounded-xl text-white font-bold transition-all duration-300">
-          <%= icon "phone", class: "w-5 h-5 mr-2" %>
-          Emergency Support: +233 00 000 0000
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Visual Security Status Section -->
-  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-    <div class="bg-gradient-to-r from-amber-500 to-amber-600 p-5 text-white">
+  <!-- Help & Support - Redesigned with enhanced visuals and accessibility -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+    <!-- Enhanced header with gradient and improved layout -->
+    <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6 text-white">
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 shadow-md">
-            <%= icon "shield", class: "w-5 h-5" %>
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+            <%= icon "help-circle", class: "w-6 h-6" %>
           </div>
-          <h2 class="text-xl font-bold">Account Security</h2>
+          <div>
+            <h2 class="text-2xl font-bold">Help & Support</h2>
+            <p class="text-white/80 text-sm mt-1">We're here to help you</p>
+          </div>
         </div>
-        <a href="<%= security_settings_path %>" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full text-sm font-medium flex items-center transition-all duration-300">
-          <span>Settings</span>
+        <a href="#" class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+          <span>Support Center</span>
+          <%= icon "external-link", class: "w-4 h-4 ml-2" %>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-6">
+      <!-- Enhanced support options with better visuals and animations -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Enhanced Call Support card -->
+        <a href="#" class="group flex items-center p-5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 border border-blue-200 dark:border-blue-800/30 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mr-4 shadow-md transform transition-all duration-300 group-hover:scale-110">
+            <%= icon "phone", class: "w-7 h-7" %>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-gray-900 dark:text-white">Call Support</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Talk to a representative</div>
+            <div class="text-xs text-blue-600 dark:text-blue-400 mt-2 flex items-center">
+              <span>Available 24/7</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Enhanced Chat Support card -->
+        <a href="#" class="group flex items-center p-5 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/10 dark:to-teal-900/10 border border-green-200 dark:border-green-800/30 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center text-white mr-4 shadow-md transform transition-all duration-300 group-hover:scale-110">
+            <%= icon "message-circle", class: "w-7 h-7" %>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-gray-900 dark:text-white">Chat Support</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Message with support team</div>
+            <div class="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center">
+              <span class="inline-flex items-center">
+                <span class="w-2 h-2 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                Online now
+              </span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Enhanced How to Guides card -->
+        <a href="#" class="group flex items-center p-5 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 border border-amber-200 dark:border-amber-800/30 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white mr-4 shadow-md transform transition-all duration-300 group-hover:scale-110">
+            <%= icon "book-open", class: "w-7 h-7" %>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-gray-900 dark:text-white">How to Guides</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Learn how to use the app</div>
+            <div class="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-center">
+              <span>20+ guides available</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Enhanced Find Branch card -->
+        <a href="#" class="group flex items-center p-5 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/10 dark:to-violet-900/10 border border-purple-200 dark:border-purple-800/30 rounded-xl transition-all duration-300 hover:shadow-md transform hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white mr-4 shadow-md transform transition-all duration-300 group-hover:scale-110">
+            <%= icon "map-pin", class: "w-7 h-7" %>
+          </div>
+          <div>
+            <div class="text-lg font-bold text-gray-900 dark:text-white">Find Branch</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Locate nearest office</div>
+            <div class="text-xs text-purple-600 dark:text-purple-400 mt-2 flex items-center">
+              <span>50+ locations nationwide</span>
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Enhanced emergency support section -->
+      <div class="mt-6 p-5 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/10 dark:to-pink-900/10 rounded-xl border border-red-200 dark:border-red-800/30 shadow-sm">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white shadow-md">
+              <%= icon "phone", class: "w-6 h-6" %>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white">24/7 Emergency Support</h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">For urgent assistance, call our dedicated emergency line</p>
+            </div>
+          </div>
+          <a href="tel:+233000000000" class="px-5 py-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex items-center">
+            <%= icon "phone-call", class: "w-5 h-5 mr-2" %>
+            +233 00 000 0000
+          </a>
+        </div>
+      </div>
+
+      <!-- Enhanced FAQ section -->
+      <div class="mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+            <%= icon "help-circle", class: "w-5 h-5 mr-2 text-green-500" %>
+            Frequently Asked Questions
+          </h3>
+          <a href="#" class="text-sm text-green-600 dark:text-green-400 font-medium flex items-center">
+            View All
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="space-y-3">
+          <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300">
+            <button class="flex justify-between items-center w-full text-left">
+              <span class="font-medium text-gray-900 dark:text-white">How do I reset my password?</span>
+              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300">
+            <button class="flex justify-between items-center w-full text-left">
+              <span class="font-medium text-gray-900 dark:text-white">How do I transfer money to another bank?</span>
+              <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Security - Redesigned with enhanced visuals and interactions -->
+  <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+    <!-- Enhanced header with gradient and improved layout -->
+    <div class="bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 p-6 text-white">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+            <%= icon "shield", class: "w-6 h-6" %>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold">Account Security</h2>
+            <p class="text-white/80 text-sm mt-1">Protect your account and transactions</p>
+          </div>
+        </div>
+        <a href="<%= security_settings_path %>" class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+          <span>Security Settings</span>
           <%= icon "settings", class: "w-4 h-4 ml-2" %>
         </a>
       </div>
     </div>
 
-    <div class="p-5">
+    <div class="p-6">
       <% has_pin = current_user.respond_to?(:pin_digest) && current_user.pin_digest.present? %>
-      <!-- Visual security status indicator -->
-      <div class="flex justify-between items-center p-5 border border-gray-200 dark:border-gray-700 rounded-xl bg-amber-50 dark:bg-amber-900/10">
+
+      <!-- Enhanced security status indicator with better visuals -->
+      <div class="flex justify-between items-center p-6 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10 rounded-xl border border-amber-200 dark:border-amber-800/30 shadow-sm">
         <div class="flex items-center">
           <div class="relative">
-            <!-- Shield icon with visual indicator of security strength -->
-            <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-              <%= icon "shield", class: "w-8 h-8 text-amber-600 dark:text-amber-400" %>
+            <!-- Enhanced shield icon with visual indicator of security strength -->
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-900/30 dark:to-yellow-900/30 flex items-center justify-center shadow-md">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white">
+                <%= icon "shield", class: "w-10 h-10" %>
+              </div>
             </div>
             <% if has_pin %>
-              <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-green-500 flex items-center justify-center border-2 border-white dark:border-gray-800">
-                <%= icon "check", class: "w-4 h-4 text-white" %>
+              <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-md">
+                <%= icon "check", class: "w-5 h-5 text-white" %>
               </div>
             <% else %>
-              <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-red-500 flex items-center justify-center border-2 border-white dark:border-gray-800">
-                <%= icon "alert-triangle", class: "w-4 h-4 text-white" %>
+              <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-md">
+                <%= icon "alert-triangle", class: "w-5 h-5 text-white" %>
               </div>
             <% end %>
           </div>
 
-          <div class="ml-4">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Security Level</h3>
+          <div class="ml-5">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Security Level</h3>
             <% if has_pin %>
-              <p class="text-green-600 dark:text-green-400 flex items-center text-sm mt-1">
-                <%= icon "check-circle", class: "w-4 h-4 mr-1" %>
+              <p class="text-green-600 dark:text-green-400 flex items-center text-base mt-1">
+                <%= icon "check-circle", class: "w-5 h-5 mr-2" %>
                 Basic protection enabled
               </p>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 max-w-md">Your account has basic protection. Enable 2FA for enhanced security.</p>
             <% else %>
-              <p class="text-red-600 dark:text-red-400 flex items-center text-sm mt-1">
-                <%= icon "alert-triangle", class: "w-4 h-4 mr-1" %>
-                Set up PIN for better protection
+              <p class="text-red-600 dark:text-red-400 flex items-center text-base mt-1">
+                <%= icon "alert-triangle", class: "w-5 h-5 mr-2" %>
+                Your account needs protection
               </p>
+              <p class="text-gray-600 dark:text-gray-400 text-sm mt-2 max-w-md">Set up a PIN to protect your transactions and sensitive account information.</p>
             <% end %>
           </div>
         </div>
 
         <div>
           <% if has_pin %>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-              <%= icon "shield-check", class: "w-4 h-4 mr-1" %>
-              Protected
-            </span>
+            <div class="flex flex-col items-center">
+              <div class="w-24 h-24 relative">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="8" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="url(#securityGradient)" stroke-width="8" stroke-dasharray="282.6" stroke-dashoffset="141.3" transform="rotate(-90 50 50)" data-target="dashboard.securityChart" />
+                  <defs>
+                    <linearGradient id="securityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#10B981" />
+                      <stop offset="100%" stop-color="#34D399" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                  <span class="text-gray-500 text-xs font-medium">SECURITY</span>
+                  <span class="text-gray-900 dark:text-white text-xl font-bold" data-target="dashboard.securityLevel">50%</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 mt-2">
+                <%= icon "shield-check", class: "w-4 h-4 mr-1" %>
+                Protected
+              </span>
+            </div>
           <% else %>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
-              <%= icon "shield", class: "w-4 h-4 mr-1" %>
-              Vulnerable
-            </span>
+            <div class="flex flex-col items-center">
+              <div class="w-24 h-24 relative">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="8" />
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="url(#securityGradientLow)" stroke-width="8" stroke-dasharray="282.6" stroke-dashoffset="254.34" transform="rotate(-90 50 50)" data-target="dashboard.securityChart" />
+                  <defs>
+                    <linearGradient id="securityGradientLow" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#EF4444" />
+                      <stop offset="100%" stop-color="#F87171" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                  <span class="text-gray-500 text-xs font-medium">SECURITY</span>
+                  <span class="text-gray-900 dark:text-white text-xl font-bold" data-target="dashboard.securityLevel">10%</span>
+                </div>
+              </div>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 mt-2">
+                <%= icon "shield", class: "w-4 h-4 mr-1" %>
+                Vulnerable
+              </span>
+            </div>
           <% end %>
         </div>
       </div>
 
-      <!-- Visual security checklist -->
-      <div class="mt-5 space-y-3">
-        <!-- PIN Security Check -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
-          <div class="flex items-center">
-            <% if has_pin %>
-              <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 flex items-center justify-center mr-3">
-                <%= icon "check-circle", class: "w-5 h-5" %>
-              </div>
-            <% else %>
-              <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center mr-3">
-                <%= icon "x-circle", class: "w-5 h-5" %>
-              </div>
-            <% end %>
-            <div>
-              <div class="text-base font-bold text-gray-900 dark:text-white">Transaction PIN</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">
-                <%= has_pin ? "Your transactions are PIN protected" : "Set up a PIN to protect your transactions" %>
+      <!-- Enhanced security checklist with better visuals and interactions -->
+      <div class="mt-6 space-y-4">
+        <!-- Enhanced PIN Security Check -->
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <% if has_pin %>
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 flex items-center justify-center mr-4 shadow-sm transform transition-all duration-300 group-hover:scale-110">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white">
+                    <%= icon "check-circle", class: "w-6 h-6" %>
+                  </div>
+                </div>
+              <% else %>
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 flex items-center justify-center mr-4 shadow-sm transform transition-all duration-300 group-hover:scale-110">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white">
+                    <%= icon "x-circle", class: "w-6 h-6" %>
+                  </div>
+                </div>
+              <% end %>
+              <div>
+                <div class="text-lg font-bold text-gray-900 dark:text-white">Transaction PIN</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  <%= has_pin ? "Your transactions are PIN protected" : "Set up a PIN to protect your transactions" %>
+                </div>
+                <% if has_pin %>
+                  <div class="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center">
+                    <span class="inline-flex items-center">
+                      <span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>
+                      Last updated: 2 weeks ago
+                    </span>
+                  </div>
+                <% end %>
               </div>
             </div>
-          </div>
 
-          <a href="<%= security_settings_path %>" class="inline-flex items-center px-4 py-2 rounded-lg <%= has_pin ? 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-red-500 hover:bg-red-600 text-white' %> font-medium transition-all duration-300">
-            <%= has_pin ? "Change PIN" : "Set PIN Now" %>
-          </a>
+            <a href="<%= security_settings_path %>" class="px-5 py-2.5 rounded-xl <%= has_pin ? 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 text-gray-700 dark:text-gray-300' : 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white' %> font-medium transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+              <%= has_pin ? "Change PIN" : "Set PIN Now" %>
+            </a>
+          </div>
         </div>
 
-        <!-- 2FA Check -->
-        <div class="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
-          <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 flex items-center justify-center mr-3">
-              <%= icon "x-circle", class: "w-5 h-5" %>
+        <!-- Enhanced 2FA Check -->
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 flex items-center justify-center mr-4 shadow-sm transform transition-all duration-300 group-hover:scale-110">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white">
+                  <%= icon "x-circle", class: "w-6 h-6" %>
+                </div>
+              </div>
+              <div>
+                <div class="text-lg font-bold text-gray-900 dark:text-white">Two-Factor Authentication</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Add an extra layer of security to your account</div>
+                <div class="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-center">
+                  <span class="inline-flex items-center">
+                    <span class="w-2 h-2 bg-amber-500 rounded-full mr-1.5"></span>
+                    Recommended for all accounts
+                  </span>
+                </div>
+              </div>
             </div>
-            <div>
-              <div class="text-base font-bold text-gray-900 dark:text-white">Two-Factor Authentication</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">Add an extra layer of security</div>
+
+            <a href="<%= security_settings_path %>" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-medium transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+              Enable 2FA
+            </a>
+          </div>
+        </div>
+
+        <!-- Enhanced Biometric Authentication Check -->
+        <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 group">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 flex items-center justify-center mr-4 shadow-sm transform transition-all duration-300 group-hover:scale-110">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white">
+                  <%= icon "x-circle", class: "w-6 h-6" %>
+                </div>
+              </div>
+              <div>
+                <div class="text-lg font-bold text-gray-900 dark:text-white">Biometric Authentication</div>
+                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Use fingerprint or face recognition for faster access</div>
+                <div class="text-xs text-blue-600 dark:text-blue-400 mt-2 flex items-center">
+                  <span class="inline-flex items-center">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full mr-1.5"></span>
+                    Available on supported devices
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <a href="<%= security_settings_path %>" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
+              Set Up
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced security tips -->
+      <div class="mt-6 p-5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-xl border border-blue-200 dark:border-blue-800/30 shadow-sm">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-md text-white">
+              <%= icon "info", class: "w-6 h-6" %>
             </div>
           </div>
+          <div class="ml-4">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white">Security Tips</h3>
+            <ul class="mt-2 space-y-2">
+              <li class="flex items-start">
+                <span class="text-blue-500 mr-2">•</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400">Never share your PIN or password with anyone</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-blue-500 mr-2">•</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400">Use a strong, unique password for your account</span>
+              </li>
+              <li class="flex items-start">
+                <span class="text-blue-500 mr-2">•</span>
+                <span class="text-sm text-gray-600 dark:text-gray-400">Enable 2FA for an extra layer of security</span>
+              </li>
+            </ul>
 
-          <a href="<%= security_settings_path %>" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-medium transition-all duration-300">
-            Enable 2FA
-          </a>
+            <div class="mt-3">
+              <a href="#" class="text-sm text-blue-600 dark:text-blue-400 font-medium flex items-center">
+                Learn more about account security
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Floating Help Button - Always accessible -->
-  <div class="fixed right-4 bottom-20 z-20">
-    <button class="w-14 h-14 rounded-full bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-110 flex items-center justify-center">
+  <!-- Enhanced Floating Help Button - Always accessible -->
+  <div class="fixed right-6 bottom-24 z-20">
+    <button class="w-16 h-16 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl hover:shadow-2xl transform transition-all duration-300 hover:scale-110 flex items-center justify-center">
       <%= icon "help-circle", class: "w-8 h-8" %>
     </button>
   </div>
