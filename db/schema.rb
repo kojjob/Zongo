@@ -636,6 +636,81 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
     t.index ["position"], name: "index_navigation_items_on_position"
   end
 
+  create_table "notification_channels", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "channel_type", null: false
+    t.string "identifier", null: false
+    t.boolean "enabled", default: true, null: false
+    t.boolean "verified", default: false, null: false
+    t.datetime "verified_at"
+    t.string "verification_token"
+    t.datetime "verification_sent_at"
+    t.integer "verification_attempts", default: 0, null: false
+    t.json "settings"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["channel_type", "identifier"], name: "index_notification_channels_on_channel_type_and_identifier", unique: true
+    t.index ["user_id", "channel_type"], name: "index_notification_channels_on_user_id_and_channel_type"
+    t.index ["user_id"], name: "index_notification_channels_on_user_id"
+    t.index ["verification_token"], name: "index_notification_channels_on_verification_token", unique: true
+  end
+
+  create_table "notification_deliveries", force: :cascade do |t|
+    t.bigint "notification_id", null: false
+    t.bigint "notification_channel_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "delivered_at"
+    t.datetime "read_at"
+    t.text "error_message"
+    t.integer "attempts", default: 0, null: false
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_channel_id"], name: "index_notification_deliveries_on_notification_channel_id"
+    t.index ["notification_id", "notification_channel_id"], name: "index_notification_deliveries_on_notification_and_channel"
+    t.index ["notification_id"], name: "index_notification_deliveries_on_notification_id"
+    t.index ["status"], name: "index_notification_deliveries_on_status"
+  end
+
+  create_table "notification_preferences", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.boolean "email_enabled", default: true
+    t.boolean "sms_enabled", default: true
+    t.boolean "push_enabled", default: true
+    t.boolean "in_app_enabled", default: true
+    t.jsonb "email_preferences", default: {}
+    t.jsonb "sms_preferences", default: {}
+    t.jsonb "push_preferences", default: {}
+    t.jsonb "in_app_preferences", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notification_preferences_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title", null: false
+    t.text "message", null: false
+    t.integer "severity", default: 0, null: false
+    t.integer "category", default: 0, null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "read_at"
+    t.datetime "sent_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.string "action_url"
+    t.string "action_text"
+    t.json "metadata"
+    t.string "image_url"
+    t.string "icon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "category"], name: "index_notifications_on_user_id_and_category"
+    t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
+    t.index ["user_id", "read"], name: "index_notifications_on_user_id_and_read"
+    t.index ["user_id", "severity"], name: "index_notifications_on_user_id_and_severity"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "order_items", force: :cascade do |t|
     t.bigint "order_id", null: false
     t.bigint "product_id", null: false
@@ -1308,6 +1383,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
   add_foreign_key "loan_repayments", "transactions"
   add_foreign_key "loans", "users"
   add_foreign_key "navigation_items", "navigation_items", column: "parent_id"
+  add_foreign_key "notification_channels", "users"
+  add_foreign_key "notification_deliveries", "notification_channels"
+  add_foreign_key "notification_deliveries", "notifications"
+  add_foreign_key "notification_preferences", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "coupons"

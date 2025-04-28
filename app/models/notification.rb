@@ -23,7 +23,7 @@ class Notification < ApplicationRecord
   enum :category, {
     general: 0,
     security: 1,
-    transaction: 2,
+    financial: 2,
     account: 3,
     system: 4
   }, default: :general
@@ -31,7 +31,7 @@ class Notification < ApplicationRecord
   # Scopes
   scope :unread, -> { where(read: false) }
   scope :security, -> { where(category: :security) }
-  scope :transactions, -> { where(category: :transaction) }
+  scope :financial, -> { where(category: :financial) }
   scope :by_severity, ->(severity) { where(severity: severity) }
   scope :recent, -> { order(sent_at: :desc) }
   scope :recent_first, -> { order(sent_at: :desc) }
@@ -78,7 +78,7 @@ class Notification < ApplicationRecord
       when :warning then "alert-triangle"
       else "shield"
       end
-    when :transaction then "credit-card"
+    when :financial then "credit-card"
     when :account then "user"
     when :system then "settings"
     else "bell"
@@ -168,7 +168,7 @@ class Notification < ApplicationRecord
   def default_action_text
     case category.to_sym
     when :security then "Review"
-    when :transaction then "View"
+    when :financial then "View"
     when :account then "Manage"
     else "View"
     end

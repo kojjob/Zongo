@@ -28,14 +28,14 @@ User.find_each do |user|
     push_preferences: {
       'general' => true,
       'security' => true,
-      'transaction' => true,
+      'financial' => true,
       'account' => true,
       'system' => false
     },
     in_app_preferences: {
       'general' => true,
       'security' => true,
-      'transaction' => true,
+      'financial' => true,
       'account' => true,
       'system' => true
     }
@@ -112,7 +112,7 @@ notification_data = [
     metadata: { ip_address: '102.176.0.123', location: 'Accra, Ghana', device: 'iPhone', browser: 'Safari' }
   },
   {
-    category: 'transaction',
+    category: 'financial',
     severity: 'info',
     title: 'Payment Successful',
     message: 'Your payment of GHS 250.00 to MTN Mobile Money was successful.',
@@ -122,7 +122,7 @@ notification_data = [
     metadata: { transaction_id: '123456', amount: 250.00, recipient: 'MTN Mobile Money', status: 'completed' }
   },
   {
-    category: 'transaction',
+    category: 'financial',
     severity: 'warning',
     title: 'Payment Failed',
     message: 'Your payment of GHS 100.00 to Vodafone Cash failed due to insufficient funds.',
@@ -182,7 +182,7 @@ notification_data = [
     metadata: { feature_id: 'bulk_transfer', release_date: Date.today - 2.days }
   },
   {
-    category: 'transaction',
+    category: 'financial',
     severity: 'info',
     title: 'Money Received',
     message: 'You received GHS 500.00 from John Doe.',
