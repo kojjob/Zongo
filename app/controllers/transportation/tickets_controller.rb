@@ -1,10 +1,18 @@
 module Transportation
   class TicketsController < ApplicationController
     before_action :authenticate_user!, except: [:index]
+    before_action :set_ticket_booking, only: [:show, :cancel]
 
     def index
       @page_title = "Travel Tickets"
-      @popular_routes = sample_popular_routes
+
+      # Get popular routes from the database
+      @popular_routes = Route.popular.limit(5)
+
+      # If no routes exist yet, use sample data
+      if @popular_routes.empty?
+        @popular_routes = sample_popular_routes
+      end
     end
 
     def search
@@ -15,6 +23,7 @@ module Transportation
       @transport_type = params[:transport_type] || 'all'
 
       # In a real implementation, this would search for available tickets
+      # For now, we'll just create some sample tickets
       @tickets = sample_tickets(@origin, @destination, @transport_type)
 
       respond_to do |format|
@@ -24,28 +33,125 @@ module Transportation
     end
 
     def book
-      # This would handle the booking of a ticket
       @ticket_id = params[:ticket_id]
       @passengers = params[:passengers] || 1
       @payment_method = params[:payment_method]
+      @origin = params[:origin]
+      @destination = params[:destination]
+      @departure_time = parse_datetime(params[:date], params[:time])
+      @transport_type = params[:transport_type] || 'bus'
+      @company_name = params[:company_name]
+      @price = params[:price]
 
-      # In a real implementation, this would create a booking
-      flash[:notice] = "Your ticket has been booked successfully!"
-
-      respond_to do |format|
-        format.html { redirect_to transportation_my_tickets_path }
-        format.turbo_stream
+      # Find or create a route
+      route = Route.find_or_create_by(
+        origin: @origin,
+        destination: @destination
+      ) do |r|
+        r.distance = rand(50..500)
+        r.transport_type = @transport_type
       end
+
+      # Create a new ticket booking
+      @ticket_booking = current_user.ticket_bookings.new(
+        route: route,
+        company_name: @company_name,
+        transport_type: @transport_type,
+        departure_time: @departure_time,
+        arrival_time: @departure_time + rand(2..6).hours,
+        passengers: @passengers,
+        price: @price,
+        status: :confirmed,
+        payment_method: @payment_method
+      )
+
+      # Generate a unique ticket number
+      @ticket_booking.ticket_number = "TKT-#{SecureRandom.alphanumeric(8).upcase}"
+
+      if @ticket_booking.save
+        # In a real implementation, this would process payment
+        flash[:notice] = "Your ticket has been booked successfully!"
+
+        respond_to do |format|
+          format.html { redirect_to transportation_my_tickets_path }
+          format.turbo_stream
+        end
+      else
+        flash[:alert] = "Failed to book your ticket. Please try again."
+
+        respond_to do |format|
+          format.html { redirect_to transportation_tickets_path }
+          format.turbo_stream { render turbo_stream: turbo_stream.replace("booking_form", partial: "transportation/tickets/booking_form", locals: { error: @ticket_booking.errors.full_messages.join(", ") }) }
+        end
+      end
+    end
+
+    def show
+      @page_title = "Ticket Details"
+    end
+
+    def cancel
+      if @ticket_booking.status == "confirmed"
+        @ticket_booking.update(status: :cancelled)
+        flash[:notice] = "Your ticket has been cancelled."
+      else
+        flash[:alert] = "This ticket cannot be cancelled."
+      end
+
+      redirect_to transportation_my_tickets_path
     end
 
     def my_tickets
       @page_title = "My Tickets"
-      # In a real implementation, this would fetch the user's tickets
-      @upcoming_tickets = sample_upcoming_tickets
-      @past_tickets = sample_past_tickets
+
+      # Fetch the user's tickets from the database
+      @upcoming_tickets = current_user.ticket_bookings
+                                     .where(status: [:pending, :confirmed])
+                                     .where("departure_time > ?", Time.current)
+                                     .order(departure_time: :asc)
+
+      @past_tickets = current_user.ticket_bookings
+                                 .where(status: [:completed, :cancelled])
+                                 .or(current_user.ticket_bookings.where("departure_time < ?", Time.current))
+                                 .order(departure_time: :desc)
+                                 .limit(10)
+
+      # If no tickets exist yet, use sample data
+      if @upcoming_tickets.empty? && @past_tickets.empty?
+        @upcoming_tickets = sample_upcoming_tickets
+        @past_tickets = sample_past_tickets
+      end
     end
 
     private
+
+    def set_ticket_booking
+      @ticket_booking = current_user.ticket_bookings.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = "Ticket not found."
+      redirect_to transportation_my_tickets_path
+    end
+
+    def parse_datetime(date_str, time_str)
+      return Time.current + 1.day if date_str.blank? || time_str.blank?
+
+      begin
+        date = Date.parse(date_str)
+        time = Time.parse(time_str)
+
+        DateTime.new(
+          date.year,
+          date.month,
+          date.day,
+          time.hour,
+          time.min,
+          0,
+          Time.zone.formatted_offset
+        )
+      rescue ArgumentError
+        Time.current + 1.day
+      end
+    end
 
     def sample_popular_routes
       [

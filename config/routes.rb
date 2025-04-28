@@ -308,14 +308,35 @@ Rails.application.routes.draw do
 
   # Transportation namespace for all transportation-related routes
   namespace :transportation do
+    # Ride booking routes
     get "rides", to: "rides#index", as: "rides"
-    get "tickets", to: "tickets#index", as: "tickets"
     post "search_rides", to: "rides#search", as: "search_rides"
-    post "search_tickets", to: "tickets#search", as: "search_tickets"
     post "book_ride", to: "rides#book", as: "book_ride"
-    post "book_ticket", to: "tickets#book", as: "book_ticket"
     get "my_rides", to: "rides#my_rides", as: "my_rides"
+    get "rides/:id", to: "rides#show", as: "ride"
+    post "rides/:id/cancel", to: "rides#cancel", as: "cancel_ride"
+
+    # Ticket booking routes
+    get "tickets", to: "tickets#index", as: "tickets"
+    post "search_tickets", to: "tickets#search", as: "search_tickets"
+    post "book_ticket", to: "tickets#book", as: "book_ticket"
     get "my_tickets", to: "tickets#my_tickets", as: "my_tickets"
+    get "tickets/:id", to: "tickets#show", as: "ticket"
+    post "tickets/:id/cancel", to: "tickets#cancel", as: "cancel_ticket"
+
+    # Admin routes for transport companies and routes
+    resources :transport_companies
+    resources :routes
+  end
+
+  # Admin Transportation routes
+  namespace :admin do
+    namespace :transportation do
+      resources :transport_companies
+      resources :routes
+      resources :ride_bookings, only: [:index, :show, :edit, :update, :destroy]
+      resources :ticket_bookings, only: [:index, :show, :edit, :update, :destroy]
+    end
   end
 
   # Education Services routes
