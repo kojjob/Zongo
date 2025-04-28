@@ -66,6 +66,7 @@ class Transaction < ApplicationRecord
     .where("source.user_id = ? OR dest.user_id = ?", user_id, user_id)
   }
   scope :blocked, -> { where(status: :blocked) }
+  scope :recent, -> { order(created_at: :desc) }
 
   # Class methods
 

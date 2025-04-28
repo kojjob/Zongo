@@ -1,4 +1,3 @@
-<%# app/views/notifications/index.turbo_stream.erb %>
 <% if @notification.present? %>
   <%# For single notification actions like mark_as_read, mark_as_unread, etc. %>
   <%= turbo_stream.replace "notification_#{@notification.id}" do %>

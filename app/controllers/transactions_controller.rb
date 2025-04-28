@@ -8,7 +8,14 @@ class TransactionsController < ApplicationController
 
   # GET /transactions
   def index
-    @pagy, @transactions = pagy(current_user.transactions.recent, items: 20)
+    # Handle the case where the user doesn't have any transactions
+    transactions = if current_user.respond_to?(:transactions) && current_user.transactions.present?
+                    current_user.transactions.recent
+                  else
+                    Transaction.none
+                  end
+
+    @pagy, @transactions = pagy(transactions, items: 20)
   end
 
   # GET /transactions/:id

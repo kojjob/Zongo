@@ -6,10 +6,18 @@ class TransfersController < ApplicationController
 
   # GET /transfers/new
   def new
-    @recent_recipients = current_user.respond_to?(:recent_transfer_recipients) ?
-                         current_user.recent_transfer_recipients(5) : []
-    @beneficiaries = current_user.respond_to?(:beneficiaries) ?
-                     current_user.beneficiaries.order(created_at: :desc).limit(5) : []
+    # Ensure @recent_recipients is always an array, not a relation
+    @recent_recipients = if current_user.respond_to?(:recent_transfer_recipients)
+                          current_user.recent_transfer_recipients(5).to_a
+                        else
+                          []
+                        end
+
+    @beneficiaries = if current_user.respond_to?(:beneficiaries)
+                      current_user.beneficiaries.order(created_at: :desc).limit(5).to_a
+                    else
+                      []
+                    end
 
     # Handle recipient_id parameter (from beneficiary cards)
     if params[:recipient_id].present?
