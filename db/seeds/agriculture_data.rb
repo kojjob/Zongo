@@ -385,8 +385,8 @@ if users.present?
           message: "I'm interested in your #{crop.name}. Can you provide more details about the quality and availability?",
           status: [:pending, :responded, :accepted, :rejected].sample,
           read: [true, false].sample,
-          quantity: rand(1..(quantity * 0.8)).round(2),
-          offered_price: price * rand(0.8..1.1).round(2),
+          quantity: quantity.present? ? rand(1..[quantity * 0.8, 1].max.to_i).round(2) : rand(1..10).round(2),
+          offered_price: price.present? ? (price * rand(0.8..1.1)).round(2) : rand(10..100).round(2),
           responded_at: [nil, Time.current - rand(1..5).days].sample
         )
       end
