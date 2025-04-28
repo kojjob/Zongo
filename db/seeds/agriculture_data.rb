@@ -25,146 +25,146 @@ end
 # Create crops
 puts "Creating crops..."
 crops = [
-  { 
-    name: "Maize", 
-    description: "Maize is one of the most important cereal crops in Ghana. It is grown in all agro-ecological zones of the country and is a staple food for many Ghanaians.", 
-    scientific_name: "Zea mays", 
-    growing_season: "Major: April-July, Minor: September-November", 
-    season_start: 4, 
-    season_end: 11, 
-    growing_time: 90, 
+  {
+    name: "Maize",
+    description: "Maize is one of the most important cereal crops in Ghana. It is grown in all agro-ecological zones of the country and is a staple food for many Ghanaians.",
+    scientific_name: "Zea mays",
+    growing_season: "Major: April-July, Minor: September-November",
+    season_start: 4,
+    season_end: 11,
+    growing_time: 90,
     category: :grain,
     popularity: 95,
     featured: true
   },
-  { 
-    name: "Rice", 
-    description: "Rice is a major cereal crop in Ghana, grown mainly in the northern, upper east, and volta regions. It's becoming increasingly important in the Ghanaian diet.", 
-    scientific_name: "Oryza sativa", 
-    growing_season: "May-November", 
-    season_start: 5, 
-    season_end: 11, 
-    growing_time: 120, 
+  {
+    name: "Rice",
+    description: "Rice is a major cereal crop in Ghana, grown mainly in the northern, upper east, and volta regions. It's becoming increasingly important in the Ghanaian diet.",
+    scientific_name: "Oryza sativa",
+    growing_season: "May-November",
+    season_start: 5,
+    season_end: 11,
+    growing_time: 120,
     category: :grain,
     popularity: 90,
     featured: true
   },
-  { 
-    name: "Cassava", 
-    description: "Cassava is a root crop widely cultivated in Ghana. It is a major source of carbohydrates and is processed into various food products.", 
-    scientific_name: "Manihot esculenta", 
-    growing_season: "Year-round, best planted at onset of rains", 
-    season_start: 3, 
-    season_end: 10, 
-    growing_time: 270, 
+  {
+    name: "Cassava",
+    description: "Cassava is a root crop widely cultivated in Ghana. It is a major source of carbohydrates and is processed into various food products.",
+    scientific_name: "Manihot esculenta",
+    growing_season: "Year-round, best planted at onset of rains",
+    season_start: 3,
+    season_end: 10,
+    growing_time: 270,
     category: :root,
     popularity: 85,
     featured: true
   },
-  { 
-    name: "Yam", 
-    description: "Yam is an important staple food in Ghana, particularly in the forest and transitional zones. It is a major source of income for many farmers.", 
-    scientific_name: "Dioscorea spp.", 
-    growing_season: "December-July", 
-    season_start: 12, 
-    season_end: 7, 
-    growing_time: 210, 
+  {
+    name: "Yam",
+    description: "Yam is an important staple food in Ghana, particularly in the forest and transitional zones. It is a major source of income for many farmers.",
+    scientific_name: "Dioscorea spp.",
+    growing_season: "December-July",
+    season_start: 12,
+    season_end: 7,
+    growing_time: 210,
     category: :root,
     popularity: 80,
     featured: true
   },
-  { 
-    name: "Plantain", 
-    description: "Plantain is a major staple food in Ghana, particularly in the forest zone. It is consumed in various forms and is an important source of income for farmers.", 
-    scientific_name: "Musa paradisiaca", 
-    growing_season: "Year-round, best planted at onset of rains", 
-    season_start: 3, 
-    season_end: 10, 
-    growing_time: 300, 
+  {
+    name: "Plantain",
+    description: "Plantain is a major staple food in Ghana, particularly in the forest zone. It is consumed in various forms and is an important source of income for farmers.",
+    scientific_name: "Musa paradisiaca",
+    growing_season: "Year-round, best planted at onset of rains",
+    season_start: 3,
+    season_end: 10,
+    growing_time: 300,
     category: :fruit,
     popularity: 75,
     featured: true
   },
-  { 
-    name: "Cocoa", 
-    description: "Cocoa is Ghana's main cash crop and a major foreign exchange earner. Ghana is the world's second-largest producer of cocoa beans.", 
-    scientific_name: "Theobroma cacao", 
-    growing_season: "Main crop: October-March, Light crop: May-August", 
-    season_start: 10, 
-    season_end: 8, 
-    growing_time: 1825, 
+  {
+    name: "Cocoa",
+    description: "Cocoa is Ghana's main cash crop and a major foreign exchange earner. Ghana is the world's second-largest producer of cocoa beans.",
+    scientific_name: "Theobroma cacao",
+    growing_season: "Main crop: October-March, Light crop: May-August",
+    season_start: 10,
+    season_end: 8,
+    growing_time: 1825,
     category: :cash_crop,
     popularity: 100,
     featured: true
   },
-  { 
-    name: "Tomato", 
-    description: "Tomatoes are an important vegetable crop in Ghana, used in many local dishes. They are grown mainly in the dry season under irrigation.", 
-    scientific_name: "Solanum lycopersicum", 
-    growing_season: "October-April", 
-    season_start: 10, 
-    season_end: 4, 
-    growing_time: 90, 
+  {
+    name: "Tomato",
+    description: "Tomatoes are an important vegetable crop in Ghana, used in many local dishes. They are grown mainly in the dry season under irrigation.",
+    scientific_name: "Solanum lycopersicum",
+    growing_season: "October-April",
+    season_start: 10,
+    season_end: 4,
+    growing_time: 90,
     category: :vegetable,
     popularity: 70,
     featured: false
   },
-  { 
-    name: "Pepper", 
-    description: "Peppers, both hot and sweet varieties, are widely grown in Ghana and are essential ingredients in Ghanaian cuisine.", 
-    scientific_name: "Capsicum spp.", 
-    growing_season: "Year-round, best in dry season", 
-    season_start: 10, 
-    season_end: 4, 
-    growing_time: 90, 
+  {
+    name: "Pepper",
+    description: "Peppers, both hot and sweet varieties, are widely grown in Ghana and are essential ingredients in Ghanaian cuisine.",
+    scientific_name: "Capsicum spp.",
+    growing_season: "Year-round, best in dry season",
+    season_start: 10,
+    season_end: 4,
+    growing_time: 90,
     category: :vegetable,
     popularity: 65,
     featured: false
   },
-  { 
-    name: "Groundnut", 
-    description: "Groundnuts (peanuts) are an important legume crop in Ghana, providing both food and income for many farmers, especially in the northern regions.", 
-    scientific_name: "Arachis hypogaea", 
-    growing_season: "April-October", 
-    season_start: 4, 
-    season_end: 10, 
-    growing_time: 120, 
+  {
+    name: "Groundnut",
+    description: "Groundnuts (peanuts) are an important legume crop in Ghana, providing both food and income for many farmers, especially in the northern regions.",
+    scientific_name: "Arachis hypogaea",
+    growing_season: "April-October",
+    season_start: 4,
+    season_end: 10,
+    growing_time: 120,
     category: :legume,
     popularity: 60,
     featured: false
   },
-  { 
-    name: "Cowpea", 
-    description: "Cowpea is a drought-resistant legume crop grown mainly in the northern regions of Ghana. It is an important source of protein in the Ghanaian diet.", 
-    scientific_name: "Vigna unguiculata", 
-    growing_season: "May-November", 
-    season_start: 5, 
-    season_end: 11, 
-    growing_time: 70, 
+  {
+    name: "Cowpea",
+    description: "Cowpea is a drought-resistant legume crop grown mainly in the northern regions of Ghana. It is an important source of protein in the Ghanaian diet.",
+    scientific_name: "Vigna unguiculata",
+    growing_season: "May-November",
+    season_start: 5,
+    season_end: 11,
+    growing_time: 70,
     category: :legume,
     popularity: 55,
     featured: false
   },
-  { 
-    name: "Sorghum", 
-    description: "Sorghum is a drought-resistant cereal crop grown mainly in the northern regions of Ghana. It is used for food, animal feed, and brewing local beer.", 
-    scientific_name: "Sorghum bicolor", 
-    growing_season: "May-October", 
-    season_start: 5, 
-    season_end: 10, 
-    growing_time: 120, 
+  {
+    name: "Sorghum",
+    description: "Sorghum is a drought-resistant cereal crop grown mainly in the northern regions of Ghana. It is used for food, animal feed, and brewing local beer.",
+    scientific_name: "Sorghum bicolor",
+    growing_season: "May-October",
+    season_start: 5,
+    season_end: 10,
+    growing_time: 120,
     category: :grain,
     popularity: 50,
     featured: false
   },
-  { 
-    name: "Millet", 
-    description: "Millet is a drought-resistant cereal crop grown mainly in the northern regions of Ghana. It is an important food crop in these areas.", 
-    scientific_name: "Pennisetum glaucum", 
-    growing_season: "May-October", 
-    season_start: 5, 
-    season_end: 10, 
-    growing_time: 90, 
+  {
+    name: "Millet",
+    description: "Millet is a drought-resistant cereal crop grown mainly in the northern regions of Ghana. It is an important food crop in these areas.",
+    scientific_name: "Pennisetum glaucum",
+    growing_season: "May-October",
+    season_start: 5,
+    season_end: 10,
+    growing_time: 90,
     category: :grain,
     popularity: 45,
     featured: false
@@ -198,7 +198,7 @@ current_date = Date.today
 # Generate prices for the last 90 days
 (0..90).each do |days_ago|
   date = current_date - days_ago.days
-  
+
   crops.each do |crop|
     # Base price for each crop
     base_price = case crop.category
@@ -210,29 +210,29 @@ current_date = Date.today
                  when "cash_crop" then rand(20.0..40.0)
                  else rand(5.0..10.0)
                  end
-    
+
     # Add some seasonal variation
     month_factor = if (crop.season_start..crop.season_end).include?(date.month)
                      rand(0.8..1.0) # In season - lower prices
                    else
                      rand(1.0..1.5) # Out of season - higher prices
                    end
-    
+
     # Add some random variation over time
     time_variation = Math.sin(days_ago / 15.0) * 0.2 + 1.0
-    
+
     # Calculate final price
     price = base_price * month_factor * time_variation
-    
+
     # Create price records for different regions and markets
     rand(1..3).times do
       region = regions.sample
       market = markets.sample
       unit = units.sample
-      
+
       # Add regional variation
       regional_factor = rand(0.9..1.1)
-      
+
       CropPrice.create!(
         crop: crop,
         region: region,
@@ -254,14 +254,14 @@ weather_conditions = WeatherForecast.weather_conditions.keys
 # Generate forecasts for the next 7 days
 (0..7).each do |days_from_now|
   date = current_date + days_from_now.days
-  
+
   regions.each do |region|
     # Base temperatures based on region's latitude (northern regions hotter and drier)
     is_northern = region.latitude > 8.0
-    
+
     base_high = is_northern ? rand(30..36) : rand(26..32)
     base_low = is_northern ? rand(22..26) : rand(20..24)
-    
+
     # Seasonal adjustments
     month = date.month
     if [12, 1, 2].include?(month) # Harmattan season
@@ -283,10 +283,10 @@ weather_conditions = WeatherForecast.weather_conditions.keys
       precipitation_amount = rand(3..15)
       condition = ['partly_cloudy', 'cloudy', 'rainy'].sample
     end
-    
+
     # Random daily variations
     temp_variation = rand(-2.0..2.0)
-    
+
     WeatherForecast.create!(
       region: region,
       forecast_date: date,
@@ -320,7 +320,7 @@ if users.present?
     listing_type = listing_types.sample
     status = statuses.sample
     unit = units.sample
-    
+
     # Base price based on crop category and listing type
     base_price = case crop.category
                  when "grain" then rand(3.0..8.0)
@@ -331,10 +331,10 @@ if users.present?
                  when "cash_crop" then rand(20.0..40.0)
                  else rand(5.0..10.0)
                  end
-    
+
     # Adjust price based on listing type
     price = listing_type == 'selling' ? base_price * rand(1.0..1.3) : base_price * rand(0.7..0.9)
-    
+
     # Quantity based on unit
     quantity = case unit
                when "kg" then rand(10..1000)
@@ -344,14 +344,14 @@ if users.present?
                when "bunch" then rand(10..100)
                else rand(10..100)
                end
-    
+
     # Create the listing
     listing = CropListing.create!(
       user: user,
       crop: crop,
       region: region,
       title: "#{listing_type == 'selling' ? 'Selling' : 'Looking for'} #{crop.name} - #{quantity} #{unit}",
-      description: "#{listing_type == 'selling' ? 'I have' : 'I need'} #{quantity} #{unit} of high-quality #{crop.name} #{listing_type == 'selling' ? 'for sale' : 'to buy'}. #{Faker::Lorem.paragraph(sentence_count: 2)}",
+      description: "#{listing_type == 'selling' ? 'I have' : 'I need'} #{quantity} #{unit} of high-quality #{crop.name} #{listing_type == 'selling' ? 'for sale' : 'to buy'}. This is a sample description for this crop listing.",
       price: price.round(2),
       quantity: quantity,
       unit: unit,
@@ -361,19 +361,19 @@ if users.present?
       negotiable: [true, true, false].sample,
       expiry_date: Date.today + rand(7..60).days,
       sold_at: status == :sold ? (Date.today - rand(1..30).days) : nil,
-      location: "#{Faker::Address.community}, #{region.name}",
-      terms: Faker::Lorem.paragraph(sentence_count: 3)
+      location: "Local Community, #{region.name}",
+      terms: "Standard terms and conditions apply to this listing. Contact the seller for more details."
     )
-    
+
     # Create some inquiries for this listing
     if listing.active? && listing_type == 'selling'
       rand(0..3).times do
         inquirer = users.reject { |u| u.id == user.id }.sample
-        
+
         CropListingInquiry.create!(
           user: inquirer,
           crop_listing: listing,
-          message: "I'm interested in your #{crop.name}. #{Faker::Lorem.sentence}",
+          message: "I'm interested in your #{crop.name}. Can you provide more details about the quality and availability?",
           status: [:pending, :responded, :accepted, :rejected].sample,
           read: [true, false].sample,
           quantity: rand(1..(quantity * 0.8)).round(2),
@@ -394,7 +394,7 @@ admin_users = User.where(admin: true).presence || User.first(3)
 30.times do
   resource_type = resource_types.sample
   crop = [nil, crops.sample, crops.sample].sample # Some resources are general, some are crop-specific
-  
+
   title = case resource_type
           when 'article'
             "#{['Guide to', 'Understanding', 'Tips for', 'Best Practices in'].sample} #{crop&.name || 'Farming'} #{['Production', 'Cultivation', 'Management', 'Marketing'].sample}"
@@ -409,9 +409,9 @@ admin_users = User.where(admin: true).presence || User.first(3)
           when 'pest_disease'
             "#{['Managing', 'Controlling', 'Preventing', 'Treating'].sample} #{['Pests', 'Diseases', 'Weeds'].sample} in #{crop&.name || 'Crops'}"
           end
-  
-  content = Faker::Lorem.paragraphs(number: 10).join("\n\n")
-  
+
+  content = "This is a sample article about agriculture in Ghana. It contains information about farming practices, crop varieties, and market trends. The content is meant to be educational and informative for farmers and agricultural stakeholders.\n\nGhana's agricultural sector is diverse and includes crops such as maize, rice, cassava, yams, and various fruits and vegetables. The sector employs a significant portion of the population and contributes substantially to the country's GDP.\n\nFarmers face various challenges including climate change, access to markets, and availability of inputs. However, there are also opportunities for growth and innovation in the sector.\n\nThis article would typically contain more detailed information about specific farming techniques, success stories, and recommendations for improving agricultural productivity."
+
   tags = []
   tags << crop&.name if crop
   tags << crop&.category.to_s.humanize if crop
@@ -419,7 +419,7 @@ admin_users = User.where(admin: true).presence || User.first(3)
   tags << ['organic', 'sustainable', 'traditional', 'modern', 'irrigation', 'rainfed'].sample(2)
   tags << ['harvest', 'planting', 'pest control', 'fertilizer', 'soil management', 'marketing', 'storage'].sample(2)
   tags.flatten!
-  
+
   AgricultureResource.create!(
     title: title,
     content: content,
