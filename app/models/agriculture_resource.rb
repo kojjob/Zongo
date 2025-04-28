@@ -9,7 +9,7 @@ class AgricultureResource < ApplicationRecord
   validates :resource_type, presence: true
 
   # Enums
-  enum resource_type: {
+  enum :resource_type, {
     article: 0,
     video: 1,
     guide: 2,
