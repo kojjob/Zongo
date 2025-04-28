@@ -34,14 +34,15 @@ module Transportation
 
     def book
       @ticket_id = params[:ticket_id]
-      @passengers = params[:passengers] || 1
+      @passengers = params[:passengers].to_i || 1
       @payment_method = params[:payment_method]
       @origin = params[:origin]
       @destination = params[:destination]
       @departure_time = parse_datetime(params[:date], params[:time])
       @transport_type = params[:transport_type] || 'bus'
       @company_name = params[:company_name]
-      @price = params[:price]
+      @price = params[:price].to_f
+      @total_price = @price * @passengers
 
       # Find or create a route
       route = Route.find_or_create_by(
@@ -55,26 +56,49 @@ module Transportation
       # Create a new ticket booking
       @ticket_booking = current_user.ticket_bookings.new(
         route: route,
+        origin: @origin,
+        destination: @destination,
         company_name: @company_name,
         transport_type: @transport_type,
         departure_time: @departure_time,
         arrival_time: @departure_time + rand(2..6).hours,
         passengers: @passengers,
         price: @price,
-        status: :confirmed,
-        payment_method: @payment_method
+        status: :pending
       )
 
-      # Generate a unique ticket number
-      @ticket_booking.ticket_number = "TKT-#{SecureRandom.alphanumeric(8).upcase}"
+      # Generate a unique booking reference
+      @ticket_booking.booking_reference = "TKT-#{SecureRandom.alphanumeric(8).upcase}"
 
       if @ticket_booking.save
-        # In a real implementation, this would process payment
-        flash[:notice] = "Your ticket has been booked successfully!"
+        # Process payment
+        payment_service = Transportation::PaymentService.new(
+          user: current_user,
+          amount: @total_price,
+          payment_method: @payment_method,
+          description: "#{@passengers} ticket(s) from #{@origin} to #{@destination}",
+          booking: @ticket_booking
+        )
 
-        respond_to do |format|
-          format.html { redirect_to transportation_my_tickets_path }
-          format.turbo_stream
+        payment_result = payment_service.process_payment
+
+        if payment_result[:success]
+          flash[:notice] = "Your ticket has been booked successfully!"
+
+          respond_to do |format|
+            format.html { redirect_to transportation_my_tickets_path }
+            format.turbo_stream
+          end
+        else
+          # Payment failed, update booking status
+          @ticket_booking.update(status: :cancelled)
+
+          flash[:alert] = "Payment failed: #{payment_result[:message]}"
+
+          respond_to do |format|
+            format.html { redirect_to transportation_tickets_path }
+            format.turbo_stream { render turbo_stream: turbo_stream.replace("booking_form", partial: "transportation/tickets/booking_form", locals: { error: payment_result[:message] }) }
+          end
         end
       else
         flash[:alert] = "Failed to book your ticket. Please try again."

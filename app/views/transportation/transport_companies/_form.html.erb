@@ -1,0 +1,63 @@
+<%# Transport Company Form Partial %>
+<%= form_with(model: transport_company, url: transport_company.new_record? ? transportation_transport_companies_path : transportation_transport_company_path(transport_company), class: "space-y-6") do |form| %>
+  <% if transport_company.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
+      <strong class="font-bold">Error:</strong>
+      <span class="block sm:inline"><%= pluralize(transport_company.errors.count, "error") %> prohibited this transport company from being saved:</span>
+      <ul class="list-disc list-inside mt-2">
+        <% transport_company.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.text_field :name, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :transport_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.select :transport_type, TransportCompany.transport_types.keys.map { |type| [type.titleize, type] }, {}, class: "mt-1 block w-full py-2 px-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white bg-white rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm" %>
+    </div>
+
+    <div>
+      <%= form.label :logo_url, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.text_field :logo_url, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :website, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.text_field :website, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.text_field :phone, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+    </div>
+
+    <div>
+      <%= form.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <%= form.email_field :email, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+    </div>
+  </div>
+
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+    <%= form.text_area :description, rows: 4, class: "mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+  </div>
+
+  <div class="flex items-center">
+    <%= form.check_box :active, class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded" %>
+    <%= form.label :active, "Active", class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+  </div>
+
+  <div class="border-t border-gray-200 dark:border-gray-700 pt-5">
+    <div class="flex justify-end">
+      <%= link_to "Cancel", transportation_transport_companies_path, class: "bg-white dark:bg-gray-800 py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,74 @@
+<%# Ride Payment Form Partial %>
+<div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+    <h2 class="text-lg font-medium text-gray-900 dark:text-white">Payment Details</h2>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Choose your payment method</p>
+  </div>
+  
+  <%= form_with(url: transportation_book_ride_path, method: :post, data: { turbo: true }, class: "px-4 py-5 sm:p-6") do |form| %>
+    <%= form.hidden_field :ride_id, value: ride[:id] %>
+    <%= form.hidden_field :origin, value: origin %>
+    <%= form.hidden_field :destination, value: destination %>
+    <%= form.hidden_field :date, value: date %>
+    <%= form.hidden_field :time, value: time %>
+    <%= form.hidden_field :ride_type, value: ride[:ride_type] %>
+    <%= form.hidden_field :price, value: ride[:price] %>
+    
+    <div class="space-y-6">
+      <% if defined?(error) && error.present? %>
+        <div class="bg-red-50 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative" role="alert">
+          <span class="block sm:inline"><%= error %></span>
+        </div>
+      <% end %>
+      
+      <div>
+        <label class="text-base font-medium text-gray-900 dark:text-white">Payment Method</label>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Select how you want to pay</p>
+        <fieldset class="mt-4">
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <%= form.radio_button :payment_method, "wallet", class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-700 dark:bg-gray-800", checked: true %>
+              <label for="payment_method_wallet" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Wallet Balance
+                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                  <% if current_user.wallet&.balance %>
+                    (Available: <%= current_user.wallet.currency %> <%= sprintf('%.2f', current_user.wallet.balance) %>)
+                  <% else %>
+                    (No wallet found)
+                  <% end %>
+                </span>
+              </label>
+            </div>
+            
+            <div class="flex items-center">
+              <%= form.radio_button :payment_method, "mobile_money", class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-700 dark:bg-gray-800" %>
+              <label for="payment_method_mobile_money" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Mobile Money
+              </label>
+            </div>
+            
+            <div class="flex items-center">
+              <%= form.radio_button :payment_method, "card", class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-700 dark:bg-gray-800" %>
+              <label for="payment_method_card" class="ml-3 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Credit/Debit Card
+              </label>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+      
+      <div class="border-t border-gray-200 dark:border-gray-700 pt-5">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Total Amount:</p>
+            <p class="text-xl font-bold text-gray-900 dark:text-white"><%= ride[:currency] %> <%= sprintf('%.2f', ride[:price]) %></p>
+          </div>
+          <div class="flex space-x-3">
+            <%= link_to "Cancel", transportation_rides_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-700 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+            <%= form.submit "Pay Now", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

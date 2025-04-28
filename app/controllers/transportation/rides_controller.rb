@@ -39,6 +39,7 @@ module Transportation
       @origin = params[:origin]
       @destination = params[:destination]
       @pickup_time = parse_datetime(params[:date], params[:time])
+      @price = params[:price].to_f || calculate_ride_price(@origin, @destination, params[:ride_type])
 
       # Create a new ride booking
       @ride_booking = current_user.ride_bookings.new(
@@ -46,9 +47,8 @@ module Transportation
         destination_address: @destination,
         pickup_time: @pickup_time,
         ride_type: params[:ride_type] || 'standard',
-        price: params[:price] || calculate_ride_price(@origin, @destination, params[:ride_type]),
-        status: :pending,
-        payment_method: @payment_method
+        price: @price,
+        status: :pending
       )
 
       # Set driver and vehicle details (in a real app, this would be assigned by the system)
@@ -58,12 +58,34 @@ module Transportation
       @ride_booking.license_plate = "#{('A'..'Z').to_a.sample(2).join}-#{rand(1000..9999)}"
 
       if @ride_booking.save
-        # In a real implementation, this would process payment and assign a driver
-        flash[:notice] = "Your ride has been booked successfully!"
+        # Process payment
+        payment_service = Transportation::PaymentService.new(
+          user: current_user,
+          amount: @price,
+          payment_method: @payment_method,
+          description: "Ride from #{@origin} to #{@destination}",
+          booking: @ride_booking
+        )
 
-        respond_to do |format|
-          format.html { redirect_to transportation_my_rides_path }
-          format.turbo_stream
+        payment_result = payment_service.process_payment
+
+        if payment_result[:success]
+          flash[:notice] = "Your ride has been booked successfully!"
+
+          respond_to do |format|
+            format.html { redirect_to transportation_my_rides_path }
+            format.turbo_stream
+          end
+        else
+          # Payment failed, update booking status
+          @ride_booking.update(status: :cancelled)
+
+          flash[:alert] = "Payment failed: #{payment_result[:message]}"
+
+          respond_to do |format|
+            format.html { redirect_to transportation_rides_path }
+            format.turbo_stream { render turbo_stream: turbo_stream.replace("booking_form", partial: "transportation/rides/booking_form", locals: { error: payment_result[:message] }) }
+          end
         end
       else
         flash[:alert] = "Failed to book your ride. Please try again."
