@@ -1,0 +1,87 @@
+<%# This template will be rendered when the search form is submitted %>
+<%= turbo_stream.update "search_results" do %>
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mt-8">
+    <div class="bg-primary-600 dark:bg-primary-700 py-4 px-6">
+      <h3 class="text-lg font-bold text-white flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        Search Results
+      </h3>
+      <p class="text-primary-100 text-sm">
+        <%= @rides.length %> rides found from <%= @origin %> to <%= @destination %>
+      </p>
+    </div>
+    
+    <div class="p-6">
+      <% if @rides.any? %>
+        <div class="space-y-4">
+          <% @rides.each do |ride| %>
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-start space-x-4">
+                  <div class="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="flex items-center">
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white"><%= ride[:ride_type] %> Ride</h4>
+                      <span class="ml-2 px-2 py-1 text-xs rounded-full bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200">
+                        <%= ride[:vehicle] %>
+                      </span>
+                    </div>
+                    <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      Driver: <%= ride[:driver_name] %> • <%= ride[:driver_rating] %> ★
+                    </div>
+                    <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      <%= ride[:vehicle_color] %> • <%= ride[:license_plate] %>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm">
+                      <div class="flex items-center text-gray-600 dark:text-gray-400 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <%= ride[:duration] %>
+                      </div>
+                      <div class="flex items-center text-gray-600 dark:text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        <%= ride[:distance] %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 md:mt-0 flex flex-col items-end">
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <%= ride[:currency] %> <%= ride[:price] %>
+                  </div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Pickup in <%= ((ride[:pickup_time] - Time.now) / 60).round %> mins
+                  </div>
+                  <%= button_to transportation_book_ride_path(ride_id: ride[:id]), method: :post, class: "px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg text-sm transition" do %>
+                    Book Now
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No rides found</h3>
+          <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+            We couldn't find any rides matching your search criteria. Please try different locations or times.
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
