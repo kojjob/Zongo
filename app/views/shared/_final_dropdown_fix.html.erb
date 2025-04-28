@@ -159,11 +159,12 @@
     left: auto !important;
     bottom: auto !important;
     margin-top: 0.75rem !important;
-    min-width: 16rem !important; /* 256px */
-    padding: 0.5rem !important;
-    border-radius: 0.75rem !important;
+    min-width: 18rem !important; /* 288px */
+    padding: 0.75rem !important;
+    border-radius: 1rem !important;
     background-color: white !important;
     border: 1px solid #e5e7eb !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
   }
 
   /* User dropdown specific text colors in light mode */
@@ -178,6 +179,63 @@
   .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a:hover,
   .relative[data-controller="dropdown"] [data-dropdown-target="menu"] button:hover {
     background-color: #f3f4f6 !important; /* gray-100 */
+    border-radius: 0.5rem !important;
+  }
+
+  /* Enhance user dropdown menu items */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a,
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] button {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.625rem 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.2s ease !important;
+  }
+
+  /* Add colorful icons to user dropdown items */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a svg,
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] button svg {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    margin-right: 0.75rem !important;
+  }
+
+  /* Profile icon - blue */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="profile"] svg,
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="account"] svg {
+    color: #3b82f6 !important; /* blue-500 */
+  }
+
+  /* Dashboard icon - purple */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="dashboard"] svg {
+    color: #8b5cf6 !important; /* violet-500 */
+  }
+
+  /* Settings icon - gray */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="settings"] svg {
+    color: #6b7280 !important; /* gray-500 */
+  }
+
+  /* Admin icon - red */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="admin"] svg {
+    color: #ef4444 !important; /* red-500 */
+  }
+
+  /* Wallet icon - green */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="wallet"] svg {
+    color: #10b981 !important; /* emerald-500 */
+  }
+
+  /* Sign out icon - orange */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] form[action*="sign_out"] button svg {
+    color: #f97316 !important; /* orange-500 */
+  }
+
+  /* Add dividers between sections */
+  .relative[data-controller="dropdown"] [data-dropdown-target="menu"] hr {
+    margin: 0.5rem 0 !important;
+    border-color: #e5e7eb !important;
   }
 
   /* Shop and Services dropdown positioning */
@@ -188,6 +246,88 @@
     right: auto !important;
     bottom: auto !important;
     margin-top: 0.5rem !important;
+    min-width: 20rem !important;
+    padding: 1rem !important;
+    border-radius: 1rem !important;
+    background-color: white !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  /* Shop dropdown grid layout */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] .grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+  }
+
+  /* Shop dropdown category headers */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] h3 {
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    color: #4b5563 !important; /* gray-600 */
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Shop dropdown links */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.5rem !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.2s ease !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  /* Shop dropdown link hover */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a:hover {
+    background-color: #f3f4f6 !important; /* gray-100 */
+  }
+
+  /* Shop dropdown icons */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a svg {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    margin-right: 0.75rem !important;
+  }
+
+  /* Colorful category icons in shop dropdown - light mode */
+  /* Electronics - blue */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="electronics"] svg {
+    color: #3b82f6 !important; /* blue-500 */
+  }
+
+  /* Clothing - purple */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="clothing"] svg,
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="fashion"] svg {
+    color: #8b5cf6 !important; /* violet-500 */
+  }
+
+  /* Home - amber */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="home"] svg,
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="furniture"] svg {
+    color: #f59e0b !important; /* amber-500 */
+  }
+
+  /* Food - green */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="food"] svg,
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="grocery"] svg {
+    color: #10b981 !important; /* emerald-500 */
+  }
+
+  /* Beauty - pink */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="beauty"] svg,
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="health"] svg {
+    color: #ec4899 !important; /* pink-500 */
+  }
+
+  /* Shop dropdown footer */
+  .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] .bg-gray-50 {
+    background-color: #f9fafb !important;
+    margin: 0 -1rem -1rem -1rem !important;
+    padding: 0.75rem 1rem !important;
+    border-top: 1px solid #e5e7eb !important;
+    border-radius: 0 0 1rem 1rem !important;
   }
 
   /* Dark mode fixes */
@@ -196,10 +336,99 @@
     border-color: #374151 !important;
   }
 
+  /* Shop dropdown dark mode fixes */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] {
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+  }
+
+  /* Shop dropdown dark mode category headers */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] h3 {
+    color: #9ca3af !important; /* gray-400 */
+  }
+
+  /* Shop dropdown dark mode link hover */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a:hover {
+    background-color: #374151 !important; /* gray-700 */
+  }
+
+  /* Shop dropdown dark mode footer */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] .bg-gray-50 {
+    background-color: #111827 !important; /* gray-900 */
+    border-top: 1px solid #374151 !important;
+  }
+
+  /* Colorful category icons in shop dropdown */
+  /* Electronics - blue */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="electronics"] svg {
+    color: #60a5fa !important; /* blue-400 */
+  }
+
+  /* Clothing - purple */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="clothing"] svg,
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="fashion"] svg {
+    color: #a78bfa !important; /* violet-400 */
+  }
+
+  /* Home - amber */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="home"] svg,
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="furniture"] svg {
+    color: #fbbf24 !important; /* amber-400 */
+  }
+
+  /* Food - green */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="food"] svg,
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="grocery"] svg {
+    color: #34d399 !important; /* emerald-400 */
+  }
+
+  /* Beauty - pink */
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="beauty"] svg,
+  .dark .dropdown-container[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="health"] svg {
+    color: #f472b6 !important; /* pink-400 */
+  }
+
   /* User dropdown specific dark mode fixes */
   .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] {
     background-color: #1f2937 !important;
     border: 1px solid #374151 !important;
+  }
+
+  /* Dark mode hover states for user dropdown */
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a:hover,
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] button:hover {
+    background-color: #374151 !important;
+  }
+
+  /* Dark mode dividers */
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] hr {
+    border-color: #374151 !important;
+  }
+
+  /* Keep colorful icons in dark mode */
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="profile"] svg,
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="account"] svg {
+    color: #60a5fa !important; /* blue-400 */
+  }
+
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="dashboard"] svg {
+    color: #a78bfa !important; /* violet-400 */
+  }
+
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="settings"] svg {
+    color: #9ca3af !important; /* gray-400 */
+  }
+
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="admin"] svg {
+    color: #f87171 !important; /* red-400 */
+  }
+
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] a[href*="wallet"] svg {
+    color: #34d399 !important; /* emerald-400 */
+  }
+
+  .dark .relative[data-controller="dropdown"] [data-dropdown-target="menu"] form[action*="sign_out"] button svg {
+    color: #fb923c !important; /* orange-400 */
   }
 
   /* Force all text to be visible in dark mode */
