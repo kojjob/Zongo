@@ -300,6 +300,9 @@ Rails.application.routes.draw do
   # Flash message management
   post "clear_flash", to: "flash#clear", as: :clear_flash
 
+  # Services main route
+  get "services", to: "services#index", as: "services"
+
   # Transportation Services routes
   get "services/transportation", to: "transportation#index", as: "transportation"
 
