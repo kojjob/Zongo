@@ -8,6 +8,7 @@ class MarketplaceController < ApplicationController
     # Electronics category page
     @page_title = "Electronics"
     @category = "electronics"
+    @subcategory = params[:subcategory]
     render :category
   end
 
@@ -15,6 +16,7 @@ class MarketplaceController < ApplicationController
     # Fashion category page
     @page_title = "Fashion"
     @category = "fashion"
+    @subcategory = params[:subcategory]
     render :category
   end
 
@@ -22,6 +24,7 @@ class MarketplaceController < ApplicationController
     # Groceries category page
     @page_title = "Groceries"
     @category = "groceries"
+    @subcategory = params[:subcategory]
     render :category
   end
 
@@ -29,6 +32,30 @@ class MarketplaceController < ApplicationController
     # Local marketplace page
     @page_title = "Local Marketplace"
     @category = "local"
+    @subcategory = params[:subcategory]
     render :category
+  end
+
+  def subcategory
+    # Handle subcategory pages
+    @category = params[:category]
+    @subcategory = params[:subcategory]
+
+    case @category
+    when 'electronics'
+      @page_title = @subcategory.titleize
+      render :category
+    when 'fashion'
+      @page_title = @subcategory.titleize
+      render :category
+    when 'groceries'
+      @page_title = @subcategory.titleize
+      render :category
+    when 'local'
+      @page_title = @subcategory.titleize
+      render :category
+    else
+      redirect_to marketplace_path, alert: "Category not found"
+    end
   end
 end

@@ -411,6 +411,7 @@ Rails.application.routes.draw do
   get 'marketplace/fashion', to: 'marketplace#fashion', as: :marketplace_fashion
   get 'marketplace/groceries', to: 'marketplace#groceries', as: :marketplace_groceries
   get 'marketplace/local', to: 'marketplace#local', as: :marketplace_local
+  get 'marketplace/:category/:subcategory', to: 'marketplace#subcategory', as: :marketplace_subcategory
 
   # Cart routes
   get 'cart', to: 'carts#show', as: :cart
