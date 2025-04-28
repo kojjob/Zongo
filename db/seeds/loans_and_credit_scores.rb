@@ -147,9 +147,15 @@ puts "Creating sample loans..."
   if [ :active, :completed ].include?(status)
     # For completed loans, create full repayment
     if status == :completed
+      # For completed loans, calculate principal and interest
+      principal_amount = (loan.current_balance * 0.8).round(2)  # 80% principal
+      interest_amount = (loan.current_balance * 0.2).round(2)   # 20% interest
+
       LoanRepayment.create!(
         loan: loan,
         amount: loan.current_balance,
+        principal_amount: principal_amount,
+        interest_amount: interest_amount,
         status: :successful,
         paid_at: loan.completed_at
       )
@@ -159,9 +165,15 @@ puts "Creating sample loans..."
       repayment_amount = (loan.current_balance / (repayment_count + rand(1..2))).round(2)
 
       repayment_count.times do
+        # For active loans, calculate principal and interest for each repayment
+        principal_amount = (repayment_amount * 0.8).round(2)  # 80% principal
+        interest_amount = (repayment_amount * 0.2).round(2)   # 20% interest
+
         LoanRepayment.create!(
           loan: loan,
           amount: repayment_amount,
+          principal_amount: principal_amount,
+          interest_amount: interest_amount,
           status: :successful,
           paid_at: loan.disbursed_at + rand(1..30).days
         )
