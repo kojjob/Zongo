@@ -1,19 +1,19 @@
 <%= content_for :title, "Marketplace" %>
 <div class="bg-white dark:bg-gray-900 -mt-20"> <!-- Added -mt-20 to remove the gap -->
   <!-- Hero Section -->
-  <div class="relative overflow-hidden">
+  <div class="relative overflow-hidden h-[500px] sm:h-[600px]"> <!-- Added fixed height to make banner taller -->
     <div class="absolute inset-0 z-0">
       <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 opacity-90"></div>
       <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
            alt="Marketplace Header" class="w-full h-full object-cover">
     </div>
 
-    <div class="relative z-10 px-4 py-24 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="relative z-10 px-4 py-32 sm:py-40 sm:px-6 lg:px-8 max-w-7xl mx-auto"> <!-- Increased padding to make banner bigger -->
       <div class="text-center">
-        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <h1 class="text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
           Zongo Marketplace
         </h1>
-        <p class="mt-6 max-w-2xl mx-auto text-lg text-white/90">
+        <p class="mt-8 max-w-2xl mx-auto text-xl text-white/90 leading-relaxed">
           Discover a wide range of products from trusted sellers. Shop with confidence in our secure marketplace.
         </p>
 

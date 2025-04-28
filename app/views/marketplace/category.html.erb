@@ -3,7 +3,7 @@
 
 <div class="bg-white dark:bg-gray-900 -mt-20"> <!-- Added -mt-20 to remove the gap -->
   <!-- Category Header -->
-  <div class="relative bg-gradient-to-r from-indigo-600 to-purple-700 overflow-hidden">
+  <div class="relative bg-gradient-to-r from-indigo-600 to-purple-700 overflow-hidden h-[400px] sm:h-[500px]"> <!-- Added fixed height to make banner taller -->
     <div class="absolute inset-0 z-0 opacity-30">
       <img src="<%=
         case @category
@@ -22,12 +22,12 @@
            alt="<%= @page_title %> Header" class="w-full h-full object-cover">
     </div>
 
-    <div class="relative z-10 px-4 py-16 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="relative z-10 px-4 py-24 sm:py-32 sm:px-6 lg:px-8 max-w-7xl mx-auto"> <!-- Increased padding to make banner bigger -->
       <div class="text-center">
-        <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+        <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
           <%= @page_title %>
         </h1>
-        <p class="mt-4 max-w-2xl mx-auto text-lg text-white/90">
+        <p class="mt-6 max-w-2xl mx-auto text-xl text-white/90 leading-relaxed">
           <% case @category %>
           <% when 'electronics' %>
             Browse our collection of the latest electronics, gadgets, and tech accessories.
