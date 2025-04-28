@@ -1,0 +1,91 @@
+<%# app/views/notifications/index.html.erb %>
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+      <%= @filter_category.present? ? "#{@filter_category.humanize} Notifications" : "Notifications" %>
+    </h1>
+
+    <div class="flex items-center space-x-3">
+      <div>
+        <% if @notifications.unread.any? %>
+          <%= button_to mark_all_as_read_notifications_path(category: @filter_category, read: @filter_read), 
+                      method: :post,
+                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Mark all as read
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Filters %>
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 p-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex flex-wrap gap-2">
+        <%= link_to "All", notifications_path, class: "px-3 py-1.5 rounded-full text-sm #{@filter_category.blank? && @filter_read.blank? ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}" %>
+        
+        <%= link_to "Unread", notifications_path(category: @filter_category, read: "false"), class: "px-3 py-1.5 rounded-full text-sm #{@filter_read == 'false' ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}" %>
+        
+        <%= link_to "Read", notifications_path(category: @filter_category, read: "true"), class: "px-3 py-1.5 rounded-full text-sm #{@filter_read == 'true' ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}" %>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <%= link_to "All Categories", notifications_path(read: @filter_read), class: "px-3 py-1.5 rounded-full text-sm #{@filter_category.blank? ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}" %>
+        
+        <% Notification.categories.keys.each do |category| %>
+          <%= link_to category.humanize, notifications_path(category: category, read: @filter_read), class: "px-3 py-1.5 rounded-full text-sm #{@filter_category == category ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'}" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Notifications list %>
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <% if @notifications.any? %>
+      <div id="notifications">
+        <% @notifications.each do |notification| %>
+          <%= render 'notification', notification: notification %>
+        <% end %>
+      </div>
+      
+      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <div class="text-sm text-gray-500 dark:text-gray-400">
+          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> notifications
+        </div>
+        
+        <%# Pagination %>
+        <nav class="flex items-center">
+          <%== pagy_nav(@pagy) %>
+        </nav>
+      </div>
+    <% else %>
+      <div class="p-8 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 mb-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">No notifications</h3>
+        <p class="text-gray-500 dark:text-gray-400">
+          <% if @filter_category.present? || @filter_read.present? %>
+            No <%= @filter_read == 'true' ? 'read' : @filter_read == 'false' ? 'unread' : '' %> 
+            <%= @filter_category.present? ? "#{@filter_category.humanize.downcase}" : '' %> notifications found.
+            <%= link_to "View all notifications", notifications_path, class: "text-primary-600 dark:text-primary-400 hover:underline" %>
+          <% else %>
+            You don't have any notifications yet.
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Turbo Stream template for mark as read/unread actions %>
+<% if turbo_frame_request? %>
+  <%= turbo_frame_tag "notification_#{@notification.id}" do %>
+    <%= render 'notification', notification: @notification %>
+  <% end %>
+<% end %>

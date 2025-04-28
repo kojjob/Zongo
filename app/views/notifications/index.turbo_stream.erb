@@ -1,0 +1,17 @@
+<%# app/views/notifications/index.turbo_stream.erb %>
+<% if @notification.present? %>
+  <%# For single notification actions like mark_as_read, mark_as_unread, etc. %>
+  <%= turbo_stream.replace "notification_#{@notification.id}" do %>
+    <%= render 'notification', notification: @notification %>
+  <% end %>
+<% elsif defined?(@removed_notification_id) && @removed_notification_id.present? %>
+  <%# For dismiss action %>
+  <%= turbo_stream.remove "notification_#{@removed_notification_id}" %>
+<% else %>
+  <%# For mark_all_as_read, dismiss_all, or full list refresh %>
+  <%= turbo_stream.update "notifications" do %>
+    <% @notifications.each do |notification| %>
+      <%= render 'notification', notification: notification %>
+    <% end %>
+  <% end %>
+<% end %>
