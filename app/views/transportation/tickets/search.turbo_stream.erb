@@ -1,0 +1,106 @@
+<%# This template will be rendered when the search form is submitted %>
+<%= turbo_stream.update "search_results" do %>
+  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden mt-8">
+    <div class="bg-secondary-600 dark:bg-secondary-700 py-4 px-6">
+      <h3 class="text-lg font-bold text-white flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        Search Results
+      </h3>
+      <p class="text-secondary-100 text-sm">
+        <%= @tickets.length %> tickets found from <%= @origin %> to <%= @destination %> for <%= @passengers %> passenger<%= @passengers.to_i > 1 ? 's' : '' %>
+      </p>
+    </div>
+    
+    <div class="p-6">
+      <% if @tickets.any? %>
+        <div class="space-y-4">
+          <% @tickets.each do |ticket| %>
+            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-md transition-shadow">
+              <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-start space-x-4">
+                  <div class="p-2 bg-secondary-100 dark:bg-secondary-900/30 rounded-full">
+                    <% if ticket[:transport_type] == "Bus" %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600 dark:text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                      </svg>
+                    <% elsif ticket[:transport_type] == "Train" %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600 dark:text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                    <% else %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-secondary-600 dark:text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    <% end %>
+                  </div>
+                  <div>
+                    <div class="flex items-center">
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white"><%= ticket[:company] %></h4>
+                      <span class="ml-2 px-2 py-1 text-xs rounded-full bg-secondary-100 text-secondary-800 dark:bg-secondary-900 dark:text-secondary-200">
+                        <%= ticket[:transport_type] %>
+                      </span>
+                    </div>
+                    <div class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      <%= @origin %> to <%= @destination %> • <%= ticket[:duration] %>
+                    </div>
+                    <div class="mt-2 flex items-center text-sm">
+                      <div class="flex items-center text-gray-600 dark:text-gray-400 mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <%= ticket[:departure_time].strftime("%I:%M %p") %> - <%= ticket[:arrival_time].strftime("%I:%M %p") %>
+                      </div>
+                      <div class="flex items-center text-gray-600 dark:text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <%= ticket[:available_seats] %> seats available
+                      </div>
+                    </div>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                      <% ticket[:amenities].each do |amenity| %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                          <%= amenity %>
+                        </span>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 md:mt-0 flex flex-col items-end">
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <%= ticket[:currency] %> <%= sprintf('%.2f', ticket[:price]) %>
+                  </div>
+                  <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                    Total: <%= ticket[:currency] %> <%= sprintf('%.2f', ticket[:price] * @passengers.to_i) %> for <%= @passengers %> passenger<%= @passengers.to_i > 1 ? 's' : '' %>
+                  </div>
+                  <%= form_with url: transportation_book_ticket_path, method: :post, class: "flex" do |f| %>
+                    <%= f.hidden_field :ticket_id, value: ticket[:id] %>
+                    <%= f.hidden_field :payment_method, value: "wallet" %>
+                    <%= f.hidden_field :passengers, value: @passengers %>
+                    <button type="submit" class="px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-lg text-sm transition">
+                      Book Now
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No tickets found</h3>
+          <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+            We couldn't find any tickets matching your search criteria. Please try different locations, dates, or transport types.
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

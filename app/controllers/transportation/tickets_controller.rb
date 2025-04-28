@@ -13,10 +13,10 @@ module Transportation
       @date = params[:date]
       @passengers = params[:passengers] || 1
       @transport_type = params[:transport_type] || 'all'
-      
+
       # In a real implementation, this would search for available tickets
       @tickets = sample_tickets(@origin, @destination, @transport_type)
-      
+
       respond_to do |format|
         format.turbo_stream
         format.html { render :index }
@@ -28,10 +28,10 @@ module Transportation
       @ticket_id = params[:ticket_id]
       @passengers = params[:passengers] || 1
       @payment_method = params[:payment_method]
-      
+
       # In a real implementation, this would create a booking
       flash[:notice] = "Your ticket has been booked successfully!"
-      
+
       respond_to do |format|
         format.html { redirect_to transportation_my_tickets_path }
         format.turbo_stream
@@ -41,8 +41,8 @@ module Transportation
     def my_tickets
       @page_title = "My Tickets"
       # In a real implementation, this would fetch the user's tickets
-      @upcoming_tickets = []
-      @past_tickets = []
+      @upcoming_tickets = sample_upcoming_tickets
+      @past_tickets = sample_past_tickets
     end
 
     private
@@ -109,6 +109,71 @@ module Transportation
           amenities: ["Air Conditioning", "Cafeteria"]
         }
       ].select { |ticket| transport_type == 'all' || ticket[:transport_type].downcase == transport_type.downcase }
+    end
+
+    def sample_upcoming_tickets
+      [
+        {
+          id: 101,
+          company: "VIP Transport",
+          transport_type: "Bus",
+          departure_time: 2.days.from_now,
+          arrival_time: 2.days.from_now + 4.hours,
+          duration: "4h 0m",
+          price: 150.00,
+          currency: "GHS",
+          amenities: ["Air Conditioning", "WiFi", "Restroom", "Refreshments"]
+        },
+        {
+          id: 102,
+          company: "Ghana Railways",
+          transport_type: "Train",
+          departure_time: 5.days.from_now,
+          arrival_time: 5.days.from_now + 3.hours,
+          duration: "3h 0m",
+          price: 80.00,
+          currency: "GHS",
+          amenities: ["Air Conditioning", "Cafeteria"]
+        }
+      ]
+    end
+
+    def sample_past_tickets
+      [
+        {
+          id: 201,
+          company: "Ghana Express",
+          transport_type: "Bus",
+          departure_time: 2.weeks.ago,
+          arrival_time: 2.weeks.ago + 4.hours,
+          duration: "4h 0m",
+          price: 120.00,
+          currency: "GHS",
+          amenities: ["Air Conditioning", "WiFi", "Restroom"]
+        },
+        {
+          id: 202,
+          company: "Metro Mass Transit",
+          transport_type: "Bus",
+          departure_time: 1.month.ago,
+          arrival_time: 1.month.ago + 4.5.hours,
+          duration: "4h 30m",
+          price: 100.00,
+          currency: "GHS",
+          amenities: ["Air Conditioning"]
+        },
+        {
+          id: 203,
+          company: "STC",
+          transport_type: "Bus",
+          departure_time: 2.months.ago,
+          arrival_time: 2.months.ago + 3.5.hours,
+          duration: "3h 30m",
+          price: 130.00,
+          currency: "GHS",
+          amenities: ["Air Conditioning", "WiFi", "Restroom"]
+        }
+      ]
     end
   end
 end
