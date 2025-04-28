@@ -1,0 +1,58 @@
+/* Emergency fix to ensure text is visible in header */
+
+header > div > div span, 
+header > div > div a,
+header > div > div button,
+header > div > div p {
+  color: white !important;
+}
+
+header .text-white {
+  color: white !important;
+}
+
+/* Make top-level menu items white */
+header nav > div > button > span, 
+header nav > a > span {
+  color: white !important;
+}
+
+/* Fix dropdown menus */
+header [data-dropdown-target="menu"] {
+  position: absolute !important;
+  top: 100% !important;
+  z-index: 999999 !important;
+}
+
+/* Override specific styles for dropdown content */
+header [data-dropdown-target="menu"] p.text-gray-900,
+header [data-dropdown-target="menu"] .text-gray-900 {
+  color: #111827 !important;
+}
+
+header [data-dropdown-target="menu"] p.text-gray-600,
+header [data-dropdown-target="menu"] .text-gray-600,
+header [data-dropdown-target="menu"] .text-gray-400 {
+  color: #4b5563 !important;
+}
+
+/* Dropdown should show darker text */
+header [data-dropdown-target="menu"] div.ml-4 p {
+  color: #111827 !important;
+}
+
+/* Make white SVG icons in main header area */
+header > div > div svg {
+  fill: white !important;
+}
+
+/* Fix notification badge visibility */
+header .bg-secondary-500 {
+  background-color: #9333ea !important; 
+  color: white !important;
+}
+
+/* Fix background color of header */
+.header-background {
+  background: linear-gradient(to right, #134e4a, #166534) !important;
+}

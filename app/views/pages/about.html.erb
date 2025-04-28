@@ -1,21 +1,61 @@
 <!-- about.html.erb -->
 
-<!-- Hero Section with Parallax Effect -->
+<!-- Enhanced Hero Section with Parallax Effect -->
 <section class="relative h-screen overflow-hidden bg-gradient-to-br from-primary-900 to-primary-600 text-white" data-controller="parallax">
+  <!-- Background image with parallax effect -->
   <div class="absolute inset-0 z-0">
     <img src="<%= asset_path('hero_ghana.jpg') %>" alt="Ghana landscape" class="object-cover w-full h-full opacity-30" data-parallax-target="image">
   </div>
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-900 z-10"></div>
-  
+
+  <!-- Decorative elements -->
+  <div class="absolute inset-0 z-5">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary-500/10 rounded-full filter blur-3xl animate-pulse-slow animation-delay-2000"></div>
+  </div>
+
+  <!-- Gradient overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-primary-900/70 via-primary-800/70 to-primary-900/90 z-10"></div>
+
+  <!-- Floating shapes -->
+  <div class="absolute inset-0 z-15 overflow-hidden">
+    <div class="absolute top-20 left-[10%] w-16 h-16 bg-white/5 rounded-lg rotate-12 animate-float-slow"></div>
+    <div class="absolute top-[30%] right-[15%] w-24 h-24 bg-white/5 rounded-full animate-float-slow animation-delay-1000"></div>
+    <div class="absolute bottom-[25%] left-[20%] w-20 h-20 bg-white/5 rounded-lg -rotate-12 animate-float-slow animation-delay-2000"></div>
+  </div>
+
+  <!-- Content -->
   <div class="relative z-20 container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 tracking-tight leading-tight animate-fade-in">
-      Transforming Ghana's Digital Future
+    <!-- Small badge/label -->
+    <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 mb-8 animate-fade-in">
+      <span class="text-sm font-medium text-white/90">About Super Ghana</span>
+    </div>
+
+    <!-- Main heading with gradient text -->
+    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight leading-tight animate-fade-in">
+      Transforming Ghana's <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary-400 to-accent-400">Digital Future</span>
     </h1>
-    <p class="text-xl md:text-2xl mb-8 max-w-3xl animate-fade-in-delay">
+
+    <!-- Subheading with improved styling -->
+    <p class="text-xl md:text-2xl mb-10 max-w-3xl animate-fade-in-delay text-white/90 leading-relaxed">
       Connecting communities, simplifying transactions, and empowering individuals across Ghana through innovative digital solutions
     </p>
-    <div class="animate-bounce mt-16 hidden md:block">
-      <a href="#our-mission" class="text-white">
+
+    <!-- CTA buttons -->
+    <div class="flex flex-wrap justify-center gap-4 mb-16 animate-fade-in-delay animation-delay-500">
+      <a href="#our-mission" class="px-6 py-3 rounded-lg bg-white text-primary-700 font-medium hover:bg-white/90 transition shadow-lg flex items-center">
+        <span>Our Mission</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+        </svg>
+      </a>
+      <a href="#contact-form" class="px-6 py-3 rounded-lg bg-transparent border border-white/50 text-white font-medium hover:bg-white/10 transition shadow-lg">
+        Contact Us
+      </a>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="animate-bounce mt-8 hidden md:block">
+      <a href="#our-mission" class="text-white/80 hover:text-white transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
@@ -37,7 +77,7 @@
         <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Our Mission</h2>
         <div class="w-20 h-1 bg-primary-500 mx-auto mb-8"></div>
       </div>
-      
+
       <div class="flex flex-col md:flex-row gap-8 items-center">
         <div class="flex-1">
           <img src="<%= asset_path('mobile_payment.jpg') %>" alt="Mobile payments in Ghana" class="rounded-2xl shadow-lg w-full">
@@ -79,6 +119,123 @@
   </div>
 </section>
 
+<!-- Company History Timeline Section -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
+  <!-- Background decorative elements -->
+  <div class="absolute inset-0 bg-pattern-grid opacity-50 z-0"></div>
+  <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full filter blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary-500/5 rounded-full filter blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-16">
+      <div class="inline-block p-3 rounded-full bg-accent-100 dark:bg-accent-900 text-accent-600 dark:text-accent-400 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Our Journey</h2>
+      <div class="w-20 h-1 bg-accent-500 mx-auto mb-8"></div>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        From a small startup to Ghana's leading super app - here's how we've grown over the years.
+      </p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="max-w-5xl mx-auto timeline-container py-8">
+      <!-- Timeline Item 1 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2018</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">The Beginning</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              Super Ghana was founded with a vision to create a unified digital platform for essential services in Ghana. Our small team of 5 started developing the first prototype.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 2 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2019</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">First Launch</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              We launched our first version with basic mobile money and bill payment features. Within six months, we reached 10,000 users across Accra and Kumasi.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 3 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2020</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Expansion & Growth</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              We secured our first major investment round and expanded our team to 25 people. New features included marketplace integration and transportation services.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 4 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2021</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Agricultural Focus</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              We introduced agricultural services to support farmers across Ghana, connecting them directly with buyers and providing real-time market information.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 5 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2022</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Financial Inclusion</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              We launched our microloan program and savings groups feature, bringing financial services to underserved communities throughout Ghana.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 6 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-accent-600 dark:text-accent-400 font-bold text-xl mb-2">2023</div>
+            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">One Million Users</h3>
+            <p class="text-gray-700 dark:text-gray-300">
+              We celebrated reaching one million active users and expanded our services to neighboring countries, beginning our journey to become West Africa's leading super app.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline Item 7 -->
+      <div class="timeline-item">
+        <div class="timeline-content w-full md:w-5/12">
+          <div class="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl shadow-md p-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <div class="text-white font-bold text-xl mb-2">Today</div>
+            <h3 class="text-xl font-bold mb-3 text-white">Transforming Ghana's Digital Future</h3>
+            <p class="text-white/90">
+              With over 100 team members and 2 million+ users, we continue to innovate and expand our services, staying true to our mission of connecting communities and empowering individuals across Ghana.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- What We Offer Section with Card-Based Design -->
 <section class="py-16 bg-gray-50 dark:bg-gray-800">
   <div class="container mx-auto px-4">
@@ -94,7 +251,7 @@
         Our super app brings together essential services in one place, making daily life simpler and more convenient.
       </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <!-- Card 1 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
@@ -116,7 +273,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Card 2 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
         <div class="h-2 bg-secondary-500"></div>
@@ -137,7 +294,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Card 3 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
         <div class="h-2 bg-accent-500"></div>
@@ -159,7 +316,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Card 4 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
         <div class="h-2 bg-success-500"></div>
@@ -180,7 +337,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Card 5 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
         <div class="h-2 bg-warning-500"></div>
@@ -201,7 +358,7 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Card 6 -->
       <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden transition transform hover:scale-105 hover:shadow-lg">
         <div class="h-2 bg-info-500"></div>
@@ -241,29 +398,64 @@
         Meet the visionaries and experts driving Super Ghana's mission forward.
       </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <!-- Team Member 1 -->
-      <div class="group">
-        <div class="relative overflow-hidden rounded-xl shadow-lg transform transition duration-500 hover:scale-105">
-          <img class="w-full h-96 object-cover object-center" src="<%= asset_path('ceo.jpg') %>" alt="CEO portrait">
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-            <div class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 rounded-lg p-4 shadow-lg">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">Kofi Annan</h3>
-              <p class="text-primary-600 dark:text-primary-400 font-medium">Chief Executive Officer</p>
-              <p class="text-gray-700 dark:text-gray-300 mt-2 text-sm">
-                With over 15 years in fintech, Kofi leads our mission to build Ghana's digital future.
-              </p>
-              <div class="mt-4 flex space-x-3">
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+      <!-- Team Member 1 - 3D Flip Card -->
+      <div class="team-card h-96">
+        <div class="team-card-inner relative w-full h-full">
+          <!-- Front of card -->
+          <div class="team-card-front absolute w-full h-full rounded-xl shadow-lg overflow-hidden">
+            <!-- Gradient overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-primary-900/80 via-primary-800/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+            <!-- Background pattern -->
+            <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+            <!-- Profile image -->
+            <img class="w-full h-full object-cover object-center" src="<%= asset_path('ceo.jpg') %>" alt="CEO portrait">
+
+            <!-- Name badge -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="bg-primary-600/90 backdrop-blur-sm rounded-lg p-4 transform transition-all duration-300 shadow-lg border border-primary-500/30">
+                <h3 class="text-xl font-bold">Kofi Annan</h3>
+                <p class="text-primary-200 font-medium">Chief Executive Officer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back of card -->
+          <div class="team-card-back absolute w-full h-full rounded-xl shadow-lg overflow-hidden bg-gradient-to-br from-primary-700 to-primary-900 p-6 flex flex-col justify-center">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 rounded-full filter blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-primary-500/10 rounded-full filter blur-xl"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-primary-400/30">
+                <img class="w-full h-full object-cover object-center" src="<%= asset_path('ceo.jpg') %>" alt="CEO portrait">
+              </div>
+
+              <h3 class="text-2xl font-bold text-white mb-2">Kofi Annan</h3>
+              <p class="text-primary-200 font-medium mb-4">Chief Executive Officer</p>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 text-white/90">
+                <p>With over 15 years in fintech, Kofi leads our mission to build Ghana's digital future. His vision drives our innovation and growth.</p>
+              </div>
+
+              <div class="flex justify-center space-x-4">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
                 </a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"></path>
                   </svg>
                 </a>
               </div>
@@ -271,28 +463,63 @@
           </div>
         </div>
       </div>
-      
-      <!-- Team Member 2 -->
-      <div class="group">
-        <div class="relative overflow-hidden rounded-xl shadow-lg transform transition duration-500 hover:scale-105">
-          <img class="w-full h-96 object-cover object-center" src="<%= asset_path('cto.jpg') %>" alt="CTO portrait">
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-            <div class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 rounded-lg p-4 shadow-lg">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">Abena Mensah</h3>
-              <p class="text-secondary-600 dark:text-secondary-400 font-medium">Chief Technology Officer</p>
-              <p class="text-gray-700 dark:text-gray-300 mt-2 text-sm">
-                Abena leads our technology innovation with expertise in mobile platforms and financial systems.
-              </p>
-              <div class="mt-4 flex space-x-3">
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-secondary-600 dark:hover:text-secondary-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+
+      <!-- Team Member 2 - 3D Flip Card -->
+      <div class="team-card h-96">
+        <div class="team-card-inner relative w-full h-full">
+          <!-- Front of card -->
+          <div class="team-card-front absolute w-full h-full rounded-xl shadow-lg overflow-hidden">
+            <!-- Gradient overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-secondary-900/80 via-secondary-800/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+            <!-- Background pattern -->
+            <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+            <!-- Profile image -->
+            <img class="w-full h-full object-cover object-center" src="<%= asset_path('cto.jpg') %>" alt="CTO portrait">
+
+            <!-- Name badge -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="bg-secondary-600/90 backdrop-blur-sm rounded-lg p-4 transform transition-all duration-300 shadow-lg border border-secondary-500/30">
+                <h3 class="text-xl font-bold">Abena Mensah</h3>
+                <p class="text-secondary-200 font-medium">Chief Technology Officer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back of card -->
+          <div class="team-card-back absolute w-full h-full rounded-xl shadow-lg overflow-hidden bg-gradient-to-br from-secondary-700 to-secondary-900 p-6 flex flex-col justify-center">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-secondary-500/10 rounded-full filter blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-secondary-500/10 rounded-full filter blur-xl"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-secondary-400/30">
+                <img class="w-full h-full object-cover object-center" src="<%= asset_path('cto.jpg') %>" alt="CTO portrait">
+              </div>
+
+              <h3 class="text-2xl font-bold text-white mb-2">Abena Mensah</h3>
+              <p class="text-secondary-200 font-medium mb-4">Chief Technology Officer</p>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 text-white/90">
+                <p>Abena leads our technology innovation with expertise in mobile platforms and financial systems. Her technical vision shapes our product development.</p>
+              </div>
+
+              <div class="flex justify-center space-x-4">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
                 </a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-secondary-600 dark:hover:text-secondary-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
                   </svg>
                 </a>
               </div>
@@ -300,28 +527,63 @@
           </div>
         </div>
       </div>
-      
-      <!-- Team Member 3 -->
-      <div class="group">
-        <div class="relative overflow-hidden rounded-xl shadow-lg transform transition duration-500 hover:scale-105">
-          <img class="w-full h-96 object-cover object-center" src="<%= asset_path('cfo.png') %>" alt="CFO portrait">
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-            <div class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 rounded-lg p-4 shadow-lg">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">David Osei</h3>
-              <p class="text-accent-600 dark:text-accent-400 font-medium">Chief Financial Officer</p>
-              <p class="text-gray-700 dark:text-gray-300 mt-2 text-sm">
-                With a background in finance and banking, David ensures our financial stability and growth.
-              </p>
-              <div class="mt-4 flex space-x-3">
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+
+      <!-- Team Member 3 - 3D Flip Card -->
+      <div class="team-card h-96">
+        <div class="team-card-inner relative w-full h-full">
+          <!-- Front of card -->
+          <div class="team-card-front absolute w-full h-full rounded-xl shadow-lg overflow-hidden">
+            <!-- Gradient overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-accent-900/80 via-accent-800/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+            <!-- Background pattern -->
+            <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+            <!-- Profile image -->
+            <img class="w-full h-full object-cover object-center" src="<%= asset_path('cfo.png') %>" alt="CFO portrait">
+
+            <!-- Name badge -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="bg-accent-600/90 backdrop-blur-sm rounded-lg p-4 transform transition-all duration-300 shadow-lg border border-accent-500/30">
+                <h3 class="text-xl font-bold">David Osei</h3>
+                <p class="text-accent-200 font-medium">Chief Financial Officer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back of card -->
+          <div class="team-card-back absolute w-full h-full rounded-xl shadow-lg overflow-hidden bg-gradient-to-br from-accent-700 to-accent-900 p-6 flex flex-col justify-center">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-accent-500/10 rounded-full filter blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-accent-500/10 rounded-full filter blur-xl"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-accent-400/30">
+                <img class="w-full h-full object-cover object-center" src="<%= asset_path('cfo.png') %>" alt="CFO portrait">
+              </div>
+
+              <h3 class="text-2xl font-bold text-white mb-2">David Osei</h3>
+              <p class="text-accent-200 font-medium mb-4">Chief Financial Officer</p>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 text-white/90">
+                <p>With a background in finance and banking, David ensures our financial stability and growth. His expertise has been crucial to our expansion.</p>
+              </div>
+
+              <div class="flex justify-center space-x-4">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
                 </a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22.0367422,14.5026202 C21.0127438,14.5026202 20.1367446,15.3786193 20.1367446,16.4026178 C20.1367446,17.4266163 21.0127438,18.3026155 22.0367422,18.3026155 C23.0607407,18.3026155 23.9367399,17.4266163 23.9367399,16.4026178 C23.9367399,15.3786193 23.0607407,14.5026202 22.0367422,14.5026202 Z M11.0367422,11.0026202 C10.0127438,11.0026202 9.13674459,11.8786193 9.13674459,12.9026178 C9.13674459,13.9266163 10.0127438,14.8026155 11.0367422,14.8026155 C12.0607407,14.8026155 12.9367399,13.9266163 12.9367399,12.9026178 C12.9367399,11.8786193 12.0607407,11.0026202 11.0367422,11.0026202 Z M16.0367422,7.50262017 C15.0127438,7.50262017 14.1367446,8.37861933 14.1367446,9.40261775 C14.1367446,10.4266162 15.0127438,11.3026154 16.0367422,11.3026154 C17.0607407,11.3026154 17.9367399,10.4266162 17.9367399,9.40261775 C17.9367399,8.37861933 17.0607407,7.50262017 16.0367422,7.50262017 Z"></path>
                   </svg>
                 </a>
               </div>
@@ -329,28 +591,63 @@
           </div>
         </div>
       </div>
-      
-      <!-- Team Member 4 -->
-      <div class="group">
-        <div class="relative overflow-hidden rounded-xl shadow-lg transform transition duration-500 hover:scale-105">
-          <img class="w-full h-96 object-cover object-center" src="<%= asset_path('coo.png') %>" alt="COO portrait">
-          <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-            <div class="bg-white dark:bg-gray-900 bg-opacity-90 dark:bg-opacity-90 rounded-lg p-4 shadow-lg">
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white">Grace Adjei</h3>
-              <p class="text-success-600 dark:text-success-400 font-medium">Chief Operations Officer</p>
-              <p class="text-gray-700 dark:text-gray-300 mt-2 text-sm">
-                Grace oversees our day-to-day operations and ensures smooth service delivery to all users.
-              </p>
-              <div class="mt-4 flex space-x-3">
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-success-600 dark:hover:text-success-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+
+      <!-- Team Member 4 - 3D Flip Card -->
+      <div class="team-card h-96">
+        <div class="team-card-inner relative w-full h-full">
+          <!-- Front of card -->
+          <div class="team-card-front absolute w-full h-full rounded-xl shadow-lg overflow-hidden">
+            <!-- Gradient overlay on hover -->
+            <div class="absolute inset-0 bg-gradient-to-t from-success-900/80 via-success-800/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+            <!-- Background pattern -->
+            <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
+
+            <!-- Profile image -->
+            <img class="w-full h-full object-cover object-center" src="<%= asset_path('coo.png') %>" alt="COO portrait">
+
+            <!-- Name badge -->
+            <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+              <div class="bg-success-600/90 backdrop-blur-sm rounded-lg p-4 transform transition-all duration-300 shadow-lg border border-success-500/30">
+                <h3 class="text-xl font-bold">Grace Adjei</h3>
+                <p class="text-success-200 font-medium">Chief Operations Officer</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Back of card -->
+          <div class="team-card-back absolute w-full h-full rounded-xl shadow-lg overflow-hidden bg-gradient-to-br from-success-700 to-success-900 p-6 flex flex-col justify-center">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-success-500/10 rounded-full filter blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-success-500/10 rounded-full filter blur-xl"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 text-center">
+              <div class="w-24 h-24 rounded-full overflow-hidden mx-auto mb-4 border-4 border-success-400/30">
+                <img class="w-full h-full object-cover object-center" src="<%= asset_path('coo.png') %>" alt="COO portrait">
+              </div>
+
+              <h3 class="text-2xl font-bold text-white mb-2">Grace Adjei</h3>
+              <p class="text-success-200 font-medium mb-4">Chief Operations Officer</p>
+
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 text-white/90">
+                <p>Grace oversees our day-to-day operations and ensures smooth service delivery to all users. Her leadership has been instrumental in scaling our operations.</p>
+              </div>
+
+              <div class="flex justify-center space-x-4">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
                   </svg>
                 </a>
-                <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-success-600 dark:hover:text-success-400">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                  </svg>
+                </a>
+                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors duration-300">
+                  <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z"></path>
                   </svg>
                 </a>
               </div>
@@ -377,7 +674,7 @@
         Getting started with Super Ghana is easy. Follow these simple steps to begin your journey.
       </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Step 1 -->
       <div class="relative">
@@ -396,7 +693,7 @@
           </svg>
         </div>
       </div>
-      
+
       <!-- Step 2 -->
       <div class="relative">
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 text-center relative z-10">
@@ -414,7 +711,7 @@
           </svg>
         </div>
       </div>
-      
+
       <!-- Step 3 -->
       <div class="relative">
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 text-center relative z-10">
@@ -432,7 +729,7 @@
           </svg>
         </div>
       </div>
-      
+
       <!-- Step 4 -->
       <div class="relative">
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md p-6 text-center relative z-10">
@@ -463,7 +760,7 @@
         Hear from people across Ghana who have transformed their daily lives with our super app.
       </p>
     </div>
-    
+
     <div class="max-w-5xl mx-auto" x-data="{ activeSlide: 0 }">
       <div class="relative">
         <!-- Testimonial 1 -->
@@ -490,7 +787,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Testimonial 2 -->
         <div x-show="activeSlide === 1" class="testimonial-card" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100">
           <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12">
@@ -515,7 +812,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Testimonial 3 -->
         <div x-show="activeSlide === 2" class="testimonial-card" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-90" x-transition:enter-end="opacity-100 transform scale-100">
           <div class="bg-gray-50 dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12">
@@ -540,14 +837,14 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Navigation Buttons -->
         <div class="flex justify-center mt-8 space-x-2">
           <button @click="activeSlide = 0" class="h-3 w-3 rounded-full" :class="{ 'bg-primary-600': activeSlide === 0, 'bg-gray-300 dark:bg-gray-600': activeSlide !== 0 }"></button>
           <button @click="activeSlide = 1" class="h-3 w-3 rounded-full" :class="{ 'bg-primary-600': activeSlide === 1, 'bg-gray-300 dark:bg-gray-600': activeSlide !== 1 }"></button>
           <button @click="activeSlide = 2" class="h-3 w-3 rounded-full" :class="{ 'bg-primary-600': activeSlide === 2, 'bg-gray-300 dark:bg-gray-600': activeSlide !== 2 }"></button>
         </div>
-        
+
         <!-- Arrow Controls -->
         <button @click="activeSlide = activeSlide === 0 ? 2 : activeSlide - 1" class="absolute top-1/2 -left-4 lg:-left-12 transform -translate-y-1/2 bg-white dark:bg-gray-800 rounded-full p-2 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -569,7 +866,7 @@
   <div class="absolute inset-0 z-0 opacity-10">
     <div class="absolute inset-0 bg-pattern-dots"></div>
   </div>
-  
+
   <div class="container mx-auto px-4 relative z-10">
     <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
       <div class="lg:w-1/2">
@@ -617,7 +914,7 @@
         These core principles guide everything we do at Super Ghana.
       </p>
     </div>
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       <!-- Value 1 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-primary-500 hover:shadow-lg transition">
@@ -637,7 +934,7 @@
           Building for all Ghanaians
         </div>
       </div>
-      
+
       <!-- Value 2 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-secondary-500 hover:shadow-lg transition">
         <div class="w-16 h-16 rounded-lg bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-6">
@@ -656,7 +953,7 @@
           Your security is our priority
         </div>
       </div>
-      
+
       <!-- Value 3 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-accent-500 hover:shadow-lg transition">
         <div class="w-16 h-16 rounded-lg bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-6">
@@ -675,7 +972,7 @@
           Always advancing forward
         </div>
       </div>
-      
+
       <!-- Value 4 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-success-500 hover:shadow-lg transition">
         <div class="w-16 h-16 rounded-lg bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-6">
@@ -694,7 +991,7 @@
           Banking for everyone
         </div>
       </div>
-      
+
       <!-- Value 5 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-warning-500 hover:shadow-lg transition">
         <div class="w-16 h-16 rounded-lg bg-warning-100 dark:bg-warning-900 flex items-center justify-center text-warning-600 dark:text-warning-400 mb-6">
@@ -713,7 +1010,7 @@
           Empowering local growth
         </div>
       </div>
-      
+
       <!-- Value 6 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-8 border-t-4 border-info-500 hover:shadow-lg transition">
         <div class="w-16 h-16 rounded-lg bg-info-100 dark:bg-info-900 flex items-center justify-center text-info-600 dark:text-info-400 mb-6">
@@ -746,7 +1043,7 @@
           <p class="text-white/90 mb-8">
             Have questions about Super Ghana? Want to partner with us? Our team is here to help. Reach out and we'll get back to you soon.
           </p>
-          
+
           <div class="space-y-6">
             <div class="flex items-start">
               <div class="flex-shrink-0 mt-1">
@@ -760,7 +1057,7 @@
                 <p class="text-white/80">123 Innovation Avenue, Accra, Ghana</p>
               </div>
             </div>
-            
+
             <div class="flex items-start">
               <div class="flex-shrink-0 mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -772,7 +1069,7 @@
                 <p class="text-white/80">contact@superghanaglobal.com</p>
               </div>
             </div>
-            
+
             <div class="flex items-start">
               <div class="flex-shrink-0 mt-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -785,8 +1082,143 @@
               </div>
             </div>
           </div>
-          
-          <div class="mt-12">
+
+          <!-- Interactive Map -->
+          <div class="mt-8 mb-8">
+            <h3 class="text-lg font-medium mb-4">Find Us</h3>
+            <div class="rounded-lg overflow-hidden shadow-lg h-64 relative">
+              <!-- Fallback static map (shown if JavaScript is disabled) -->
+              <div id="static-map" class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center transition-opacity duration-500 ease-in-out">
+                <div class="text-center p-4">
+                  <div class="mb-2 text-primary-600 dark:text-primary-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <h4 class="font-medium text-gray-900 dark:text-white">Super Ghana Headquarters</h4>
+                  <p class="text-gray-600 dark:text-gray-300">123 Innovation Avenue, Accra, Ghana</p>
+                </div>
+              </div>
+
+              <!-- Interactive map container (replaces static image when JS loads) -->
+              <div id="map" class="w-full h-full absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"></div>
+
+              <!-- Map overlay with pin -->
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary-600 animate-bounce z-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 drop-shadow-lg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Map Script -->
+          <script>
+            document.addEventListener('turbo:load', function() {
+              // Initialize the map when the page loads
+              loadGoogleMaps();
+            });
+
+            // Load Google Maps API dynamically
+            function loadGoogleMaps() {
+              // Check if map container exists
+              const mapElement = document.getElementById('map');
+              if (!mapElement) return;
+
+              // Create script element
+              const script = document.createElement('script');
+              script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap';
+              script.async = true;
+              script.defer = true;
+
+              // Handle loading errors
+              script.onerror = function() {
+                console.error('Failed to load Google Maps API');
+                // Keep the static map visible if API fails to load
+              };
+
+              // Append script to document
+              document.head.appendChild(script);
+            }
+
+            // Initialize the map (called by Google Maps API when loaded)
+            function initMap() {
+              // Check if the map container exists
+              const mapElement = document.getElementById('map');
+              const staticMap = document.getElementById('static-map');
+              if (!mapElement) return;
+
+              try {
+                // Create a map centered on Accra, Ghana
+                const map = new google.maps.Map(mapElement, {
+                  center: { lat: 5.6037, lng: -0.1870 }, // Coordinates for Accra
+                  zoom: 15,
+                  styles: [
+                    {
+                      "featureType": "all",
+                      "elementType": "geometry",
+                      "stylers": [{ "color": "#242f3e" }]
+                    },
+                    {
+                      "featureType": "all",
+                      "elementType": "labels.text.fill",
+                      "stylers": [{ "color": "#746855" }]
+                    },
+                    {
+                      "featureType": "all",
+                      "elementType": "labels.text.stroke",
+                      "stylers": [{ "color": "#242f3e" }]
+                    },
+                    {
+                      "featureType": "water",
+                      "elementType": "geometry",
+                      "stylers": [{ "color": "#17263c" }]
+                    }
+                  ]
+                });
+
+                // Add a marker for our office location
+                const marker = new google.maps.Marker({
+                  position: { lat: 5.6037, lng: -0.1870 },
+                  map: map,
+                  title: 'Super Ghana Headquarters',
+                  animation: google.maps.Animation.DROP
+                });
+
+                // Add an info window
+                const infoWindow = new google.maps.InfoWindow({
+                  content: '<div class="p-2"><strong>Super Ghana Headquarters</strong><br>123 Innovation Avenue, Accra</div>'
+                });
+
+                // Open info window when marker is clicked
+                marker.addListener('click', function() {
+                  infoWindow.open(map, marker);
+                });
+
+                // Hide static map and show interactive map with a smooth transition
+                if (staticMap) {
+                  // Fade out static map
+                  staticMap.classList.add('opacity-0');
+                  // Fade in interactive map
+                  mapElement.classList.remove('opacity-0');
+                  mapElement.classList.add('opacity-100');
+
+                  // After transition, set static map to display:none
+                  setTimeout(() => {
+                    staticMap.classList.add('hidden');
+                  }, 500);
+                }
+              } catch (error) {
+                console.error('Error initializing Google Maps:', error);
+                // Keep the static map visible if there's an error
+              }
+            }
+          </script>
+
+          <!-- We're using Tailwind classes for transitions instead of custom CSS -->
+
+          <div class="mt-8">
             <h3 class="text-lg font-medium mb-4">Follow Us</h3>
             <div class="flex space-x-4">
               <a href="#" class="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition">
@@ -813,31 +1245,31 @@
             </div>
           </div>
         </div>
-        
+
         <div class="lg:w-1/2 p-8 md:p-12">
           <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Send Us a Message</h2>
-          
+
           <%= form_with url: "/contact", method: :post, class: "space-y-6" do |f| %>
             <div>
               <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Name</label>
               <%= f.text_field :name, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white", placeholder: "Enter your name" %>
             </div>
-            
+
             <div>
               <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Email</label>
               <%= f.email_field :email, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white", placeholder: "Enter your email" %>
             </div>
-            
+
             <div>
               <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number (Optional)</label>
               <%= f.telephone_field :phone, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white", placeholder: "Enter your phone number" %>
             </div>
-            
+
             <div>
               <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Your Message</label>
               <%= f.text_area :message, rows: 5, class: "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-gray-800 dark:text-white", placeholder: "How can we help you?" %>
             </div>
-            
+
             <div>
               <%= f.submit "Send Message", class: "w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-4 rounded-lg transition shadow-md" %>
             </div>
@@ -863,7 +1295,7 @@
         Get answers to common questions about Super Ghana.
       </p>
     </div>
-    
+
     <div class="max-w-4xl mx-auto" data-controller="accordion">
       <!-- FAQ Item 1 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
@@ -879,7 +1311,7 @@
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 2 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -894,7 +1326,7 @@
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 3 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -909,7 +1341,7 @@
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 4 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -924,7 +1356,7 @@
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 5 -->
       <div class="border-b border-gray-200 dark:border-gray-700">
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -939,7 +1371,7 @@
           </p>
         </div>
       </div>
-      
+
       <!-- FAQ Item 6 -->
       <div>
         <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
@@ -955,7 +1387,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="text-center mt-12">
       <p class="text-gray-700 dark:text-gray-300 mb-6">
         Still have questions? We're here to help.
@@ -972,34 +1404,159 @@
 
 <!-- Custom CSS for animations -->
 <style>
+  /* Basic animations */
   .animate-fade-in {
     animation: fadeIn 1s ease-out;
   }
-  
+
   .animate-fade-in-delay {
     animation: fadeIn 1s ease-out 0.3s;
     opacity: 0;
     animation-fill-mode: forwards;
   }
-  
+
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
-  
+
+  .animate-float-slow {
+    animation: float 8s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  /* Animation delays */
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  /* Background patterns */
   .bg-pattern-dots {
     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
-  
+
+  .bg-pattern-grid {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Keyframes */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  
+
   @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
     100% { transform: translateY(0px); }
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+    100% { opacity: 0.4; transform: scale(1); }
+  }
+
+  /* Timeline styles */
+  .timeline-container {
+    position: relative;
+  }
+
+  .timeline-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--color-primary-500), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--color-primary-500);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
+  }
+
+  .timeline-item:nth-child(odd) .timeline-content {
+    margin-right: auto;
+    margin-left: 0;
+    text-align: right;
+    padding-right: 3rem;
+  }
+
+  .timeline-item:nth-child(even) .timeline-content {
+    margin-left: auto;
+    margin-right: 0;
+    text-align: left;
+    padding-left: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .timeline-container::before {
+      left: 2rem;
+    }
+
+    .timeline-item::before {
+      left: 2rem;
+    }
+
+    .timeline-item .timeline-content {
+      margin-left: 4rem !important;
+      margin-right: 0 !important;
+      text-align: left !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+  }
+
+  /* Team member card hover effects */
+  .team-card {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  .team-card-inner {
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+
+  .team-card:hover .team-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .team-card-front, .team-card-back {
+    backface-visibility: hidden;
+  }
+
+  .team-card-back {
+    transform: rotateY(180deg);
   }
 </style>
 
@@ -1010,15 +1567,15 @@
     if (typeof Alpine !== 'undefined') {
       Alpine.start();
     }
-    
+
     // Fallback for accordion if not using Alpine.js
     const accordionButtons = document.querySelectorAll('[data-action="accordion#toggle"]');
-    
+
     accordionButtons.forEach(button => {
       button.addEventListener('click', function() {
         const content = this.nextElementSibling;
         const icon = this.querySelector('[data-accordion-target="icon"]');
-        
+
         if (content.classList.contains('hidden')) {
           content.classList.remove('hidden');
           icon.classList.add('rotate-180');

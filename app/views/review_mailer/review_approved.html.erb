@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #16a34a;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 5px 5px 0 0;
+    }
+    .content {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    .product-info {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    .review-content {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f0f9ff;
+      border-left: 4px solid #16a34a;
+    }
+    .button {
+      display: inline-block;
+      background-color: #16a34a;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Your Review Has Been Approved!</h1>
+  </div>
+  
+  <div class="content">
+    <p>Hello <%= @user.username || @user.email %>,</p>
+    
+    <p>Great news! Your review for <strong><%= @product.name %></strong> has been approved and is now visible to other customers.</p>
+    
+    <div class="product-info">
+      <h3>Product: <%= @product.name %></h3>
+      <p>Your rating: <%= @review.rating %>/5</p>
+    </div>
+    
+    <div class="review-content">
+      <p><em>"<%= @review.comment %>"</em></p>
+    </div>
+    
+    <p>Thank you for taking the time to share your experience with our community. Your feedback helps other customers make informed decisions.</p>
+    
+    <a href="<%= product_url(@product) %>" class="button">View Your Review</a>
+    
+    <div class="footer">
+      <p>This email was sent from Super Ghana App. Please do not reply to this email.</p>
+      <p>&copy; <%= Date.today.year %> Super Ghana App. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

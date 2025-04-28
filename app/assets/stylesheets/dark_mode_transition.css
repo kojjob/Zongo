@@ -1,0 +1,128 @@
+/* Dark Mode Transition CSS */
+
+/* Apply smooth transitions to elements that change with dark mode */
+.dark-mode-transition,
+.dark-mode-transition * {
+  transition: background-color 0.5s ease, 
+              color 0.5s ease, 
+              border-color 0.5s ease, 
+              box-shadow 0.5s ease;
+}
+
+/* Transition for the body and main containers */
+body,
+main,
+header,
+footer,
+.card,
+.sidebar,
+.modal,
+.dropdown-menu,
+.navbar,
+.button,
+.input,
+.select,
+.textarea,
+.badge,
+.alert,
+.toast,
+.tab,
+.accordion,
+.table {
+  transition: background-color 0.5s ease, 
+              color 0.5s ease, 
+              border-color 0.5s ease, 
+              box-shadow 0.5s ease;
+}
+
+/* Transition for text elements */
+h1, h2, h3, h4, h5, h6, p, span, a, button, input, select, textarea, label {
+  transition: color 0.5s ease, background-color 0.5s ease;
+}
+
+/* Transition for borders */
+.border, [class*="border-"] {
+  transition: border-color 0.5s ease;
+}
+
+/* Transition for shadows */
+.shadow, [class*="shadow-"] {
+  transition: box-shadow 0.5s ease;
+}
+
+/* Transition for background colors */
+.bg-white, .bg-gray-50, .bg-gray-100, .bg-gray-200, .bg-gray-300, .bg-gray-400,
+.bg-gray-500, .bg-gray-600, .bg-gray-700, .bg-gray-800, .bg-gray-900, .bg-black,
+[class*="bg-"] {
+  transition: background-color 0.5s ease;
+}
+
+/* Transition for text colors */
+.text-white, .text-gray-50, .text-gray-100, .text-gray-200, .text-gray-300, .text-gray-400,
+.text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800, .text-gray-900, .text-black,
+[class*="text-"] {
+  transition: color 0.5s ease;
+}
+
+/* Dark mode toggle animation */
+.dark-mode-toggle {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #e2e8f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dark .dark-mode-toggle {
+  background-color: #4b5563;
+}
+
+.dark-mode-toggle::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.dark .dark-mode-toggle::before {
+  transform: translateX(26px);
+  background-color: #1e293b;
+}
+
+/* Sun and moon icons */
+.dark-mode-toggle .sun-icon,
+.dark-mode-toggle .moon-icon {
+  position: absolute;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  transition: opacity 0.3s ease;
+}
+
+.dark-mode-toggle .sun-icon {
+  right: 4px;
+  opacity: 1;
+  color: #f59e0b;
+}
+
+.dark-mode-toggle .moon-icon {
+  left: 4px;
+  opacity: 0;
+  color: #f3f4f6;
+}
+
+.dark .dark-mode-toggle .sun-icon {
+  opacity: 0;
+}
+
+.dark .dark-mode-toggle .moon-icon {
+  opacity: 1;
+}

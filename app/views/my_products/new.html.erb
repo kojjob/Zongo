@@ -1,0 +1,137 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Add New Product</h1>
+        <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Create a new product listing</p>
+      </div>
+      <%= link_to my_products_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "arrow-left", class: "h-5 w-5 mr-2" %>
+        Back to Products
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white">Product Information</h2>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Fill in the details for your new product.</p>
+    </div>
+
+    <%= form_with model: @product, url: my_products_path, local: true, class: "p-6 space-y-6" do |f| %>
+      <% if @product.errors.any? %>
+        <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 mb-6">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <%= icon "alert-triangle", class: "h-5 w-5 text-red-400" %>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+                <%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:
+              </h3>
+              <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                <ul class="list-disc pl-5 space-y-1">
+                  <% @product.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.text_field :name, class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "Product name" %>
+        </div>
+
+        <div>
+          <%= f.label :shop_category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.collection_select :shop_category_id, @categories, :id, :name, { prompt: "Select a category" }, class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm" %>
+        </div>
+
+        <div>
+          <%= f.label :price, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">GHS</span>
+            </div>
+            <%= f.number_field :price, step: "0.01", min: "0", class: "block w-full pl-12 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "0.00" %>
+          </div>
+        </div>
+
+        <div>
+          <%= f.label :original_price, "Original Price (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">GHS</span>
+            </div>
+            <%= f.number_field :original_price, step: "0.01", min: "0", class: "block w-full pl-12 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "0.00" %>
+          </div>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Set this higher than the price to show a discount</p>
+        </div>
+
+        <div>
+          <%= f.label :stock_quantity, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.number_field :stock_quantity, min: "0", class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "Quantity in stock" %>
+        </div>
+
+        <div>
+          <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.select :status, 
+              options_for_select([
+                ["Active", "active"],
+                ["Inactive", "inactive"],
+                ["Discontinued", "discontinued"]
+              ], "active"), 
+              {}, 
+              class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm" %>
+        </div>
+
+        <div>
+          <%= f.label :brand, "Brand (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.text_field :brand, class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "Brand name" %>
+        </div>
+
+        <div>
+          <%= f.label :sku, "SKU (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= f.text_field :sku, class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "Stock Keeping Unit" %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Leave blank to generate automatically</p>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.text_area :description, rows: 5, class: "block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm", placeholder: "Detailed product description" %>
+      </div>
+
+      <div>
+        <%= f.label :images, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+          <div class="space-y-1 text-center">
+            <%= icon "upload", class: "mx-auto h-12 w-12 text-gray-400" %>
+            <div class="flex text-sm text-gray-600 dark:text-gray-400">
+              <label for="product_images" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                <span>Upload files</span>
+                <%= f.file_field :images, multiple: true, direct_upload: true, class: "sr-only" %>
+              </label>
+              <p class="pl-1">or drag and drop</p>
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              PNG, JPG, GIF up to 10MB
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-5 border-t border-gray-200 dark:border-gray-700">
+        <div class="flex justify-end">
+          <%= link_to "Cancel", my_products_path, class: "bg-white dark:bg-gray-800 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+          <%= f.submit "Create Product", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -77,7 +77,7 @@
   </div>
 
   <%# Enhanced Balance Card with more vibrant colors and visual elements %>
-  <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 md:p-8 shadow-xl text-white mb-8 relative overflow-hidden">
+  <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 md:p-8 shadow-xl text-white mb-8 relative overflow-hidden" data-wallet-dashboard-target="balanceContainer">
     <!-- Decorative elements for visual appeal -->
     <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mt-32 -mr-32"></div>
     <div class="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -mb-32 -ml-32"></div>
@@ -91,7 +91,7 @@
           <h2 class="text-xl font-bold">Available Balance</h2>
         </div>
         <div class="mt-4 flex items-baseline">
-          <span class="text-4xl md:text-5xl font-extrabold" data-wallet-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
+          <span class="text-4xl md:text-5xl font-extrabold transition-opacity duration-300" data-wallet-dashboard-target="balance"><%= @wallet.formatted_balance %></span>
           <span class="ml-2 text-xl font-medium"><%= @wallet.currency %></span>
           <button type="button" class="ml-3 bg-white/20 p-2 rounded-full hover:bg-white/30 transition-all"
                   data-wallet-dashboard-target="refreshButton"
@@ -255,7 +255,7 @@
       </div>
     </div>
 
-    <div class="overflow-x-auto" data-wallet-dashboard-target="recentTransactions">
+    <div class="overflow-x-auto relative" data-wallet-dashboard-target="recentTransactions">
       <table class="w-full">
         <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>

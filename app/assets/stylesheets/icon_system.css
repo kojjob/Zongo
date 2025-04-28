@@ -1,0 +1,55 @@
+
+.sg-icon {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 2;
+    stroke: currentColor;
+    fill: none;
+    vertical-align: middle;
+}
+  
+/* Size variants */
+.sg-icon--xs { width: 1rem; height: 1rem; }
+.sg-icon--sm { width: 1.25rem; height: 1.25rem; }
+.sg-icon--md { width: 1.5rem; height: 1.5rem; }
+.sg-icon--lg { width: 2rem; height: 2rem; }
+.sg-icon--xl { width: 2.5rem; height: 2.5rem; }
+.sg-icon--2xl { width: 3rem; height: 3rem; }
+
+/* Color variants - can be used with Tailwind classes or on their own */
+.sg-icon--primary { color: var(--color-primary-600); }
+.sg-icon--secondary { color: var(--color-secondary-500); }
+.sg-icon--white { color: white; }
+.sg-icon--gray { color: var(--color-gray-500); }
+.sg-icon--success { color: var(--color-success-500); }
+.sg-icon--warning { color: var(--color-warning-500); }
+.sg-icon--error { color: var(--color-error-500); }
+
+  /* Special effect: Animated pulse */
+.sg-icon--pulse {
+ animation: sg-icon-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+  
+@keyframes sg-icon-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+  
+  /* Special effect: Animated spin */
+.sg-icon--spin {
+    animation: sg-icon-spin 2s linear infinite;
+}
+  
+@keyframes sg-icon-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+  
+/* Dark mode adjustments */
+.dark .sg-icon--primary { color: var(--color-primary-400); }
+.dark .sg-icon--secondary { color: var(--color-secondary-400); }
+.dark .sg-icon--gray { color: var(--color-gray-400); }
+.dark .sg-icon--success { color: var(--color-success-400); }
+.dark .sg-icon--warning { color: var(--color-warning-400); }
+.dark .sg-icon--error { color: var(--color-error-400); }

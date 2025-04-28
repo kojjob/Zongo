@@ -1,0 +1,158 @@
+<%# 
+  Accessible Card Partial
+  
+  Parameters:
+  - title: The card title (optional)
+  - subtitle: The card subtitle (optional)
+  - image: The card image URL (optional)
+  - image_alt: The alt text for the image (required if image is present)
+  - footer: Whether to show a footer (default: false)
+  - footer_content: The content of the footer (optional)
+  - header_actions: Actions to display in the header (optional)
+  - class: Additional CSS classes (optional)
+  - id: The ID of the card (optional)
+  - clickable: Whether the entire card is clickable (default: false)
+  - clickable_url: The URL to navigate to when the card is clicked (required if clickable is true)
+  - hover_effect: Whether to show a hover effect (default: true)
+  - shadow: Whether to show a shadow (default: true)
+  - border: Whether to show a border (default: true)
+  
+  Usage:
+  <%= render 'shared/accessible_card', 
+    title: 'Card Title',
+    subtitle: 'Card Subtitle',
+    image: 'path/to/image.jpg',
+    image_alt: 'Description of image',
+    footer: true,
+    footer_content: content_tag(:div, 'Footer content'),
+    header_actions: content_tag(:div, link_to('Action', '#', class: 'btn-sm btn-primary')),
+    class: 'my-custom-class',
+    id: 'my-card',
+    clickable: true,
+    clickable_url: user_path(@user),
+    hover_effect: true,
+    shadow: true,
+    border: true
+  do %>
+    <!-- Card content goes here -->
+  <% end %>
+%>
+
+<% 
+  # Set default values
+  title ||= nil
+  subtitle ||= nil
+  image ||= nil
+  image_alt ||= nil
+  footer = false if footer.nil?
+  footer_content ||= nil
+  header_actions ||= nil
+  card_class ||= nil
+  card_id ||= nil
+  clickable = false if clickable.nil?
+  clickable_url ||= nil
+  hover_effect = true if hover_effect.nil?
+  shadow = true if shadow.nil?
+  border = true if border.nil?
+  
+  # Generate card classes
+  card_classes = ['accessible-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden']
+  card_classes << 'shadow-md' if shadow
+  card_classes << 'border border-gray-200 dark:border-gray-700' if border
+  card_classes << 'hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1' if hover_effect
+  card_classes << card_class if card_class.present?
+  
+  # Generate unique ID if not provided
+  card_id ||= "card-#{SecureRandom.hex(4)}"
+  
+  # Validate required parameters
+  if image.present? && image_alt.blank?
+    raise ArgumentError, "image_alt is required when image is present"
+  end
+  
+  if clickable && clickable_url.blank?
+    raise ArgumentError, "clickable_url is required when clickable is true"
+  end
+%>
+
+<% if clickable %>
+  <%= link_to clickable_url, id: card_id, class: card_classes.join(' '), tabindex: "0" do %>
+    <% if image.present? %>
+      <div class="relative">
+        <%= image_tag image, alt: image_alt, class: "w-full h-48 object-cover" %>
+      </div>
+    <% end %>
+    
+    <% if title.present? || subtitle.present? || header_actions.present? %>
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center">
+          <div>
+            <% if title.present? %>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white"><%= title %></h3>
+            <% end %>
+            
+            <% if subtitle.present? %>
+              <p class="text-sm text-gray-600 dark:text-gray-400"><%= subtitle %></p>
+            <% end %>
+          </div>
+          
+          <% if header_actions.present? %>
+            <div>
+              <%= header_actions %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="px-6 py-4">
+      <%= yield %>
+    </div>
+    
+    <% if footer && footer_content.present? %>
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700">
+        <%= footer_content %>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <div id="<%= card_id %>" class="<%= card_classes.join(' ') %>">
+    <% if image.present? %>
+      <div class="relative">
+        <%= image_tag image, alt: image_alt, class: "w-full h-48 object-cover" %>
+      </div>
+    <% end %>
+    
+    <% if title.present? || subtitle.present? || header_actions.present? %>
+      <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex justify-between items-center">
+          <div>
+            <% if title.present? %>
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white"><%= title %></h3>
+            <% end %>
+            
+            <% if subtitle.present? %>
+              <p class="text-sm text-gray-600 dark:text-gray-400"><%= subtitle %></p>
+            <% end %>
+          </div>
+          
+          <% if header_actions.present? %>
+            <div>
+              <%= header_actions %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div class="px-6 py-4">
+      <%= yield %>
+    </div>
+    
+    <% if footer && footer_content.present? %>
+      <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700">
+        <%= footer_content %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

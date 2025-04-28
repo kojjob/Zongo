@@ -1,0 +1,262 @@
+<%= form_with(model: [:admin, product], local: true, class: "space-y-8") do |form| %>
+  <% if product.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "alert-triangle", class: "h-5 w-5 text-red-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5 space-y-1">
+              <% product.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+        <%= product.persisted? ? "Edit Product" : "New Product" %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+        <%= product.persisted? ? "Update the product details below." : "Fill in the details below to create a new product." %>
+      </p>
+    </div>
+    <div class="px-4 py-5 sm:p-6 space-y-6">
+      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :name, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Product Name" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :sku, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :sku, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "SKU123" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_area :description, rows: 5, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Detailed product description" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :price, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">GHS</span>
+            </div>
+            <%= form.number_field :price, step: "0.01", min: 0, class: "pl-12 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "0.00" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :original_price, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1 relative rounded-md shadow-sm">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="text-gray-500 dark:text-gray-400 sm:text-sm">GHS</span>
+            </div>
+            <%= form.number_field :original_price, step: "0.01", min: 0, class: "pl-12 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "0.00" %>
+          </div>
+          <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Original price before discount (if applicable)</p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :stock_quantity, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.number_field :stock_quantity, min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "100" %>
+          </div>
+          <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Leave blank for unlimited stock</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :shop_category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :shop_category_id, options_from_collection_for_select(@categories, :id, :name, product.shop_category_id), { include_blank: "Select a category" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">A category is required. If none is selected, a default category will be used.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :user_id, "Seller", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :user_id, options_from_collection_for_select(@sellers, :id, :username, product.user_id), { include_blank: "Select a seller" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">A seller is required. If none is selected, you will be set as the seller.</p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :brand, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :brand, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Brand Name" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :status, [["Active", "active"], ["Inactive", "inactive"], ["Pending", "pending"]], {}, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :product_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :product_type, [["Physical", "physical"], ["Digital", "digital"], ["Service", "service"]], { selected: "physical" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <div class="flex items-start mt-6">
+            <div class="flex items-center h-5">
+              <%= form.check_box :featured, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :featured, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">Feature this product on the homepage</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6 border-t border-gray-200 dark:border-gray-700 pt-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Dimensions & Weight</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Optional product physical attributes</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <%= form.label :weight, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.number_field :weight, step: "0.01", min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "1.5" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :weight_unit, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.select :weight_unit, [["kg", "kg"], ["g", "g"], ["lb", "lb"], ["oz", "oz"]], { include_blank: "Select unit" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <div class="grid grid-cols-4 gap-4">
+            <div>
+              <%= form.label :length, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.number_field :length, step: "0.01", min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "10" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :width, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.number_field :width, step: "0.01", min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "5" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :height, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.number_field :height, step: "0.01", min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "2" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :dimension_unit, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1">
+                <%= form.select :dimension_unit, [["cm", "cm"], ["m", "m"], ["in", "in"], ["ft", "ft"]], { include_blank: "Select unit" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6 border-t border-gray-200 dark:border-gray-700 pt-6">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white">Images</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Upload product images</p>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :images, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                <label for="file-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                  <span>Upload files</span>
+                  <%= form.file_field :images, multiple: true, id: "file-upload", class: "sr-only" %>
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG, GIF up to 10MB
+              </p>
+              <% if product.images.attached? %>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Current images:</p>
+                  <div class="grid grid-cols-4 gap-2 mt-2">
+                    <% product.images.each do |image| %>
+                      <div class="relative">
+                        <%= image_tag image.variant(resize_to_limit: [100, 100]), class: "h-20 w-20 object-cover rounded" %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6" data-controller="product-form" data-product-form-type-value="<%= product.product_type || 'physical' %>">
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6 <%= product.product_type == 'digital' ? '' : 'hidden' %>" data-product-form-target="digitalSection">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Digital Product</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Upload digital file for download</p>
+
+            <div class="mt-4">
+              <%= form.label :digital_file, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                <div class="space-y-1 text-center">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                    <label for="digital-file-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                      <span>Upload digital file</span>
+                      <%= form.file_field :digital_file, id: "digital-file-upload", class: "sr-only" %>
+                    </label>
+                    <p class="pl-1">or drag and drop</p>
+                  </div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    PDF, ZIP, Office documents, images, videos, or audio files up to 100MB
+                  </p>
+                  <% if product.digital_file.attached? %>
+                    <div class="mt-2">
+                      <p class="text-sm text-gray-500 dark:text-gray-400">Current file: <%= product.digital_file.filename %> (<%= product.digital_file_size_in_mb %> MB)</p>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6 border-t border-gray-200 dark:border-gray-700">
+      <%= link_to "Cancel", product.persisted? ? admin_product_path(product) : admin_products_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+  </div>
+<% end %>

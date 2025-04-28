@@ -1,0 +1,164 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_discounts_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Discounts
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @discount.name %></h1>
+    <div class="flex items-center space-x-3">
+      <%= button_to toggle_active_admin_discount_path(@discount), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white #{@discount.active? ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <% if @discount.active? %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Deactivate
+        <% else %>
+          <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
+          Activate
+        <% end %>
+      <% end %>
+      <%= link_to edit_admin_discount_path(@discount), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+        Edit
+      <% end %>
+      <%= button_to admin_discount_path(@discount), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this discount?" } }, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "trash", class: "h-4 w-4 mr-1.5" %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+            <% if @discount.discount_type == 'percentage' %>
+              <%= icon "percent", class: "h-6 w-6 text-primary-600 dark:text-primary-400" %>
+            <% else %>
+              <%= icon "currency-dollar", class: "h-6 w-6 text-primary-600 dark:text-primary-400" %>
+            <% end %>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white flex items-center">
+            <%= @discount.name %>
+            <% if @discount.featured? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">
+                Featured
+              </span>
+            <% end %>
+            <% if @discount.active? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                Active
+              </span>
+            <% else %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                Inactive
+              </span>
+            <% end %>
+            <% if @discount.expired? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                Expired
+              </span>
+            <% end %>
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+            <%= @discount.description %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount Value</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @discount.discount_type == 'percentage' %>
+              <%= @discount.value.to_i %>% off
+            <% else %>
+              GHS <%= @discount.value %> off
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount Type</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.discount_type.titleize %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.starts_at ? @discount.starts_at.strftime("%B %d, %Y %I:%M %p") : "No start date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.ends_at ? @discount.ends_at.strftime("%B %d, %Y %I:%M %p") : "No end date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Limit</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.usage_limit || "Unlimited" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Count</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.usage_count %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @discount.shop_category %>
+              <%= link_to @discount.shop_category.name, admin_category_path(@discount.shop_category), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+            <% else %>
+              N/A
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Product</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @discount.product %>
+              <%= link_to @discount.product.name, admin_product_path(@discount.product), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+            <% else %>
+              N/A
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.created_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Updated At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @discount.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <% if @discount.active? && !@discount.expired? && @discount.time_remaining %>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Time Remaining</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+              <% if @discount.days_remaining && @discount.days_remaining > 0 %>
+                <%= @discount.days_remaining %> days
+              <% elsif @discount.hours_remaining && @discount.hours_remaining > 0 %>
+                <%= @discount.hours_remaining %> hours
+              <% else %>
+                <%= @discount.minutes_remaining %> minutes
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+</div>

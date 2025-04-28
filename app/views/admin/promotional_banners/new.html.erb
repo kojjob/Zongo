@@ -1,0 +1,10 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_promotional_banners_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Promotional Banners
+    <% end %>
+  </div>
+
+  <%= render 'form', promotional_banner: @promotional_banner %>
+</div>

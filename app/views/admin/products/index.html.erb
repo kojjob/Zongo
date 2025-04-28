@@ -1,0 +1,187 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Products</h1>
+    <%= link_to new_admin_product_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+      <%= icon "plus", class: "h-4 w-4 mr-1.5" %>
+      New Product
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md mb-6">
+    <div class="px-4 py-5 sm:p-6">
+      <%= form_with url: admin_products_path, method: :get, class: "space-y-4 sm:flex sm:items-end sm:space-y-0 sm:space-x-4" do |f| %>
+        <div class="w-full sm:w-auto">
+          <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= f.select :category_id, 
+                options_from_collection_for_select(@categories, :id, :name, params[:category_id]), 
+                { include_blank: "All Categories" }, 
+                class: "block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <div class="w-full sm:w-auto">
+          <%= f.label :status, "Status", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= f.select :status, 
+                options_for_select([
+                  ["All", ""],
+                  ["Active", "active"],
+                  ["Inactive", "inactive"],
+                  ["Pending", "pending"]
+                ], params[:status]), 
+                {}, 
+                class: "block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <div class="w-full sm:w-auto">
+          <%= f.label :featured, "Featured", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= f.select :featured, 
+                options_for_select([
+                  ["All", ""],
+                  ["Featured", "true"],
+                  ["Not Featured", "false"]
+                ], params[:featured]), 
+                {}, 
+                class: "block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <div class="w-full sm:w-auto">
+          <%= f.label :sort, "Sort By", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= f.select :sort, 
+                options_for_select([
+                  ["Newest", "newest"],
+                  ["Oldest", "oldest"],
+                  ["Price: Low to High", "price_asc"],
+                  ["Price: High to Low", "price_desc"],
+                  ["Name: A to Z", "name_asc"],
+                  ["Name: Z to A", "name_desc"]
+                ], params[:sort]), 
+                {}, 
+                class: "block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <div class="w-full sm:w-auto">
+          <%= f.label :search, "Search", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= f.text_field :search, value: params[:search], placeholder: "Name, description, SKU", class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:mt-6">
+          <%= f.submit "Filter", class: "w-full inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:w-auto" %>
+          <%= link_to "Clear", admin_products_path, class: "mt-3 w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+    <% if @products.any? %>
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+        <% @products.each do |product| %>
+          <li>
+            <div class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700">
+                    <% if product.images.attached? %>
+                      <%= image_tag product.images.first.variant(resize_to_fill: [40, 40]), class: "h-10 w-10 object-cover" %>
+                    <% else %>
+                      <div class="h-10 w-10 flex items-center justify-center">
+                        <%= icon "image", class: "h-5 w-5 text-gray-400 dark:text-gray-500" %>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <div class="flex items-center">
+                      <h3 class="text-sm font-medium text-gray-900 dark:text-white"><%= product.name %></h3>
+                      <% if product.featured? %>
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">
+                          Featured
+                        </span>
+                      <% end %>
+                      <% case product.status %>
+                      <% when 'active' %>
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                          Active
+                        </span>
+                      <% when 'inactive' %>
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                          Inactive
+                        </span>
+                      <% when 'pending' %>
+                        <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300">
+                          Pending
+                        </span>
+                      <% end %>
+                    </div>
+                    <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <span>GHS <%= product.price %></span>
+                      <% if product.original_price.present? && product.original_price > product.price %>
+                        <span class="mx-2">&middot;</span>
+                        <span class="line-through">GHS <%= product.original_price %></span>
+                        <span class="mx-2">&middot;</span>
+                        <span class="text-green-600 dark:text-green-400">
+                          <%= ((product.original_price - product.price) / product.original_price * 100).round %>% off
+                        </span>
+                      <% end %>
+                      <span class="mx-2">&middot;</span>
+                      <span>Stock: <%= product.stock_quantity || 'Unlimited' %></span>
+                      <% if product.shop_category %>
+                        <span class="mx-2">&middot;</span>
+                        <span>Category: <%= product.shop_category.name %></span>
+                      <% end %>
+                    </div>
+                    <div class="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                      <span>SKU: <%= product.sku %></span>
+                      <span class="mx-2">&middot;</span>
+                      <span>Added: <%= product.created_at.strftime("%b %d, %Y") %></span>
+                      <% if product.user %>
+                        <span class="mx-2">&middot;</span>
+                        <span>Seller: <%= product.user.username %></span>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <%= link_to admin_product_path(product), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" do %>
+                    <%= icon "eye", class: "h-5 w-5" %>
+                  <% end %>
+                  <%= link_to edit_admin_product_path(product), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" do %>
+                    <%= icon "pencil", class: "h-5 w-5" %>
+                  <% end %>
+                  <%= button_to admin_product_path(product), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this product?" } }, class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" do %>
+                    <%= icon "trash", class: "h-5 w-5" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 sm:px-6">
+        <%== pagy_nav(@pagy) %>
+      </div>
+    <% else %>
+      <div class="px-4 py-12 text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No products found</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by creating a new product.</p>
+        <div class="mt-6">
+          <%= link_to new_admin_product_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+            <%= icon "plus", class: "h-4 w-4 mr-1.5" %>
+            New Product
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -120,29 +120,50 @@
           <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden">
             <div class="px-6 py-6">
               <h2 class="text-lg font-medium text-gray-900 dark:text-white">Order Summary</h2>
-              
+
+              <!-- Coupon Form -->
+              <% if user_signed_in? %>
+                <%= render 'shared/coupon_form' %>
+              <% end %>
+
               <div class="mt-6 space-y-4">
                 <div class="flex items-center justify-between">
                   <p class="text-sm text-gray-600 dark:text-gray-400">Subtotal</p>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">GHS <%= @cart.total_price.round(2) %></p>
+                  <p id="cart-subtotal" class="text-sm font-medium text-gray-900 dark:text-white">GHS <%= @cart.total_price.round(2) %></p>
                 </div>
-                
+
+                <% if session[:coupon_discount].present? && session[:coupon_discount].to_f > 0 %>
+                  <div class="flex items-center justify-between text-green-600 dark:text-green-400">
+                    <p class="text-sm">Coupon Discount (<%= session[:coupon_code] %>)</p>
+                    <p id="cart-discount" class="text-sm font-medium">-GHS <%= session[:coupon_discount].to_f.round(2) %></p>
+                  </div>
+                <% else %>
+                  <div class="flex items-center justify-between text-green-600 dark:text-green-400 hidden">
+                    <p class="text-sm">Coupon Discount</p>
+                    <p id="cart-discount" class="text-sm font-medium">-GHS 0.00</p>
+                  </div>
+                <% end %>
+
                 <div class="flex items-center justify-between">
                   <p class="text-sm text-gray-600 dark:text-gray-400">Shipping</p>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">GHS 10.00</p>
                 </div>
-                
+
                 <div class="flex items-center justify-between">
                   <p class="text-sm text-gray-600 dark:text-gray-400">Tax</p>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">GHS <%= (@cart.total_price * 0.05).round(2) %></p>
                 </div>
-                
+
                 <div class="border-t border-gray-200 dark:border-gray-700 pt-4 flex items-center justify-between">
                   <p class="text-base font-medium text-gray-900 dark:text-white">Order Total</p>
-                  <p class="text-base font-medium text-gray-900 dark:text-white">GHS <%= (@cart.total_price + 10 + @cart.total_price * 0.05).round(2) %></p>
+                  <%
+                    discount = session[:coupon_discount].present? ? session[:coupon_discount].to_f : 0
+                    total = (@cart.total_price - discount + 10 + @cart.total_price * 0.05).round(2)
+                  %>
+                  <p id="cart-total" class="text-base font-medium text-gray-900 dark:text-white">GHS <%= total %></p>
                 </div>
               </div>
-              
+
               <div class="mt-6">
                 <% if user_signed_in? %>
                   <a href="<%= new_order_path %>" class="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
@@ -159,7 +180,7 @@
                   </div>
                 <% end %>
               </div>
-              
+
               <div class="mt-6 flex items-center">
                 <div class="flex-shrink-0">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
@@ -189,7 +210,7 @@
         }
       });
     });
-    
+
     document.querySelectorAll('[data-action="increment"]').forEach(button => {
       button.addEventListener('click', function() {
         const input = this.parentNode.querySelector('input[type="number"]');

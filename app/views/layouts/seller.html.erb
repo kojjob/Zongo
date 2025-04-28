@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Seller Dashboard - Super Ghana App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <meta name="theme-color" content="#16a34a" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#064e3b" media="(prefers-color-scheme: dark)">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dark_mode_overrides", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dark_mode_refinements", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "light_mode_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "section_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "animations", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "loading_states", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "button_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "header_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "dropdown_fixes", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="font-poppins antialiased bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-white min-h-screen flex flex-col dark-mode-transition">
+    <%= render 'shared/skip_links' %>
+    <div aria-live="polite" aria-atomic="true" class="sr-only" data-accessibility-target="announcement"></div>
+
+    <%= render 'shared/header' %>
+    <%= render 'shared/toast_template' %>
+    <%= render 'shared/icons' %>
+    <%= render 'shared/final_dropdown_fix' %>
+    <%= render 'shared/scroll_progress' %>
+    <%= render 'shared/accessibility_settings' %>
+
+    <div class="flex-grow flex">
+      <!-- Sidebar -->
+      <div class="hidden md:flex md:w-64 md:flex-col">
+        <div class="flex flex-col flex-grow pt-5 bg-white dark:bg-gray-900 overflow-y-auto border-r border-gray-200 dark:border-gray-800">
+          <div class="flex items-center flex-shrink-0 px-4 mb-5">
+            <span class="text-xl font-bold text-primary-600 dark:text-primary-400">Seller Dashboard</span>
+          </div>
+          <div class="mt-5 flex-grow flex flex-col">
+            <nav class="flex-1 px-2 pb-4 space-y-1">
+              <%= link_to seller_dashboard_path, class: "group flex items-center px-2 py-2 text-sm font-medium rounded-md #{current_page?(seller_dashboard_path) ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 flex-shrink-0 h-6 w-6 #{current_page?(seller_dashboard_path) ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Dashboard
+              <% end %>
+
+              <%= link_to seller_products_path, class: "group flex items-center px-2 py-2 text-sm font-medium rounded-md #{controller_name == 'products' ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 flex-shrink-0 h-6 w-6 #{controller_name == 'products' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                Products
+              <% end %>
+
+              <%= link_to seller_orders_path, class: "group flex items-center px-2 py-2 text-sm font-medium rounded-md #{controller_name == 'orders' ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'}" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 flex-shrink-0 h-6 w-6 #{controller_name == 'orders' ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                Orders
+              <% end %>
+
+              <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                <h3 class="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Bulk Actions
+                </h3>
+                <%= link_to bulk_new_seller_products_path, class: "mt-1 group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                  Bulk Upload
+                <% end %>
+              </div>
+
+              <div class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                <h3 class="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Help & Support
+                </h3>
+                <%= link_to support_path, class: "mt-1 group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 flex-shrink-0 h-6 w-6 text-gray-400 dark:text-gray-500 group-hover:text-gray-500 dark:group-hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Help Center
+                <% end %>
+              </div>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="flex-1 flex flex-col overflow-hidden">
+        <main class="flex-1 overflow-y-auto focus:outline-none" tabindex="0">
+          <div class="py-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              <%= render 'shared/flash' if flash.any? %>
+              <%= yield %>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <%= render 'shared/footer' %>
+    <%= render 'shared/offline_indicator' %>
+  </body>
+</html>

@@ -15,17 +15,17 @@
             <div class="flex items-center">
               <%
                 icon_name = case transaction.transaction_type
-                            when 'deposit' then 'money-in'
+                            when 'deposit'    then 'money-in'
                             when 'withdrawal' then 'money-out'
-                            when 'transfer' then 'transfer'
-                            when 'payment' then 'shopping'
+                            when 'transfer'   then 'transfer'
+                            when 'payment'    then 'shopping'
                             end
 
                 icon_color = case transaction.transaction_type
-                            when 'deposit' then 'text-green-500'
+                            when 'deposit'    then 'text-green-500'
                             when 'withdrawal' then 'text-red-500'
-                            when 'transfer' then 'text-blue-500'
-                            when 'payment' then 'text-purple-500'
+                            when 'transfer'   then 'text-blue-500'
+                            when 'payment'    then 'text-purple-500'
                             end
               %>
               <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center <%= icon_color %>">

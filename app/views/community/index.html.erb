@@ -1,0 +1,178 @@
+<%# Community Main Page %>
+<div class="bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-950">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <%# Hero Section %>
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl sm:tracking-tight lg:text-6xl">Community</h1>
+      <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500 dark:text-gray-400">Connect with local groups and attend gatherings in your community.</p>
+    </div>
+
+    <%# Services Cards %>
+    <div class="mt-12 grid gap-8 md:grid-cols-2">
+      <%# Local Groups Card %>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:scale-[1.01]">
+        <div class="h-48 bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Local Groups</h2>
+          <p class="mt-3 text-gray-600 dark:text-gray-400">Join local groups based on your interests and connect with like-minded people in your community.</p>
+          <div class="mt-6 flex items-center">
+            <div class="flex-1">
+              <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Find your community
+              </div>
+              <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                Connect & share
+              </div>
+            </div>
+            <a href="<%= community_groups_path %>" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+              Explore Groups
+              <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 -mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <%# Local Gatherings Card %>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:scale-[1.01]">
+        <div class="h-48 bg-gradient-to-r from-teal-500 to-teal-600 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div class="p-6">
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Local Gatherings</h2>
+          <p class="mt-3 text-gray-600 dark:text-gray-400">Discover and attend local gatherings, events, and meetups happening in your community.</p>
+          <div class="mt-6 flex items-center">
+            <div class="flex-1">
+              <div class="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Find nearby events
+              </div>
+              <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                </svg>
+                RSVP & attend
+              </div>
+            </div>
+            <a href="<%= community_gatherings_path %>" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+              Find Gatherings
+              <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 -mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Featured Groups Section %>
+    <div class="mt-16">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white text-center">Featured Groups</h2>
+      <div class="mt-10 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <% @featured_groups&.each do |group| %>
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md">
+            <div class="h-40 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
+              <% if group.image.present? %>
+                <%= image_tag group.image, class: "h-full w-full object-cover rounded-lg" %>
+              <% else %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              <% end %>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white"><%= group.name %></h3>
+            <p class="mt-2 text-gray-600 dark:text-gray-400 line-clamp-2"><%= group.description %></p>
+            <div class="mt-4 flex justify-between items-center">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                <%= group.group_category&.name || "General" %>
+              </span>
+              <span class="text-sm text-gray-500 dark:text-gray-400"><%= group.members_count %> members</span>
+            </div>
+            <div class="mt-4">
+              <a href="<%= community_groups_path(group_id: group.id) %>" class="text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 text-sm font-medium">
+                View Group
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Upcoming Gatherings Section %>
+    <div class="mt-16">
+      <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white text-center">Upcoming Gatherings</h2>
+      <div class="mt-10 grid gap-8 grid-cols-1 sm:grid-cols-2">
+        <% @upcoming_gatherings&.each do |gathering| %>
+          <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md">
+            <div class="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <% if gathering.image.present? %>
+                <%= image_tag gathering.image, class: "h-full w-full object-cover" %>
+              <% else %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              <% end %>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900 text-teal-800 dark:text-teal-200">
+                  <%= gathering.gathering_type || "Meetup" %>
+                </span>
+                <span class="ml-2 text-xs text-gray-500 dark:text-gray-400"><%= gathering.date.strftime("%b %d, %Y") %></span>
+              </div>
+              <h3 class="mt-2 text-xl font-bold text-gray-900 dark:text-white"><%= gathering.title %></h3>
+              <p class="mt-2 text-gray-600 dark:text-gray-400 line-clamp-2"><%= gathering.description %></p>
+              <div class="mt-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="ml-1 text-sm text-gray-500 dark:text-gray-400"><%= gathering.location %></span>
+              </div>
+              <div class="mt-4 flex justify-between items-center">
+                <span class="text-sm text-gray-500 dark:text-gray-400"><%= gathering.attendees_count %> attending</span>
+                <a href="<%= community_gatherings_path(gathering_id: gathering.id) %>" class="text-teal-600 dark:text-teal-400 hover:text-teal-500 dark:hover:text-teal-300 text-sm font-medium">
+                  View Details
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Call to Action %>
+    <div class="mt-16 bg-gradient-to-r from-green-600 to-teal-700 rounded-2xl shadow-xl overflow-hidden">
+      <div class="px-6 py-12 sm:px-12 lg:py-16 lg:pr-0 xl:py-20 xl:px-20">
+        <div class="lg:self-center">
+          <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+            <span class="block">Ready to connect with your community?</span>
+            <span class="block">Join a group or attend a gathering today.</span>
+          </h2>
+          <p class="mt-4 text-lg leading-6 text-green-200">Connect with like-minded people in your community. Join local groups based on your interests and attend gatherings to meet new people.</p>
+          <a href="<%= community_groups_path %>" class="mt-8 bg-white border border-transparent rounded-md shadow px-5 py-3 inline-flex items-center text-base font-medium text-green-600 hover:bg-green-50">
+            Explore Community Groups
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

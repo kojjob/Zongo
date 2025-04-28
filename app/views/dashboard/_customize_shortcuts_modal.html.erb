@@ -1,0 +1,183 @@
+<%# Customize Shortcuts Modal %>
+<div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <%# Background overlay %>
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+
+    <%# Modal panel %>
+    <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+      <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900/30 sm:mx-0 sm:h-10 sm:w-10">
+            <%= icon "lightning-bolt", class: "h-6 w-6 text-purple-600 dark:text-purple-400" %>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
+              Customize Quick Access Shortcuts
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Select up to 6 shortcuts to display in your Quick Access section. Drag and drop to reorder.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <div class="space-y-4">
+            <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Selected Shortcuts (6/6)
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-200 dark:border-gray-700">
+              <!-- Send Money -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "money-out", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Send Money</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Add Money -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "money-in", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Add Money</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Buy Airtime -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "mobile-screen", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Buy Airtime</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Pay Bills -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "file-invoice", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Pay Bills</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Scan to Pay -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "qrcode", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Scan to Pay</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Transactions -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-move">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-gray-500 to-slate-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "history", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Transactions</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "x", class: "w-4 h-4" %>
+                </button>
+              </div>
+            </div>
+            
+            <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mt-6">
+              Available Shortcuts
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-200 dark:border-gray-700">
+              <!-- Request Money -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "money-request", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Request Money</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "plus", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Buy Data -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 flex items-center justify-center text-white mr-3">
+                  <%= icon "wifi", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Buy Data</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "plus", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Savings -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white mr-3">
+                  <%= icon "piggy-bank", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Savings</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "plus", class: "w-4 h-4" %>
+                </button>
+              </div>
+              
+              <!-- Apply for Loan -->
+              <div class="flex items-center p-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center text-white mr-3">
+                  <%= icon "cash", class: "w-4 h-4" %>
+                </div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-gray-900 dark:text-white">Apply for Loan</div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                  <%= icon "plus", class: "w-4 h-4" %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm" data-action="dashboard#saveShortcuts">
+          Save Changes
+        </button>
+        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" data-action="dashboard#closeModal">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

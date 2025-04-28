@@ -1,0 +1,60 @@
+<%# Responsive Settings Tabs Navigation - With teal-emerald colors and improved dark mode %>
+<div class="mb-6 sm:mb-8 overflow-x-auto">
+  <div class="flex flex-nowrap min-w-full pb-1 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-2 dark:shadow-md" data-controller="tabs">
+    <%# Overview Tab %>
+    <%= link_to user_settings_path, class: "flex items-center mr-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "user", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Overview</span>
+    <% end %>
+
+    <%# Profile Tab %>
+    <%= link_to user_settings_profile_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_profile_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_profile_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "id-card", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Profile</span>
+    <% end %>
+
+    <%# Security Tab %>
+    <%= link_to user_settings_security_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_security_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_security_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "shield", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Security</span>
+    <% end %>
+
+    <%# Notifications Tab %>
+    <%= link_to user_settings_notifications_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_notifications_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_notifications_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "bell", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Notifications</span>
+    <% end %>
+
+    <%# Appearance Tab %>
+    <%= link_to user_settings_appearance_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_appearance_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_appearance_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "paint-brush", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Appearance</span>
+    <% end %>
+
+    <%# Payment Tab %>
+    <%= link_to user_settings_payment_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_payment_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_payment_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "credit-card", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Payment</span>
+    <% end %>
+
+    <%# Support Tab %>
+    <%= link_to user_settings_support_path, class: "flex items-center ml-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_support_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_support_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "headset", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Support</span>
+    <% end %>
+  </div>
+</div>

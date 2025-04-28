@@ -41,3 +41,42 @@
 .custom-cursor {
   display: none !important;
 }
+
+/* Fix dropdown menus in header */
+.relative [data-dropdown-target="menu"] {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  pointer-events: auto !important;
+}
+
+/* Fix for dropdown arrows */
+[data-dropdown-target="arrow"] {
+  transform: rotate(180deg) !important;
+}
+
+/* Make text white on dark backgrounds */
+.text-white {
+  color: white !important;
+}
+
+/* Ensure text contrast against primary backgrounds */
+header .text-white,
+.bg-primary-600 .text-white,
+.bg-primary-700 .text-white,
+.from-primary-600 .text-white,
+.to-primary-700 .text-white,
+.backdrop-blur-lg .text-white,
+.text-white {
+  color: white !important;
+  opacity: 1 !important;
+}
+
+/* Fix dropdown visibility */
+.pointer-events-none {
+  pointer-events: auto !important;
+}
+
+.opacity-0.scale-95 {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}

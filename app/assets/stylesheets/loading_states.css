@@ -1,0 +1,291 @@
+/**
+ * Loading States - Attractive loading animations for dynamic content
+ */
+
+/* Skeleton loading animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, 
+    rgba(0, 0, 0, 0.06) 25%, 
+    rgba(0, 0, 0, 0.15) 37%, 
+    rgba(0, 0, 0, 0.06) 63%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.06) 25%, 
+    rgba(255, 255, 255, 0.15) 37%, 
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Pulse animation */
+@keyframes pulse-animation {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.pulse-loading {
+  animation: pulse-animation 1.5s infinite ease-in-out;
+}
+
+/* Spinner animation */
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #14b8a6;
+  animation: spinner 0.8s linear infinite;
+}
+
+.dark .spinner:before {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #2dd4bf;
+}
+
+/* Gradient spinner */
+.gradient-spinner {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.gradient-spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #14b8a6;
+  border-bottom-color: #0d9488;
+  animation: spinner 1s ease infinite;
+}
+
+.dark .gradient-spinner:before {
+  border-top-color: #2dd4bf;
+  border-bottom-color: #14b8a6;
+}
+
+/* Dots loading animation */
+.dots-loading {
+  display: inline-flex;
+  align-items: center;
+}
+
+.dots-loading span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  margin: 0 0.15rem;
+  opacity: 0.6;
+}
+
+.dots-loading span:nth-child(1) {
+  animation: dots-animation 1.4s infinite ease-in-out;
+}
+
+.dots-loading span:nth-child(2) {
+  animation: dots-animation 1.4s infinite ease-in-out 0.2s;
+}
+
+.dots-loading span:nth-child(3) {
+  animation: dots-animation 1.4s infinite ease-in-out 0.4s;
+}
+
+@keyframes dots-animation {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* Fade-in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+/* Skeleton elements */
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.skeleton-text.skeleton-title {
+  height: 1.5rem;
+  width: 70%;
+  margin-bottom: 1rem;
+}
+
+.skeleton-circle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+}
+
+.skeleton-button {
+  height: 2.5rem;
+  width: 8rem;
+  border-radius: 0.375rem;
+}
+
+.skeleton-card {
+  height: 8rem;
+  border-radius: 0.5rem;
+}
+
+.skeleton-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+/* Content loading overlay */
+.content-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(2px);
+  border-radius: inherit;
+}
+
+.dark .content-loading-overlay {
+  background-color: rgba(17, 24, 39, 0.7);
+}
+
+/* Teal-emerald themed loading elements */
+.teal-spinner:before {
+  border-top-color: #14b8a6;
+  border-bottom-color: #10b981;
+}
+
+.dark .teal-spinner:before {
+  border-top-color: #2dd4bf;
+  border-bottom-color: #34d399;
+}
+
+.teal-pulse {
+  color: #14b8a6;
+}
+
+.dark .teal-pulse {
+  color: #2dd4bf;
+}
+
+/* Loading bar animation */
+@keyframes loading-bar {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.loading-bar {
+  height: 3px;
+  background: linear-gradient(to right, #14b8a6, #10b981);
+  animation: loading-bar 2s ease-out forwards;
+}
+
+.dark .loading-bar {
+  background: linear-gradient(to right, #2dd4bf, #34d399);
+}
+
+/* Shimmer effect for cards */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite;
+}
+
+.dark .shimmer-card::after {
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.2) 60%,
+    rgba(255, 255, 255, 0)
+  );
+}

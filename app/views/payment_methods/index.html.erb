@@ -1,131 +1,136 @@
   <% content_for :title, "Payment Methods" %>
 <%# Payment Methods Index %>
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="flex items-center justify-between mb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div class="flex items-center">
-      <a href="<%= wallet_path %>" class="flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors mr-4 shadow">
-        <%= icon "arrow-left", class: "w-6 h-6" %>
+      <a href="<%= wallet_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mr-3 shadow-sm border border-gray-100 dark:border-gray-700">
+        <%= icon "arrow-left", class: "w-5 h-5" %>
       </a>
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Payment Methods</h1>
-        <p class="text-base text-gray-700 dark:text-gray-300 mt-1">Manage your payment methods for deposits and withdrawals</p>
+        <h1 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Payment Methods</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your payment methods for deposits and withdrawals</p>
       </div>
     </div>
 
-    <div class="hidden sm:block">
-      <%= link_to new_payment_method_path, class: "inline-flex items-center px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-base transition-colors shadow-lg" do %>
-        <%= icon "plus-circle", class: "w-6 h-6 mr-2" %>
-        Add Payment Method
+    <div class="self-start sm:self-center">
+      <%= link_to new_payment_method_path, class: "btn btn-primary flex items-center" do %>
+        <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+        <span>Add Payment Method</span>
       <% end %>
     </div>
   </div>
 
   <% if @payment_methods.empty? %>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 max-w-3xl mx-auto">
-      <div class="bg-gradient-to-r from-primary-600 to-blue-600 p-8 relative overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700 max-w-3xl mx-auto">
+      <!-- Header with subtle gradient -->
+      <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 p-6 sm:p-8 relative overflow-hidden border-b border-gray-100 dark:border-gray-700">
         <div class="absolute inset-0">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
-          <% (1..5).each do |i| %>
-            <div class="absolute rounded-full bg-white/30 w-<%= 10 + i*6 %>0 h-<%= 10 + i*6 %>0"
-                 style="left: <%= rand(0..100) %>%; top: <%= rand(-50..100) %>%; transform: translate(-50%, -50%);"></div>
-          <% end %>
+          <!-- Subtle background patterns -->
+          <div class="absolute right-0 top-0 w-64 h-64 bg-primary-100/50 dark:bg-primary-800/10 rounded-full -mr-32 -mt-32 opacity-70"></div>
+          <div class="absolute left-0 bottom-0 w-48 h-48 bg-blue-100/50 dark:bg-blue-800/10 rounded-full -ml-24 -mb-24 opacity-50"></div>
         </div>
 
-        <div class="relative z-10 text-center">
-          <h2 class="text-3xl font-bold text-white">Payment Methods</h2>
-          <p class="mt-2 text-xl text-white">
-            You haven't added any payment methods yet
-          </p>
+        <div class="relative z-10 flex items-center justify-center">
+          <div class="w-12 h-12 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center mr-4 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-800/30">
+            <%= icon "credit-card", class: "w-6 h-6" %>
+          </div>
+          <div class="text-center sm:text-left">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Payment Methods</h2>
+            <p class="mt-1 text-sm sm:text-base text-gray-600 dark:text-gray-400">
+              You haven't added any payment methods yet
+            </p>
+          </div>
         </div>
       </div>
 
-      <div class="p-10 text-center">
-        <div class="w-32 h-32 rounded-full bg-gradient-to-r from-primary-600 to-blue-600 shadow-lg flex items-center justify-center text-white mx-auto mb-8 transform transition-transform hover:scale-105 duration-300">
-          <%= icon "credit-card", class: "w-16 h-16" %>
+      <div class="p-6 sm:p-8 text-center">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white dark:bg-gray-700 shadow-sm border border-primary-100 dark:border-primary-800/30 flex items-center justify-center text-primary-600 dark:text-primary-400 mx-auto mb-6 transform transition-transform hover:scale-105 duration-300">
+          <%= icon "credit-card", class: "w-12 h-12 sm:w-14 sm:h-14" %>
         </div>
 
-        <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-8 mb-8 max-w-lg mx-auto shadow">
-          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">No Payment Methods Yet</h3>
-          <p class="text-gray-700 dark:text-gray-200 text-lg mb-6 max-w-md mx-auto">
+        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 mb-6 max-w-lg mx-auto shadow-sm border border-gray-100 dark:border-gray-700">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">No Payment Methods Yet</h3>
+          <p class="text-gray-600 dark:text-gray-300 text-base mb-6 max-w-md mx-auto">
             Add a payment method to easily deposit and withdraw funds from your wallet. You can add bank accounts, cards, or mobile money accounts.
           </p>
 
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <div class="flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 shadow border border-blue-200 dark:border-blue-900">
-              <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
-                <%= icon "bank", class: "w-6 h-6" %>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 justify-center">
+            <div class="flex items-center p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-blue-100 dark:border-blue-900/30 hover:border-blue-200 dark:hover:border-blue-800/50 transition-all">
+              <div class="w-10 h-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-blue-500 dark:text-blue-400 mr-3 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                <%= icon "bank", class: "w-5 h-5" %>
               </div>
-              <span class="text-base font-semibold text-gray-700 dark:text-gray-300">Bank Account</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Bank Account</span>
             </div>
 
-            <div class="flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 shadow border border-purple-200 dark:border-purple-900">
-              <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3">
-                <%= icon "credit-card", class: "w-6 h-6" %>
+            <div class="flex items-center p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-purple-100 dark:border-purple-900/30 hover:border-purple-200 dark:hover:border-purple-800/50 transition-all">
+              <div class="w-10 h-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-purple-500 dark:text-purple-400 mr-3 shadow-sm border border-purple-100 dark:border-purple-800/30">
+                <%= icon "credit-card", class: "w-5 h-5" %>
               </div>
-              <span class="text-base font-semibold text-gray-700 dark:text-gray-300">Credit Card</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Credit Card</span>
             </div>
 
-            <div class="flex items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 shadow border border-green-200 dark:border-green-900">
-              <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-3">
-                <%= icon "smartphone", class: "w-6 h-6" %>
+            <div class="flex items-center p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-green-100 dark:border-green-900/30 hover:border-green-200 dark:hover:border-green-800/50 transition-all">
+              <div class="w-10 h-10 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-green-500 dark:text-green-400 mr-3 shadow-sm border border-green-100 dark:border-green-800/30">
+                <%= icon "smartphone", class: "w-5 h-5" %>
               </div>
-              <span class="text-base font-semibold text-gray-700 dark:text-gray-300">Mobile Money</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Mobile Money</span>
             </div>
           </div>
         </div>
 
-        <%= link_to new_payment_method_path, class: "inline-flex items-center px-8 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-blue-600 text-white font-bold text-lg transition-colors shadow-lg hover:from-primary-700 hover:to-blue-700" do %>
-          <%= icon "plus-circle", class: "w-6 h-6 mr-3" %>
-          Add Your First Payment Method
+        <%= link_to new_payment_method_path, class: "btn btn-primary flex items-center justify-center mx-auto" do %>
+          <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
+          <span>Add Your First Payment Method</span>
         <% end %>
       </div>
     </div>
   <% else %>
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-      <div class="bg-gradient-to-r from-primary-600 to-blue-600 p-8 relative overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+      <!-- Header with subtle gradient -->
+      <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-900/20 dark:to-blue-900/20 p-6 sm:p-8 relative overflow-hidden border-b border-gray-100 dark:border-gray-700">
         <div class="absolute inset-0">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
-          <% (1..5).each do |i| %>
-            <div class="absolute rounded-full bg-white/30 w-<%= 10 + i*6 %>0 h-<%= 10 + i*6 %>0"
-                 style="left: <%= rand(0..100) %>%; top: <%= rand(-50..100) %>%; transform: translate(-50%, -50%);"></div>
-          <% end %>
+          <!-- Subtle background patterns -->
+          <div class="absolute right-0 top-0 w-64 h-64 bg-primary-100/50 dark:bg-primary-800/10 rounded-full -mr-32 -mt-32 opacity-70"></div>
+          <div class="absolute left-0 bottom-0 w-48 h-48 bg-blue-100/50 dark:bg-blue-800/10 rounded-full -ml-24 -mb-24 opacity-50"></div>
         </div>
 
         <div class="relative z-10">
-          <div class="flex items-center justify-between">
-            <div>
-              <h2 class="text-2xl font-bold text-white flex items-center">
-                <%= icon "credit-card", class: "w-8 h-8 mr-3" %>
-                Your Payment Methods
-              </h2>
-              <p class="mt-2 text-white text-lg">
-                Manage your payment methods for deposits and withdrawals
-              </p>
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center mr-4 text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-800/30">
+                <%= icon "credit-card", class: "w-6 h-6" %>
+              </div>
+              <div>
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Your Payment Methods</h2>
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                  Manage your payment methods for deposits and withdrawals
+                </p>
+              </div>
             </div>
 
-            <div class="hidden sm:block">
-              <%= link_to new_payment_method_path, class: "inline-flex items-center px-5 py-3 rounded-xl bg-white/30 hover:bg-white/40 text-white font-bold text-sm transition-colors shadow-md" do %>
+            <div>
+              <%= link_to new_payment_method_path, class: "btn btn-outline-primary flex items-center" do %>
                 <%= icon "plus-circle", class: "w-5 h-5 mr-2" %>
-                Add New Method
+                <span>Add New Method</span>
               <% end %>
             </div>
           </div>
 
-          <div class="mt-6 flex flex-wrap gap-3">
-            <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/30 text-white text-sm font-bold">
+          <div class="mt-5 flex flex-wrap gap-2">
+            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium">
               <span class="mr-1">Total:</span>
-              <span><%= @payment_methods.count %> Methods</span>
+              <span class="font-semibold"><%= @payment_methods.count %> Methods</span>
             </div>
 
-            <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/30 text-white text-sm font-bold">
+            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-medium">
               <span class="mr-1">Verified:</span>
-              <span><%= @payment_methods.where(status: :verified).count %></span>
+              <span class="font-semibold"><%= @payment_methods.where(status: :verified).count %></span>
             </div>
 
             <% if default_method = @payment_methods.find_by(default: true) %>
-              <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/30 text-white text-sm font-bold">
-                <%= icon "star", class: "h-4 w-4 mr-2" %>
-                <span>Default: <%= default_method.description %></span>
+              <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-sm font-medium">
+                <%= icon "star", class: "h-4 w-4 mr-1.5" %>
+                <span class="font-semibold">Default: <%= default_method.description %></span>
               </div>
             <% end %>
           </div>
@@ -134,42 +139,47 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
         <%
-          # Define method type colors and gradients
+          # Define method type colors and gradients with more subtle styling
           method_styles = {
             'bank' => {
               color: 'blue',
-              gradient: 'from-blue-600 to-indigo-700',
-              bg_color: 'bg-gradient-to-r from-blue-600 to-indigo-700',
-              card_bg: 'bg-white dark:bg-gray-800',
-              icon_bg: 'bg-gradient-to-r from-blue-600 to-indigo-700'
+              bg_color: 'bg-blue-50 dark:bg-blue-900/10',
+              border_color: 'border-blue-100 dark:border-blue-800/30',
+              hover_border: 'hover:border-blue-200 dark:hover:border-blue-700/50',
+              icon_color: 'text-blue-500 dark:text-blue-400',
+              icon_border: 'border-blue-100 dark:border-blue-800/30'
             },
             'card' => {
               color: 'purple',
-              gradient: 'from-purple-600 to-pink-700',
-              bg_color: 'bg-gradient-to-r from-purple-600 to-pink-700',
-              card_bg: 'bg-white dark:bg-gray-800',
-              icon_bg: 'bg-gradient-to-r from-purple-600 to-pink-700'
+              bg_color: 'bg-purple-50 dark:bg-purple-900/10',
+              border_color: 'border-purple-100 dark:border-purple-800/30',
+              hover_border: 'hover:border-purple-200 dark:hover:border-purple-700/50',
+              icon_color: 'text-purple-500 dark:text-purple-400',
+              icon_border: 'border-purple-100 dark:border-purple-800/30'
             },
             'mobile_money' => {
               color: 'green',
-              gradient: 'from-green-600 to-emerald-700',
-              bg_color: 'bg-gradient-to-r from-green-600 to-emerald-700',
-              card_bg: 'bg-white dark:bg-gray-800',
-              icon_bg: 'bg-gradient-to-r from-green-600 to-emerald-700'
+              bg_color: 'bg-green-50 dark:bg-green-900/10',
+              border_color: 'border-green-100 dark:border-green-800/30',
+              hover_border: 'hover:border-green-200 dark:hover:border-green-700/50',
+              icon_color: 'text-green-500 dark:text-green-400',
+              icon_border: 'border-green-100 dark:border-green-800/30'
             },
             'wallet' => {
-              color: 'orange',
-              gradient: 'from-orange-600 to-amber-700',
-              bg_color: 'bg-gradient-to-r from-orange-600 to-amber-700',
-              card_bg: 'bg-white dark:bg-gray-800',
-              icon_bg: 'bg-gradient-to-r from-orange-600 to-amber-700'
+              color: 'amber',
+              bg_color: 'bg-amber-50 dark:bg-amber-900/10',
+              border_color: 'border-amber-100 dark:border-amber-800/30',
+              hover_border: 'hover:border-amber-200 dark:hover:border-amber-700/50',
+              icon_color: 'text-amber-500 dark:text-amber-400',
+              icon_border: 'border-amber-100 dark:border-amber-800/30'
             },
             'other' => {
               color: 'gray',
-              gradient: 'from-gray-600 to-gray-700',
-              bg_color: 'bg-gradient-to-r from-gray-600 to-gray-700',
-              card_bg: 'bg-white dark:bg-gray-800',
-              icon_bg: 'bg-gradient-to-r from-gray-600 to-gray-700'
+              bg_color: 'bg-gray-50 dark:bg-gray-700/50',
+              border_color: 'border-gray-200 dark:border-gray-700',
+              hover_border: 'hover:border-gray-300 dark:hover:border-gray-600',
+              icon_color: 'text-gray-500 dark:text-gray-400',
+              icon_border: 'border-gray-200 dark:border-gray-700'
             }
           }
         %>
@@ -180,15 +190,17 @@
             style = method_styles[method.method_type.to_s] || method_styles['other']
             color = style[:color]
             bg_color = style[:bg_color]
-            card_bg = style[:card_bg]
-            icon_bg = style[:icon_bg]
+            border_color = style[:border_color]
+            hover_border = style[:hover_border]
+            icon_color = style[:icon_color]
+            icon_border = style[:icon_border]
           %>
-          <div class="payment-method-card group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl <%= card_bg %> <%= method.default? ? "ring-3 ring-#{color}-500 dark:ring-#{color}-400" : 'border border-gray-200 dark:border-gray-700' %>">
+          <div class="payment-method-card group relative overflow-hidden rounded-xl shadow-sm transition-all duration-300 hover:shadow-md bg-white dark:bg-gray-800 border <%= border_color %> <%= hover_border %> <%= method.default? ? "ring-2 ring-#{color}-400 dark:ring-#{color}-500" : '' %>">
             <% if method.default? %>
-              <div class="absolute top-4 right-4 z-10">
-                <div class="flex items-center justify-center px-3 py-1.5 rounded-full bg-#{color}-600 shadow-md">
-                  <span class="text-xs font-bold text-white flex items-center">
-                    <%= icon "star", class: "h-3.5 w-3.5 mr-1.5" %>
+              <div class="absolute top-3 right-3 z-10">
+                <div class="flex items-center justify-center px-2 py-1 rounded-full bg-#{color}-100 dark:bg-#{color}-900/30 text-#{color}-700 dark:text-#{color}-300 shadow-sm">
+                  <span class="text-xs font-medium flex items-center">
+                    <%= icon "star", class: "h-3 w-3 mr-1" %>
                     DEFAULT
                   </span>
                 </div>
@@ -196,102 +208,96 @@
             <% end %>
 
             <!-- Card Header with Icon -->
-            <div class="relative overflow-hidden h-28 <%= bg_color %> flex items-center justify-center">
-              <div class="absolute inset-0">
-                <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
-                <% (1..4).each do |i| %>
-                  <div class="absolute rounded-full bg-white/30 w-<%= 10 + i*5 %>0 h-<%= 10 + i*5 %>0"
-                       style="left: <%= rand(0..100) %>%; top: <%= rand(-50..100) %>%; transform: translate(-50%, -50%);"></div>
-                <% end %>
-              </div>
-
-              <div class="relative z-10 flex items-center justify-center space-x-4">
-                <div class="flex-shrink-0 w-16 h-16 rounded-full bg-white/30 shadow-lg flex items-center justify-center text-white transform transition-transform duration-300 group-hover:scale-110">
-                  <%= icon method.icon_name, class: "h-9 w-9" %>
+            <div class="relative overflow-hidden p-4 <%= bg_color %> border-b <%= border_color %> flex items-center">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-white dark:bg-gray-700 shadow-sm border <%= icon_border %> flex items-center justify-center <%= icon_color %> transform transition-transform duration-300 group-hover:scale-110 mr-4">
+                  <%= icon method.icon_name, class: "h-6 w-6" %>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-white drop-shadow-md"><%= method.provider || method.method_type.to_s.titleize %></h3>
-                  <p class="text-sm text-white/90"><%= method.method_type.to_s.titleize %></p>
+                  <h3 class="text-base font-bold text-gray-900 dark:text-white"><%= method.provider || method.method_type.to_s.titleize %></h3>
+                  <p class="text-xs text-gray-500 dark:text-gray-400"><%= method.method_type.to_s.titleize %></p>
                 </div>
               </div>
+
+              <% if method.verified? %>
+                <span class="absolute top-3 right-3 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                  <%= icon "check-circle", class: "h-3 w-3 mr-1" %>
+                  VERIFIED
+                </span>
+              <% else %>
+                <span class="absolute top-3 right-3 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
+                  <%= icon "clock", class: "h-3 w-3 mr-1" %>
+                  PENDING
+                </span>
+              <% end %>
             </div>
 
             <!-- Card Content -->
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white"><%= method.description %></h3>
-
-                <% if method.verified? %>
-                  <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 shadow-sm">
-                    <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
-                    VERIFIED
-                  </span>
-                <% else %>
-                  <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 shadow-sm">
-                    <%= icon "clock", class: "h-4 w-4 mr-1.5" %>
-                    PENDING
-                  </span>
-                <% end %>
+            <div class="p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white"><%= method.description %></h3>
               </div>
 
               <!-- Card Details -->
-              <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-5 mb-5 shadow">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex items-center text-sm text-gray-700 dark:text-gray-200">
-                    <%= icon "credit-card", class: "h-5 w-5 mr-2 text-#{color}-600 dark:text-#{color}-400" %>
-                    <span class="font-semibold">Account Number</span>
+              <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-4 border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                    <%= icon "credit-card", class: "h-4 w-4 mr-2 #{icon_color}" %>
+                    <span class="font-medium">Account Number</span>
                   </div>
-                  <span class="text-sm font-mono font-bold text-gray-900 dark:text-white"><%= method.masked_account_number %></span>
+                  <span class="text-sm font-mono font-medium text-gray-900 dark:text-white"><%= method.masked_account_number %></span>
                 </div>
 
                 <% if method.expiry_date.present? %>
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center text-sm text-gray-700 dark:text-gray-200">
-                      <%= icon "calendar", class: "h-5 w-5 mr-2 text-#{color}-600 dark:text-#{color}-400" %>
-                      <span class="font-semibold">Expiration Date</span>
+                  <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                      <%= icon "calendar", class: "h-4 w-4 mr-2 #{icon_color}" %>
+                      <span class="font-medium">Expiration Date</span>
                     </div>
-                    <span class="text-sm font-mono font-bold text-gray-900 dark:text-white"><%= method.formatted_expiry_date %></span>
+                    <span class="text-sm font-mono font-medium text-gray-900 dark:text-white"><%= method.formatted_expiry_date %></span>
                   </div>
                 <% end %>
 
                 <% if method.last_used_at.present? %>
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center text-sm text-gray-700 dark:text-gray-200">
-                      <%= icon "clock", class: "h-5 w-5 mr-2 text-#{color}-600 dark:text-#{color}-400" %>
-                      <span class="font-semibold">Last Used</span>
+                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                      <%= icon "clock", class: "h-4 w-4 mr-2 #{icon_color}" %>
+                      <span class="font-medium">Last Used</span>
                     </div>
-                    <span class="text-sm font-bold text-gray-900 dark:text-white"><%= time_ago_in_words(method.last_used_at) %> ago</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white"><%= time_ago_in_words(method.last_used_at) %> ago</span>
                   </div>
                 <% end %>
               </div>
 
               <!-- Card Actions -->
-              <div class="flex justify-between items-center">
-                <% unless method.verified? %>
-                  <%= button_to verify_payment_method_path(method), method: :post, class: "inline-flex items-center px-5 py-2.5 rounded-lg bg-#{color}-600 hover:bg-#{color}-700 text-white font-medium text-sm transition-colors shadow" do %>
-                    <%= icon "shield-check", class: "h-5 w-5 mr-2" %>
-                    Verify Now
+              <div class="flex flex-wrap gap-2 justify-between items-center">
+                <div class="flex flex-wrap gap-2">
+                  <% unless method.verified? %>
+                    <%= button_to verify_payment_method_path(method), method: :post, class: "btn btn-sm btn-#{color} flex items-center" do %>
+                      <%= icon "shield-check", class: "h-4 w-4 mr-1.5" %>
+                      Verify
+                    <% end %>
                   <% end %>
-                <% end %>
 
-                <% unless method.default? %>
-                  <%= button_to set_default_payment_method_path(method), method: :post, class: "inline-flex items-center px-5 py-2.5 rounded-lg bg-#{color}-100 dark:bg-#{color}-800 hover:bg-#{color}-200 dark:hover:bg-#{color}-700 text-#{color}-700 dark:text-#{color}-300 font-medium text-sm transition-colors shadow" do %>
-                    <%= icon "star", class: "h-5 w-5 mr-2" %>
-                    Set as Default
+                  <% unless method.default? %>
+                    <%= button_to set_default_payment_method_path(method), method: :post, class: "btn btn-sm btn-outline-#{color} flex items-center" do %>
+                      <%= icon "star", class: "h-4 w-4 mr-1.5" %>
+                      Set Default
+                    <% end %>
                   <% end %>
-                <% end %>
+                </div>
 
-                <div class="flex space-x-3">
-                  <%= link_to edit_payment_method_path(method), class: "inline-flex items-center justify-center px-3 py-2.5 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow" do %>
-                    <%= icon "pencil", class: "h-5 w-5 mr-2" %>
+                <div class="flex gap-2">
+                  <%= link_to edit_payment_method_path(method), class: "btn btn-sm btn-outline-secondary flex items-center" do %>
+                    <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
                     Edit
                   <% end %>
 
                   <%= button_to payment_method_path(method),
                              method: :delete,
                              form: { data: { turbo_confirm: "Are you sure you want to remove this payment method?" } },
-                             class: "inline-flex items-center justify-center px-3 py-2.5 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors shadow" do %>
-                    <%= icon "trash", class: "h-5 w-5 mr-2" %>
+                             class: "btn btn-sm btn-outline-danger flex items-center" do %>
+                    <%= icon "trash", class: "h-4 w-4 mr-1.5" %>
                     Delete
                   <% end %>
                 </div>
@@ -300,55 +306,59 @@
           </div>
         <% end %>
 
-        <%= link_to new_payment_method_path, class: "payment-method-card group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl bg-white dark:bg-gray-800 border-2 border-dashed border-primary-500 dark:border-primary-400" do %>
+        <%= link_to new_payment_method_path, class: "payment-method-card group relative overflow-hidden rounded-xl shadow-sm transition-all duration-300 hover:shadow-md bg-white dark:bg-gray-800 border-2 border-dashed border-primary-200 dark:border-primary-700 hover:border-primary-300 dark:hover:border-primary-600" do %>
           <!-- Card Header with Icon -->
-          <div class="relative overflow-hidden h-28 bg-gradient-to-r from-primary-600 to-blue-600 flex items-center justify-center">
+          <div class="relative overflow-hidden p-4 bg-primary-50 dark:bg-primary-900/10 border-b border-primary-100 dark:border-primary-800/30 flex items-center">
             <div class="absolute inset-0">
-              <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
-              <% (1..4).each do |i| %>
-                <div class="absolute rounded-full bg-white/30 w-<%= 10 + i*5 %>0 h-<%= 10 + i*5 %>0"
-                     style="left: <%= rand(0..100) %>%; top: <%= rand(-50..100) %>%; transform: translate(-50%, -50%);"></div>
-              <% end %>
+              <!-- Subtle background patterns -->
+              <div class="absolute right-0 top-0 w-32 h-32 bg-primary-100/50 dark:bg-primary-800/10 rounded-full -mr-16 -mt-16 opacity-70"></div>
+              <div class="absolute left-0 bottom-0 w-24 h-24 bg-primary-100/50 dark:bg-primary-800/10 rounded-full -ml-12 -mb-12 opacity-50"></div>
             </div>
 
-            <div class="relative z-10 flex items-center justify-center space-x-4">
-              <div class="flex-shrink-0 w-16 h-16 rounded-full bg-white/30 shadow-lg flex items-center justify-center text-white transform transition-transform duration-300 group-hover:scale-110">
-                <%= icon "plus", class: "h-9 w-9" %>
+            <div class="relative z-10 flex items-center">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full bg-white dark:bg-gray-700 shadow-sm border border-primary-100 dark:border-primary-800/30 flex items-center justify-center text-primary-500 dark:text-primary-400 transform transition-transform duration-300 group-hover:scale-110 mr-4">
+                <%= icon "plus", class: "h-6 w-6" %>
               </div>
               <div>
-                <h3 class="text-xl font-bold text-white drop-shadow-md">Add New Method</h3>
-                <p class="text-sm text-white/90">Set up a payment option</p>
+                <h3 class="text-base font-bold text-gray-900 dark:text-white">Add New Method</h3>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Set up a payment option</p>
               </div>
             </div>
           </div>
 
           <!-- Card Content -->
-          <div class="p-6 flex flex-col items-center justify-center text-center">
-            <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-5 mb-5 shadow w-full">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Add Payment Method</h3>
-              <p class="text-gray-700 dark:text-gray-300">Add a bank account, card, or mobile money account to make deposits and withdrawals</p>
+          <div class="p-4 flex flex-col">
+            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 mb-4 border border-gray-100 dark:border-gray-700">
+              <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">Add Payment Method</h3>
+              <p class="text-xs text-gray-600 dark:text-gray-300">Add a bank account, card, or mobile money account to make deposits and withdrawals</p>
             </div>
 
-            <div class="flex flex-col gap-4 w-full">
-              <div class="flex items-center p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                <%= icon "bank", class: "h-5 w-5 mr-3" %>
-                <span class="font-medium">Bank Account</span>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+              <div class="flex items-center p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-blue-100 dark:border-blue-900/30 hover:border-blue-200 dark:hover:border-blue-800/50 transition-all">
+                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-blue-500 dark:text-blue-400 mr-2 shadow-sm border border-blue-100 dark:border-blue-800/30">
+                  <%= icon "bank", class: "h-4 w-4" %>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Bank Account</span>
               </div>
 
-              <div class="flex items-center p-3 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                <%= icon "credit-card", class: "h-5 w-5 mr-3" %>
-                <span class="font-medium">Credit Card</span>
+              <div class="flex items-center p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-purple-100 dark:border-purple-900/30 hover:border-purple-200 dark:hover:border-purple-800/50 transition-all">
+                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-purple-500 dark:text-purple-400 mr-2 shadow-sm border border-purple-100 dark:border-purple-800/30">
+                  <%= icon "credit-card", class: "h-4 w-4" %>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Credit Card</span>
               </div>
 
-              <div class="flex items-center p-3 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">
-                <%= icon "smartphone", class: "h-5 w-5 mr-3" %>
-                <span class="font-medium">Mobile Money</span>
+              <div class="flex items-center p-2 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-green-100 dark:border-green-900/30 hover:border-green-200 dark:hover:border-green-800/50 transition-all">
+                <div class="w-8 h-8 rounded-full bg-white dark:bg-gray-700 flex items-center justify-center text-green-500 dark:text-green-400 mr-2 shadow-sm border border-green-100 dark:border-green-800/30">
+                  <%= icon "smartphone", class: "h-4 w-4" %>
+                </div>
+                <span class="text-xs font-medium text-gray-700 dark:text-gray-300">Mobile Money</span>
               </div>
             </div>
 
-            <div class="mt-5 inline-flex items-center px-6 py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-bold text-base transition-colors shadow">
-              <%= icon "plus-circle", class: "h-5 w-5 mr-2" %>
-              Get Started
+            <div class="btn btn-primary btn-sm flex items-center justify-center self-center mt-auto">
+              <%= icon "plus-circle", class: "h-4 w-4 mr-1.5" %>
+              <span>Get Started</span>
             </div>
           </div>
         <% end %>

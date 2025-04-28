@@ -1,0 +1,48 @@
+<%
+# This partial renders a search form with autocomplete
+# Parameters:
+# - placeholder: Placeholder text for the search input (default: "Search for products...")
+# - button_text: Text for the search button (default: "Search")
+# - form_class: Additional CSS classes for the form (optional)
+# - input_class: Additional CSS classes for the input (optional)
+# - button_class: Additional CSS classes for the button (optional)
+# - suggestions_class: Additional CSS classes for the suggestions dropdown (optional)
+%>
+
+<% 
+  # Get parameters
+  placeholder = local_assigns.fetch(:placeholder, "Search for products...")
+  button_text = local_assigns.fetch(:button_text, "Search")
+  form_class = local_assigns[:form_class]
+  input_class = local_assigns[:input_class]
+  button_class = local_assigns[:button_class]
+  suggestions_class = local_assigns[:suggestions_class]
+%>
+
+<div class="relative" data-controller="search">
+  <%= form_with url: search_path, method: :get, class: "flex #{form_class}", data: { search_target: "form" } do |f| %>
+    <div class="relative flex-grow">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <%= icon "search", class: "h-5 w-5 text-gray-400" %>
+      </div>
+      <%= f.text_field :q, 
+                      placeholder: placeholder, 
+                      class: "block w-full pl-10 pr-12 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm #{input_class}",
+                      autocomplete: "off",
+                      data: { 
+                        search_target: "input",
+                        action: "input->search#handleInput keydown->search#handleKeydown"
+                      } %>
+    </div>
+    <button type="submit" 
+            class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 #{button_class}">
+      <%= button_text %>
+    </button>
+  <% end %>
+  
+  <!-- Autocomplete Suggestions -->
+  <ul class="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden #{suggestions_class}"
+      data-search-target="suggestions">
+    <!-- Suggestions will be populated here -->
+  </ul>
+</div>

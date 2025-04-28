@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_26_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,28 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "agriculture_resources", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "content", null: false
+    t.bigint "crop_id"
+    t.bigint "user_id"
+    t.integer "resource_type", default: 0
+    t.boolean "published", default: true
+    t.boolean "featured", default: false
+    t.datetime "published_at"
+    t.integer "view_count", default: 0
+    t.string "external_url"
+    t.string "video_url"
+    t.string "tags"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crop_id"], name: "index_agriculture_resources_on_crop_id"
+    t.index ["featured"], name: "index_agriculture_resources_on_featured"
+    t.index ["published"], name: "index_agriculture_resources_on_published"
+    t.index ["resource_type"], name: "index_agriculture_resources_on_resource_type"
+    t.index ["user_id"], name: "index_agriculture_resources_on_user_id"
   end
 
   create_table "attendances", force: :cascade do |t|
@@ -104,6 +126,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["user_id"], name: "index_bill_payments_on_user_id"
   end
 
+  create_table "cart_items", force: :cascade do |t|
+    t.bigint "cart_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cart_id", "product_id"], name: "index_cart_items_on_cart_id_and_product_id", unique: true
+    t.index ["cart_id"], name: "index_cart_items_on_cart_id"
+    t.index ["product_id"], name: "index_cart_items_on_product_id"
+  end
+
+  create_table "carts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "session_id"
+    t.datetime "abandoned_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["session_id"], name: "index_carts_on_session_id", unique: true
+    t.index ["user_id"], name: "index_carts_on_user_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -132,6 +175,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["read_at"], name: "index_contact_submissions_on_read_at"
   end
 
+  create_table "coupons", force: :cascade do |t|
+    t.string "code", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "value", precision: 10, scale: 2, null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.boolean "active", default: true
+    t.integer "usage_limit"
+    t.integer "usage_count", default: 0
+    t.decimal "minimum_order_amount", precision: 10, scale: 2
+    t.bigint "shop_category_id"
+    t.boolean "first_time_purchase_only", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_coupons_on_code", unique: true
+    t.index ["shop_category_id"], name: "index_coupons_on_shop_category_id"
+  end
+
   create_table "credit_scores", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "score", null: false
@@ -143,6 +206,116 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["is_current"], name: "index_credit_scores_on_is_current"
     t.index ["score"], name: "index_credit_scores_on_score"
     t.index ["user_id"], name: "index_credit_scores_on_user_id"
+  end
+
+  create_table "crop_listing_inquiries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "crop_listing_id", null: false
+    t.text "message", null: false
+    t.text "response"
+    t.integer "status", default: 0
+    t.boolean "read", default: false
+    t.decimal "quantity"
+    t.decimal "offered_price", precision: 10, scale: 2
+    t.datetime "responded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crop_listing_id"], name: "index_crop_listing_inquiries_on_crop_listing_id"
+    t.index ["read"], name: "index_crop_listing_inquiries_on_read"
+    t.index ["status"], name: "index_crop_listing_inquiries_on_status"
+    t.index ["user_id"], name: "index_crop_listing_inquiries_on_user_id"
+  end
+
+  create_table "crop_listings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "crop_id", null: false
+    t.bigint "region_id"
+    t.string "title", null: false
+    t.text "description", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.decimal "quantity", precision: 10, scale: 2, null: false
+    t.string "unit", default: "kg", null: false
+    t.integer "listing_type", default: 0
+    t.integer "status", default: 0
+    t.boolean "featured", default: false
+    t.boolean "negotiable", default: true
+    t.date "expiry_date"
+    t.datetime "sold_at"
+    t.string "location"
+    t.text "terms"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crop_id"], name: "index_crop_listings_on_crop_id"
+    t.index ["featured"], name: "index_crop_listings_on_featured"
+    t.index ["listing_type"], name: "index_crop_listings_on_listing_type"
+    t.index ["region_id"], name: "index_crop_listings_on_region_id"
+    t.index ["status"], name: "index_crop_listings_on_status"
+    t.index ["user_id"], name: "index_crop_listings_on_user_id"
+  end
+
+  create_table "crop_prices", force: :cascade do |t|
+    t.bigint "crop_id", null: false
+    t.bigint "region_id"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.date "date", null: false
+    t.string "unit", default: "kg", null: false
+    t.string "market", null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["crop_id", "date", "region_id", "market"], name: "index_crop_prices_on_crop_date_region_market"
+    t.index ["crop_id"], name: "index_crop_prices_on_crop_id"
+    t.index ["region_id"], name: "index_crop_prices_on_region_id"
+  end
+
+  create_table "crops", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "scientific_name"
+    t.string "growing_season"
+    t.integer "season_start"
+    t.integer "season_end"
+    t.integer "growing_time"
+    t.integer "category", default: 0
+    t.integer "popularity", default: 0
+    t.boolean "featured", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_crops_on_category"
+    t.index ["featured"], name: "index_crops_on_featured"
+    t.index ["name"], name: "index_crops_on_name", unique: true
+  end
+
+  create_table "digital_downloads", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "product_id", null: false
+    t.bigint "order_item_id", null: false
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_item_id"], name: "index_digital_downloads_on_order_item_id"
+    t.index ["product_id"], name: "index_digital_downloads_on_product_id"
+    t.index ["user_id", "product_id"], name: "index_digital_downloads_on_user_id_and_product_id"
+    t.index ["user_id"], name: "index_digital_downloads_on_user_id"
+  end
+
+  create_table "discounts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.decimal "value", precision: 10, scale: 2, null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.boolean "active", default: true
+    t.integer "usage_limit"
+    t.integer "usage_count", default: 0
+    t.bigint "shop_category_id"
+    t.bigint "product_id"
+    t.boolean "featured", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_discounts_on_product_id"
+    t.index ["shop_category_id"], name: "index_discounts_on_shop_category_id"
   end
 
   create_table "event_categories", force: :cascade do |t|
@@ -296,6 +469,113 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
+  create_table "flash_sale_items", force: :cascade do |t|
+    t.bigint "flash_sale_id", null: false
+    t.bigint "product_id", null: false
+    t.decimal "discount_value", precision: 10, scale: 2, null: false
+    t.string "discount_type", default: "percentage", null: false
+    t.integer "quantity_limit"
+    t.integer "sold_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["flash_sale_id", "product_id"], name: "index_flash_sale_items_on_flash_sale_id_and_product_id", unique: true
+    t.index ["flash_sale_id"], name: "index_flash_sale_items_on_flash_sale_id"
+    t.index ["product_id"], name: "index_flash_sale_items_on_product_id"
+  end
+
+  create_table "flash_sales", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.datetime "starts_at", null: false
+    t.datetime "ends_at", null: false
+    t.boolean "active", default: true
+    t.boolean "featured", default: false
+    t.string "banner_text"
+    t.string "banner_color", default: "#FF0000"
+    t.string "banner_text_color", default: "#FFFFFF"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "gathering_attendances", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "gathering_id", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gathering_id"], name: "index_gathering_attendances_on_gathering_id"
+    t.index ["user_id", "gathering_id"], name: "index_gathering_attendances_on_user_id_and_gathering_id", unique: true
+    t.index ["user_id"], name: "index_gathering_attendances_on_user_id"
+  end
+
+  create_table "gatherings", force: :cascade do |t|
+    t.bigint "group_id"
+    t.bigint "organizer_id", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.date "date", null: false
+    t.time "start_time"
+    t.time "end_time"
+    t.string "location", null: false
+    t.string "image"
+    t.string "gathering_type"
+    t.boolean "featured", default: false
+    t.integer "attendees_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_gatherings_on_group_id"
+    t.index ["organizer_id"], name: "index_gatherings_on_organizer_id"
+  end
+
+  create_table "group_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "icon"
+    t.integer "groups_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "group_memberships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "group_id", null: false
+    t.integer "role", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_memberships_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_group_memberships_on_user_id_and_group_id", unique: true
+    t.index ["user_id"], name: "index_group_memberships_on_user_id"
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.bigint "group_category_id", null: false
+    t.string "name", null: false
+    t.text "description", null: false
+    t.string "image"
+    t.string "location"
+    t.boolean "featured", default: false
+    t.integer "members_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_category_id"], name: "index_groups_on_group_category_id"
+  end
+
+  create_table "learning_resources", force: :cascade do |t|
+    t.bigint "resource_category_id", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.string "file_url", null: false
+    t.string "thumbnail"
+    t.string "file_type"
+    t.string "level"
+    t.string "duration"
+    t.boolean "featured", default: false
+    t.integer "downloads_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["resource_category_id"], name: "index_learning_resources_on_resource_category_id"
+  end
+
   create_table "loan_repayments", force: :cascade do |t|
     t.bigint "loan_id", null: false
     t.bigint "transaction_id"
@@ -356,6 +636,48 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["position"], name: "index_navigation_items_on_position"
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.bigint "order_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", null: false
+    t.decimal "unit_price", precision: 10, scale: 2, null: false
+    t.decimal "total_price", precision: 10, scale: 2, null: false
+    t.jsonb "product_snapshot", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id", "product_id"], name: "index_order_items_on_order_id_and_product_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "order_number", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "total_amount", precision: 10, scale: 2, null: false
+    t.decimal "shipping_cost", precision: 10, scale: 2, default: "0.0"
+    t.decimal "tax_amount", precision: 10, scale: 2, default: "0.0"
+    t.string "shipping_address"
+    t.string "billing_address"
+    t.string "payment_method"
+    t.bigint "transaction_id"
+    t.datetime "shipped_at"
+    t.datetime "delivered_at"
+    t.datetime "cancelled_at"
+    t.string "tracking_number"
+    t.text "notes"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "coupon_id"
+    t.decimal "coupon_discount", precision: 10, scale: 2, default: "0.0"
+    t.index ["coupon_id"], name: "index_orders_on_coupon_id"
+    t.index ["order_number"], name: "index_orders_on_order_number", unique: true
+    t.index ["status"], name: "index_orders_on_status"
+    t.index ["transaction_id"], name: "index_orders_on_transaction_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
   create_table "payment_methods", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "method_type", null: false
@@ -377,6 +699,147 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["user_id", "default"], name: "index_payment_methods_on_user_id_and_default"
     t.index ["user_id", "method_type"], name: "index_payment_methods_on_user_id_and_method_type"
     t.index ["user_id"], name: "index_payment_methods_on_user_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.decimal "original_price", precision: 10, scale: 2
+    t.integer "stock_quantity", default: 0, null: false
+    t.string "sku", null: false
+    t.bigint "shop_category_id"
+    t.bigint "user_id", null: false
+    t.integer "status", default: 0, null: false
+    t.boolean "featured", default: false
+    t.string "brand"
+    t.jsonb "specifications", default: {}
+    t.string "tags", default: [], array: true
+    t.decimal "weight"
+    t.string "weight_unit"
+    t.decimal "length"
+    t.decimal "width"
+    t.decimal "height"
+    t.string "dimension_unit"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "product_type", default: "physical"
+    t.string "digital_file_name"
+    t.integer "digital_file_size"
+    t.string "digital_content_type"
+    t.integer "download_limit", default: 0
+    t.index ["featured"], name: "index_products_on_featured"
+    t.index ["name"], name: "index_products_on_name"
+    t.index ["shop_category_id"], name: "index_products_on_shop_category_id"
+    t.index ["sku"], name: "index_products_on_sku", unique: true
+    t.index ["status"], name: "index_products_on_status"
+    t.index ["tags"], name: "index_products_on_tags", using: :gin
+    t.index ["user_id"], name: "index_products_on_user_id"
+  end
+
+  create_table "promotional_banners", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.string "button_text"
+    t.string "link_url"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.boolean "active", default: true
+    t.integer "position", default: 0
+    t.string "background_color", default: "#F3F4F6"
+    t.string "text_color", default: "#111827"
+    t.string "button_color", default: "#4F46E5"
+    t.string "button_text_color", default: "#FFFFFF"
+    t.string "location", default: "home"
+    t.bigint "shop_category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["shop_category_id"], name: "index_promotional_banners_on_shop_category_id"
+  end
+
+  create_table "recent_locations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.string "address", null: false
+    t.decimal "latitude", precision: 10, scale: 6, null: false
+    t.decimal "longitude", precision: 10, scale: 6, null: false
+    t.string "location_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_recent_locations_on_user_id"
+  end
+
+  create_table "regions", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "code", null: false
+    t.text "description"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_regions_on_code", unique: true
+    t.index ["name"], name: "index_regions_on_name", unique: true
+  end
+
+  create_table "resource_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "icon"
+    t.integer "resources_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "rating", null: false
+    t.text "comment", null: false
+    t.boolean "approved", default: false
+    t.text "admin_comment"
+    t.datetime "approved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["approved"], name: "index_reviews_on_approved"
+    t.index ["product_id"], name: "index_reviews_on_product_id"
+    t.index ["rating"], name: "index_reviews_on_rating"
+    t.index ["user_id", "product_id"], name: "index_reviews_on_user_id_and_product_id", unique: true
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
+  create_table "ride_bookings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "origin", null: false
+    t.string "destination", null: false
+    t.decimal "origin_latitude", precision: 10, scale: 6
+    t.decimal "origin_longitude", precision: 10, scale: 6
+    t.decimal "destination_latitude", precision: 10, scale: 6
+    t.decimal "destination_longitude", precision: 10, scale: 6
+    t.datetime "pickup_time", null: false
+    t.datetime "dropoff_time"
+    t.string "status", default: "pending"
+    t.string "ride_type"
+    t.string "driver_name"
+    t.string "driver_phone"
+    t.string "vehicle_model"
+    t.string "vehicle_color"
+    t.string "license_plate"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.string "payment_method"
+    t.string "payment_status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_ride_bookings_on_user_id"
+  end
+
+  create_table "routes", force: :cascade do |t|
+    t.string "origin", null: false
+    t.string "destination", null: false
+    t.decimal "distance", precision: 10, scale: 2, null: false
+    t.string "transport_type"
+    t.integer "bookings_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "scheduled_transactions", force: :cascade do |t|
@@ -405,6 +868,50 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["user_id"], name: "index_scheduled_transactions_on_user_id"
   end
 
+  create_table "school_fee_payments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "school_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "student_name", null: false
+    t.string "student_id", null: false
+    t.string "term", null: false
+    t.string "payment_method", null: false
+    t.string "status", default: "pending"
+    t.string "transaction_id"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_school_fee_payments_on_school_id"
+    t.index ["user_id"], name: "index_school_fee_payments_on_user_id"
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "location", null: false
+    t.string "school_type"
+    t.string "contact_email"
+    t.string "contact_phone"
+    t.string "website"
+    t.text "description"
+    t.string "logo"
+    t.boolean "featured", default: false
+    t.integer "payments_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "search_queries", force: :cascade do |t|
+    t.string "query", null: false
+    t.bigint "user_id"
+    t.string "ip_address"
+    t.string "user_agent"
+    t.integer "results_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["query"], name: "index_search_queries_on_query"
+    t.index ["user_id"], name: "index_search_queries_on_user_id"
+  end
+
   create_table "security_logs", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "event_type", default: 0, null: false
@@ -431,6 +938,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["key"], name: "index_settings_on_key", unique: true
   end
 
+  create_table "shop_categories", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "slug", null: false
+    t.string "icon"
+    t.string "color_code"
+    t.bigint "parent_id"
+    t.boolean "featured", default: false
+    t.boolean "active", default: true
+    t.integer "position", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_shop_categories_on_name", unique: true
+    t.index ["parent_id"], name: "index_shop_categories_on_parent_id"
+    t.index ["slug"], name: "index_shop_categories_on_slug", unique: true
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -439,6 +963,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_tags_on_name", unique: true
     t.index ["slug"], name: "index_tags_on_slug", unique: true
+  end
+
+  create_table "ticket_bookings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "route_id", null: false
+    t.string "company_name"
+    t.string "transport_type", null: false
+    t.datetime "departure_time", null: false
+    t.datetime "arrival_time", null: false
+    t.integer "passengers", default: 1
+    t.string "status", default: "confirmed"
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.string "payment_method"
+    t.string "payment_status", default: "paid"
+    t.string "ticket_number"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["route_id"], name: "index_ticket_bookings_on_route_id"
+    t.index ["user_id"], name: "index_ticket_bookings_on_user_id"
   end
 
   create_table "ticket_types", force: :cascade do |t|
@@ -496,10 +1040,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.datetime "reversed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "scheduled_transaction_id"
     t.index ["destination_wallet_id"], name: "index_transactions_on_destination_wallet_id"
     t.index ["initiated_at"], name: "index_transactions_on_initiated_at"
     t.index ["payment_method"], name: "index_transactions_on_payment_method"
     t.index ["provider"], name: "index_transactions_on_provider"
+    t.index ["scheduled_transaction_id"], name: "index_transactions_on_scheduled_transaction_id"
     t.index ["source_wallet_id"], name: "index_transactions_on_source_wallet_id"
     t.index ["status"], name: "index_transactions_on_status"
     t.index ["transaction_id"], name: "index_transactions_on_transaction_id", unique: true
@@ -524,6 +1070,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.boolean "promotional_emails"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "text_size", default: 3
+    t.boolean "reduce_motion", default: false
+    t.boolean "high_contrast", default: false
     t.index ["user_id", "created_at"], name: "index_user_settings_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_user_settings_on_user_id"
   end
@@ -569,11 +1118,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.string "postal_code"
     t.string "website"
     t.string "occupation"
+    t.boolean "seller", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["phone"], name: "index_users_on_phone", unique: true, where: "((phone IS NOT NULL) AND ((phone)::text <> ''::text))"
     t.index ["phone_number"], name: "index_users_on_phone_number", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["seller"], name: "index_users_on_seller"
     t.index ["super_admin"], name: "index_users_on_super_admin"
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -618,14 +1169,50 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
     t.index ["wallet_id"], name: "index_wallets_on_wallet_id", unique: true
   end
 
+  create_table "weather_forecasts", force: :cascade do |t|
+    t.bigint "region_id", null: false
+    t.date "forecast_date", null: false
+    t.decimal "temperature_high", precision: 5, scale: 2, null: false
+    t.decimal "temperature_low", precision: 5, scale: 2, null: false
+    t.decimal "precipitation_chance", precision: 5, scale: 2, null: false
+    t.decimal "precipitation_amount", precision: 5, scale: 2, null: false
+    t.integer "weather_condition", default: 0
+    t.decimal "wind_speed", precision: 5, scale: 2
+    t.string "wind_direction"
+    t.decimal "humidity", precision: 5, scale: 2
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["region_id", "forecast_date"], name: "index_weather_forecasts_on_region_id_and_forecast_date", unique: true
+    t.index ["region_id"], name: "index_weather_forecasts_on_region_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "agriculture_resources", "crops"
+  add_foreign_key "agriculture_resources", "users"
   add_foreign_key "attendances", "events"
   add_foreign_key "attendances", "users"
   add_foreign_key "beneficiaries", "users"
   add_foreign_key "bill_payments", "transactions"
   add_foreign_key "bill_payments", "users"
+  add_foreign_key "cart_items", "carts"
+  add_foreign_key "cart_items", "products"
+  add_foreign_key "carts", "users"
+  add_foreign_key "coupons", "shop_categories"
   add_foreign_key "credit_scores", "users"
+  add_foreign_key "crop_listing_inquiries", "crop_listings"
+  add_foreign_key "crop_listing_inquiries", "users"
+  add_foreign_key "crop_listings", "crops"
+  add_foreign_key "crop_listings", "regions"
+  add_foreign_key "crop_listings", "users"
+  add_foreign_key "crop_prices", "crops"
+  add_foreign_key "crop_prices", "regions"
+  add_foreign_key "digital_downloads", "order_items"
+  add_foreign_key "digital_downloads", "products"
+  add_foreign_key "digital_downloads", "users"
+  add_foreign_key "discounts", "products"
+  add_foreign_key "discounts", "shop_categories"
   add_foreign_key "event_categories", "event_categories", column: "parent_category_id"
   add_foreign_key "event_comments", "event_comments", column: "parent_comment_id"
   add_foreign_key "event_comments", "events"
@@ -648,19 +1235,49 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_25_134500) do
   add_foreign_key "events", "users", column: "organizer_id"
   add_foreign_key "events", "venues"
   add_foreign_key "favorites", "users"
+  add_foreign_key "flash_sale_items", "flash_sales"
+  add_foreign_key "flash_sale_items", "products"
+  add_foreign_key "gathering_attendances", "gatherings"
+  add_foreign_key "gathering_attendances", "users"
+  add_foreign_key "gatherings", "groups"
+  add_foreign_key "gatherings", "users", column: "organizer_id"
+  add_foreign_key "group_memberships", "groups"
+  add_foreign_key "group_memberships", "users"
+  add_foreign_key "groups", "group_categories"
+  add_foreign_key "learning_resources", "resource_categories"
   add_foreign_key "loan_repayments", "loans"
   add_foreign_key "loan_repayments", "transactions"
   add_foreign_key "loans", "users"
   add_foreign_key "navigation_items", "navigation_items", column: "parent_id"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "coupons"
+  add_foreign_key "orders", "transactions"
+  add_foreign_key "orders", "users"
   add_foreign_key "payment_methods", "users"
+  add_foreign_key "products", "shop_categories"
+  add_foreign_key "products", "users"
+  add_foreign_key "promotional_banners", "shop_categories"
+  add_foreign_key "recent_locations", "users"
+  add_foreign_key "reviews", "products"
+  add_foreign_key "reviews", "users"
+  add_foreign_key "ride_bookings", "users"
   add_foreign_key "scheduled_transactions", "users"
   add_foreign_key "scheduled_transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "scheduled_transactions", "wallets", column: "source_wallet_id"
+  add_foreign_key "school_fee_payments", "schools"
+  add_foreign_key "school_fee_payments", "users"
+  add_foreign_key "search_queries", "users"
   add_foreign_key "security_logs", "users"
+  add_foreign_key "shop_categories", "shop_categories", column: "parent_id"
+  add_foreign_key "ticket_bookings", "routes"
+  add_foreign_key "ticket_bookings", "users"
   add_foreign_key "ticket_types", "events"
+  add_foreign_key "transactions", "scheduled_transactions"
   add_foreign_key "transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "transactions", "wallets", column: "source_wallet_id"
   add_foreign_key "user_settings", "users"
   add_foreign_key "venues", "users"
   add_foreign_key "wallets", "users"
+  add_foreign_key "weather_forecasts", "regions"
 end

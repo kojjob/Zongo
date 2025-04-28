@@ -1,0 +1,24 @@
+<%# Help Section - Mobile-friendly with teal-emerald colors and improved dark mode %>
+<div class="bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-800/20 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 border border-teal-200 dark:border-teal-800/50 dark:shadow-md">
+  <div class="flex flex-col md:flex-row items-center">
+    <div class="mb-4 md:mb-0 md:mr-6 flex-shrink-0">
+      <div class="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-md dark:shadow-teal-500/20">
+        <%= icon "question-mark-circle", class: "w-7 h-7 sm:w-8 sm:h-8" %>
+      </div>
+    </div>
+    <div class="flex-1 text-center md:text-left">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2"><%= title %></h3>
+      <p class="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-4"><%= description %></p>
+      <div class="flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3">
+        <a href="#" class="inline-flex items-center px-3 sm:px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm dark:shadow-md">
+          <%= icon "chat-alt-2", class: "w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" %>
+          Chat with Support
+        </a>
+        <a href="#" class="inline-flex items-center px-3 sm:px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm dark:shadow-md">
+          <%= icon "document-text", class: "w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-teal-500 dark:text-teal-400" %>
+          View <%= faq_type %> FAQs
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

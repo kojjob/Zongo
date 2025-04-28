@@ -1,0 +1,183 @@
+<%# Shared Loading States - Collection of reusable loading components %>
+
+<%# Spinner Loading - Simple spinner with optional text %>
+<% def spinner_loading(text: nil, size: "medium", theme: "teal", center: false) %>
+  <div class="<%= center ? 'flex flex-col items-center justify-center' : '' %>">
+    <div class="<%= size == 'small' ? 'w-5 h-5' : size == 'large' ? 'w-10 h-10' : 'w-8 h-8' %> 
+                <%= theme == 'teal' ? 'teal-spinner' : '' %> spinner"></div>
+    <% if text.present? %>
+      <p class="mt-2 text-sm text-gray-600 dark:text-gray-400"><%= text %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Skeleton Card Loading - For card-like components %>
+<% def skeleton_card_loading(rows: 1, height: "h-32") %>
+  <div class="space-y-4">
+    <% rows.times do %>
+      <div class="bg-gray-100 dark:bg-gray-800 rounded-xl <%= height %> skeleton"></div>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Skeleton Text Loading - For text content %>
+<% def skeleton_text_loading(lines: 3, include_title: true) %>
+  <div class="space-y-2">
+    <% if include_title %>
+      <div class="skeleton skeleton-text skeleton-title"></div>
+    <% end %>
+    
+    <% lines.times do |i| %>
+      <div class="skeleton skeleton-text" style="width: <%= 75 + rand(-20..20) %>%"></div>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Skeleton Table Loading - For table content %>
+<% def skeleton_table_loading(rows: 5, columns: 4) %>
+  <div class="overflow-x-auto">
+    <table class="min-w-full">
+      <thead>
+        <tr class="bg-gray-50 dark:bg-gray-700">
+          <% columns.times do %>
+            <th class="px-6 py-3">
+              <div class="skeleton h-4 w-24"></div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <% rows.times do %>
+          <tr>
+            <% columns.times do |i| %>
+              <td class="px-6 py-4">
+                <% if i == 0 %>
+                  <div class="flex items-center">
+                    <div class="skeleton skeleton-avatar mr-3"></div>
+                    <div class="skeleton h-4 w-24"></div>
+                  </div>
+                <% else %>
+                  <div class="skeleton h-4" style="width: <%= 40 + rand(20..60) %>%"></div>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<%# Content Loading Overlay - For overlaying existing content %>
+<% def content_loading_overlay(text: "Loading...", theme: "teal") %>
+  <div class="content-loading-overlay">
+    <div class="flex flex-col items-center">
+      <div class="<%= theme == 'teal' ? 'teal-spinner' : '' %> spinner mb-3"></div>
+      <p class="text-sm font-medium text-gray-700 dark:text-gray-300"><%= text %></p>
+    </div>
+  </div>
+<% end %>
+
+<%# Dots Loading - For inline loading indicators %>
+<% def dots_loading(text: "Loading", theme: "teal") %>
+  <div class="flex items-center">
+    <span class="mr-2 <%= theme == 'teal' ? 'text-teal-600 dark:text-teal-400' : 'text-gray-600 dark:text-gray-400' %>"><%= text %></span>
+    <div class="dots-loading <%= theme == 'teal' ? 'teal-pulse' : '' %>">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+<% end %>
+
+<%# Progress Bar Loading - For indicating progress %>
+<% def progress_bar_loading(theme: "teal") %>
+  <div class="h-1 w-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+    <div class="loading-bar <%= theme == 'teal' ? 'bg-gradient-to-r from-teal-500 to-emerald-500 dark:from-teal-400 dark:to-emerald-400' : '' %>"></div>
+  </div>
+<% end %>
+
+<%# Skeleton Button Loading - For button placeholders %>
+<% def skeleton_button_loading(count: 1) %>
+  <div class="flex space-x-3">
+    <% count.times do %>
+      <div class="skeleton skeleton-button"></div>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Shimmer Card - For card with shimmer effect %>
+<% def shimmer_card(height: "h-32") %>
+  <div class="bg-gray-100 dark:bg-gray-800 rounded-xl <%= height %> shimmer-card"></div>
+<% end %>
+
+<%# Transaction Card Loading - Specific for transaction cards %>
+<% def transaction_card_loading(count: 3) %>
+  <div class="space-y-4">
+    <% count.times do %>
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div class="flex items-center">
+          <div class="skeleton skeleton-avatar mr-3"></div>
+          <div class="flex-1">
+            <div class="skeleton h-4 w-32 mb-2"></div>
+            <div class="skeleton h-3 w-24"></div>
+          </div>
+          <div class="skeleton h-6 w-20 rounded-full"></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<%# Wallet Balance Loading - Specific for wallet balance display %>
+<% def wallet_balance_loading %>
+  <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mt-32 -mr-32"></div>
+    <div class="absolute bottom-0 left-0 w-64 h-64 bg-white opacity-5 rounded-full -mb-32 -ml-32"></div>
+    
+    <div class="relative">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mr-3 pulse-loading">
+          <%= icon "cash", class: "w-7 h-7" %>
+        </div>
+        <h2 class="text-xl font-bold">Available Balance</h2>
+      </div>
+      
+      <div class="mt-4 flex items-baseline">
+        <div class="h-10 w-40 bg-white/20 rounded-lg pulse-loading"></div>
+      </div>
+      
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 pulse-loading">
+          <div class="flex items-center mb-2">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
+              <%= icon "arrow-down", class: "w-5 h-5" %>
+            </div>
+            <p class="text-base font-medium">Today's Deposits</p>
+          </div>
+          <div class="h-6 w-24 bg-white/20 rounded-lg"></div>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 pulse-loading">
+          <div class="flex items-center mb-2">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
+              <%= icon "arrow-up", class: "w-5 h-5" %>
+            </div>
+            <p class="text-base font-medium">Today's Withdrawals</p>
+          </div>
+          <div class="h-6 w-24 bg-white/20 rounded-lg"></div>
+        </div>
+        
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20 pulse-loading">
+          <div class="flex items-center mb-2">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
+              <%= icon "chart-bar", class: "w-5 h-5" %>
+            </div>
+            <p class="text-base font-medium">Monthly Net Flow</p>
+          </div>
+          <div class="h-6 w-24 bg-white/20 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

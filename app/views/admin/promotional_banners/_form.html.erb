@@ -1,0 +1,197 @@
+<%= form_with(model: [:admin, promotional_banner], local: true, class: "space-y-8") do |form| %>
+  <% if promotional_banner.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "alert-triangle", class: "h-5 w-5 text-red-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(promotional_banner.errors.count, "error") %> prohibited this banner from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5 space-y-1">
+              <% promotional_banner.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+        <%= promotional_banner.persisted? ? "Edit Promotional Banner" : "New Promotional Banner" %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+        <%= promotional_banner.persisted? ? "Update the banner details below." : "Fill in the details below to create a new promotional banner." %>
+      </p>
+    </div>
+    <div class="px-4 py-5 sm:p-6 space-y-6">
+      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :title, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Summer Sale" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_area :description, rows: 3, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Get up to 50% off on summer products" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Brief description for the banner.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :button_text, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :button_text, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Shop Now" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for no button.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :link_url, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :link_url, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "/shop/category/summer" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">URL to navigate to when the button is clicked.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :starts_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :starts_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for no start date.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :ends_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :ends_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for no end date.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :location, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :location, @locations, {}, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :shop_category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :shop_category_id, options_from_collection_for_select(@categories, :id, :name, promotional_banner.shop_category_id), { include_blank: "All Categories" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Select a category to show this banner only on that category page.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :position, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.number_field :position, min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "0" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Order in which the banner appears (lower numbers appear first).</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <%= form.label :background_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= promotional_banner.background_color || '#F3F4F6' %>;"></div>
+                </span>
+                <%= form.text_field :background_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#F3F4F6" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :text_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= promotional_banner.text_color || '#111827' %>;"></div>
+                </span>
+                <%= form.text_field :text_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#111827" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <%= form.label :button_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= promotional_banner.button_color || '#4F46E5' %>;"></div>
+                </span>
+                <%= form.text_field :button_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#4F46E5" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :button_text_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= promotional_banner.button_text_color || '#FFFFFF' %>;"></div>
+                </span>
+                <%= form.text_field :button_text_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#FFFFFF" %>
+              </div>
+            </div>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Colors for the banner and button (hex format).</p>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                <label for="file-upload" class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary-500">
+                  <span>Upload a file</span>
+                  <%= form.file_field :image, id: "file-upload", class: "sr-only" %>
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                PNG, JPG, GIF up to 10MB
+              </p>
+              <% if promotional_banner.image.attached? %>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Current image:</p>
+                  <%= image_tag promotional_banner.image.variant(resize_to_limit: [200, 100]), class: "mt-2 mx-auto h-20 object-cover" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= form.check_box :active, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :active, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">If checked, the banner will be active.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6 border-t border-gray-200 dark:border-gray-700">
+      <%= link_to "Cancel", promotional_banner.persisted? ? admin_promotional_banner_path(promotional_banner) : admin_promotional_banners_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+  </div>
+<% end %>

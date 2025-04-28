@@ -1,0 +1,134 @@
+<%# 
+  Accessibility Settings Panel
+  
+  This component provides a panel for users to customize their accessibility preferences.
+  It includes options for:
+  - High contrast mode
+  - Reduced motion
+  - Text size
+  - Focus indicators
+  - Screen reader announcements
+  
+  Usage:
+  <%= render 'shared/accessibility_settings' %>
+%>
+
+<div id="accessibility-settings" class="fixed right-4 bottom-4 z-50" data-controller="accessibility-settings">
+  <%# Accessibility button %>
+  <button 
+    type="button" 
+    class="flex items-center justify-center w-12 h-12 rounded-full bg-primary-600 text-white shadow-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+    aria-label="Accessibility settings"
+    data-action="accessibility-settings#togglePanel"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  </button>
+  
+  <%# Accessibility panel %>
+  <div 
+    class="absolute bottom-16 right-0 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 hidden"
+    data-accessibility-settings-target="panel"
+    role="dialog"
+    aria-labelledby="accessibility-settings-title"
+    aria-modal="true"
+  >
+    <div class="flex justify-between items-center mb-4">
+      <h2 id="accessibility-settings-title" class="text-lg font-semibold text-gray-900 dark:text-white">Accessibility Settings</h2>
+      <button 
+        type="button" 
+        class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+        aria-label="Close accessibility settings"
+        data-action="accessibility-settings#togglePanel"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+    
+    <div class="space-y-4">
+      <%# High contrast mode %>
+      <div class="flex items-center justify-between">
+        <label for="high-contrast-toggle" class="text-sm font-medium text-gray-700 dark:text-gray-300">High Contrast</label>
+        <button 
+          type="button" 
+          id="high-contrast-toggle" 
+          class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700"
+          role="switch"
+          aria-checked="false"
+          data-accessibility-settings-target="highContrastToggle"
+          data-action="accessibility-settings#toggleHighContrast"
+        >
+          <span class="sr-only">Enable high contrast mode</span>
+          <span class="inline-block h-4 w-4 transform rounded-full bg-white dark:bg-gray-200 transition-transform translate-x-1" data-accessibility-settings-target="highContrastToggleKnob"></span>
+        </button>
+      </div>
+      
+      <%# Reduced motion %>
+      <div class="flex items-center justify-between">
+        <label for="reduced-motion-toggle" class="text-sm font-medium text-gray-700 dark:text-gray-300">Reduced Motion</label>
+        <button 
+          type="button" 
+          id="reduced-motion-toggle" 
+          class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700"
+          role="switch"
+          aria-checked="false"
+          data-accessibility-settings-target="reducedMotionToggle"
+          data-action="accessibility-settings#toggleReducedMotion"
+        >
+          <span class="sr-only">Enable reduced motion</span>
+          <span class="inline-block h-4 w-4 transform rounded-full bg-white dark:bg-gray-200 transition-transform translate-x-1" data-accessibility-settings-target="reducedMotionToggleKnob"></span>
+        </button>
+      </div>
+      
+      <%# Text size %>
+      <div>
+        <label for="text-size-slider" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Text Size</label>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs text-gray-500 dark:text-gray-400">A</span>
+          <input 
+            type="range" 
+            id="text-size-slider" 
+            min="1" 
+            max="5" 
+            value="3" 
+            class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+            data-accessibility-settings-target="textSizeSlider"
+            data-action="input->accessibility-settings#changeTextSize"
+          >
+          <span class="text-base text-gray-500 dark:text-gray-400">A</span>
+        </div>
+      </div>
+      
+      <%# Focus indicator style %>
+      <div>
+        <label for="focus-style" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Focus Indicator</label>
+        <select 
+          id="focus-style" 
+          class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+          data-accessibility-settings-target="focusStyleSelect"
+          data-action="change->accessibility-settings#changeFocusStyle"
+        >
+          <option value="default">Default</option>
+          <option value="solid">Solid</option>
+          <option value="dashed">Dashed</option>
+          <option value="dotted">Dotted</option>
+          <option value="thick">Thick</option>
+        </select>
+      </div>
+      
+      <%# Reset button %>
+      <div class="pt-2">
+        <button 
+          type="button" 
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          data-action="accessibility-settings#resetSettings"
+        >
+          Reset to Defaults
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

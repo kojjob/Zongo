@@ -14,11 +14,25 @@ class Users::SessionsController < Devise::SessionsController
   # GET /resource/sign_in
   def new
     # If user is already signed in and trying to access sign_in page,
-    # redirect to root path instead of showing the "already signed in" message
+    # redirect to profile page
     if user_signed_in? && request.get? && is_navigational_format?
-      redirect_to after_sign_in_path_for(current_user)
-    else
-      super
+      redirect_to user_settings_profile_path
+      return
+    end
+
+    super
+  end
+
+  # Override Devise's method to handle already authenticated users
+  def require_no_authentication
+    return unless is_navigational_format?
+
+    if user_signed_in?
+      # Only redirect if trying to access sign-in page
+      if request.path == new_user_session_path
+        redirect_to user_settings_profile_path
+        return
+      end
     end
   end
 

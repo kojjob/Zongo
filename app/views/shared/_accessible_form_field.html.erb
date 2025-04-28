@@ -1,0 +1,181 @@
+<%# 
+  Accessible Form Field Partial
+  
+  Parameters:
+  - form: The form builder object (required)
+  - field: The field name (required)
+  - label: The label text (required)
+  - type: The field type (default: 'text', options: 'text', 'email', 'password', 'number', 'tel', 'url', 'textarea', 'select', 'checkbox', 'radio', 'file', 'date', 'time', 'datetime')
+  - required: Whether the field is required (default: false)
+  - help_text: Help text to display below the field (optional)
+  - error: Error message to display (optional)
+  - options: Options for select fields (optional)
+  - placeholder: Placeholder text (optional)
+  - min: Minimum value for number fields (optional)
+  - max: Maximum value for number fields (optional)
+  - step: Step value for number fields (optional)
+  - rows: Number of rows for textarea fields (default: 3)
+  - cols: Number of columns for textarea fields (default: 40)
+  - checked: Whether checkbox/radio fields are checked (default: false)
+  - value: The value of the field (optional)
+  - disabled: Whether the field is disabled (default: false)
+  - readonly: Whether the field is readonly (default: false)
+  - autocomplete: Autocomplete attribute (optional)
+  - pattern: Pattern attribute for validation (optional)
+  - maxlength: Maximum length of the field (optional)
+  - minlength: Minimum length of the field (optional)
+  - multiple: Whether the field accepts multiple values (default: false)
+  - accept: File types to accept for file fields (optional)
+  - class: Additional CSS classes (optional)
+  - data: Data attributes (optional)
+  - aria: ARIA attributes (optional)
+  
+  Usage:
+  <%= render 'shared/accessible_form_field', 
+    form: form,
+    field: :email,
+    label: 'Email Address',
+    type: 'email',
+    required: true,
+    help_text: 'We will never share your email with anyone else.',
+    placeholder: 'Enter your email',
+    autocomplete: 'email'
+  %>
+%>
+
+<% 
+  # Set default values
+  type ||= 'text'
+  required ||= false
+  help_text ||= nil
+  error ||= nil
+  options ||= nil
+  placeholder ||= nil
+  min ||= nil
+  max ||= nil
+  step ||= nil
+  rows ||= 3
+  cols ||= 40
+  checked ||= false
+  value ||= nil
+  disabled ||= false
+  readonly ||= false
+  autocomplete ||= nil
+  pattern ||= nil
+  maxlength ||= nil
+  minlength ||= nil
+  multiple ||= false
+  accept ||= nil
+  field_class ||= nil
+  data ||= {}
+  aria ||= {}
+  
+  # Generate unique IDs
+  field_id = "#{form.object_name}_#{field}"
+  help_id = "#{field_id}_help"
+  error_id = "#{field_id}_error"
+  
+  # Set ARIA attributes
+  aria_attrs = {}
+  aria_attrs['aria-required'] = 'true' if required
+  aria_attrs['aria-invalid'] = 'true' if error.present?
+  aria_attrs['aria-describedby'] = [
+    help_text.present? ? help_id : nil,
+    error.present? ? error_id : nil
+  ].compact.join(' ')
+  
+  # Merge with custom ARIA attributes
+  aria_attrs.merge!(aria) if aria.present?
+  
+  # Set field options
+  field_options = {
+    class: "form-input #{'form-input-error' if error.present?} #{field_class}",
+    placeholder: placeholder,
+    required: required,
+    disabled: disabled,
+    readonly: readonly,
+    autocomplete: autocomplete,
+    pattern: pattern,
+    maxlength: maxlength,
+    minlength: minlength,
+    multiple: multiple,
+    accept: accept,
+    data: data,
+    aria: aria_attrs
+  }
+  
+  # Add type-specific options
+  case type
+  when 'number', 'range'
+    field_options[:min] = min if min.present?
+    field_options[:max] = max if max.present?
+    field_options[:step] = step if step.present?
+  when 'checkbox', 'radio'
+    field_options[:checked] = checked
+    field_options[:value] = value if value.present?
+  when 'textarea'
+    field_options[:rows] = rows
+    field_options[:cols] = cols
+  when 'select'
+    # No additional options needed
+  else
+    field_options[:type] = type
+    field_options[:value] = value if value.present?
+  end
+%>
+
+<div class="form-group mb-4">
+  <%# Label %>
+  <% unless type == 'hidden' %>
+    <%= form.label field, label, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 #{'form-required' if required}" %>
+  <% end %>
+  
+  <%# Field %>
+  <% case type %>
+  <% when 'textarea' %>
+    <%= form.text_area field, field_options %>
+  <% when 'select' %>
+    <%= form.select field, options, { include_blank: placeholder }, field_options %>
+  <% when 'checkbox' %>
+    <div class="flex items-center">
+      <%= form.check_box field, field_options %>
+      <span class="ml-2 text-sm text-gray-600 dark:text-gray-400"><%= help_text %></span>
+    </div>
+  <% when 'radio' %>
+    <% if options.present? %>
+      <div class="space-y-2">
+        <% options.each do |option_text, option_value| %>
+          <div class="flex items-center">
+            <%= form.radio_button field, option_value, field_options.merge(id: "#{field_id}_#{option_value}") %>
+            <%= form.label "#{field}_#{option_value}", option_text, class: "ml-2 text-sm text-gray-600 dark:text-gray-400" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <%= form.radio_button field, value || '1', field_options %>
+    <% end %>
+  <% when 'file' %>
+    <div class="mt-1 flex items-center">
+      <%= form.file_field field, field_options %>
+    </div>
+  <% when 'hidden' %>
+    <%= form.hidden_field field, value: value %>
+  <% else %>
+    <%= form.text_field field, field_options %>
+  <% end %>
+  
+  <%# Help text %>
+  <% if help_text.present? && type != 'checkbox' %>
+    <p id="<%= help_id %>" class="mt-1 text-sm text-gray-500 dark:text-gray-400"><%= help_text %></p>
+  <% end %>
+  
+  <%# Error message %>
+  <% if error.present? %>
+    <p id="<%= error_id %>" class="mt-1 text-sm text-red-600 dark:text-red-400">
+      <svg class="inline-block w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      <%= error %>
+    </p>
+  <% end %>
+</div>

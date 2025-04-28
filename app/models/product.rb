@@ -1,7 +1,11 @@
 class Product < ApplicationRecord
   # Associations
-  belongs_to :shop_category
-  belongs_to :seller, class_name: "User", foreign_key: "user_id"
+  belongs_to :shop_category, optional: true
+  belongs_to :user, optional: true
+  belongs_to :seller, class_name: "User", foreign_key: "user_id", optional: true
+  has_many :flash_sale_items, dependent: :destroy
+  has_many :flash_sales, through: :flash_sale_items
+
   has_many :order_items, dependent: :nullify
   has_many :orders, through: :order_items
   has_many :reviews, dependent: :destroy
@@ -23,7 +27,7 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :description, presence: true
   validates :stock_quantity, presence: true, numericality: { greater_than_or_equal_to: 0 }, unless: -> { product_type == "digital" }
-  validates :sku, presence: true, uniqueness: true
+  validates :sku, uniqueness: true, allow_blank: true
   validates :status, presence: true
   validates :product_type, presence: true, inclusion: { in: PRODUCT_TYPES }
 
@@ -105,7 +109,12 @@ class Product < ApplicationRecord
   private
 
   def generate_sku
-    prefix = shop_category.name[0..2].upcase
+    # Use 'PRD' as default prefix if shop_category is nil
+    prefix = if shop_category.present?
+               shop_category.name[0..2].upcase
+             else
+               'PRD'
+             end
     timestamp = Time.now.to_i
     random = SecureRandom.hex(2).upcase
     self.sku = "#{prefix}-#{timestamp}-#{random}"

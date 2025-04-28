@@ -9,9 +9,14 @@
 
     <div class="mt-4 md:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300">
-        <%= icon "shield-check", class: "w-4 h-4 mr-1" %>
+        <%= render partial: "shared/icons/shield-check", locals: { classes: "w-4 h-4 mr-1" } %>
         Admin Mode
       </div>
+
+      <%= link_to new_admin_user_path, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+        <%= render partial: "shared/icons/plus", locals: { classes: "w-4 h-4 mr-1" } %>
+        New User
+      <% end %>
     </div>
   </div>
 
@@ -124,33 +129,33 @@
                 <%= user.created_at.strftime("%b %d, %Y") %>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-end space-x-2">
-                  <%= link_to admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
-                    <%= icon "eye", class: "w-5 h-5" %>
+                <div class="flex justify-end space-x-3">
+                  <%= link_to admin_user_path(user), class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300", title: "View User" do %>
+                    <%= render partial: "shared/icons/eye", locals: { classes: "w-5 h-5" } %>
                   <% end %>
 
                   <% if !user.admin? || current_user.admin? %>
-                    <%= link_to edit_admin_user_path(user), class: "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300" do %>
-                      <%= icon "pencil", class: "w-5 h-5" %>
+                    <%= link_to edit_admin_user_path(user), class: "text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300", title: "Edit User" do %>
+                      <%= render partial: "shared/icons/pencil", locals: { classes: "w-5 h-5" } %>
                     <% end %>
 
                     <% if user.status == 'active' %>
-                      <%= button_to suspend_admin_user_path(user), method: :post, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } } do %>
-                        <%= icon "ban", class: "w-5 h-5" %>
+                      <%= button_to suspend_admin_user_path(user), method: :post, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } }, title: "Suspend User" do %>
+                        <%= render partial: "shared/icons/ban", locals: { classes: "w-5 h-5" } %>
                       <% end %>
                     <% elsif user.status == 'suspended' %>
-                      <%= button_to activate_admin_user_path(user), method: :post, class: "text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300" do %>
-                        <%= icon "check-circle", class: "w-5 h-5" %>
+                      <%= button_to activate_admin_user_path(user), method: :post, class: "text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300", title: "Activate User" do %>
+                        <%= render partial: "shared/icons/check-circle", locals: { classes: "w-5 h-5" } %>
                       <% end %>
                     <% end %>
 
                     <% if !user.admin? %>
-                      <%= button_to promote_admin_user_path(user), method: :post, class: "text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } } do %>
-                        <%= icon "arrow-up", class: "w-5 h-5" %>
+                      <%= button_to promote_admin_user_path(user), method: :post, class: "text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } }, title: "Promote to Admin" do %>
+                        <%= render partial: "shared/icons/arrow-up", locals: { classes: "w-5 h-5" } %>
                       <% end %>
                     <% else %>
-                      <%= button_to demote_admin_user_path(user), method: :post, class: "text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } } do %>
-                        <%= icon "arrow-down", class: "w-5 h-5" %>
+                      <%= button_to demote_admin_user_path(user), method: :post, class: "text-orange-600 hover:text-orange-900 dark:text-orange-400 dark:hover:text-orange-300", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } }, title: "Demote to Regular User" do %>
+                        <%= render partial: "shared/icons/arrow-down", locals: { classes: "w-5 h-5" } %>
                       <% end %>
                     <% end %>
                   <% end %>

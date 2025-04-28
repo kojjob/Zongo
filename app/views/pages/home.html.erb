@@ -1,87 +1,325 @@
-<!-- home.html.erb -->
-
-<!-- Hero Section with Video Background -->
-<section class="relative h-screen overflow-hidden">
-  <!-- Video Background with Fallback Image -->
+<% content_for :body_class, "landing-page" %>
+<!-- Hero Section with 3D Elements and Gradient Animations -->
+<section class="hero-section relative min-h-screen overflow-hidden">
+  <!-- Video Background with Enhanced Overlay -->
   <div class="absolute inset-0 z-0">
     <video class="w-full h-full object-cover hidden md:block" autoplay loop muted playsinline>
       <source src="<%= asset_path('ghanapp.mp4') %>" type="video/mp4">
     </video>
-    <!-- Fallback image for mobile or if video fails -->
-    <img src="<%= asset_path('hero_ghana.jpg') %>" alt="Vibrant Ghana market scene" class="w-full h-full object-cover md:hidden">
-    <!-- Gradient overlay -->
-    <div class="absolute inset-0 bg-gradient-to-r from-primary-900/80 to-primary-800/70"></div>
+    <!-- Fallback image for mobile -->
+    <img src="<%= asset_path('hero_ghana.jpg') %>" alt="Vibrant Ghana marketplace" class="w-full h-full object-cover md:hidden">
+    
+    <!-- Gradient overlay with enhanced depth -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-900/95 via-primary-800/90 to-primary-900/85"></div>
+    
+    <!-- Animated pattern overlay -->
+    <div class="absolute inset-0 pattern-grid opacity-10 animate-pulse-slow"></div>
+    
+    <!-- Floating geometric decorative elements -->
+    <div class="absolute top-1/4 right-[15%] w-64 h-64 bg-secondary-500/10 rounded-full filter blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 left-[10%] w-80 h-80 bg-primary-400/10 rounded-full filter blur-3xl animate-float animation-delay-1000"></div>
+    <div class="absolute top-1/3 left-[25%] w-40 h-40 bg-primary-300/5 rounded-full filter blur-2xl animate-float animation-delay-2000"></div>
   </div>
 
-  <!-- Hero Content -->
-  <div class="relative z-10 flex flex-col justify-center items-start h-full container mx-auto px-4 md:px-8">
-    <div class="max-w-3xl" data-controller="parallax">
-      <div class="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white font-semibold animate-fade-in">
-        <span class="flex items-center">
-          <span class="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
-          Ghana's First All-In-One Super App
-        </span>
-      </div>
-
-      <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight mb-6 animate-fade-in">
-        Your Complete Digital <br class="hidden md:block">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-300">Life Companion</span>
-      </h1>
-
-      <p class="text-xl text-white mb-8 max-w-2xl animate-fade-in">
-        Simplify your daily life with Ghana's revolutionary super app. Send money, shop, pay bills, book rides, and connect with your community—all in one place.
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-4 animate-fade-in">
-        <a href="#download" class="btn-primary flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-          </svg>
-          Download App
-        </a>
-        <a href="#features" class="btn-secondary flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Explore Features
-        </a>
-      </div>
-
-      <!-- Social Proof -->
-      <div class="mt-10 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 animate-fade-in">
-        <div class="flex -space-x-2">
-          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user1.png') %>" alt="User">
-          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user2.png') %>" alt="User">
-          <img class="inline-block h-8 w-8 rounded-full ring-2 ring-white" src="<%= asset_path('user3.png') %>" alt="User">
-          <div class="inline-flex h-8 w-8 items-center justify-center rounded-full ring-2 ring-white bg-primary-400 text-xs font-medium text-white">
-            +5K
-          </div>
+  <!-- Hero Content with Advanced Layout and Animations -->
+  <div class="hero-content relative z-10 flex flex-col justify-center min-h-screen">
+    <div class="container mx-auto px-4 md:px-8 flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+      <!-- Left Column: Text Content -->
+      <div class="w-full lg:w-3/5" data-controller="parallax">
+        <!-- Animated Badge with Pulse Effect -->
+        <div class="mb-8 inline-flex items-center px-4 py-2 backdrop-blur-md rounded-full bg-white/10 border border-white/20 shadow-xl animate-fade-in-up">
+          <span class="flex items-center">
+            <span class="h-2.5 w-2.5 rounded-full bg-secondary-400 mr-2 animate-pulse"></span>
+            <span class="text-white font-semibold text-sm">Ghana's First All-In-One Super App</span>
+          </span>
         </div>
-        <div>
-          <div class="flex mb-1">
-            <% 5.times do %>
-              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+
+        <!-- Main Heading with 3D Text Effect -->
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 animate-fade-in-up animation-delay-200 leading-tight">
+          <span class="text-white drop-shadow-xl">Unlock Ghana's</span><br>
+          <span class="relative">
+            <span class="absolute -inset-1 blur-md bg-gradient-to-r from-secondary-400 to-secondary-300 opacity-50"></span>
+            <span class="relative bg-clip-text text-transparent bg-gradient-to-r from-secondary-400 to-secondary-300 drop-shadow-xl">Digital SuperApp</span>
+          </span>
+        </h1>
+
+        <!-- Enhanced Subtitle with Animated Highlight -->
+        <p class="text-xl text-white/90 mb-10 max-w-2xl animate-fade-in-up animation-delay-400 leading-relaxed">
+          One app for all your needs - send money, shop, pay bills, access agricultural services, and connect with your community across Ghana.
+        </p>
+
+        <!-- CTAs with Advanced Hover Effects -->
+        <div class="flex flex-col sm:flex-row gap-5 animate-fade-in-up animation-delay-600">
+          <a href="#download" class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-secondary-500 to-secondary-600 px-8 py-4 text-white font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
+            <!-- Background shimmer effect -->
+            <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+            
+            <span class="relative flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-            <% end %>
+              Download App
+            </span>
+          </a>
+          
+          <a href="#features" class="group relative overflow-hidden rounded-2xl backdrop-blur-md bg-white/10 border border-white/20 px-8 py-4 text-white font-medium shadow-lg transition-all duration-300 hover:bg-white/20 hover:shadow-xl hover:scale-105">
+            <!-- Background shimmer effect -->
+            <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+            
+            <span class="relative flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Explore Features
+            </span>
+          </a>
+        </div>
+
+        <!-- Enhanced Social Proof Section -->
+        <div class="mt-16 animate-fade-in-up animation-delay-800">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-10 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+            <!-- User Avatars with Enhanced Styling -->
+            <div class="flex -space-x-4">
+              <div class="relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-br from-secondary-400 to-secondary-500 rounded-full blur-sm"></div>
+                <img class="relative inline-block h-12 w-12 rounded-full ring-2 ring-white shadow-lg" src="<%= asset_path('user1.png') %>" alt="User">
+              </div>
+              <div class="relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-br from-primary-400 to-primary-500 rounded-full blur-sm"></div>
+                <img class="relative inline-block h-12 w-12 rounded-full ring-2 ring-white shadow-lg" src="<%= asset_path('user2.png') %>" alt="User">
+              </div>
+              <div class="relative">
+                <div class="absolute -inset-0.5 bg-gradient-to-br from-secondary-400 to-secondary-500 rounded-full blur-sm"></div>
+                <img class="relative inline-block h-12 w-12 rounded-full ring-2 ring-white shadow-lg" src="<%= asset_path('user3.png') %>" alt="User">
+              </div>
+              <div class="relative inline-flex h-12 w-12 items-center justify-center rounded-full ring-2 ring-white bg-gradient-to-br from-secondary-500 to-secondary-600 text-sm font-bold text-white shadow-lg">
+                <span class="drop-shadow-md">5K+</span>
+              </div>
+            </div>
+            
+            <!-- Rating and User Count with Enhanced Styling -->
+            <div>
+              <div class="flex mb-2">
+                <% 5.times do %>
+                  <svg class="w-5 h-5 text-secondary-400 drop-shadow" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                <% end %>
+              </div>
+              <p class="text-white text-sm font-medium">Trusted by over 5,000 users across Ghana</p>
+              <p class="text-white/70 text-xs mt-1">Join our growing community today!</p>
+            </div>
           </div>
-          <p class="text-white text-sm">Trusted by 5,000+ users across Ghana</p>
+        </div>
+      </div>
+
+      <!-- Right Column: 3D App Preview with Advanced Animation -->
+      <div class="w-full lg:w-2/5 mt-8 lg:mt-0 relative animate-fade-in-right">
+        <!-- Main phone mockup with 3D effect -->
+        <div class="relative mx-auto max-w-xs">
+          <!-- Shadow and glow effects -->
+          <div class="absolute -inset-1 rounded-3xl bg-gradient-to-br from-secondary-400/20 via-primary-500/20 to-primary-600/20 blur-xl transform rotate-12 scale-105"></div>
+          
+          <!-- Phone frame with 3D rotation -->
+          <div class="relative bg-gradient-to-b from-gray-800 to-gray-900 rounded-[40px] p-4 shadow-2xl border-4 border-gray-700 transform hover:rotate-[5deg] transition-transform duration-700 perspective-phone">
+            <!-- Phone notch -->
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-1/3 h-6 bg-black rounded-b-xl"></div>
+            
+            <!-- Phone screen content -->
+            <div class="bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 rounded-3xl overflow-hidden shadow-inner h-[500px]">
+              <!-- App UI simulation -->
+              <div class="flex flex-col h-full">
+                <!-- App header -->
+                <div class="bg-gradient-to-r from-primary-700 to-primary-800 px-4 py-3 flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                      <span class="text-primary-600 text-xs font-bold">SG</span>
+                    </div>
+                    <span class="text-white text-sm font-bold">Super Ghana</span>
+                  </div>
+                  <div class="flex space-x-2">
+                    <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                      <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- App content with animated shimmer -->
+                <div class="flex-1 p-4 flex flex-col gap-3">
+                  <!-- Balance card -->
+                  <div class="bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl p-4 shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                      <span class="text-white/70 text-xs">Your Balance</span>
+                      <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <div class="text-white text-2xl font-bold mb-1">₵1,245.00</div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-white/70 text-xs">Available</span>
+                      <span class="text-white/70 text-xs">**** 4832</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Quick actions -->
+                  <div class="grid grid-cols-4 gap-3 mb-2">
+                    <div class="flex flex-col items-center">
+                      <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-1">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                      </div>
+                      <span class="text-white text-xs">Send</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-1">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        </svg>
+                      </div>
+                      <span class="text-white text-xs">Receive</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-1">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                      </div>
+                      <span class="text-white text-xs">Pay</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                      <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-1">
+                        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                      </div>
+                      <span class="text-white text-xs">Shop</span>
+                    </div>
+                  </div>
+                  
+                  <!-- Recent activity -->
+                  <div>
+                    <div class="flex justify-between items-center mb-3">
+                      <span class="text-white font-medium">Recent Activity</span>
+                      <span class="text-white/70 text-xs">See All</span>
+                    </div>
+                    
+                    <!-- Activity items -->
+                    <div class="space-y-3">
+                      <div class="flex items-center bg-white/10 rounded-xl p-3">
+                        <div class="w-10 h-10 rounded-xl bg-primary-500/30 flex items-center justify-center mr-3">
+                          <svg class="w-5 h-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex justify-between">
+                            <span class="text-white text-sm font-medium">John Mensah</span>
+                            <span class="text-white text-sm font-bold">₵200</span>
+                          </div>
+                          <div class="flex justify-between items-center">
+                            <span class="text-white/70 text-xs">Just now</span>
+                            <span class="text-secondary-300 text-xs">Received</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="flex items-center bg-white/10 rounded-xl p-3 opacity-80">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/30 flex items-center justify-center mr-3">
+                          <svg class="w-5 h-5 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex justify-between">
+                            <span class="text-white text-sm font-medium">Medi Pharmacy</span>
+                            <span class="text-white text-sm font-bold">₵45</span>
+                          </div>
+                          <div class="flex justify-between items-center">
+                            <span class="text-white/70 text-xs">Yesterday</span>
+                            <span class="text-red-300 text-xs">Sent</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Bottom navigation -->
+                <div class="bg-primary-800/50 backdrop-blur-sm px-2 py-3 flex justify-around items-center">
+                  <button class="w-12 h-12 rounded-xl bg-white/10 flex flex-col items-center justify-center hover:bg-white/20 transition">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span class="text-white text-xs mt-1">Home</span>
+                  </button>
+                  <button class="w-12 h-12 rounded-xl flex flex-col items-center justify-center hover:bg-white/10 transition">
+                    <svg class="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span class="text-white/70 text-xs mt-1">Cards</span>
+                  </button>
+                  <button class="w-12 h-12 rounded-xl flex flex-col items-center justify-center hover:bg-white/10 transition">
+                    <svg class="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="text-white/70 text-xs mt-1">Settings</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Home indicator -->
+            <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-1 bg-gray-500 rounded-full"></div>
+          </div>
+          
+          <!-- Decorative light effects -->
+          <div class="absolute -bottom-8 -right-8 w-32 h-32 bg-secondary-500/20 rounded-full filter blur-xl"></div>
+          <div class="absolute -top-8 -left-8 w-32 h-32 bg-primary-500/20 rounded-full filter blur-xl"></div>
+        </div>
+        
+        <!-- Floating notification elements for depth -->
+        <div class="absolute top-1/4 -right-10 transform rotate-6 animate-float-slow animation-delay-1500">
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-xl border border-gray-100 dark:border-gray-700 max-w-[200px]">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 bg-primary-100 dark:bg-primary-800 rounded-full p-2 mr-3">
+                <svg class="h-5 w-5 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">Payment Sent!</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">₵120.00 sent to Akua.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="absolute bottom-1/4 -left-10 transform -rotate-3 animate-float-slow animation-delay-500">
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-xl border border-gray-100 dark:border-gray-700 max-w-[200px]">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 bg-secondary-100 dark:bg-secondary-800 rounded-full p-2 mr-3">
+                <svg class="h-5 w-5 text-secondary-600 dark:text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">Invite Friends</p>
+                <p class="text-xs text-gray-600 dark:text-gray-400">Get ₵20 for each referral!</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Floating Mobile App Preview -->
-    <div class="hidden lg:block absolute right-8 top-1/2 transform -translate-y-1/2">
-      <div class="relative">
-        <img src="<%= asset_path('app-mockup-3d.png') %>" alt="Super Ghana App Preview" class="w-80 h-auto animate-float">
-        <div class="absolute -bottom-6 -left-6 w-full h-20 bg-gradient-to-r from-accent-500 to-secondary-500 rounded-full filter blur-xl opacity-30"></div>
-      </div>
-    </div>
-
-    <!-- Scroll Down Indicator -->
+    
+    <!-- Scroll Down Indicator with Enhanced Animation -->
     <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce hidden md:block">
-      <a href="#features" class="text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <a href="#features" class="group flex items-center justify-center w-14 h-14 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </a>
@@ -89,683 +327,735 @@
   </div>
 </section>
 
-<!-- Featured In Section -->
-<section class="py-10 bg-gray-50 dark:bg-gray-900">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-6">
-      <span class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400 tracking-wider">Featured In</span>
-    </div>
-    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
-        <div class="flex items-center">
-          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" fill="currentColor"/>
-          </svg>
-          <span class="text-lg font-semibold">GhanaNews</span>
-        </div>
-      </div>
-      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
-        <div class="flex items-center">
-          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-            <circle cx="12" cy="12" r="10" fill="currentColor"/>
-          </svg>
-          <span class="text-lg font-semibold">TechAfrica</span>
-        </div>
-      </div>
-      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
-        <div class="flex items-center">
-          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-            <rect x="2" y="2" width="20" height="20" fill="currentColor"/>
-          </svg>
-          <span class="text-lg font-semibold">BusinessGH</span>
-        </div>
-      </div>
-      <div class="grayscale opacity-90 hover:grayscale-0 hover:opacity-100 transition">
-        <div class="flex items-center">
-          <svg class="h-8 sm:h-10 mr-2" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-            <polygon points="12,2 22,12 12,22 2,12" fill="currentColor"/>
-          </svg>
-          <span class="text-lg font-semibold">FinanceDaily</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Core Features Section -->
-<section id="features" class="py-20 bg-white dark:bg-gray-900">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <div class="inline-block p-3 rounded-full bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-        </svg>
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Everything You Need in One App</h2>
-      <div class="w-20 h-1 bg-primary-500 mx-auto mb-8"></div>
-      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-        Super Ghana brings together essential services that simplify your daily life, save you time, and help you manage your finances.
+<!-- Trusted Partners Section with Advanced Animations -->
+<section class="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden">
+  <!-- Decorative elements -->
+  <div class="absolute inset-0 pattern-dots opacity-5 dark:opacity-10"></div>
+  <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-200 dark:via-primary-700 to-transparent"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="text-center mb-10">
+      <h2 class="inline-block px-6 py-1.5 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-semibold uppercase tracking-wider border border-primary-100 dark:border-primary-800/30 mb-4 animate-fade-in">
+        Trusted Partners
+      </h2>
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+        Joining forces with Ghana's most trusted institutions to bring you the best services.
       </p>
     </div>
 
-    <!-- Feature Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Feature 1 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-primary-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <!-- Partners Logo Showcase with Advanced Hover Effects -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <!-- Logo shimmer effect on hover -->
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <!-- Bank logo -->
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-primary-600 dark:text-primary-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <rect width="24" height="24" rx="4" fill="currentColor" opacity="0.2"/>
+              <path d="M6 10h12v8H6z" fill="currentColor"/>
+              <path d="M12 6l6 4H6z" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-400 dark:to-primary-500">GhanaBank</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Mobile Money & Payments</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Send money instantly, pay bills, buy airtime, and manage all your finances in one secure wallet.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Instant P2P transfers</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Bill payments & subscriptions</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>QR code merchant payments</span>
-            </li>
-          </ul>
         </div>
       </div>
-
-      <!-- Feature 2 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-secondary-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/>
+              <path d="M12 6a6 6 0 100 12 6 6 0 000-12z" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-500">TelecomGH</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Shopping & Marketplace</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Discover local products, shop from trusted merchants, and get everything delivered to your doorstep.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Local merchant marketplace</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Secure in-app purchasing</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Delivery tracking & notifications</span>
-            </li>
-          </ul>
         </div>
       </div>
-
-      <!-- Feature 3 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-accent-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-amber-600 dark:text-amber-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" opacity="0.2"/>
+              <path d="M7 7h10v10H7z" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-amber-500 dark:from-amber-400 dark:to-amber-500">FarmTech</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Transportation & Travel</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Book rides, purchase bus tickets, and plan your journeys with our integrated transit options.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Ride-hailing services</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Bus and transit ticketing</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Route planning and navigation</span>
-            </li>
-          </ul>
         </div>
       </div>
-
-      <!-- Feature 4 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-success-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-primary-600 dark:text-primary-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <polygon points="12,2 22,12 12,22 2,12" fill="currentColor" opacity="0.2"/>
+              <circle cx="12" cy="12" r="5" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-teal-500 dark:from-primary-400 dark:to-teal-400">AgroFinance</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Agricultural Services</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Track crop prices, get weather forecasts, and connect with buyers in the agricultural sector.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Market price tracking</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Weather forecasts and alerts</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Farmer marketplace connections</span>
-            </li>
-          </ul>
         </div>
       </div>
-
-      <!-- Feature 5 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-warning-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-warning-100 dark:bg-warning-900 flex items-center justify-center text-warning-600 dark:text-warning-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z" fill="currentColor" opacity="0.2"/>
+              <path d="M8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h5v2H8v-2z" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-500 dark:from-red-400 dark:to-red-500">GhanaPay</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Financial Services</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Access loans, create savings groups, and learn about financial management all in one place.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Micro-lending services</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Group savings ("susu") tools</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Financial education resources</span>
-            </li>
-          </ul>
         </div>
       </div>
-
-      <!-- Feature 6 -->
-      <div class="feature-card">
-        <div class="h-3 w-full bg-info-500 rounded-t-2xl"></div>
-        <div class="p-8">
-          <div class="w-16 h-16 rounded-xl bg-info-100 dark:bg-info-900 flex items-center justify-center text-info-600 dark:text-info-400 mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+      
+      <div class="partners-logo group">
+        <div class="relative overflow-hidden bg-white dark:bg-gray-800 px-5 py-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700 h-24 flex items-center justify-center">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary-100/30 dark:via-primary-800/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1500 ease-in-out"></div>
+          
+          <div class="relative flex items-center">
+            <svg class="h-10 sm:h-12 mr-3 text-purple-600 dark:text-purple-400" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" fill="currentColor" opacity="0.2"/>
+              <path d="M15 9a3 3 0 11-6 0 3 3 0 016 0zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z" fill="currentColor"/>
             </svg>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-500 dark:from-purple-400 dark:to-purple-500">EduTech</span>
           </div>
-          <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Community & Social</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Connect with your community, discover local events, and build networks with people in your area.
-          </p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Community groups & forums</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Event discovery & ticketing</span>
-            </li>
-            <li class="flex items-center">
-              <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <span>Local service provider directory</span>
-            </li>
-          </ul>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- App Demo Section with Animated Screens -->
-<section class="py-20 bg-gradient-to-br from-primary-900 to-primary-700 text-white overflow-hidden relative">
-  <div class="absolute inset-0 z-0 opacity-10 pattern-dots"></div>
+<!-- Core Features Section with 3D Cards and Animations -->
+<section id="features" class="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
+  <!-- Background pattern and decorative elements -->
+  <div class="absolute inset-0 pattern-grid opacity-5 dark:opacity-10"></div>
+  <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-primary-400/5 to-transparent rounded-full filter blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-secondary-400/5 to-transparent rounded-full filter blur-3xl"></div>
 
   <div class="container mx-auto px-4 relative z-10">
     <div class="text-center mb-16">
-      <div class="inline-block p-3 rounded-full bg-white/10 text-white mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-bold mb-4">See the App in Action</h2>
-      <div class="w-20 h-1 bg-white mx-auto mb-8"></div>
-      <p class="text-xl text-white max-w-3xl mx-auto">
-        Experience the simplicity and power of Super Ghana through our interactive demo.
-      </p>
-    </div>
-
-    <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
-      <!-- App Screenshots Slider -->
-      <div class="lg:w-3/5 relative">
-        <div class="phone-mockup">
-          <div class="phone-screen">
-            <img src="<%= asset_path('app-screen-animation.gif') %>" alt="App Demo" class="w-full h-full object-cover rounded-3xl">
-          </div>
-        </div>
-
-        <div class="absolute -top-10 -left-10 w-20 h-20 bg-accent-500 rounded-full opacity-20 animate-pulse"></div>
-        <div class="absolute -bottom-5 -right-5 w-16 h-16 bg-secondary-500 rounded-full opacity-20 animate-pulse delay-300"></div>
-      </div>
-
-      <!-- Features List -->
-      <div class="lg:w-2/5 space-y-8">
-        <!-- Feature 1 -->
-        <div class="feature-highlight" data-controller="hover-effect">
-          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
-            <div class="flex">
-              <div class="w-12 h-12 rounded-xl bg-primary-500 flex items-center justify-center mr-4 flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold mb-2">Intuitive Interface</h3>
-                <p class="text-white">
-                  Designed for all users regardless of tech experience, with simple navigation and clear visuals.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature-highlight" data-controller="hover-effect">
-          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
-            <div class="flex">
-              <div class="w-12 h-12 rounded-xl bg-secondary-500 flex items-center justify-center mr-4 flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold mb-2">Bank-Grade Security</h3>
-                <p class="text-white">
-                  Your data and money are protected with industry-leading encryption and security measures.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature-highlight" data-controller="hover-effect">
-          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition cursor-pointer relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-bl-3xl"></div>
-            <div class="flex">
-              <div class="w-12 h-12 rounded-xl bg-accent-500 flex items-center justify-center mr-4 flex-shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <div>
-                <h3 class="text-xl font-bold mb-2">Works Offline</h3>
-                <p class="text-white">
-                  Continue using essential features even when your connection is unstable or unavailable.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-8">
-          <a href="#download" class="btn-white flex items-center justify-center mx-auto">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-            Try the Demo
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works Section -->
-<section class="py-20 bg-white dark:bg-gray-900">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <div class="inline-block p-3 rounded-full bg-warning-100 dark:bg-warning-900 text-warning-600 dark:text-warning-400 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-        </svg>
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Getting Started is Easy</h2>
-      <div class="w-20 h-1 bg-warning-500 mx-auto mb-8"></div>
-      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-        Start using Super Ghana in just a few simple steps
-      </p>
-    </div>
-
-    <div class="relative">
-      <!-- Steps connection line -->
-      <div class="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gray-200 dark:bg-gray-700 transform -translate-y-1/2 z-0"></div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-        <!-- Step 1 -->
-        <div class="text-center flex flex-col items-center">
-          <div class="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-4 relative">
-            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary-600 text-white text-sm flex items-center justify-center">1</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
-            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Download the App</h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              Get Super Ghana from your app store and install it on your smartphone.
-            </p>
-            <img src="<%= asset_path('step1-signup.png') %>" alt="Download app" class="h-32 mx-auto mt-4">
-          </div>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="text-center flex flex-col items-center">
-          <div class="w-16 h-16 rounded-full bg-secondary-100 dark:bg-secondary-900 flex items-center justify-center text-secondary-600 dark:text-secondary-400 mb-4 relative">
-            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-secondary-600 text-white text-sm flex items-center justify-center">2</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
-            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Create Your Account</h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              Register with your phone number and complete a simple verification process.
-            </p>
-            <img src="<%= asset_path('step2-verify.png') %>" alt="Create account" class="h-32 mx-auto mt-4">
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="text-center flex flex-col items-center">
-          <div class="w-16 h-16 rounded-full bg-accent-100 dark:bg-accent-900 flex items-center justify-center text-accent-600 dark:text-accent-400 mb-4 relative">
-            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-accent-600 text-white text-sm flex items-center justify-center">3</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
-            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Add Money to Wallet</h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              Fund your wallet using mobile money, bank transfer, or other payment methods.
-            </p>
-            <img src="<%= asset_path('step3-wallet.png') %>" alt="Add money" class="h-32 mx-auto mt-4">
-          </div>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="text-center flex flex-col items-center">
-          <div class="w-16 h-16 rounded-full bg-success-100 dark:bg-success-900 flex items-center justify-center text-success-600 dark:text-success-400 mb-4 relative">
-            <span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-success-600 text-white text-sm flex items-center justify-center">4</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 h-full">
-            <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Start Using the App</h3>
-            <p class="text-gray-700 dark:text-gray-300">
-              Explore all features and start enjoying the convenience of Super Ghana.
-            </p>
-            <img src="<%= asset_path('step4-use.png') %>" alt="Use app" class="h-32 mx-auto mt-4">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="py-20 bg-gray-50 dark:bg-gray-800">
-  <div class="container mx-auto px-4">
-    <div class="text-center mb-16">
-      <div class="inline-block p-3 rounded-full bg-success-100 dark:bg-success-900 text-success-600 dark:text-success-400 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <!-- Visual icon with animation -->
+      <div class="inline-flex items-center justify-center p-4 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 mb-6 shadow-md border border-primary-200 dark:border-primary-800/30 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
         </svg>
       </div>
-      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">What Our Users Say</h2>
-      <div class="w-20 h-1 bg-success-500 mx-auto mb-8"></div>
-      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-        Join thousands of satisfied users who have transformed their daily lives with Super Ghana
+
+      <!-- Enhanced heading with gradient text -->
+      <h2 class="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in">
+        <span class="block text-gray-900 dark:text-white">Power Your Daily Life</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-400 dark:to-primary-500">With One Super App</span>
+      </h2>
+
+      <!-- Styled divider -->
+      <div class="w-24 h-1.5 mx-auto mb-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse-slow"></div>
+
+      <!-- Enhanced description -->
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed animate-fade-in animation-delay-200">
+        Super Ghana combines essential services into one powerful platform, designed specifically for the needs of Ghanaians.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Testimonial 1 -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
-        <div class="p-8">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-1.jpg') %>" alt="User">
-            <div>
-              <h3 class="font-bold text-gray-900 dark:text-white">Ama Kufuor</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Market Vendor, Kumasi</p>
-            </div>
-          </div>
-          <div class="flex mb-4">
-            <% 5.times do %>
-              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+    <!-- Feature Cards with 3D Effects and Animations -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <!-- Digital Wallet Card -->
+      <div class="feature-card group relative animate-fade-in animation-delay-300">
+        <!-- 3D card effect with hover animation -->
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <!-- Card background with gradient -->
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <!-- Card content -->
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <!-- Icon with animation -->
+            <div class="w-16 h-16 rounded-xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-all duration-500 transform group-hover:rotate-[360deg] group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-            <% end %>
-          </div>
-          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
-            "Super Ghana has transformed how I run my market business. I can now accept mobile payments, order new stock, and even get small loans when I need them - all in one app!"
-          </blockquote>
-          <div class="flex items-center text-primary-600 dark:text-primary-400 text-sm font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Mobile Money User
+            </div>
+            
+            <!-- Title with transition effect -->
+            <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">Digital Wallet</h3>
+            
+            <!-- Description with transition -->
+            <p class="text-gray-600 dark:text-gray-300 mb-6 group-hover:text-white/90 transition-colors duration-500">
+              Send money instantly to anyone in Ghana, pay bills, and manage your finances with our secure digital wallet system.
+            </p>
+            
+            <!-- Feature list -->
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-primary-500 dark:text-primary-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Instant Money Transfers
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-primary-500 dark:text-primary-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Bill Payments
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-primary-500 dark:text-primary-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Financial Management
+              </li>
+            </ul>
+            
+            <!-- Learn more link with animated arrow -->
+            <a href="/wallet" class="inline-flex items-center font-medium text-primary-600 dark:text-primary-400 group-hover:text-white transition-colors duration-500">
+              Learn more
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
-
-      <!-- Testimonial 2 -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
-        <div class="p-8">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-2.jpg') %>" alt="User">
-            <div>
-              <h3 class="font-bold text-gray-900 dark:text-white">Kwame Asante</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">University Student, Accra</p>
-            </div>
-          </div>
-          <div class="flex mb-4">
-            <% 5.times do %>
-              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+      
+      <!-- Agricultural Services Card -->
+      <div class="feature-card group relative animate-fade-in animation-delay-500">
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-secondary-500 to-secondary-600 dark:from-secondary-600 dark:to-secondary-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <div class="w-16 h-16 rounded-xl bg-secondary-100 dark:bg-secondary-900/30 text-secondary-600 dark:text-secondary-400 flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-all duration-500 transform group-hover:rotate-[360deg] group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-            <% end %>
-          </div>
-          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
-            "As a student, managing money was always difficult. With Super Ghana, I can easily pay my school fees, split costs with roommates, and even save money towards my goals."
-          </blockquote>
-          <div class="flex items-center text-secondary-600 dark:text-secondary-400 text-sm font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            Student User
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">Agricultural Services</h3>
+            
+            <p class="text-gray-600 dark:text-gray-300 mb-6 group-hover:text-white/90 transition-colors duration-500">
+              Get real-time crop prices, weather forecasts, farming tips, and connect with buyers and sellers in our agricultural marketplace.
+            </p>
+            
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-secondary-500 dark:text-secondary-400 group-hover:text-primary-200 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Market Price Monitoring
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-secondary-500 dark:text-secondary-400 group-hover:text-primary-200 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Weather Alerts & Forecasts
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-secondary-500 dark:text-secondary-400 group-hover:text-primary-200 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Agricultural Marketplace
+              </li>
+            </ul>
+            
+            <a href="/agriculture" class="inline-flex items-center font-medium text-secondary-600 dark:text-secondary-400 group-hover:text-white transition-colors duration-500">
+              Learn more
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
-
-      <!-- Testimonial 3 -->
-      <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
-        <div class="p-8">
-          <div class="flex items-center mb-4">
-            <img class="h-12 w-12 rounded-full object-cover mr-4" src="<%= asset_path('testimonial-3.jpg') %>" alt="User">
-            <div>
-              <h3 class="font-bold text-gray-900 dark:text-white">Ibrahim Mensa</h3>
-              <p class="text-sm text-gray-600 dark:text-gray-400">Farmer, Northern Region</p>
-            </div>
-          </div>
-          <div class="flex mb-4">
-            <% 5.times do %>
-              <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+      
+      <!-- Community & Events Card -->
+      <div class="feature-card group relative animate-fade-in animation-delay-700">
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-purple-700 dark:from-purple-700 dark:to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <div class="w-16 h-16 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-6 group-hover:bg-white/20 group-hover:text-white transition-all duration-500 transform group-hover:rotate-[360deg] group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-            <% end %>
-          </div>
-          <blockquote class="italic text-gray-700 dark:text-gray-300 mb-4">
-            "The farming tools on Super Ghana help me track market prices and connect with buyers directly. I've increased my profits and expanded my farm thanks to the agricultural loans."
-          </blockquote>
-          <div class="flex items-center text-success-600 dark:text-success-400 text-sm font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Agricultural Services User
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">Community & Events</h3>
+            
+            <p class="text-gray-600 dark:text-gray-300 mb-6 group-hover:text-white/90 transition-colors duration-500">
+              Discover local events, connect with your community, and build meaningful relationships with people who share your interests.
+            </p>
+            
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-purple-500 dark:text-purple-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Local Event Discovery
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-purple-500 dark:text-purple-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Community Groups
+              </li>
+              <li class="flex items-center text-gray-700 dark:text-gray-300 group-hover:text-white/90 transition-colors duration-500">
+                <svg class="h-5 w-5 mr-3 text-purple-500 dark:text-purple-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                Ticket Booking
+              </li>
+            </ul>
+            
+            <a href="/events" class="inline-flex items-center font-medium text-purple-600 dark:text-purple-400 group-hover:text-white transition-colors duration-500">
+              Learn more
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="text-center mt-12">
-      <a href="#" class="text-primary-600 dark:text-primary-400 font-medium hover:underline flex items-center justify-center">
-        Read More Success Stories
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+    
+    <!-- "View All Features" Button with Animation -->
+    <div class="text-center">
+      <a href="/features" class="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold rounded-xl bg-primary-600 text-white shadow-lg transition-all duration-500 hover:bg-primary-700 transform hover:scale-105">
+        <!-- Background shimmer animation -->
+        <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 transform transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
         </svg>
+        Explore All Features
       </a>
     </div>
   </div>
 </section>
 
-<!-- Download & CTA Section -->
-<section id="download" class="py-20 bg-white dark:bg-gray-900 relative overflow-hidden">
-  <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary-100 to-white opacity-50 dark:opacity-10 z-0"></div>
-  <div class="absolute bottom-0 left-0 w-1/3 h-1/2 bg-gradient-to-t from-secondary-100 to-white opacity-50 dark:opacity-10 z-0"></div>
+<!-- Testimonials Section with 3D Cards and Advanced Animations -->
+<section class="py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden">
+  <!-- Background elements -->
+  <div class="absolute inset-0 pattern-dots opacity-5 dark:opacity-10"></div>
+  <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent"></div>
+  <div class="absolute top-20 right-0 w-1/3 h-1/3 bg-primary-500/5 rounded-full filter blur-3xl"></div>
+  <div class="absolute bottom-20 left-0 w-1/3 h-1/3 bg-secondary-500/5 rounded-full filter blur-3xl"></div>
+
   <div class="container mx-auto px-4 relative z-10">
-    <div class="flex flex-col lg:flex-row items-center gap-12">
-      <div class="lg:w-3/5">
-        <div class="inline-block p-2 px-4 rounded-full bg-success-100 dark:bg-success-900 text-success-600 dark:text-success-400 mb-4">
-          <span class="text-sm font-semibold">Available Now</span>
+    <div class="text-center mb-16">
+      <!-- Icon -->
+      <div class="inline-flex items-center justify-center p-4 rounded-full bg-secondary-100 dark:bg-secondary-900/30 text-secondary-700 dark:text-secondary-300 mb-6 shadow-md border border-secondary-200 dark:border-secondary-800/30 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+      </div>
+
+      <!-- Heading -->
+      <h2 class="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in">
+        <span class="block text-gray-900 dark:text-white">Success Stories</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-secondary-500 to-secondary-600 dark:from-secondary-400 dark:to-secondary-500">From Our Users</span>
+      </h2>
+
+      <!-- Divider -->
+      <div class="w-24 h-1.5 mx-auto mb-8 rounded-full bg-gradient-to-r from-secondary-500 to-primary-500 animate-pulse-slow"></div>
+
+      <!-- Description -->
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed animate-fade-in animation-delay-200">
+        Hear from real people whose lives have been transformed by Super Ghana's innovative solutions.
+      </p>
+    </div>
+
+    <!-- Testimonials Grid with 3D Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <!-- Testimonial 1 - Agriculture -->
+      <div class="testimonial-card group relative animate-fade-in animation-delay-300">
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <!-- Card background with gradient hover effect -->
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-primary-700 dark:from-primary-700 dark:to-primary-800 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <!-- Card content -->
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <!-- Quote icon -->
+            <div class="absolute top-6 right-8 text-primary-100 dark:text-primary-900 opacity-60 group-hover:text-white/20 group-hover:transform group-hover:-rotate-12 transition-all duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+            </div>
+
+            <!-- User info with enhanced avatar -->
+            <div class="flex items-center mb-6 relative z-10">
+              <div class="relative mr-5">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 blur-sm transform -translate-x-1 -translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500"></div>
+                <img class="relative h-16 w-16 rounded-xl object-cover border-2 border-white dark:border-gray-800 shadow-lg" src="<%= asset_path('testimonial-1.jpg') %>" alt="Ibrahim Mensa">
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">Ibrahim Mensa</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center group-hover:text-white/80 transition-colors duration-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-primary-500 dark:text-primary-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                  </svg>
+                  Farmer, Northern Region
+                </p>
+              </div>
+            </div>
+
+            <!-- Star rating with enhanced styling -->
+            <div class="mb-4">
+              <div class="inline-flex items-center bg-primary-50 dark:bg-primary-900/20 group-hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors duration-500">
+                <% 5.times do %>
+                  <svg class="w-5 h-5 text-secondary-400 dark:text-secondary-400 group-hover:text-secondary-300 drop-shadow mx-0.5 transition-colors duration-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Testimonial text with enhanced styling -->
+            <blockquote class="text-gray-700 dark:text-gray-300 group-hover:text-white/90 mb-6 relative z-10 text-lg leading-relaxed font-medium transition-colors duration-500">
+              "The farming tools on Super Ghana help me track market prices and connect with buyers directly. I've increased my profits by 40% and expanded my farm thanks to the agricultural loans and advice from the app."
+            </blockquote>
+
+            <!-- User category badge -->
+            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-medium border border-primary-200 dark:border-primary-800/30 group-hover:bg-white/10 group-hover:text-white group-hover:border-white/10 transition-colors duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Agricultural Services User
+            </div>
+          </div>
         </div>
-        <h2 class="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white">Download Super Ghana Today</h2>
-        <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">
+      </div>
+      
+      <!-- Testimonial 2 - Financial -->
+      <div class="testimonial-card group relative animate-fade-in animation-delay-500">
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-secondary-500 to-secondary-600 dark:from-secondary-600 dark:to-secondary-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <!-- Quote icon -->
+            <div class="absolute top-6 right-8 text-secondary-100 dark:text-secondary-900 opacity-60 group-hover:text-white/20 group-hover:transform group-hover:-rotate-12 transition-all duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+            </div>
+
+            <!-- User info with enhanced avatar -->
+            <div class="flex items-center mb-6 relative z-10">
+              <div class="relative mr-5">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-secondary-500 to-secondary-600 blur-sm transform -translate-x-1 -translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500"></div>
+                <img class="relative h-16 w-16 rounded-xl object-cover border-2 border-white dark:border-gray-800 shadow-lg" src="<%= asset_path('testimonial-2.jpg') %>" alt="Afua Owusu">
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">Afua Owusu</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center group-hover:text-white/80 transition-colors duration-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-secondary-500 dark:text-secondary-400 group-hover:text-primary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                  </svg>
+                  Small Business Owner, Accra
+                </p>
+              </div>
+            </div>
+
+            <!-- Star rating with enhanced styling -->
+            <div class="mb-4">
+              <div class="inline-flex items-center bg-secondary-50 dark:bg-secondary-900/20 group-hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors duration-500">
+                <% 5.times do %>
+                  <svg class="w-5 h-5 text-secondary-400 dark:text-secondary-400 group-hover:text-primary-300 drop-shadow mx-0.5 transition-colors duration-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Testimonial text with enhanced styling -->
+            <blockquote class="text-gray-700 dark:text-gray-300 group-hover:text-white/90 mb-6 relative z-10 text-lg leading-relaxed font-medium transition-colors duration-500">
+              "Super Ghana has revolutionized my business finances. I can now easily accept payments from customers, pay suppliers, and manage my business expenses all in one place. The micro-loan feature helped me expand my shop during a crucial time."
+            </blockquote>
+
+            <!-- User category badge -->
+            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-secondary-100 dark:bg-secondary-900/30 text-secondary-700 dark:text-secondary-300 text-sm font-medium border border-secondary-200 dark:border-secondary-800/30 group-hover:bg-white/10 group-hover:text-white group-hover:border-white/10 transition-colors duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Financial Services User
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonial 3 - Community -->
+      <div class="testimonial-card group relative animate-fade-in animation-delay-700">
+        <div class="relative overflow-hidden rounded-2xl transition-all duration-500 ease-out transform perspective-card group-hover:scale-[1.02]">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-purple-700 dark:from-purple-700 dark:to-purple-800 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div class="relative z-10 bg-white dark:bg-gray-800 p-8 h-full border border-gray-100 dark:border-gray-700 rounded-2xl group-hover:border-transparent transition-colors duration-500">
+            <!-- Quote icon -->
+            <div class="absolute top-6 right-8 text-purple-100 dark:text-purple-900 opacity-60 group-hover:text-white/20 group-hover:transform group-hover:-rotate-12 transition-all duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+            </div>
+
+            <!-- User info with enhanced avatar -->
+            <div class="flex items-center mb-6 relative z-10">
+              <div class="relative mr-5">
+                <div class="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 blur-sm transform -translate-x-1 -translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-500"></div>
+                <img class="relative h-16 w-16 rounded-xl object-cover border-2 border-white dark:border-gray-800 shadow-lg" src="<%= asset_path('testimonial-3.jpg') %>" alt="David Aidoo">
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-white transition-colors duration-500">David Aidoo</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center group-hover:text-white/80 transition-colors duration-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-purple-500 dark:text-purple-400 group-hover:text-secondary-300 transition-colors duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                  </svg>
+                  Event Organizer, Kumasi
+                </p>
+              </div>
+            </div>
+
+            <!-- Star rating with enhanced styling -->
+            <div class="mb-4">
+              <div class="inline-flex items-center bg-purple-50 dark:bg-purple-900/20 group-hover:bg-white/10 px-3 py-1.5 rounded-lg transition-colors duration-500">
+                <% 5.times do %>
+                  <svg class="w-5 h-5 text-purple-400 dark:text-purple-400 group-hover:text-secondary-300 drop-shadow mx-0.5 transition-colors duration-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                <% end %>
+              </div>
+            </div>
+
+            <!-- Testimonial text with enhanced styling -->
+            <blockquote class="text-gray-700 dark:text-gray-300 group-hover:text-white/90 mb-6 relative z-10 text-lg leading-relaxed font-medium transition-colors duration-500">
+              "As an event organizer, Super Ghana has been a game-changer for me. I can promote events, sell tickets, and connect with attendees all in one platform. It's helped me grow my audience by 70% and simplified the entire event management process."
+            </blockquote>
+
+            <!-- User category badge -->
+            <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-sm font-medium border border-purple-200 dark:border-purple-800/30 group-hover:bg-white/10 group-hover:text-white group-hover:border-white/10 transition-colors duration-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Community & Events User
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- View More Stories Button -->
+    <div class="text-center mt-12">
+      <a href="/success-stories" class="group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden font-bold rounded-xl bg-gray-900 dark:bg-white dark:text-gray-900 text-white shadow-lg transition-all duration-500 hover:bg-gray-800 dark:hover:bg-gray-100 transform hover:scale-105">
+        <!-- Background shimmer animation -->
+        <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 transform transition-transform duration-300 group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 19 7.5 19s3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 19 16.5 19c-1.746 0-3.332-.477-4.5-1.253" />
+        </svg>
+        Read More Success Stories
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Download Super Ghana Today Section with Enhanced 3D Effects -->
+<section id="download" class="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
+  <!-- Background elements -->
+  <div class="absolute inset-0 pattern-grid opacity-5 dark:opacity-10 z-0"></div>
+  <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent"></div>
+  <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-100/30 via-primary-50/20 to-transparent opacity-70 dark:opacity-10 z-0"></div>
+  <div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-secondary-50/30 via-secondary-50/20 to-transparent opacity-70 dark:opacity-10 z-0"></div>
+
+  <!-- Decorative elements -->
+  <div class="absolute top-20 right-20 w-64 h-64 bg-primary-500/5 dark:bg-primary-500/5 rounded-full filter blur-3xl"></div>
+  <div class="absolute bottom-20 left-20 w-64 h-64 bg-secondary-500/5 dark:bg-secondary-500/5 rounded-full filter blur-3xl"></div>
+
+  <!-- Floating device mockups (decorative) -->
+  <div class="absolute top-1/4 right-[5%] w-20 h-40 bg-gray-900/10 dark:bg-gray-100/5 rounded-xl transform rotate-12 animate-float"></div>
+  <div class="absolute bottom-1/4 left-[5%] w-16 h-32 bg-gray-900/10 dark:bg-gray-100/5 rounded-xl transform -rotate-12 animate-float animation-delay-1000"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="flex flex-col lg:flex-row items-center gap-16">
+      <!-- Left Column: Download Info -->
+      <div class="lg:w-3/5 animate-fade-in">
+        <!-- Badge -->
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-primary-100 dark:from-primary-900/30 dark:to-primary-900/30 text-primary-700 dark:text-primary-300 mb-6 shadow-md border border-primary-200 dark:border-primary-800/30">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-sm font-bold">Available Now</span>
+        </div>
+
+        <!-- Heading -->
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
+          Download <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-400 dark:to-primary-500">Super Ghana</span> Today
+        </h2>
+
+        <!-- Description -->
+        <p class="text-xl text-gray-700 dark:text-gray-300 mb-10 font-medium leading-relaxed max-w-2xl">
           Join thousands of Ghanaians who are simplifying their daily lives with our all-in-one super app. Available for Android and iOS devices.
         </p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-          <!-- Download Button 1 -->
-          <a href="#" class="download-button group">
-            <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
-              <div class="mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+        <!-- Download Buttons with Enhanced Animations -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
+          <!-- Google Play Button -->
+          <a href="#" class="download-button group relative overflow-hidden">
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white rounded-xl p-5 flex items-center shadow-lg hover:shadow-xl transform transition-all duration-500 hover:-translate-y-1 border border-gray-700 dark:border-gray-700/50">
+              <!-- Background shimmer effect -->
+              <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/5 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+              
+              <div class="mr-4 text-primary-400 dark:text-primary-500 transition-all duration-500 transform group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M3 3v18l8-8-8-10zm11 0l-2 9.5 2 9.5 8-9.5-8-9.5zm-7 4l4 4-4 4V7z"/>
                 </svg>
               </div>
               <div>
-                <div class="text-xs">GET IT ON</div>
-                <div class="text-xl font-semibold">Google Play</div>
+                <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">GET IT ON</div>
+                <div class="text-xl font-bold">Google Play</div>
               </div>
             </div>
           </a>
 
-          <!-- Download Button 2 -->
-          <a href="#" class="download-button group">
-            <div class="bg-gray-900 dark:bg-gray-800 text-white rounded-xl p-4 flex items-center transition hover:bg-primary-600 dark:hover:bg-primary-700">
-              <div class="mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.92 14.56c-.146.26-.424.403-.718.403-.152 0-.304-.04-.44-.12l-3.72-2.18-3.72 2.18c-.136.08-.288.12-.44.12-.294 0-.572-.143-.718-.403-.29-.52-.12-1.174.38-1.468l3.74-2.19V8.3c0-.59.43-1.07.96-1.07s.96.48.96 1.07v4.602l3.74 2.19c.5.294.67.948.38 1.468z"/>
+          <!-- App Store Button -->
+          <a href="#" class="download-button group relative overflow-hidden">
+            <div class="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white rounded-xl p-5 flex items-center shadow-lg hover:shadow-xl transform transition-all duration-500 hover:-translate-y-1 border border-gray-700 dark:border-gray-700/50">
+              <!-- Background shimmer effect -->
+              <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/5 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+              
+              <div class="mr-4 text-blue-400 dark:text-blue-500 transition-all duration-500 transform group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M16.462 8.293c-.069-.689.4-1.484.643-1.764-.349-.515-1.395-1.168-2.122-1.168-.909-.041-1.704.513-2.134.513-.439 0-1.144-.499-1.667-.499-1.34.012-2.389.775-2.987 1.887-1.283 2.229-.329 5.512.9 7.323.61.93 1.339 1.979 2.291 1.939.919-.02 1.269-.6 2.379-.6 1.1 0 1.419.6 2.389.58.99-.02 1.619-.9 2.219-1.84.709-.84.989-1.659 1.009-1.699-.02-.01-1.939-.759-1.959-2.969-.02-1.859 1.519-2.749 1.589-2.789-.879-1.289-2.239-1.429-2.719-1.469-1.198-.08-2.189.66-2.729.66zm-1.339-4.293c.504-.61.844-1.451.749-2.3-.749.04-1.648.5-2.188 1.12-.479.56-.899 1.449-.789 2.3.839.06 1.699-.42 2.228-1.12z"/>
                 </svg>
               </div>
               <div>
-                <div class="text-xs">Download on the</div>
-                <div class="text-xl font-semibold">App Store</div>
+                <div class="text-xs text-gray-400 dark:text-gray-500 font-medium">DOWNLOAD ON THE</div>
+                <div class="text-xl font-bold">App Store</div>
               </div>
             </div>
           </a>
         </div>
 
-        <div class="flex items-center justify-center sm:justify-start text-sm text-gray-600 dark:text-gray-400">
-          <div class="flex mr-4">
-            <% 5.times do %>
-              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-              </svg>
-            <% end %>
+        <!-- Rating with Enhanced Design -->
+        <div class="flex items-center justify-center sm:justify-start mb-8">
+          <div class="inline-flex items-center bg-white dark:bg-gray-800 px-6 py-3 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
+            <div class="flex mr-3">
+              <% 5.times do |i| %>
+                <svg class="w-5 h-5 <%= i < 4 ? 'text-secondary-400' : 'text-gray-300 dark:text-gray-600' %> drop-shadow mx-0.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+            </div>
+            <div>
+              <span class="text-gray-700 dark:text-gray-300 font-medium">Rated 4.8/5</span>
+              <span class="text-gray-500 dark:text-gray-400 text-sm ml-1">from over 2,000 users</span>
+            </div>
           </div>
-          <span>Rated 4.8/5 from over 2,000 users</span>
+        </div>
+
+        <!-- Features List with Enhanced Design -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+          <div class="flex items-center p-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-gray-800/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-700 dark:text-gray-300">Free to download</span>
+          </div>
+          <div class="flex items-center p-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-gray-800/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-700 dark:text-gray-300">Works offline</span>
+          </div>
+          <div class="flex items-center p-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-gray-800/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-700 dark:text-gray-300">Regular updates</span>
+          </div>
+          <div class="flex items-center p-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm rounded-xl border border-gray-100 dark:border-gray-800/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-500 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-700 dark:text-gray-300">24/7 local support</span>
+          </div>
         </div>
       </div>
 
-      <div class="lg:w-2/5 mt-8 lg:mt-0">
-        <!-- QR Code for App Download -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 max-w-sm mx-auto transform hover:scale-105 transition duration-300">
-          <div class="text-center mb-4">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Scan to Download</h3>
-            <p class="text-gray-600 dark:text-gray-400 text-sm">
-              Use your phone camera to scan this QR code
-            </p>
-          </div>
+      <!-- Right Column: QR Code with 3D Effect -->
+      <div class="lg:w-2/5 mt-8 lg:mt-0 animate-fade-in-right">
+        <!-- Phone mockup with QR code -->
+        <div class="relative mx-auto max-w-sm perspective-card">
+          <!-- Phone frame with 3D effect -->
+          <div class="relative transform hover:rotate-y-12 transition-all duration-700">
+            <!-- Background glow effect -->
+            <div class="absolute -inset-4 bg-gradient-to-br from-primary-500/10 via-secondary-500/10 to-primary-600/10 blur-xl rounded-[60px] opacity-70 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <!-- Phone frame -->
+            <div class="relative bg-gradient-to-b from-gray-800 to-gray-900 rounded-[40px] p-8 shadow-2xl border-4 border-gray-700">
+              <!-- Phone notch -->
+              <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-1/3 h-6 bg-black rounded-b-xl"></div>
+              
+              <!-- QR Code container -->
+              <div class="bg-white dark:bg-gray-200 rounded-3xl p-6 shadow-inner">
+                <div class="text-center mb-4">
+                  <h3 class="text-xl font-bold text-gray-900">Scan to Download</h3>
+                  <p class="text-gray-600 text-sm mb-2">
+                    Use your phone camera to scan
+                  </p>
+                  <div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-primary-100 text-primary-800 text-xs font-medium mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Instant Access
+                  </div>
+                </div>
 
-          <div class="bg-white p-4 rounded-xl mx-auto max-w-xs">
-            <div class="aspect-square w-full flex items-center justify-center">
-              <!-- QR Code -->
-              <img src="<%= asset_path('qr-code.svg') %>" alt="QR Code to download app" class="w-full h-full" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20fill%3D%22%23f8f9fa%22%20width%3D%22200%22%20height%3D%22200%22%2F%3E%3Cg%20fill%3D%22%23adb5bd%22%3E%3Crect%20x%3D%2250%22%20y%3D%2250%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Crect%20x%3D%2260%22%20y%3D%2260%22%20width%3D%2280%22%20height%3D%2280%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%2270%22%20y%3D%2270%22%20width%3D%2260%22%20height%3D%2260%22%2F%3E%3C%2Fg%3E%3Ctext%20x%3D%22100%22%20y%3D%22180%22%20font-family%3D%22Arial%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%20fill%3D%22%23495057%22%3EScan%20to%20download%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-100 dark:to-primary-200 p-4 rounded-xl mx-auto">
+                  <div class="aspect-square w-full flex items-center justify-center relative">
+                    <!-- QR Code with logo overlay -->
+                    <img src="<%= asset_path('qr-code.svg') %>" alt="QR Code to download app" class="w-full h-full" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20fill%3D%22%23f8f9fa%22%20width%3D%22200%22%20height%3D%22200%22%2F%3E%3Cg%20fill%3D%22%23adb5bd%22%3E%3Crect%20x%3D%2250%22%20y%3D%2250%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Crect%20x%3D%2260%22%20y%3D%2260%22%20width%3D%2280%22%20height%3D%2280%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%2270%22%20y%3D%2270%22%20width%3D%2260%22%20height%3D%2260%22%2F%3E%3C%2Fg%3E%3Ctext%20x%3D%22100%22%20y%3D%22180%22%20font-family%3D%22Arial%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%20fill%3D%22%23495057%22%3EScan%20to%20download%3C%2Ftext%3E%3C%2Fsvg%3E'">
+
+                    <!-- Logo overlay (center of QR code) -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <div class="bg-white p-2.5 rounded-lg shadow-lg">
+                        <svg class="w-10 h-10 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                  <p class="text-sm text-gray-500">
+                    Or visit <span class="text-primary-600 font-semibold">superghanaglobal.com/download</span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Home indicator -->
+              <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-1/3 h-1 bg-gray-500 rounded-full"></div>
             </div>
           </div>
 
-          <div class="mt-4 text-center">
-            <p class="text-xs text-gray-500 dark:text-gray-400">
-              Or visit <span class="text-primary-600 dark:text-primary-400 font-semibold">superghanaglobal.com/download</span>
-            </p>
+          <!-- Decorative elements -->
+          <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-primary-500 rounded-full filter blur-xl opacity-30"></div>
+          <div class="absolute -top-6 -left-6 w-24 h-24 bg-secondary-500 rounded-full filter blur-xl opacity-30"></div>
+          
+          <!-- Floating notification -->
+          <div class="absolute -top-4 -right-4 animate-float-slow max-w-[120px]">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-2 shadow-xl border border-gray-100 dark:border-gray-700 text-center text-xs">
+              <div class="flex justify-center mb-1">
+                <svg class="h-4 w-4 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                </svg>
+              </div>
+              <p class="font-medium text-gray-900 dark:text-white">5K+ downloads today!</p>
+            </div>
           </div>
         </div>
       </div>
@@ -773,348 +1063,399 @@
   </div>
 </section>
 
-<!-- FAQ Section -->
-<section class="py-20 bg-gray-50 dark:bg-gray-800">
-  <div class="container mx-auto px-4">
+<!-- FAQ Section with Animated Accordions -->
+<section class="py-24 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden">
+  <!-- Background elements -->
+  <div class="absolute inset-0 pattern-dots opacity-5 dark:opacity-10"></div>
+  <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent"></div>
+  
+  <div class="container mx-auto px-4 relative z-10">
     <div class="text-center mb-16">
-      <div class="inline-block p-3 rounded-full bg-info-100 dark:bg-info-900 text-info-600 dark:text-info-400 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <!-- Icon -->
+      <div class="inline-flex items-center justify-center p-4 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 mb-6 shadow-md border border-primary-200 dark:border-primary-800/30 animate-fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">Frequently Asked Questions</h2>
-      <div class="w-20 h-1 bg-info-500 mx-auto mb-8"></div>
-      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-        Get answers to common questions about Super Ghana
+
+      <!-- Heading -->
+      <h2 class="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in">
+        <span class="block text-gray-900 dark:text-white">Frequently Asked</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-400 dark:to-primary-500">Questions</span>
+      </h2>
+
+      <!-- Divider -->
+      <div class="w-24 h-1.5 mx-auto mb-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse-slow"></div>
+
+      <!-- Description -->
+      <p class="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto font-medium leading-relaxed animate-fade-in animation-delay-200 mb-12">
+        Find answers to the most common questions about Super Ghana App and our services.
       </p>
     </div>
 
+    <!-- FAQ Accordion -->
     <div class="max-w-4xl mx-auto" data-controller="accordion">
       <!-- FAQ Item 1 -->
-      <div class="border-b border-gray-200 dark:border-gray-700">
-        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
-          <span class="text-lg font-semibold text-gray-900 dark:text-white">What is Super Ghana?</span>
-          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="mb-5 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-md">
+        <button
+          class="w-full flex justify-between items-center p-5 text-left text-gray-900 dark:text-white font-medium focus:outline-none"
+          data-action="accordion#toggle"
+          data-accordion-target="item"
+          aria-expanded="false">
+          <span class="text-lg">How do I create an account?</span>
+          <svg data-accordion-target="chevron" class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="pb-6" data-accordion-target="content">
-          <p class="text-gray-700 dark:text-gray-300">
-            Super Ghana is a comprehensive digital platform that brings together essential services in one application. It includes mobile money transfers, bill payments, shopping, transportation services, agricultural tools, financial services, and community features - all designed specifically for the Ghanaian market.
-          </p>
+        <div data-accordion-target="content" class="hidden transition-all duration-300 overflow-hidden">
+          <div class="p-5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+            <p class="text-gray-700 dark:text-gray-300">
+              Creating an account is easy! Simply download the Super Ghana App from the App Store or Google Play Store, open the app, and tap "Sign Up". You'll need to provide your phone number, create a password, and verify your identity with a valid ID. The whole process takes less than 5 minutes.
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- FAQ Item 2 -->
-      <div class="border-b border-gray-200 dark:border-gray-700">
-        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
-          <span class="text-lg font-semibold text-gray-900 dark:text-white">Is my money safe with Super Ghana?</span>
-          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="mb-5 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-md">
+        <button
+          class="w-full flex justify-between items-center p-5 text-left text-gray-900 dark:text-white font-medium focus:outline-none"
+          data-action="accordion#toggle"
+          data-accordion-target="item"
+          aria-expanded="false">
+          <span class="text-lg">Is my money and data safe?</span>
+          <svg data-accordion-target="chevron" class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="pb-6" data-accordion-target="content">
-          <p class="text-gray-700 dark:text-gray-300">
-            Absolutely! We prioritize the security of your funds and personal information. Super Ghana employs industry-leading security measures, including encryption, secure authentication, and fraud detection systems. Additionally, we comply with all relevant financial regulations in Ghana to ensure your money is protected.
-          </p>
+        <div data-accordion-target="content" class="hidden transition-all duration-300 overflow-hidden">
+          <div class="p-5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+            <p class="text-gray-700 dark:text-gray-300">
+              Absolutely! Super Ghana takes security very seriously. We use bank-level encryption to protect your financial data and transactions. All funds are held in regulated financial institutions, and we comply with Bank of Ghana regulations. We also have multiple security features like PIN protection, biometric authentication, and real-time fraud monitoring to keep your money safe.
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- FAQ Item 3 -->
-      <div class="border-b border-gray-200 dark:border-gray-700">
-        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
-          <span class="text-lg font-semibold text-gray-900 dark:text-white">Can I use Super Ghana if I don't have a smartphone?</span>
-          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="mb-5 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-md">
+        <button
+          class="w-full flex justify-between items-center p-5 text-left text-gray-900 dark:text-white font-medium focus:outline-none"
+          data-action="accordion#toggle"
+          data-accordion-target="item"
+          aria-expanded="false">
+          <span class="text-lg">What fees does Super Ghana charge?</span>
+          <svg data-accordion-target="chevron" class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="pb-6" data-accordion-target="content">
-          <p class="text-gray-700 dark:text-gray-300">
-            Yes! While the full app experience is available on smartphones, we've also designed basic services to be accessible via USSD codes on feature phones. This ensures that essential financial services are available to all Ghanaians, regardless of the type of phone they use.
-          </p>
+        <div data-accordion-target="content" class="hidden transition-all duration-300 overflow-hidden">
+          <div class="p-5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+            <p class="text-gray-700 dark:text-gray-300">
+              Super Ghana offers many free services, including account creation, maintenance, and most transfers between Super Ghana users. We charge small fees for services like withdrawals to bank accounts, bill payments, and international transfers. All fees are clearly displayed before you confirm any transaction, so there are never any surprises. Visit our pricing page for a detailed breakdown of all fees.
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- FAQ Item 4 -->
-      <div>
-        <button class="flex justify-between items-center w-full py-6 text-left" data-action="accordion#toggle">
-          <span class="text-lg font-semibold text-gray-900 dark:text-white">How can I become a merchant on Super Ghana?</span>
-          <svg class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform" data-accordion-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div class="mb-5 overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-md">
+        <button
+          class="w-full flex justify-between items-center p-5 text-left text-gray-900 dark:text-white font-medium focus:outline-none"
+          data-action="accordion#toggle"
+          data-accordion-target="item"
+          aria-expanded="false">
+          <span class="text-lg">How can I use the agricultural services?</span>
+          <svg data-accordion-target="chevron" class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="pb-6" data-accordion-target="content">
-          <p class="text-gray-700 dark:text-gray-300">
-            To become a merchant, download the app and select "Become a Merchant" in the settings menu. You'll need to provide business details and documentation for verification. Once approved, you'll receive a merchant QR code for accepting payments and can set up your storefront in the marketplace to sell products and services.
+        <div data-accordion-target="content" class="hidden transition-all duration-300 overflow-hidden">
+          <div class="p-5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+            <p class="text-gray-700 dark:text-gray-300">
+              To access agricultural services, create an account and navigate to the "Agriculture" section of the app. There, you can check current market prices for crops, view weather forecasts specific to your region, connect with buyers or sellers in the marketplace, access farming tips and resources, and even apply for agricultural loans if eligible. The service is designed to be easy to use even for those with limited technical experience.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Item 5 -->
+      <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800/50 shadow-md">
+        <button
+          class="w-full flex justify-between items-center p-5 text-left text-gray-900 dark:text-white font-medium focus:outline-none"
+          data-action="accordion#toggle"
+          data-accordion-target="item"
+          aria-expanded="false">
+          <span class="text-lg">What if I need help or support?</span>
+          <svg data-accordion-target="chevron" class="w-6 h-6 text-gray-500 dark:text-gray-400 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div data-accordion-target="content" class="hidden transition-all duration-300 overflow-hidden">
+          <div class="p-5 border-t border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800">
+            <p class="text-gray-700 dark:text-gray-300">
+              Super Ghana offers 24/7 customer support through multiple channels. You can chat with our support team directly in the app, call our toll-free helpline at 0800-SUPER-GH, email us at support@superghanaglobal.com, or visit any of our physical support centers across Ghana. We also have a comprehensive help center with guides and tutorials to help you use the app effectively.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- View All FAQs Button -->
+      <div class="text-center mt-10">
+        <a href="/faq" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-xl text-base font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          View All FAQs
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter Section with Enhanced Design -->
+<section class="py-20 relative overflow-hidden">
+  <!-- Background with gradient -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-600 to-primary-700 z-0"></div>
+
+  <!-- Pattern overlay -->
+  <div class="absolute inset-0 pattern-grid opacity-10 z-0"></div>
+
+  <!-- Decorative elements -->
+  <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full filter blur-3xl opacity-10"></div>
+  <div class="absolute bottom-0 left-0 w-64 h-64 bg-white rounded-full filter blur-3xl opacity-10"></div>
+
+  <!-- Floating mail icons (decorative) -->
+  <div class="absolute top-1/4 left-[10%] animate-float">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  </div>
+  <div class="absolute bottom-1/4 right-[10%] animate-float animation-delay-1000">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  </div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="max-w-3xl mx-auto">
+      <!-- Newsletter card with glass effect -->
+      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-10 border border-white/20 shadow-2xl">
+        <div class="text-center mb-8">
+          <!-- Icon -->
+          <div class="inline-flex items-center justify-center p-3 rounded-full bg-white/20 text-white mb-6 shadow-lg border border-white/30">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+          </div>
+
+          <!-- Heading -->
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4 text-white drop-shadow-md">
+            Stay <span class="text-secondary-300">Updated</span>
+          </h2>
+
+          <!-- Description -->
+          <p class="text-white text-lg font-medium mb-8 leading-relaxed">
+            Subscribe to our newsletter to receive updates, special offers, and exclusive tips to make the most of Super Ghana.
+          </p>
+        </div>
+
+        <!-- Form with enhanced design -->
+        <form class="flex flex-col sm:flex-row gap-4 mb-6">
+          <div class="flex-1 relative">
+            <!-- Email input with icon -->
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+            </div>
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              class="w-full rounded-xl px-12 py-4 text-gray-900 bg-white border-0 shadow-md focus:ring-2 focus:ring-primary-300 focus:outline-none"
+            >
+          </div>
+
+          <!-- Submit button with animation -->
+          <button type="submit" class="group relative overflow-hidden bg-gradient-to-r from-secondary-500 to-secondary-600 hover:from-secondary-600 hover:to-secondary-700 text-white font-bold rounded-xl px-8 py-4 shadow-lg transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <!-- Background shimmer animation -->
+            <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+            
+            <span class="relative flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+              Subscribe
+            </span>
+          </button>
+        </form>
+
+        <!-- Features list -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-white">Weekly updates</span>
+          </div>
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-white">Exclusive offers</span>
+          </div>
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-white">Financial tips</span>
+          </div>
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-white">New feature alerts</span>
+          </div>
+        </div>
+
+        <!-- Privacy note -->
+        <div class="text-center">
+          <p class="text-white/80 text-sm">
+            We respect your privacy. Unsubscribe at any time with one click.
           </p>
         </div>
       </div>
     </div>
-
-    <div class="text-center mt-12">
-      <a href="#" class="btn-primary inline-flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-        </svg>
-        Contact Support
-      </a>
-    </div>
   </div>
 </section>
 
-<!-- Newsletter Section -->
-<section class="py-16 bg-primary-600 text-white">
-  <div class="container mx-auto px-4">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-2xl sm:text-3xl font-bold mb-4">Stay Updated</h2>
-      <p class="text-white/80 mb-8">
-        Subscribe to our newsletter to receive updates, special offers, and exclusive tips.
-      </p>
-
-      <form class="flex flex-col sm:flex-row gap-4">
-        <input type="email" placeholder="Enter your email" class="flex-1 rounded-lg px-4 py-3 text-gray-900 border-0 focus:ring-2 focus:ring-white">
-        <button type="submit" class="bg-white text-primary-600 font-medium rounded-lg px-6 py-3 hover:bg-white/90 transition">
-          Subscribe
-        </button>
-      </form>
-
-      <p class="text-white/60 text-sm mt-4">
-        We respect your privacy. Unsubscribe at any time.
-      </p>
-    </div>
-  </div>
-</section>
-<!-- Custom CSS for additional styling -->
+<!-- Custom CSS for page-specific styling -->
 <style>
-  /* Feature Card Styling */
-  .feature-card {
-    @apply bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden transition transform hover:shadow-lg hover:-translate-y-1;
+  /* Perspective Card Effect */
+  .perspective-card {
+    perspective: 2000px;
+  }
+  
+  .perspective-phone {
+    transform-style: preserve-3d;
+    transform: perspective(2000px) rotateY(5deg) rotateX(5deg);
+  }
+  
+  .transform.hover\:rotate-y-12:hover {
+    transform: rotateY(12deg);
   }
 
-  /* Button Styling */
-  .btn-primary {
-    @apply px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition shadow-md;
+  /* Background Patterns */
+  .pattern-grid {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
-
-  .btn-secondary {
-    @apply px-6 py-3 bg-white hover:bg-gray-100 text-primary-600 font-medium rounded-lg border border-primary-500 transition shadow-md;
-  }
-
-  .btn-white {
-    @apply px-6 py-3 bg-white hover:bg-gray-100 text-gray-900 font-medium rounded-lg transition shadow-md;
-  }
-
-  /* Phone Mockup Styling */
-  .phone-mockup {
-    @apply relative w-full max-w-xs mx-auto;
-    aspect-ratio: 1/2;
-  }
-
-  .phone-mockup::before {
-    content: "";
-    @apply absolute inset-0 bg-gray-900 rounded-[40px] border-4 border-gray-800 shadow-2xl;
-    z-index: 1;
-  }
-
-  .phone-screen {
-    @apply absolute top-2 right-2 bottom-2 left-2 bg-white rounded-[32px] overflow-hidden;
-    z-index: 2;
-  }
-
-  /* Text Gradient */
-  .text-gradient {
-    @apply text-transparent bg-clip-text;
-    -webkit-background-clip: text;
-  }
-
-  /* Pattern Styling */
+  
   .pattern-dots {
     background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
   /* Animations */
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out;
-    opacity: 1; /* Make sure text is visible by default */
-    animation-fill-mode: forwards;
-  }
-
-  .animate-fade-in-delay {
-    animation: fadeIn 1s ease-out 0.3s;
-    opacity: 1; /* Make sure text is visible by default */
-    animation-fill-mode: forwards;
-  }
-
-  .animate-fade-in-delay-long {
-    animation: fadeIn 1s ease-out 0.6s;
-    opacity: 1; /* Make sure text is visible by default */
-    animation-fill-mode: forwards;
-  }
-
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-
-  .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
   @keyframes fadeIn {
-    from { opacity: 0.8; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
+  
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
   @keyframes float {
-    0% { transform: translateY(0px); }
+    0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
   }
-
-  @keyframes pulse {
+  
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes pulseSlow {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.6; }
   }
-
-  /* Download Button Hover Effect */
-  .download-button:hover svg {
-    @apply animate-pulse;
+  
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
   }
-
-  /* Responsive Adjustments */
-  @media (max-width: 640px) {
-    .phone-mockup {
-      max-width: 220px;
-    }
+  
+  .animate-fade-in-right {
+    animation: fadeInRight 1s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: floatSlow 8s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animation-delay-500 {
+    animation-delay: 0.5s;
+  }
+  
+  .animation-delay-700 {
+    animation-delay: 0.7s;
+  }
+  
+  .animation-delay-1000 {
+    animation-delay: 1s;
+  }
+  
+  .animation-delay-1500 {
+    animation-delay: 1.5s;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
   }
 </style>
 
-<!-- JavaScript for Interactivity -->
+<!-- JavaScript for Accordion functionality -->
 <script>
   document.addEventListener('turbo:load', function() {
-    // Initialize Alpine.js components if they exist
-    if (typeof Alpine !== 'undefined') {
-      Alpine.start();
-    }
-
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop,
-            behavior: 'smooth'
-          });
-        }
-      });
-    });
-
-    // Intersection Observer for animations
-    const animateElements = document.querySelectorAll('.feature-card, .feature-highlight');
-
-    // First make sure all elements are visible by default
-    animateElements.forEach(el => {
-      el.style.opacity = '1';
-      el.classList.add('animate-fade-in');
-    });
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      animateElements.forEach(el => {
-        observer.observe(el);
-      });
-    }
-
-    // Theme toggle functionality
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
-
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener('click', function() {
-        if (htmlElement.classList.contains('dark')) {
-          htmlElement.classList.remove('dark');
-          localStorage.theme = 'light';
-        } else {
-          htmlElement.classList.add('dark');
-          localStorage.theme = 'dark';
-        }
-      });
-    }
-
-    // Set initial theme
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      htmlElement.classList.add('dark');
-    } else {
-      htmlElement.classList.remove('dark');
-    }
-
-    // Accordion functionality
-    const accordionButtons = document.querySelectorAll('[data-action="accordion#toggle"]');
-
-    // Initialize accordion icons to show expanded state
-    document.querySelectorAll('[data-accordion-target="icon"]').forEach(icon => {
-      icon.classList.add('rotate-180');
-    });
-
-    // Make sure all accordion contents are visible by default
-    document.querySelectorAll('[data-accordion-target="content"]').forEach(content => {
-      content.style.display = 'block';
-    });
-
-    accordionButtons.forEach(button => {
-      button.addEventListener('click', function() {
+    const accordionItems = document.querySelectorAll('[data-accordion-target="item"]');
+    
+    accordionItems.forEach(item => {
+      item.addEventListener('click', function() {
         const content = this.nextElementSibling;
-        const icon = this.querySelector('[data-accordion-target="icon"]');
-
-        if (content.style.display === 'none') {
-          content.style.display = 'block';
-          icon.classList.add('rotate-180');
+        const chevron = this.querySelector('[data-accordion-target="chevron"]');
+        
+        // Toggle expanded state
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !expanded);
+        
+        // Toggle content visibility
+        if (expanded) {
+          content.style.maxHeight = '0px';
+          setTimeout(() => {
+            content.classList.add('hidden');
+          }, 300);
+          chevron.classList.remove('rotate-180');
         } else {
-          content.style.display = 'none';
-          icon.classList.remove('rotate-180');
+          content.classList.remove('hidden');
+          content.style.maxHeight = content.scrollHeight + 'px';
+          chevron.classList.add('rotate-180');
         }
       });
     });
-
-    // Parallax effect for hero section
-    const parallaxElements = document.querySelectorAll('[data-controller="parallax"]');
-
-    if (parallaxElements.length > 0) {
-      window.addEventListener('scroll', function() {
-        const scrollPosition = window.pageYOffset;
-
-        parallaxElements.forEach(element => {
-          const image = element.querySelector('[data-parallax-target="image"]');
-          if (image) {
-            // Move the image at 40% of the scroll speed
-            image.style.transform = `translateY(${scrollPosition * 0.4}px)`;
-          }
-        });
-      });
-    }
-
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
   });
 </script>

@@ -5,42 +5,63 @@
     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Manage your payment methods and preferences</p>
   </div>
 
-  <%# Tabs Navigation %>
-  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex flex-wrap -mb-px">
-      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
-        Overview
+  <%# Tabs Navigation - Enhanced for mobile %>
+  <div class="mb-8 overflow-x-auto">
+    <div class="flex flex-nowrap min-w-full pb-1" data-controller="tabs">
+      <%# Overview Tab %>
+      <%= link_to user_settings_path, class: "flex flex-col items-center mr-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "user", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Overview</span>
       <% end %>
-      
-      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
-        Profile
+
+      <%# Profile Tab %>
+      <%= link_to user_settings_profile_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_profile_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_profile_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_profile_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_profile_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "profile", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Profile</span>
       <% end %>
-      
-      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
-        Security
+
+      <%# Security Tab %>
+      <%= link_to user_settings_security_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_security_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_security_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_security_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_security_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "shield-check", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Security</span>
       <% end %>
-      
-      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
-        Notifications
+
+      <%# Notifications Tab %>
+      <%= link_to user_settings_notifications_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_notifications_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_notifications_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_notifications_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_notifications_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "bell", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Notifications</span>
       <% end %>
-      
-      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
-        Appearance
+
+      <%# Appearance Tab %>
+      <%= link_to user_settings_appearance_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_appearance_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_appearance_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_appearance_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_appearance_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "paint-brush", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Appearance</span>
       <% end %>
-      
-      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
-        Payment
+
+      <%# Payment Tab %>
+      <%= link_to user_settings_payment_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_payment_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_payment_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_payment_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_payment_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "money", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Payment</span>
       <% end %>
-      
-      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
-        Support
+
+      <%# Support Tab %>
+      <%= link_to user_settings_support_path, class: "flex flex-col items-center ml-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_support_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_support_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_support_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_support_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "support", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Support</span>
       <% end %>
     </div>
   </div>
@@ -55,14 +76,18 @@
           Add Payment Method
         <% end %>
       </div>
-      
+
       <% if @payment_methods.empty? %>
-        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-8 text-center">
+        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 sm:p-8 text-center">
           <div class="flex flex-col items-center justify-center">
-            <%= icon "credit-card", class: "w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" %>
-            <p>No payment methods added yet</p>
-            <p class="mt-1 text-sm">Add a payment method to deposit or withdraw money</p>
-            <%= link_to new_payment_method_path, class: "mt-4 btn btn-primary" do %>
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-full shadow-md mb-4">
+              <%= icon "credit-card", class: "w-12 h-12 text-primary-500 dark:text-primary-400" %>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No payment methods added yet</h3>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+              Add a payment method to deposit or withdraw money. You can add credit cards, debit cards, or mobile money accounts.
+            </p>
+            <%= link_to new_payment_method_path, class: "mt-6 btn btn-primary w-full sm:w-auto" do %>
               <%= icon "plus", class: "w-4 h-4 mr-1" %>
               Add Payment Method
             <% end %>
@@ -71,27 +96,29 @@
       <% else %>
         <div class="space-y-4">
           <% @payment_methods.each do |method| %>
-            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-              <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div class="flex items-center mb-4 md:mb-0">
+            <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow duration-300">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center mb-4 sm:mb-0">
                   <div class="flex-shrink-0">
-                    <div class="h-12 w-12 rounded-full <%= method_type_color(method.method_type) %> flex items-center justify-center">
+                    <div class="h-12 w-12 rounded-full <%= method_type_color(method.method_type) %> flex items-center justify-center shadow-sm">
                       <%= icon method.icon_name, class: "h-6 w-6" %>
                     </div>
                   </div>
-                  <div class="ml-4">
-                    <div class="text-base font-medium text-gray-900 dark:text-white flex items-center">
-                      <%= method.provider %>
+                  <div class="ml-4 flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="text-base font-medium text-gray-900 dark:text-white truncate">
+                        <%= method.provider %>
+                      </span>
                       <% if method.default? %>
-                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                           Default
                         </span>
                       <% end %>
-                      <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= method_status_color(method.status) %>">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= method_status_color(method.status) %>">
                         <%= method.status.titleize %>
                       </span>
                     </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       <%= method.masked_account_number %>
                     </div>
                     <% if method.last_used_at %>
@@ -101,7 +128,7 @@
                     <% end %>
                   </div>
                 </div>
-                <div class="flex space-x-2">
+                <div class="flex flex-wrap gap-2">
                   <% unless method.default? %>
                     <%= link_to set_default_payment_method_path(method), method: :post, class: "btn btn-sm btn-white" do %>
                       <%= icon "star", class: "w-4 h-4 mr-1" %>
@@ -112,7 +139,7 @@
                     <button data-action="dropdown#toggle" class="btn btn-sm btn-white">
                       <%= icon "dots-vertical", class: "w-4 h-4" %>
                     </button>
-                    <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48">
+                    <div data-dropdown-target="menu" class="dropdown-menu hidden right-0 w-48 z-10">
                       <%= link_to edit_payment_method_path(method), class: "dropdown-item" do %>
                         <%= icon "edit", class: "w-4 h-4 mr-2" %>
                         Edit
@@ -137,56 +164,89 @@
       <% end %>
     </div>
   </div>
-  
-  <%# Payment Preferences %>
+
+  <%# Payment Preferences - Improved for mobile %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
-    <div class="p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Payment Preferences</h2>
-      
-      <div class="space-y-4">
-        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Transaction Confirmation</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Require PIN confirmation for all transactions</p>
+    <div class="p-4 sm:p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Payment Preferences</h2>
+        <button type="button" class="btn btn-sm btn-primary-outline hidden sm:flex">
+          <%= icon "save", class: "w-4 h-4 mr-1" %>
+          Save Changes
+        </button>
+      </div>
+
+      <div class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div class="mb-3 sm:mb-0 sm:mr-4">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
+                <%= icon "shield-check", class: "h-4 w-4" %>
+              </div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Transaction Confirmation</h3>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 ml-11">Require PIN confirmation for all transactions</p>
           </div>
-          <div class="relative inline-block w-12 align-middle select-none">
-            <input type="checkbox" name="require_pin" id="require_pin" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
-            <label for="require_pin" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          <div class="relative inline-block w-14 align-middle select-none">
+            <input type="checkbox" name="require_pin" id="require_pin" checked class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="require_pin" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label>
           </div>
         </div>
-        
-        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Daily Transaction Limit</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Maximum amount to spend per day</p>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div class="mb-3 sm:mb-0 sm:mr-4">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-3">
+                <%= icon "currency-dollar", class: "h-4 w-4" %>
+              </div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Daily Transaction Limit</h3>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 ml-11">Maximum amount to spend per day</p>
           </div>
           <div class="flex items-center">
             <span class="text-gray-900 dark:text-white font-medium mr-2">₵<%= current_user.wallet.daily_limit %></span>
             <button type="button" class="btn btn-sm btn-primary-outline">Edit</button>
           </div>
         </div>
-        
-        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Automatic Payment</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Automatically pay scheduled transactions</p>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
+          <div class="mb-3 sm:mb-0 sm:mr-4">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-3">
+                <%= icon "clock", class: "h-4 w-4" %>
+              </div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Automatic Payment</h3>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 ml-11">Automatically pay scheduled transactions</p>
           </div>
-          <div class="relative inline-block w-12 align-middle select-none">
-            <input type="checkbox" name="auto_pay" id="auto_pay" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
-            <label for="auto_pay" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-          </div>
-        </div>
-        
-        <div class="flex items-center justify-between py-3">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Payment Receipts</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Email receipts for all transactions</p>
-          </div>
-          <div class="relative inline-block w-12 align-middle select-none">
-            <input type="checkbox" name="email_receipts" id="email_receipts" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
-            <label for="email_receipts" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+          <div class="relative inline-block w-14 align-middle select-none">
+            <input type="checkbox" name="auto_pay" id="auto_pay" class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="auto_pay" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label>
           </div>
         </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3">
+          <div class="mb-3 sm:mb-0 sm:mr-4">
+            <div class="flex items-center">
+              <div class="h-8 w-8 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center text-orange-600 dark:text-orange-400 mr-3">
+                <%= icon "mail", class: "h-4 w-4" %>
+              </div>
+              <h3 class="text-base font-medium text-gray-900 dark:text-white">Payment Receipts</h3>
+            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 ml-11">Email receipts for all transactions</p>
+          </div>
+          <div class="relative inline-block w-14 align-middle select-none">
+            <input type="checkbox" name="email_receipts" id="email_receipts" checked class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"/>
+            <label for="email_receipts" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer"></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8 sm:hidden">
+        <button type="button" class="btn btn-primary w-full">
+          <%= icon "save", class: "w-4 h-4 mr-1" %>
+          Save Changes
+        </button>
       </div>
     </div>
   </div>
@@ -200,37 +260,13 @@
   .toggle-checkbox:checked + .toggle-label {
     @apply bg-primary-600;
   }
+  .toggle-label {
+    @apply transition-colors duration-300;
+  }
+  .toggle-checkbox {
+    @apply shadow-sm z-10;
+  }
+  .toggle-checkbox:focus + .toggle-label {
+    @apply ring-2 ring-primary-200;
+  }
 </style>
-
-<%# Helper method for payment method type colors %>
-<% 
-  def method_type_color(type)
-    case type
-    when 'bank'
-      'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400'
-    when 'card'
-      'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400'
-    when 'mobile_money'
-      'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400'
-    when 'wallet'
-      'bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400'
-    else
-      'bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400'
-    end
-  end
-
-  def method_status_color(status)
-    case status
-    when 'verified'
-      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-    when 'pending'
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-    when 'rejected'
-      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-    when 'expired'
-      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-    else
-      'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
-    end
-  end
-%>

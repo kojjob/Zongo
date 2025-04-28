@@ -2,6 +2,19 @@ class Users::PasswordsController < Devise::PasswordsController
   # Add a before_action to ensure the Devise mapping is set for custom actions
   before_action :set_devise_mapping, only: [ :reset_success, :instructions_sent, :dev_reset ]
 
+  # Override Devise's method to handle already authenticated users
+  def require_no_authentication
+    return unless is_navigational_format?
+
+    if user_signed_in?
+      # Only redirect if trying to access password reset page
+      if request.path == new_password_path(:user)
+        redirect_to user_settings_profile_path
+        return
+      end
+    end
+  end
+
   # Development-only method to generate a password reset token and show the reset link
   # This bypasses the email step for easier testing
   def dev_reset

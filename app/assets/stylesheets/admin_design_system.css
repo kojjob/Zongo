@@ -1,0 +1,263 @@
+/* Admin Design System
+   A comprehensive design system for the admin interface with reusable components
+   and consistent styling across all admin pages.
+*/
+
+/* ===== COLORS ===== */
+:root {
+  /* Primary Colors */
+  --admin-primary-50: #eef2ff;
+  --admin-primary-100: #e0e7ff;
+  --admin-primary-200: #c7d2fe;
+  --admin-primary-300: #a5b4fc;
+  --admin-primary-400: #818cf8;
+  --admin-primary-500: #6366f1;
+  --admin-primary-600: #4f46e5;
+  --admin-primary-700: #4338ca;
+  --admin-primary-800: #3730a3;
+  --admin-primary-900: #312e81;
+  
+  /* Secondary Colors */
+  --admin-secondary-50: #f5f3ff;
+  --admin-secondary-100: #ede9fe;
+  --admin-secondary-200: #ddd6fe;
+  --admin-secondary-300: #c4b5fd;
+  --admin-secondary-400: #a78bfa;
+  --admin-secondary-500: #8b5cf6;
+  --admin-secondary-600: #7c3aed;
+  --admin-secondary-700: #6d28d9;
+  --admin-secondary-800: #5b21b6;
+  --admin-secondary-900: #4c1d95;
+  
+  /* Accent Colors */
+  --admin-accent-blue: #3b82f6;
+  --admin-accent-green: #10b981;
+  --admin-accent-red: #ef4444;
+  --admin-accent-amber: #f59e0b;
+  --admin-accent-purple: #8b5cf6;
+  
+  /* Neutral Colors */
+  --admin-neutral-50: #f9fafb;
+  --admin-neutral-100: #f3f4f6;
+  --admin-neutral-200: #e5e7eb;
+  --admin-neutral-300: #d1d5db;
+  --admin-neutral-400: #9ca3af;
+  --admin-neutral-500: #6b7280;
+  --admin-neutral-600: #4b5563;
+  --admin-neutral-700: #374151;
+  --admin-neutral-800: #1f2937;
+  --admin-neutral-900: #111827;
+}
+
+/* Dark mode color adjustments */
+.dark {
+  --admin-card-bg: var(--admin-neutral-800);
+  --admin-card-border: rgba(255, 255, 255, 0.1);
+  --admin-text-primary: #ffffff;
+  --admin-text-secondary: rgba(255, 255, 255, 0.7);
+}
+
+/* Light mode color adjustments */
+:root:not(.dark) {
+  --admin-card-bg: #ffffff;
+  --admin-card-border: rgba(0, 0, 0, 0.05);
+  --admin-text-primary: var(--admin-neutral-900);
+  --admin-text-secondary: var(--admin-neutral-600);
+}
+
+/* ===== PATTERNS ===== */
+.bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.bg-dots {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3Ccircle cx='13' cy='13' r='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.dark .bg-dots {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3Ccircle cx='13' cy='13' r='1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ===== COMPONENTS ===== */
+
+/* Hero Sections */
+.admin-hero {
+  @apply relative overflow-hidden rounded-xl shadow-lg;
+  background: linear-gradient(to right, var(--admin-primary-600), var(--admin-secondary-600));
+}
+
+.admin-hero-pattern {
+  @apply absolute inset-0 bg-pattern opacity-10;
+}
+
+.admin-hero-content {
+  @apply relative px-6 py-8 sm:px-10 sm:py-12;
+}
+
+/* Cards */
+.admin-card {
+  @apply bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 hover:shadow-xl;
+}
+
+.admin-card-accent {
+  @apply relative;
+}
+
+.admin-card-accent::before {
+  content: '';
+  @apply absolute top-0 inset-x-0 h-1 rounded-t-xl;
+  background: linear-gradient(to right, var(--admin-primary-500), var(--admin-secondary-500));
+}
+
+/* Card Headers */
+.admin-card-header {
+  @apply px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between;
+}
+
+.admin-card-title {
+  @apply flex items-center;
+}
+
+.admin-card-title-icon {
+  @apply w-5 h-5 mr-3;
+}
+
+.admin-card-title-text {
+  @apply text-lg font-medium leading-6 text-gray-900 dark:text-white;
+}
+
+.admin-card-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+/* Card Content */
+.admin-card-content {
+  @apply p-6;
+}
+
+/* Data Cards */
+.admin-data-card {
+  @apply rounded-lg p-4 border;
+}
+
+/* Status Indicators */
+.admin-status-indicator {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs leading-5 font-semibold;
+}
+
+.admin-status-dot {
+  @apply w-2 h-2 rounded-full mr-1.5;
+}
+
+/* Gradient Cards */
+.admin-gradient-card {
+  @apply rounded-xl p-5 shadow-md;
+  background: linear-gradient(to bottom right, var(--admin-primary-500), var(--admin-secondary-600));
+}
+
+.admin-gradient-card-light {
+  @apply text-white;
+}
+
+.admin-gradient-card-dark {
+  @apply text-gray-900;
+}
+
+/* Timeline */
+.admin-timeline {
+  @apply relative;
+}
+
+.admin-timeline-line {
+  @apply absolute left-4 inset-y-0 w-0.5;
+  background: linear-gradient(to bottom, var(--admin-accent-amber), rgba(245, 158, 11, 0.1));
+}
+
+.admin-timeline-item {
+  @apply relative pl-8 mb-6;
+}
+
+.admin-timeline-marker {
+  @apply absolute left-0 top-1 w-8 flex items-center justify-center;
+}
+
+.admin-timeline-marker-circle {
+  @apply h-8 w-8 rounded-full flex items-center justify-center shadow-sm;
+}
+
+/* Buttons */
+.admin-button {
+  @apply inline-flex items-center px-4 py-2 border rounded-lg text-sm font-medium transition-all shadow-sm;
+}
+
+.admin-button-primary {
+  @apply border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.admin-button-secondary {
+  @apply border-indigo-300 text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+}
+
+.admin-button-danger {
+  @apply border-transparent text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500;
+}
+
+.admin-button-success {
+  @apply border-transparent text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500;
+}
+
+.admin-button-ghost {
+  @apply border-white/30 text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50;
+}
+
+/* Icons */
+.admin-icon-bg {
+  @apply p-2 rounded-md;
+}
+
+/* Empty States */
+.admin-empty-state {
+  @apply flex flex-col items-center justify-center py-8 text-center;
+}
+
+.admin-empty-state-icon {
+  @apply bg-gray-100 dark:bg-gray-700 p-4 rounded-full mb-4;
+}
+
+.admin-empty-state-title {
+  @apply text-lg font-medium text-gray-900 dark:text-white mb-2;
+}
+
+.admin-empty-state-description {
+  @apply text-sm text-gray-500 dark:text-gray-400 max-w-xs;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.admin-animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.admin-animate-slide-in {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+  .admin-card-header {
+    @apply flex-col items-start;
+  }
+  
+  .admin-card-header > div:last-child {
+    @apply mt-2;
+  }
+}

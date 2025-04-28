@@ -54,3 +54,55 @@ application.register("receive-money", ReceiveMoneyController)
 // Import and register icon controller
 import IconController from "./icon_controller"
 application.register("icon", IconController)
+
+// Import and register theme mode controller
+import ThemeModeController from "./theme_mode_controller"
+application.register("theme-mode", ThemeModeController)
+
+// Import and register avatar upload controller
+import AvatarUploadController from "./avatar_upload_controller"
+application.register("avatar-upload", AvatarUploadController)
+
+// Import and register scroll header controller
+import StickyHeaderController from "./sticky_header_controller"
+application.register("scroll-header", StickyHeaderController)
+
+// Import and register star rating controller
+import StarRatingController from "./star_rating_controller"
+application.register("star-rating", StarRatingController)
+
+// Import and register countdown controller
+import CountdownController from "./countdown_controller"
+application.register("countdown", CountdownController)
+
+// Import and register coupon controller
+import CouponController from "./coupon_controller"
+application.register("coupon", CouponController)
+
+// Import and register coupon form controller
+import CouponFormController from "./coupon_form_controller"
+application.register("coupon-form", CouponFormController)
+
+// Import and register sortable controller
+import SortableController from "./sortable_controller"
+application.register("sortable", SortableController)
+
+// Import and register product form controller
+import ProductFormController from "./product_form_controller"
+application.register("product-form", ProductFormController)
+
+// Import and register product gallery controller
+import ProductGalleryController from "./product_gallery_controller"
+application.register("product-gallery", ProductGalleryController)
+
+// Import and register product purchase controller
+import ProductPurchaseController from "./product_purchase_controller"
+application.register("product-purchase", ProductPurchaseController)
+
+// Import and register sticky cart controller
+import StickyCartController from "./sticky_cart_controller"
+application.register("sticky-cart", StickyCartController)
+
+// Import and register accordion controller
+import AccordionController from "./accordion_controller"
+application.register("accordion", AccordionController)

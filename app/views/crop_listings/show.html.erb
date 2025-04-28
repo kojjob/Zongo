@@ -1,0 +1,442 @@
+<%# Crop Listing Detail Page %>
+<% content_for :title, @crop_listing.title %>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <a href="<%= agriculture_marketplace_path %>" class="inline-flex items-center text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300">
+      <%= icon "arrow-left", class: "w-4 h-4 mr-2" %>
+      Back to Marketplace
+    </a>
+  </div>
+
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Main Content -->
+    <div class="w-full lg:w-2/3">
+      <!-- Listing Details -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+        <!-- Image Gallery -->
+        <div class="relative">
+          <% if @crop_listing.images.attached? %>
+            <div class="h-96 overflow-hidden">
+              <%= image_tag @crop_listing.images.first, class: "w-full h-full object-cover", id: "mainImage" %>
+            </div>
+
+            <% if @crop_listing.images.count > 1 %>
+              <div class="p-4 flex space-x-2 overflow-x-auto">
+                <% @crop_listing.images.each_with_index do |image, index| %>
+                  <div class="w-20 h-20 flex-shrink-0 cursor-pointer <%= index == 0 ? 'ring-2 ring-amber-500' : '' %>" onclick="changeMainImage(this, '<%= url_for(image) %>')">
+                    <%= image_tag image, class: "w-full h-full object-cover rounded-md" %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="h-96 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+              <%= icon "shopping-bag", class: "w-24 h-24 text-gray-400 dark:text-gray-500" %>
+            </div>
+          <% end %>
+
+          <div class="absolute top-4 left-4">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= @crop_listing.listing_type == 'selling' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' %>">
+              <%= @crop_listing.listing_type.titleize %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Listing Info -->
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @crop_listing.title %></h1>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Posted <%= time_ago_in_words(@crop_listing.created_at) %> ago</span>
+          </div>
+
+          <div class="flex items-center mb-6">
+            <div class="flex items-center mr-6">
+              <%= icon "tag", class: "w-5 h-5 text-amber-500 dark:text-amber-400 mr-2" %>
+              <span class="text-xl font-bold text-gray-900 dark:text-white">GHS <%= @crop_listing.price %></span>
+              <% if @crop_listing.negotiable? %>
+                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">(Negotiable)</span>
+              <% end %>
+            </div>
+
+            <div class="flex items-center">
+              <%= icon "package", class: "w-5 h-5 text-amber-500 dark:text-amber-400 mr-2" %>
+              <span class="text-gray-700 dark:text-gray-300"><%= @crop_listing.quantity %> <%= @crop_listing.unit %></span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Details</h2>
+              <div class="space-y-3">
+                <div class="flex items-start">
+                  <div class="w-5 h-5 text-amber-500 dark:text-amber-400 mr-3 mt-0.5">
+                    <%= icon "plant" %>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Crop</div>
+                    <div class="text-gray-900 dark:text-white"><%= @crop_listing.crop.name %></div>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <div class="w-5 h-5 text-amber-500 dark:text-amber-400 mr-3 mt-0.5">
+                    <%= icon "map-pin" %>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Location</div>
+                    <div class="text-gray-900 dark:text-white">
+                      <%= @crop_listing.location.presence || (@crop_listing.region&.name || 'Location not specified') %>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-start">
+                  <div class="w-5 h-5 text-amber-500 dark:text-amber-400 mr-3 mt-0.5">
+                    <%= icon "calendar" %>
+                  </div>
+                  <div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Expiry Date</div>
+                    <div class="text-gray-900 dark:text-white">
+                      <%= @crop_listing.expiry_date&.strftime("%B %d, %Y") || 'Not specified' %>
+                      <% if @crop_listing.days_until_expiry > 0 %>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                          (<%= @crop_listing.days_until_expiry %> days left)
+                        </span>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Seller Information</h2>
+              <div class="flex items-center mb-4">
+                <% if @crop_listing.user.respond_to?(:avatar) && @crop_listing.user.avatar.attached? %>
+                  <%= image_tag @crop_listing.user.avatar, class: "w-12 h-12 rounded-full object-cover mr-4" %>
+                <% else %>
+                  <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white mr-4">
+                    <%= icon "user", class: "w-6 h-6" %>
+                  </div>
+                <% end %>
+
+                <div>
+                  <div class="font-medium text-gray-900 dark:text-white">
+                    <%= @crop_listing.user.respond_to?(:username) ? @crop_listing.user.username : (@crop_listing.user[:username] || @crop_listing.user[:name] || 'User') %>
+                  </div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Member since <%= @crop_listing.user.created_at.strftime("%B %Y") %></div>
+                </div>
+              </div>
+
+              <% if !@is_owner && user_signed_in? %>
+                <button type="button" class="w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" data-action="click->modal#open" data-modal-target="contactSellerModal">
+                  Contact Seller
+                </button>
+              <% elsif !user_signed_in? %>
+                <a href="<%= new_user_session_path %>" class="block w-full text-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+                  Sign In to Contact Seller
+                </a>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Description</h2>
+            <div class="prose prose-amber dark:prose-invert max-w-none">
+              <p><%= @crop_listing.description %></p>
+            </div>
+          </div>
+
+          <% if @crop_listing.terms.present? %>
+            <div>
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Terms & Conditions</h2>
+              <div class="prose prose-amber dark:prose-invert max-w-none">
+                <p><%= @crop_listing.terms %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Owner Actions -->
+      <% if @is_owner %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+          <div class="p-6">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Listing Management</h2>
+
+            <div class="flex flex-wrap gap-3">
+              <%= link_to edit_crop_listing_path(@crop_listing), class: "px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" do %>
+                <%= icon "edit", class: "w-4 h-4 mr-2" %>
+                Edit Listing
+              <% end %>
+
+              <% if @crop_listing.active? %>
+                <%= button_to mark_as_sold_crop_listing_path(@crop_listing), method: :post, class: "px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" do %>
+                  <%= icon "check-circle", class: "w-4 h-4 mr-2" %>
+                  Mark as Sold
+                <% end %>
+              <% end %>
+
+              <% if @crop_listing.expired? %>
+                <%= button_to renew_crop_listing_path(@crop_listing), method: :post, class: "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" do %>
+                  <%= icon "refresh-cw", class: "w-4 h-4 mr-2" %>
+                  Renew Listing
+                <% end %>
+              <% end %>
+
+              <%= button_to crop_listing_path(@crop_listing), method: :delete, data: { confirm: "Are you sure you want to delete this listing?" }, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" do %>
+                <%= icon "trash", class: "w-4 h-4 mr-2" %>
+                Delete Listing
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inquiries Section -->
+        <% if @inquiries.present? %>
+          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 class="text-lg font-bold text-gray-900 dark:text-white">Inquiries (<%= @inquiries.count %>)</h2>
+            </div>
+
+            <div class="divide-y divide-gray-200 dark:divide-gray-700">
+              <% @inquiries.each do |inquiry| %>
+                <div class="p-6">
+                  <div class="flex items-start">
+                    <% if inquiry.user.respond_to?(:avatar) && inquiry.user.avatar.attached? %>
+                      <%= image_tag inquiry.user.avatar, class: "w-10 h-10 rounded-full object-cover mr-4" %>
+                    <% else %>
+                      <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center text-white mr-4">
+                        <%= icon "user", class: "w-5 h-5" %>
+                      </div>
+                    <% end %>
+
+                    <div class="flex-1">
+                      <div class="flex items-center justify-between mb-2">
+                        <div>
+                          <span class="font-medium text-gray-900 dark:text-white">
+                            <%= inquiry.user.respond_to?(:username) ? inquiry.user.username : (inquiry.user[:username] || inquiry.user[:name] || 'User') %>
+                          </span>
+                          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                            <%= time_ago_in_words(inquiry.created_at) %> ago
+                          </span>
+                        </div>
+
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= inquiry.status == 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' : (inquiry.status == 'accepted' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : (inquiry.status == 'rejected' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300')) %>">
+                          <%= inquiry.status.titleize %>
+                        </span>
+                      </div>
+
+                      <div class="text-gray-700 dark:text-gray-300 mb-3">
+                        <%= inquiry.message %>
+                      </div>
+
+                      <% if inquiry.quantity.present? || inquiry.offered_price.present? %>
+                        <div class="bg-gray-50 dark:bg-gray-700/30 rounded-lg p-3 mb-3">
+                          <div class="grid grid-cols-2 gap-3">
+                            <% if inquiry.quantity.present? %>
+                              <div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Quantity</div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white"><%= inquiry.quantity %> <%= @crop_listing.unit %></div>
+                              </div>
+                            <% end %>
+
+                            <% if inquiry.offered_price.present? %>
+                              <div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Offered Price</div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">GHS <%= inquiry.offered_price %></div>
+                              </div>
+                            <% end %>
+                          </div>
+                        </div>
+                      <% end %>
+
+                      <% if inquiry.response.present? %>
+                        <div class="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-3 mb-3 border-l-4 border-amber-500">
+                          <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">Your Response:</div>
+                          <div class="text-gray-700 dark:text-gray-300"><%= inquiry.response %></div>
+                        </div>
+                      <% end %>
+
+                      <% if inquiry.pending? %>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                          <%= form_with model: inquiry, url: respond_crop_listing_inquiry_path(inquiry), method: :post, class: "w-full" do |f| %>
+                            <div class="mb-3">
+                              <%= f.text_area :response, placeholder: "Write your response here...", rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+                            </div>
+
+                            <div class="flex gap-2">
+                              <%= f.submit "Send Response", class: "px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+
+                              <%= link_to "Accept", accept_crop_listing_inquiry_path(inquiry), method: :post, class: "px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+
+                              <%= link_to "Reject", reject_crop_listing_inquiry_path(inquiry), method: :post, class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="w-full lg:w-1/3">
+      <!-- Contact Form for Non-Owners -->
+      <% if !@is_owner && user_signed_in? %>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">Contact Seller</h2>
+          </div>
+
+          <div class="p-6">
+            <%= form_with model: @inquiry, url: crop_listing_crop_listing_inquiries_path(@crop_listing), method: :post do |f| %>
+              <div class="mb-4">
+                <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                <%= f.text_area :message, rows: 4, placeholder: "I'm interested in your listing. Is it still available?", required: true, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label for="quantity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity (Optional)</label>
+                  <%= f.number_field :quantity, min: 0, step: 0.01, placeholder: "e.g., 50", class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+                </div>
+
+                <div>
+                  <label for="offered_price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Offered Price (Optional)</label>
+                  <%= f.number_field :offered_price, min: 0, step: 0.01, placeholder: "GHS", class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-amber-500 focus:ring focus:ring-amber-500 focus:ring-opacity-50" %>
+                </div>
+              </div>
+
+              <%= f.submit "Send Inquiry", class: "w-full px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Related Listings -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 mb-8">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">Similar Listings</h2>
+        </div>
+
+        <div class="p-6">
+          <% if @related_listings.present? %>
+            <div class="space-y-4">
+              <% @related_listings.each do |listing| %>
+                <a href="<%= crop_listing_path(listing) %>" class="block bg-gray-50 dark:bg-gray-700/30 rounded-xl overflow-hidden hover:shadow-md transition-all duration-300">
+                  <div class="flex">
+                    <% if listing.images.attached? %>
+                      <div class="w-24 h-24 flex-shrink-0">
+                        <%= image_tag listing.images.first, class: "w-full h-full object-cover" %>
+                      </div>
+                    <% else %>
+                      <div class="w-24 h-24 flex-shrink-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center">
+                        <%= icon "shopping-bag", class: "w-8 h-8 text-gray-400 dark:text-gray-500" %>
+                      </div>
+                    <% end %>
+
+                    <div class="p-3 flex-1">
+                      <div class="flex items-center justify-between mb-1">
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium <%= listing.listing_type == 'selling' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' %>">
+                          <%= listing.listing_type.titleize %>
+                        </span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400"><%= time_ago_in_words(listing.created_at) %> ago</span>
+                      </div>
+
+                      <h3 class="font-medium text-gray-900 dark:text-white truncate"><%= listing.title %></h3>
+                      <div class="flex items-center justify-between mt-1">
+                        <div class="text-sm font-bold text-gray-900 dark:text-white">GHS <%= listing.price %></div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400"><%= listing.quantity %> <%= listing.unit %></div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              <% end %>
+            </div>
+
+            <div class="mt-4 text-center">
+              <a href="<%= agriculture_marketplace_path(crop_id: @crop_listing.crop_id) %>" class="text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 text-sm font-medium">
+                View All Similar Listings
+              </a>
+            </div>
+          <% else %>
+            <p class="text-gray-500 dark:text-gray-400 text-center">No similar listings found.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Crop Information -->
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-bold text-gray-900 dark:text-white">About <%= @crop_listing.crop.name %></h2>
+        </div>
+
+        <div class="p-6">
+          <div class="flex items-center mb-4">
+            <% if @crop_listing.crop.image.attached? %>
+              <%= image_tag @crop_listing.crop.image, class: "w-16 h-16 rounded-full object-cover mr-4" %>
+            <% else %>
+              <div class="w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-lime-500 flex items-center justify-center text-white mr-4">
+                <%= icon "plant", class: "w-8 h-8" %>
+              </div>
+            <% end %>
+
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white"><%= @crop_listing.crop.name %></h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400"><%= @crop_listing.crop.category.titleize %></p>
+            </div>
+          </div>
+
+          <div class="prose prose-amber dark:prose-invert max-w-none mb-4">
+            <p><%= @crop_listing.crop.description %></p>
+          </div>
+
+          <div class="space-y-2 mb-4">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-700 dark:text-gray-300">Growing Season:</span>
+              <span class="text-gray-900 dark:text-white"><%= @crop_listing.crop.growing_season %></span>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <span class="text-gray-700 dark:text-gray-300">Current Market Price:</span>
+              <span class="text-gray-900 dark:text-white">GHS <%= @crop_listing.crop.current_price %>/kg</span>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <span class="text-gray-700 dark:text-gray-300">Growing Time:</span>
+              <span class="text-gray-900 dark:text-white"><%= @crop_listing.crop.growing_time %> days</span>
+            </div>
+          </div>
+
+          <a href="<%= agriculture_crop_prices_path(crop_id: @crop_listing.crop.id) %>" class="block w-full text-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
+            View Market Prices
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Image Gallery -->
+<script>
+  function changeMainImage(thumbnail, imageUrl) {
+    // Update main image
+    document.getElementById('mainImage').src = imageUrl;
+
+    // Remove highlight from all thumbnails
+    document.querySelectorAll('.w-20.h-20').forEach(thumb => {
+      thumb.classList.remove('ring-2', 'ring-amber-500');
+    });
+
+    // Add highlight to selected thumbnail
+    thumbnail.classList.add('ring-2', 'ring-amber-500');
+  }
+</script>

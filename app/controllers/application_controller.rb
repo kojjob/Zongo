@@ -58,22 +58,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Override Devise's method to handle already authenticated users
-  def require_no_authentication
-    return unless is_navigational_format?
-
-    if user_signed_in?
-      # If trying to access profile or settings, just go there instead of showing error
-      if request.path.match?(/\/(profile|settings|user_settings)/)
-        redirect_to profile_path
-        return
-      end
-
-      # For other authentication pages, use the default behavior
-      set_flash_message(:alert, "already_authenticated")
-      redirect_to after_sign_in_path_for(current_user)
-    end
+  # Define where to redirect after successful sign-in
+  def after_sign_in_path_for(resource)
+    user_settings_profile_path
   end
+
+
 
   # Define Devise path methods based on routes configuration
   def new_user_registration_path

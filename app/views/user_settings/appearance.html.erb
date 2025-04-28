@@ -1,221 +1,595 @@
 <%# Appearance Settings %>
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Appearance Settings</h1>
-    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Customize how your app looks and feels</p>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8" data-theme-preference="<%= current_user.user_settings&.theme_preference || 'auto' %>">
+  <%# Page Header with Visual Elements %>
+  <div class="mb-8 text-center">
+    <div class="inline-block p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 mb-4" style="background-color: rgba(99, 102, 241, 0.1);">
+      <i class="fas fa-paint-brush fa-2x"></i>
+    </div>
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">Appearance Settings</h1>
+    <p class="mt-1 text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+      Customize how your app looks and feels to match your preferences
+    </p>
   </div>
 
-  <%# Tabs Navigation %>
-  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex flex-wrap -mb-px">
-      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
-        Overview
+  <%# Tabs Navigation - Enhanced for better visibility and touch targets %>
+  <div class="mb-8 overflow-x-auto">
+    <div class="flex flex-nowrap min-w-full pb-1" data-controller="tabs">
+      <%# Overview Tab %>
+      <%= link_to user_settings_path, class: "flex flex-col items-center mr-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-user text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Overview</span>
       <% end %>
-      
-      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
-        Profile
+
+      <%# Profile Tab %>
+      <%= link_to user_settings_profile_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_profile_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_profile_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_profile_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_profile_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-id-card text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Profile</span>
       <% end %>
-      
-      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
-        Security
+
+      <%# Security Tab %>
+      <%= link_to user_settings_security_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_security_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_security_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_security_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_security_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-shield-alt text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Security</span>
       <% end %>
-      
-      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
-        Notifications
+
+      <%# Notifications Tab %>
+      <%= link_to user_settings_notifications_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_notifications_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_notifications_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_notifications_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_notifications_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-bell text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Notifications</span>
       <% end %>
-      
-      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
-        Appearance
+
+      <%# Appearance Tab %>
+      <%= link_to user_settings_appearance_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_appearance_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_appearance_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_appearance_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_appearance_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-paint-brush text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Appearance</span>
       <% end %>
-      
-      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
-        Payment
+
+      <%# Payment Tab %>
+      <%= link_to user_settings_payment_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_payment_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_payment_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_payment_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_payment_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-credit-card text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Payment</span>
       <% end %>
-      
-      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
-        Support
+
+      <%# Support Tab %>
+      <%= link_to user_settings_support_path, class: "flex flex-col items-center ml-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_support_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_support_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_support_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_support_path) ? 'white' : '#4b5563' %>;">
+          <i class="fas fa-headset text-xl"></i>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Support</span>
       <% end %>
     </div>
   </div>
 
   <%= form_with url: user_settings_update_appearance_path, method: :patch, local: true do |form| %>
-    <%# Theme Settings %>
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+    <%# Theme Settings - Enhanced with better visual elements %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+      <div class="bg-gradient-to-r from-indigo-500/10 to-indigo-600/10 dark:from-indigo-500/20 dark:to-indigo-600/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fas fa-palette text-indigo-600 dark:text-indigo-400 mr-2 text-xl"></i>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Theme Settings</h2>
+          </div>
+        </div>
+      </div>
       <div class="p-6">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Theme Settings</h2>
-        
+        <div class="mb-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-100 dark:border-indigo-800/30">
+          <p class="text-sm text-gray-600 dark:text-gray-300 flex items-start">
+            <i class="fas fa-info-circle text-indigo-500 mt-0.5 mr-2"></i>
+            Choose your preferred color mode. You can select light mode, dark mode, or follow your system settings.
+          </p>
+        </div>
+
         <div class="space-y-8">
           <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Color Mode</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" data-controller="theme">
-              <label class="relative block cursor-pointer">
-                <% user_setting = current_user.setting || UserSetting.new(user: current_user) %>
-              <input type="radio" name="user[settings][theme_preference]" value="light" class="sr-only" data-action="click->theme#setMode" data-theme-param="light" <%= user_setting.theme_preference == 'light' ? 'checked' : '' %>>
-                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'light' ? 'border-primary-500' : 'border-gray-200 dark:border-gray-700' %> p-3">
-                  <div class="w-full h-32 rounded-md bg-white border border-gray-200 overflow-hidden">
-                    <div class="h-6 w-full bg-gray-100 flex items-center px-2">
-                      <div class="h-2 w-2 rounded-full bg-red-500 mr-1"></div>
-                      <div class="h-2 w-2 rounded-full bg-yellow-500 mr-1"></div>
-                      <div class="h-2 w-2 rounded-full bg-green-500"></div>
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-moon text-indigo-500 mr-2"></i>
+              Color Mode
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6" data-controller="theme-mode">
+              <% user_setting = current_user.user_settings || UserSetting.new(user: current_user) %>
+
+              <%# Light Mode Option %>
+              <label class="relative block cursor-pointer group">
+                <input type="radio" name="user[settings][theme_preference]" value="light" class="sr-only" data-action="click->theme-mode#setMode" data-theme-mode-target="lightOption" <%= user_setting.theme_preference == 'light' ? 'checked' : '' %>>
+                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'light' ? 'border-indigo-500' : 'border-gray-200 dark:border-gray-700' %> p-4 transition-all duration-200 group-hover:shadow-md" data-theme-mode-target="lightCard">
+                  <div class="w-full h-36 rounded-lg bg-white border border-gray-200 overflow-hidden shadow-sm">
+                    <div class="h-8 w-full bg-gray-100 flex items-center px-3">
+                      <div class="h-3 w-3 rounded-full bg-red-500 mr-1.5"></div>
+                      <div class="h-3 w-3 rounded-full bg-yellow-500 mr-1.5"></div>
+                      <div class="h-3 w-3 rounded-full bg-green-500"></div>
                     </div>
-                    <div class="p-2">
-                      <div class="h-4 w-24 bg-gray-200 rounded mb-2"></div>
-                      <div class="h-3 w-32 bg-gray-200 rounded mb-1"></div>
-                      <div class="h-3 w-36 bg-gray-200 rounded mb-1"></div>
-                      <div class="h-3 w-28 bg-gray-200 rounded"></div>
+                    <div class="p-3">
+                      <div class="h-5 w-28 bg-gray-200 rounded mb-3"></div>
+                      <div class="h-3 w-40 bg-gray-200 rounded mb-2"></div>
+                      <div class="h-3 w-36 bg-gray-200 rounded mb-2"></div>
+                      <div class="h-3 w-32 bg-gray-200 rounded"></div>
+                      <div class="mt-3 flex">
+                        <div class="h-6 w-16 bg-indigo-500 rounded-md mr-2"></div>
+                        <div class="h-6 w-16 bg-gray-200 rounded-md"></div>
+                      </div>
                     </div>
                   </div>
-                  <div class="mt-2 text-center">
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">Light Mode</span>
+                  <div class="mt-3 text-center">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white flex items-center justify-center">
+                      <i class="fas fa-sun text-yellow-500 mr-2"></i>
+                      Light Mode
+                    </span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Bright interface for daytime use</p>
                   </div>
-                  <% if user_setting.theme_preference == 'light' %>
-                    <div class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
-                      <%= icon "check", class: "h-4 w-4 text-white" %>
-                    </div>
-                  <% end %>
+                  <div class="absolute -top-2 -right-2 h-7 w-7 rounded-full bg-indigo-500 flex items-center justify-center shadow-md <%= user_setting.theme_preference == 'light' ? '' : 'hidden' %>" data-theme-mode-target="lightCheck">
+                    <i class="fas fa-check text-white text-sm"></i>
+                  </div>
                 </div>
               </label>
-              
-              <label class="relative block cursor-pointer">
-                <input type="radio" name="user[settings][theme_preference]" value="dark" class="sr-only" data-action="click->theme#setMode" data-theme-param="dark" <%= user_setting.theme_preference == 'dark' ? 'checked' : '' %>>
-                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'dark' ? 'border-primary-500' : 'border-gray-200 dark:border-gray-700' %> p-3">
-                  <div class="w-full h-32 rounded-md bg-gray-900 border border-gray-700 overflow-hidden">
-                    <div class="h-6 w-full bg-gray-800 flex items-center px-2">
-                      <div class="h-2 w-2 rounded-full bg-red-500 mr-1"></div>
-                      <div class="h-2 w-2 rounded-full bg-yellow-500 mr-1"></div>
-                      <div class="h-2 w-2 rounded-full bg-green-500"></div>
+
+              <%# Dark Mode Option %>
+              <label class="relative block cursor-pointer group">
+                <input type="radio" name="user[settings][theme_preference]" value="dark" class="sr-only" data-action="click->theme-mode#setMode" data-theme-mode-target="darkOption" <%= user_setting.theme_preference == 'dark' ? 'checked' : '' %>>
+                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'dark' ? 'border-indigo-500' : 'border-gray-200 dark:border-gray-700' %> p-4 transition-all duration-200 group-hover:shadow-md" data-theme-mode-target="darkCard">
+                  <div class="w-full h-36 rounded-lg bg-gray-900 border border-gray-700 overflow-hidden shadow-sm">
+                    <div class="h-8 w-full bg-gray-800 flex items-center px-3">
+                      <div class="h-3 w-3 rounded-full bg-red-500 mr-1.5"></div>
+                      <div class="h-3 w-3 rounded-full bg-yellow-500 mr-1.5"></div>
+                      <div class="h-3 w-3 rounded-full bg-green-500"></div>
                     </div>
-                    <div class="p-2">
-                      <div class="h-4 w-24 bg-gray-700 rounded mb-2"></div>
-                      <div class="h-3 w-32 bg-gray-700 rounded mb-1"></div>
-                      <div class="h-3 w-36 bg-gray-700 rounded mb-1"></div>
-                      <div class="h-3 w-28 bg-gray-700 rounded"></div>
+                    <div class="p-3">
+                      <div class="h-5 w-28 bg-gray-700 rounded mb-3"></div>
+                      <div class="h-3 w-40 bg-gray-700 rounded mb-2"></div>
+                      <div class="h-3 w-36 bg-gray-700 rounded mb-2"></div>
+                      <div class="h-3 w-32 bg-gray-700 rounded"></div>
+                      <div class="mt-3 flex">
+                        <div class="h-6 w-16 bg-indigo-500 rounded-md mr-2"></div>
+                        <div class="h-6 w-16 bg-gray-700 rounded-md"></div>
+                      </div>
                     </div>
                   </div>
-                  <div class="mt-2 text-center">
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">Dark Mode</span>
+                  <div class="mt-3 text-center">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white flex items-center justify-center">
+                      <i class="fas fa-moon text-indigo-400 mr-2"></i>
+                      Dark Mode
+                    </span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Easier on the eyes at night</p>
                   </div>
-                  <% if user_setting.theme_preference == 'dark' %>
-                    <div class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
-                      <%= icon "check", class: "h-4 w-4 text-white" %>
-                    </div>
-                  <% end %>
+                  <div class="absolute -top-2 -right-2 h-7 w-7 rounded-full bg-indigo-500 flex items-center justify-center shadow-md <%= user_setting.theme_preference == 'dark' ? '' : 'hidden' %>" data-theme-mode-target="darkCheck">
+                    <i class="fas fa-check text-white text-sm"></i>
+                  </div>
                 </div>
               </label>
-              
-              <label class="relative block cursor-pointer">
-                <input type="radio" name="user[settings][theme_preference]" value="system" class="sr-only" data-action="click->theme#setMode" data-theme-param="system" <%= user_setting.theme_preference == 'system' || user_setting.theme_preference.blank? ? 'checked' : '' %>>
-                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'system' || user_setting.theme_preference.blank? ? 'border-primary-500' : 'border-gray-200 dark:border-gray-700' %> p-3">
-                  <div class="w-full h-32 rounded-md bg-gradient-to-br from-white to-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden">
+
+              <%# System Default Option %>
+              <label class="relative block cursor-pointer group">
+                <input type="radio" name="user[settings][theme_preference]" value="auto" class="sr-only" data-action="click->theme-mode#setMode" data-theme-mode-target="autoOption" <%= user_setting.theme_preference == 'auto' || user_setting.theme_preference.blank? ? 'checked' : '' %>>
+                <div class="h-full w-full rounded-lg border-2 <%= user_setting.theme_preference == 'auto' || user_setting.theme_preference.blank? ? 'border-indigo-500' : 'border-gray-200 dark:border-gray-700' %> p-4 transition-all duration-200 group-hover:shadow-md" data-theme-mode-target="autoCard">
+                  <div class="w-full h-36 rounded-lg bg-gradient-to-br from-white to-gray-900 border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm">
                     <div class="h-full w-full flex items-center justify-center">
-                      <%= icon "device-desktop", class: "h-12 w-12 text-gray-500" %>
+                      <div class="flex flex-col items-center">
+                        <i class="fas fa-laptop text-gray-500 text-4xl mb-2"></i>
+                        <div class="flex items-center">
+                          <i class="fas fa-sun text-yellow-500 text-sm"></i>
+                          <div class="w-8 h-0.5 bg-gray-400 mx-1"></div>
+                          <i class="fas fa-moon text-indigo-400 text-sm"></i>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="mt-2 text-center">
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">System Default</span>
+                  <div class="mt-3 text-center">
+                    <span class="text-sm font-medium text-gray-900 dark:text-white flex items-center justify-center">
+                      <i class="fas fa-desktop text-gray-500 mr-2"></i>
+                      System Default
+                    </span>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Follows your device settings</p>
                   </div>
-                  <% if user_setting.theme_preference == 'system' || user_setting.theme_preference.blank? %>
-                    <div class="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
-                      <%= icon "check", class: "h-4 w-4 text-white" %>
-                    </div>
-                  <% end %>
+                  <div class="absolute -top-2 -right-2 h-7 w-7 rounded-full bg-indigo-500 flex items-center justify-center shadow-md <%= user_setting.theme_preference == 'auto' || user_setting.theme_preference.blank? ? '' : 'hidden' %>" data-theme-mode-target="autoCheck">
+                    <i class="fas fa-check text-white text-sm"></i>
+                  </div>
                 </div>
               </label>
             </div>
           </div>
-          
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Language</h3>
-            <div class="max-w-xs">
-              <select name="user[settings][language]" class="form-select w-full rounded-lg">
-                <option value="en" <%= user_setting.language == 'en' || user_setting.language.blank? ? 'selected' : '' %>>English</option>
-                <option value="fr" <%= user_setting.language == 'fr' ? 'selected' : '' %>>Français</option>
-                <option value="es" <%= user_setting.language == 'es' ? 'selected' : '' %>>Español</option>
-                <option value="zh" <%= user_setting.language == 'zh' ? 'selected' : '' %>>中文</option>
-                <option value="ar" <%= user_setting.language == 'ar' ? 'selected' : '' %>>العربية</option>
-              </select>
+
+          <%# Language Selection - Enhanced %>
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-language text-indigo-500 mr-2"></i>
+              Language
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 ml-7">
+              Choose your preferred language for the application interface
+            </p>
+            <div class="max-w-md ml-7" data-controller="select" data-select-setting-value="language">
+              <div class="relative">
+                <select name="user[settings][language]" class="form-select w-full py-3 px-4 pr-10 rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-colors duration-200 appearance-none" data-select-target="select">
+                  <option value="en" <%= user_setting.language == 'en' || user_setting.language.blank? ? 'selected' : '' %>>
+                    English (United States)
+                  </option>
+                  <option value="fr" <%= user_setting.language == 'fr' ? 'selected' : '' %>>
+                    Français (France)
+                  </option>
+                  <option value="es" <%= user_setting.language == 'es' ? 'selected' : '' %>>
+                    Español (España)
+                  </option>
+                  <option value="de" <%= user_setting.language == 'de' ? 'selected' : '' %>>
+                    Deutsch (Deutschland)
+                  </option>
+                  <option value="pt" <%= user_setting.language == 'pt' ? 'selected' : '' %>>
+                    Português (Brasil)
+                  </option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                  <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                  <i class="fas fa-info-circle text-indigo-500 mr-1"></i>
+                  Changes apply immediately
+                </span>
+              </div>
             </div>
           </div>
-          
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Currency Display</h3>
-            <div class="max-w-xs">
-              <select name="user[settings][currency_display]" class="form-select w-full rounded-lg">
-                <option value="GHS" <%= user_setting.currency_display == 'GHS' || user_setting.currency_display.blank? ? 'selected' : '' %>>Ghana Cedi (₵)</option>
-                <option value="USD" <%= user_setting.currency_display == 'USD' ? 'selected' : '' %>>US Dollar ($)</option>
-                <option value="EUR" <%= user_setting.currency_display == 'EUR' ? 'selected' : '' %>>Euro (€)</option>
-                <option value="GBP" <%= user_setting.currency_display == 'GBP' ? 'selected' : '' %>>British Pound (£)</option>
-                <option value="NGN" <%= user_setting.currency_display == 'NGN' ? 'selected' : '' %>>Nigerian Naira (₦)</option>
-              </select>
+
+          <%# Currency Display - Enhanced %>
+          <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-money-bill-wave text-indigo-500 mr-2"></i>
+              Currency Display
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 ml-7">
+              Choose how currency values are displayed throughout the application
+            </p>
+            <div class="max-w-md ml-7" data-controller="select" data-select-setting-value="currency_display">
+              <div class="relative">
+                <select name="user[settings][currency_display]" class="form-select w-full py-3 px-4 pr-10 rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 transition-colors duration-200 appearance-none" data-select-target="select">
+                  <option value="ghs" <%= user_setting.currency_display == 'ghs' || user_setting.currency_display.blank? ? 'selected' : '' %>>
+                    Ghana Cedi (₵) - Primary
+                  </option>
+                  <option value="usd" <%= user_setting.currency_display == 'usd' ? 'selected' : '' %>>
+                    US Dollar ($)
+                  </option>
+                  <option value="eur" <%= user_setting.currency_display == 'eur' ? 'selected' : '' %>>
+                    Euro (€)
+                  </option>
+                  <option value="gbp" <%= user_setting.currency_display == 'gbp' ? 'selected' : '' %>>
+                    British Pound (£)
+                  </option>
+                  <option value="ngn" <%= user_setting.currency_display == 'ngn' ? 'selected' : '' %>>
+                    Nigerian Naira (₦)
+                  </option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                  <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+              </div>
+              <div class="mt-4 p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
+                <p class="text-sm text-gray-600 dark:text-gray-300 flex items-start">
+                  <i class="fas fa-lightbulb text-yellow-500 mt-0.5 mr-2"></i>
+                  <span>Transactions will still be processed in Ghana Cedis (₵), but displayed in your preferred currency.</span>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <%# Accessibility Settings %>
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+
+    <%# Accessibility Settings - Enhanced with better visual elements %>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+      <div class="bg-gradient-to-r from-teal-500/10 to-teal-600/10 dark:from-teal-500/20 dark:to-teal-600/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="fas fa-universal-access text-teal-600 dark:text-teal-400 mr-2 text-xl"></i>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Accessibility</h2>
+          </div>
+        </div>
+      </div>
       <div class="p-6">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Accessibility</h2>
-        
+        <div class="mb-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg p-4 border border-teal-100 dark:border-teal-800/30">
+          <p class="text-sm text-gray-600 dark:text-gray-300 flex items-start">
+            <i class="fas fa-info-circle text-teal-500 mt-0.5 mr-2"></i>
+            Customize accessibility settings to make the application easier to use based on your needs.
+          </p>
+        </div>
+
         <div class="space-y-8">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Text Size</h3>
-            <div class="relative pt-1">
-              <input type="range" min="1" max="5" value="3" class="form-range w-full h-1 bg-gray-200 dark:bg-gray-700 rounded appearance-none cursor-pointer">
-              <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+          <%# Text Size Setting %>
+          <div class="border-b border-gray-200 dark:border-gray-700 pb-8">
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-text-height text-teal-500 mr-2"></i>
+              Text Size
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 ml-7">
+              Adjust the size of text throughout the application
+            </p>
+            <div class="relative pt-1 ml-7 max-w-md" data-controller="text-size">
+              <div class="flex items-center mb-2">
+                <span class="text-xs text-gray-500 dark:text-gray-400 mr-2">A</span>
+                <input type="range" min="1" max="5" value="<%= user_setting.text_size || 3 %>" name="user[settings][text_size]"
+                  class="form-range w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                  data-text-size-target="slider">
+                <span class="text-lg text-gray-500 dark:text-gray-400 ml-2">A</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1 px-1">
                 <span>Small</span>
                 <span>Default</span>
                 <span>Large</span>
               </div>
+              <div class="mt-2 text-sm text-indigo-600 dark:text-indigo-400 font-medium" data-text-size-target="value">
+                <%= user_setting.text_size ?
+                  case user_setting.text_size.to_i
+                  when 1 then "Small"
+                  when 2 then "Medium Small"
+                  when 3 then "Medium (Default)"
+                  when 4 then "Medium Large"
+                  when 5 then "Large"
+                  else "Medium (Default)"
+                  end : "Medium (Default)" %>
+              </div>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                  <i class="fas fa-eye text-teal-500 mr-1"></i>
+                  Improves readability
+                </span>
+              </div>
             </div>
           </div>
-          
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Reduce Motion</h3>
-            <div class="flex items-center">
-              <div class="relative w-12 h-6 mr-2" data-controller="toggle">
-                <input type="checkbox" name="reduce_motion" id="reduce_motion" class="toggle-checkbox" data-toggle-target="checkbox" data-action="toggle#toggle"/>
-                <label for="reduce_motion" class="toggle-label" data-toggle-target="label"></label>
+
+          <%# Reduce Motion Setting %>
+          <div class="border-b border-gray-200 dark:border-gray-700 pb-8">
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-film text-teal-500 mr-2"></i>
+              Reduce Motion
+            </h3>
+            <div class="flex items-start ml-7">
+              <div class="relative inline-block w-14 align-middle select-none mt-1" data-controller="toggle" data-toggle-setting-value="reduce_motion">
+                <input type="checkbox" name="user[settings][reduce_motion]" id="reduce_motion"
+                  class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"
+                  data-toggle-target="checkbox"
+                  data-action="toggle#toggle"
+                  <%= user_setting.reduce_motion ? 'checked' : '' %>/>
+                <label for="reduce_motion" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer <%= user_setting.reduce_motion ? 'bg-indigo-600' : 'bg-gray-300' %>" data-toggle-target="label"></label>
               </div>
-              <span class="text-sm text-gray-700 dark:text-gray-300">Minimize animations throughout the application</span>
+              <div class="ml-4">
+                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">Minimize animations throughout the application</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Reduces motion effects and animations that might cause discomfort or distraction
+                </p>
+              </div>
             </div>
           </div>
-          
+
+          <%# High Contrast Mode Setting %>
           <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">High Contrast Mode</h3>
-            <div class="flex items-center">
-              <div class="relative w-12 h-6 mr-2" data-controller="toggle">
-                <input type="checkbox" name="high_contrast" id="high_contrast" class="toggle-checkbox" data-toggle-target="checkbox" data-action="toggle#toggle"/>
-                <label for="high_contrast" class="toggle-label" data-toggle-target="label"></label>
+            <h3 class="flex items-center text-lg font-medium text-gray-900 dark:text-white mb-4">
+              <i class="fas fa-adjust text-teal-500 mr-2"></i>
+              High Contrast Mode
+            </h3>
+            <div class="flex items-start ml-7">
+              <div class="relative inline-block w-14 align-middle select-none mt-1" data-controller="toggle" data-toggle-setting-value="high_contrast">
+                <input type="checkbox" name="user[settings][high_contrast]" id="high_contrast"
+                  class="toggle-checkbox absolute block w-7 h-7 rounded-full bg-white border-4 border-gray-300 appearance-none cursor-pointer transition-transform duration-200 ease-in transform translate-x-0"
+                  data-toggle-target="checkbox"
+                  data-action="toggle#toggle"
+                  <%= user_setting.high_contrast ? 'checked' : '' %>/>
+                <label for="high_contrast" class="toggle-label block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer <%= user_setting.high_contrast ? 'bg-indigo-600' : 'bg-gray-300' %>" data-toggle-target="label"></label>
               </div>
-              <span class="text-sm text-gray-700 dark:text-gray-300">Increase contrast for better visibility</span>
+              <div class="ml-4">
+                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">Increase contrast for better visibility</span>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Enhances visual distinction between elements for users with visual impairments
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                    <i class="fas fa-check text-teal-500 mr-1"></i>
+                    WCAG 2.1 AA Compliant
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <div class="flex justify-end">
-      <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
-      <%= form.submit "Save Preferences", class: "btn btn-primary" %>
+
+    <div class="flex flex-col sm:flex-row justify-between items-center mt-8 border-t border-gray-200 dark:border-gray-700 pt-6 mb-8">
+      <div class="flex space-x-4 mb-4 sm:mb-0">
+        <%= form.submit "Save Preferences", class: "px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md transition-colors duration-200 flex items-center", style: "background-color: #4f46e5;" %>
+        <%= link_to "Cancel", user_settings_path, class: "px-6 py-3 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 transition-colors duration-200 flex items-center" %>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        <i class="fas fa-shield-alt text-indigo-500 mr-1"></i>
+        Your appearance preferences are saved securely
+      </p>
     </div>
   <% end %>
+
+  <%# Help Section %>
+  <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 dark:from-indigo-900/20 dark:to-indigo-800/20 rounded-xl p-6 mb-8 border border-indigo-200 dark:border-indigo-800/50">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="mb-4 md:mb-0 md:mr-6 flex-shrink-0">
+        <div class="h-16 w-16 rounded-full bg-indigo-600 flex items-center justify-center text-white" style="background-color: #4f46e5;">
+          <i class="fas fa-question-circle fa-2x"></i>
+        </div>
+      </div>
+      <div class="flex-1 text-center md:text-left">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Need help with appearance settings?</h3>
+        <p class="text-gray-600 dark:text-gray-300 mb-4">Our support team is available 24/7 to assist you with any questions about customizing your experience.</p>
+        <div class="flex flex-wrap justify-center md:justify-start gap-3">
+          <a href="#" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm" style="background-color: #4f46e5;">
+            <i class="fas fa-comments mr-2"></i>
+            Chat with Support
+          </a>
+          <a href="#" class="inline-flex items-center px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium rounded-lg transition-colors duration-200 shadow-sm">
+            <i class="fas fa-file-alt mr-2 text-indigo-600 dark:text-indigo-400"></i>
+            View Appearance FAQs
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-  /* Custom toggle switch styles */
-  .toggle-checkbox:checked {
-    @apply right-0 border-primary-600 transform translate-x-full;
+  /* Enhanced toggle switch styles */
+  .toggle-checkbox {
+    @apply right-0;
+    transition: transform 0.3s ease, border-color 0.3s ease;
   }
+
+  .toggle-checkbox:checked {
+    @apply right-0 border-indigo-600 transform translate-x-full;
+  }
+
+  .toggle-label {
+    @apply bg-gray-300;
+    transition: background-color 0.3s ease;
+  }
+
   .toggle-checkbox:checked + .toggle-label {
-    @apply bg-primary-600;
+    @apply bg-indigo-600;
+  }
+
+  /* Hover effects */
+  .toggle-checkbox:hover {
+    @apply border-gray-400;
+  }
+
+  .toggle-checkbox:checked:hover {
+    @apply border-indigo-700;
+  }
+
+  .toggle-checkbox:hover + .toggle-label {
+    @apply bg-gray-400;
+  }
+
+  .toggle-checkbox:checked:hover + .toggle-label {
+    @apply bg-indigo-700;
+  }
+
+  /* Focus styles for accessibility */
+  .toggle-checkbox:focus {
+    @apply outline-none ring-2 ring-offset-2 ring-gray-400;
+  }
+
+  .toggle-checkbox:checked:focus {
+    @apply ring-indigo-400;
+  }
+
+  /* Custom range input styling */
+  input[type="range"] {
+    -webkit-appearance: none;
+    height: 8px;
+    border-radius: 5px;
+    background: #e5e7eb;
+  }
+
+  .dark input[type="range"] {
+    background: #374151;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4f46e5;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #4f46e5;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  input[type="range"]:focus {
+    outline: none;
+  }
+
+  input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+
+  input[type="range"]:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+
+  /* Text size classes */
+  .text-size-1 {
+    font-size: 0.875rem; /* Small */
+  }
+
+  .text-size-2 {
+    font-size: 0.9375rem; /* Medium Small */
+  }
+
+  .text-size-3 {
+    font-size: 1rem; /* Medium (Default) */
+  }
+
+  .text-size-4 {
+    font-size: 1.0625rem; /* Medium Large */
+  }
+
+  .text-size-5 {
+    font-size: 1.125rem; /* Large */
+  }
+
+  /* High contrast mode */
+  .high-contrast {
+    --contrast-bg: #000000;
+    --contrast-text: #ffffff;
+    --contrast-link: #ffff00;
+    --contrast-border: #ffffff;
+    --contrast-focus: #ffff00;
+  }
+
+  .high-contrast .bg-white,
+  .high-contrast .bg-gray-100,
+  .high-contrast .bg-gray-200 {
+    background-color: var(--contrast-bg) !important;
+  }
+
+  .high-contrast .text-gray-700,
+  .high-contrast .text-gray-800,
+  .high-contrast .text-gray-900 {
+    color: var(--contrast-text) !important;
+  }
+
+  .high-contrast a:not(.btn) {
+    color: var(--contrast-link) !important;
+    text-decoration: underline !important;
+  }
+
+  .high-contrast .border,
+  .high-contrast .border-gray-200,
+  .high-contrast .border-gray-300 {
+    border-color: var(--contrast-border) !important;
+  }
+
+  /* Reduce motion */
+  .reduce-motion * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
   }
 </style>
+
+<%# Removed duplicate styles %>

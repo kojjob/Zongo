@@ -56,6 +56,8 @@
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "admin_custom", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "admin_patterns", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "admin_design_system", "data-turbo-track": "reload" %>
   <%= javascript_importmap_tags %>
   <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 
@@ -185,6 +187,62 @@
           <span class="ml-3 sidebar-text">Events</span>
         <% end %>
 
+        <!-- Shop Management Section -->
+        <div class="mt-8 mb-2 px-4">
+          <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider sidebar-text">
+            Shop Management
+          </h3>
+        </div>
+
+        <%= link_to admin_products_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'products' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "shopping-bag", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Products</span>
+        <% end %>
+
+        <%= link_to admin_orders_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'orders' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "shopping-cart", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Orders</span>
+        <% end %>
+
+        <!-- Promotional Features Section -->
+        <div class="mt-8 mb-2 px-4">
+          <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider sidebar-text">
+            Promotions
+          </h3>
+        </div>
+
+        <%= link_to admin_discounts_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'discounts' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "percent", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Discounts</span>
+        <% end %>
+
+        <%= link_to admin_coupons_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'coupons' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "ticket", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Coupons</span>
+        <% end %>
+
+        <%= link_to admin_flash_sales_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'flash_sales' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "bolt", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Flash Sales</span>
+        <% end %>
+
+        <%= link_to admin_promotional_banners_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'promotional_banners' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
+          <div class="flex items-center justify-center w-8 h-8">
+            <%= icon "photograph", class: "w-6 h-6" %>
+          </div>
+          <span class="ml-3 sidebar-text">Banners</span>
+        <% end %>
+
         <% if ActiveRecord::Base.connection.table_exists?(:loans) %>
           <%= link_to admin_loans_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{current_page?(admin_loans_path) ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
             <div class="flex items-center justify-center w-8 h-8">
@@ -194,12 +252,7 @@
           <% end %>
         <% end %>
 
-        <%= link_to admin_transactions_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{controller_name == 'transactions' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
-          <div class="flex items-center justify-center w-8 h-8">
-            <%= icon "currency-dollar", class: "w-6 h-6" %>
-          </div>
-          <span class="ml-3 sidebar-text">Transactions</span>
-        <% end %>
+
 
         <%= link_to admin_system_path, class: "flex items-center px-4 py-3 text-base font-medium rounded-lg #{current_page?(admin_system_path) ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300' : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'}" do %>
           <div class="flex items-center justify-center w-8 h-8">

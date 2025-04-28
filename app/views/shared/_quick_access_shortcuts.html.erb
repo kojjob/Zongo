@@ -1,0 +1,112 @@
+<%# Quick Access Shortcuts Component %>
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 mb-8 reveal-on-scroll" data-animation-target="reveal">
+  <div class="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-4 shadow-md">
+          <%= icon "lightning-bolt", class: "w-6 h-6" %>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold">Quick Access</h2>
+          <p class="text-white/80 text-sm mt-1">Your most used features</p>
+        </div>
+      </div>
+      <button class="bg-white/10 hover:bg-white/20 px-5 py-2.5 rounded-xl text-sm font-medium flex items-center transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5" data-action="click->dashboard#customizeShortcuts">
+        <span>Customize</span>
+        <%= icon "settings", class: "w-4 h-4 ml-2" %>
+      </button>
+    </div>
+  </div>
+
+  <div class="p-6">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" data-animation-target="stagger">
+      <!-- Send Money -->
+      <a href="<%= new_transaction_wallet_path(type: 'withdrawal') %>" class="flex flex-col items-center p-4 bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl border border-red-200 dark:border-red-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "money-out", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Send Money</span>
+      </a>
+
+      <!-- Add Money -->
+      <a href="<%= new_transaction_wallet_path(type: 'deposit') %>" class="flex flex-col items-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "money-in", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Add Money</span>
+      </a>
+
+      <!-- Buy Airtime -->
+      <a href="<%= wallet_path %>" class="flex flex-col items-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "mobile-screen", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Buy Airtime</span>
+      </a>
+
+      <!-- Pay Bills -->
+      <a href="#" class="flex flex-col items-center p-4 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-xl border border-purple-200 dark:border-purple-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-violet-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "file-invoice", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Pay Bills</span>
+      </a>
+
+      <!-- Scan to Pay -->
+      <a href="#" class="flex flex-col items-center p-4 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "qrcode", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Scan to Pay</span>
+      </a>
+
+      <!-- Transactions -->
+      <a href="<%= transactions_wallet_path %>" class="flex flex-col items-center p-4 bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl border border-gray-200 dark:border-gray-800/30 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 group" data-animation-target="staggerItem">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gray-500 to-slate-500 flex items-center justify-center text-white mb-3 shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110">
+          <%= icon "history", class: "w-7 h-7" %>
+        </div>
+        <span class="text-sm font-bold text-gray-900 dark:text-white text-center">Transactions</span>
+      </a>
+    </div>
+
+    <!-- Recent shortcuts used -->
+    <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4 flex items-center">
+        <%= icon "clock", class: "w-4 h-4 mr-2 text-gray-400" %>
+        Recently Used
+      </h3>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-300">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-pink-500 flex items-center justify-center text-white mr-3 shadow-sm">
+            <%= icon "money-out", class: "w-5 h-5" %>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-gray-900 dark:text-white">Send Money</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">2 hours ago</div>
+          </div>
+        </div>
+
+        <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-300">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white mr-3 shadow-sm">
+            <%= icon "mobile-screen", class: "w-5 h-5" %>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-gray-900 dark:text-white">Buy Airtime</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Yesterday</div>
+          </div>
+        </div>
+
+        <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-all duration-300">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center text-white mr-3 shadow-sm">
+            <%= icon "money-in", class: "w-5 h-5" %>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-gray-900 dark:text-white">Add Money</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">3 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

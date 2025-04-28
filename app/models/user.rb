@@ -18,7 +18,16 @@ class User < ApplicationRecord
   # Associations
   has_one :wallet, dependent: :destroy
   has_one :user_settings, dependent: :destroy
+  has_one :cart, dependent: :destroy
+
+  # Alias for user_settings to handle legacy code
+  def setting
+    user_settings
+  end
+
   has_many :payment_methods, dependent: :destroy
+  has_many :orders, dependent: :destroy
+  has_many :products, dependent: :destroy
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id", dependent: :nullify
   has_many :attendances, dependent: :destroy
   has_many :attending_events, through: :attendances, source: :event
@@ -26,6 +35,21 @@ class User < ApplicationRecord
   has_many :event_comments, dependent: :nullify
   has_many :beneficiaries, dependent: :destroy
   has_many :bill_payments, dependent: :destroy
+
+  # Transportation associations
+  has_many :recent_locations, dependent: :destroy
+  has_many :ride_bookings, dependent: :destroy
+  has_many :ticket_bookings, dependent: :destroy
+
+  # Education associations
+  has_many :school_fee_payments, dependent: :destroy
+
+  # Community associations
+  has_many :group_memberships, dependent: :destroy
+  has_many :groups, through: :group_memberships
+  has_many :gathering_attendances, dependent: :destroy
+  has_many :gatherings, through: :gathering_attendances
+  has_many :organized_gatherings, class_name: "Gathering", foreign_key: "organizer_id", dependent: :nullify
 
   # Define scheduled_transactions association conditionally
   if ScheduledTransaction.table_exists? && ScheduledTransaction.column_names.include?("user_id")
@@ -61,22 +85,7 @@ class User < ApplicationRecord
     self.phone_number = nil if phone_number.blank?
   end
 
-  # Add custom serialization methods to fix the issue
-  def self.serialize_from_session(key, salt)
-    record = find_by(id: key[0])
-    record if record && record.authenticatable_salt == salt
-  end
-
-  def authenticatable_salt
-    "#{self.class.salt}#{super}"
-  rescue
-    "#{self.class.salt}--#{created_at}--#{id}"
-  end
-
-  # The salt used for serialization
-  def self.salt
-    "authenticated-devise-user"
-  end
+  # Using Devise's default session serialization
 
   # PIN management methods
   # Set a new PIN for the user
@@ -316,6 +325,16 @@ class User < ApplicationRecord
     admin?
   end
 
+  # Check if user is a seller/trader
+  def seller?
+    respond_to?(:seller) && seller == true
+  end
+
+  # Alias for seller
+  def trader?
+    seller?
+  end
+
   # Check if user has admin privileges
   def has_admin_privileges?
     admin?
@@ -326,6 +345,8 @@ class User < ApplicationRecord
   def has_role?(role_name)
     return true if role_name.to_sym == :admin && admin?
     return true if role_name.to_sym == :super_admin && super_admin?
+    return true if role_name.to_sym == :seller && seller?
+    return true if role_name.to_sym == :trader && seller?
     false
   end
 

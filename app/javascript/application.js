@@ -1,5 +1,6 @@
-// Load theme initializer first to ensure theme is set ASAP
+// Load theme and appearance initializers first to ensure they are set ASAP
 import "theme_initializer"
+import "appearance_initializer"
 
 // Configure your import map in config/importmap.rb
 // Entry point for the build script in your package.json

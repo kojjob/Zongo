@@ -1,0 +1,211 @@
+<!-- Transaction Details Modal -->
+<div class="transaction-details-modal">
+  <!-- Modal Header with Transaction Type and Status -->
+  <div class="<%= transaction_status_header_class(transaction.status) %> rounded-t-xl">
+    <div class="p-4 sm:p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center">
+          <div class="<%= transaction_status_icon_class(transaction.status) %> w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0">
+            <%= transaction_status_icon(transaction.status) %>
+          </div>
+          <div class="ml-3 sm:ml-4">
+            <h2 class="text-lg sm:text-xl font-bold text-white"><%= transaction.transaction_type_description %></h2>
+            <p class="text-white/90 text-xs sm:text-sm">
+              <%= transaction_status_message(transaction) %>
+            </p>
+          </div>
+        </div>
+        <div class="text-left sm:text-right mt-2 sm:mt-0 flex flex-row sm:block items-center justify-between">
+          <div class="text-xl sm:text-2xl font-bold text-white">
+            <%= transaction.signed_amount_for_user(current_user.respond_to?(:id) ? current_user.id : current_user[:id]) %>
+          </div>
+          <div class="text-white/90 text-xs sm:text-sm">
+            <%= transaction.created_at.strftime("%b %d, %Y at %H:%M") %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Body with Transaction Details -->
+  <div class="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-b-xl dark:border-t dark:border-gray-700">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <!-- Left Column - Transaction Information -->
+      <div>
+        <h3 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Transaction Information</h3>
+
+        <div class="space-y-2 sm:space-y-3 text-sm">
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Reference</span>
+            <span class="text-gray-900 dark:text-white font-medium text-xs sm:text-sm break-all"><%= transaction.transaction_id %></span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Type</span>
+            <span class="<%= transaction_type_badge_class(transaction.transaction_type) %> mt-1 sm:mt-0 inline-block">
+              <%= transaction.transaction_type_description %>
+            </span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Status</span>
+            <span class="<%= transaction_status_badge_class(transaction.status) %> mt-1 sm:mt-0 inline-block">
+              <%= transaction.status.capitalize %>
+            </span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Amount</span>
+            <span class="text-gray-900 dark:text-white font-medium"><%= transaction.formatted_amount %></span>
+          </div>
+
+          <% if transaction.fee && transaction.fee > 0 %>
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+              <span class="text-gray-600 dark:text-gray-400 font-medium">Fee</span>
+              <span class="text-gray-900 dark:text-white"><%= transaction.currency %> <%= transaction.fee %></span>
+            </div>
+          <% end %>
+
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Date</span>
+            <span class="text-gray-900 dark:text-white text-xs sm:text-sm"><%= transaction.created_at.strftime("%b %d, %Y at %H:%M") %></span>
+          </div>
+
+          <% if transaction.description.present? %>
+            <div class="flex flex-col sm:flex-row sm:justify-between border-b border-gray-200 dark:border-gray-700 pb-2">
+              <span class="text-gray-600 dark:text-gray-400 font-medium">Description</span>
+              <span class="text-gray-900 dark:text-white break-words max-w-full sm:max-w-[60%] sm:text-right"><%= transaction.description %></span>
+            </div>
+          <% end %>
+
+          <% if transaction.payment_method.present? %>
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 dark:border-gray-700 pb-2">
+              <span class="text-gray-600 dark:text-gray-400 font-medium">Payment Method</span>
+              <span class="text-gray-900 dark:text-white"><%= transaction.payment_method.humanize %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Right Column - Parties and Timeline -->
+      <div class="mt-6 md:mt-0">
+        <!-- Transaction Parties -->
+        <h3 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Parties</h3>
+
+        <div class="space-y-3 sm:space-y-4 mb-5 sm:mb-6">
+          <% if transaction.source_wallet.present? %>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 sm:p-3">
+              <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">From</h4>
+              <div class="flex items-center">
+                <% if transaction.sender&.avatar.attached? %>
+                  <%= image_tag transaction.sender.avatar.variant(resize_to_fill: [32, 32]), class: "w-7 h-7 sm:w-8 sm:h-8 rounded-full mr-2 sm:mr-3" %>
+                <% else %>
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center mr-2 sm:mr-3">
+                    <%= icon "user", class: "w-3 h-3 sm:w-4 sm:h-4 text-teal-600 dark:text-teal-400" %>
+                  </div>
+                <% end %>
+                <div class="min-w-0 flex-1">
+                  <div class="text-sm text-gray-900 dark:text-white font-medium truncate">
+                    <%= transaction.source_name || "Unknown Sender" %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    Wallet ID: <%= transaction.source_wallet.wallet_id %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <% if transaction.destination_wallet.present? %>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-2 sm:p-3">
+              <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">To</h4>
+              <div class="flex items-center">
+                <% if transaction.recipient&.avatar.attached? %>
+                  <%= image_tag transaction.recipient.avatar.variant(resize_to_fill: [32, 32]), class: "w-7 h-7 sm:w-8 sm:h-8 rounded-full mr-2 sm:mr-3" %>
+                <% else %>
+                  <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center mr-2 sm:mr-3">
+                    <%= icon "user", class: "w-3 h-3 sm:w-4 sm:h-4 text-teal-600 dark:text-teal-400" %>
+                  </div>
+                <% end %>
+                <div class="min-w-0 flex-1">
+                  <div class="text-sm text-gray-900 dark:text-white font-medium truncate">
+                    <%= transaction.recipient_name || "Unknown Recipient" %>
+                  </div>
+                  <div class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    Wallet ID: <%= transaction.destination_wallet.wallet_id %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Transaction Timeline -->
+        <h3 class="text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">Timeline</h3>
+
+        <div class="space-y-3 text-sm">
+          <div class="flex">
+            <div class="flex flex-col items-center mr-2 sm:mr-3">
+              <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-teal-500"></div>
+              <div class="w-0.5 h-full bg-gray-200 dark:bg-gray-700"></div>
+            </div>
+            <div>
+              <div class="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Transaction Created</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.initiated_at&.strftime("%b %d, %Y at %H:%M") || transaction.created_at.strftime("%b %d, %Y at %H:%M") %></div>
+            </div>
+          </div>
+
+          <% if transaction.status_completed? && transaction.completed_at.present? %>
+            <div class="flex">
+              <div class="flex flex-col items-center mr-2 sm:mr-3">
+                <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500"></div>
+                <div class="w-0.5 h-full bg-gray-200 dark:bg-gray-700"></div>
+              </div>
+              <div>
+                <div class="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Transaction Completed</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.completed_at.strftime("%b %d, %Y at %H:%M") %></div>
+              </div>
+            </div>
+          <% end %>
+
+          <% if transaction.status_failed? && transaction.failed_at.present? %>
+            <div class="flex">
+              <div class="flex flex-col items-center mr-2 sm:mr-3">
+                <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-red-500"></div>
+                <div class="w-0.5 h-full bg-gray-200 dark:bg-gray-700"></div>
+              </div>
+              <div>
+                <div class="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Transaction Failed</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.failed_at.strftime("%b %d, %Y at %H:%M") %></div>
+                <% if transaction.metadata && transaction.metadata["failure_reason"].present? %>
+                  <div class="text-xs text-red-500 mt-1">Reason: <%= transaction.metadata["failure_reason"] %></div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="flex">
+            <div class="flex flex-col items-center mr-2 sm:mr-3">
+              <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-500 dark:text-gray-400">End of Timeline</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-2 sm:space-y-0">
+      <a href="<%= transaction_path(transaction) %>" class="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white text-sm font-medium rounded-lg transition-colors duration-300 text-center shadow-sm dark:shadow-md">
+        <%= icon "document-text", class: "w-4 h-4 mr-1 inline-block" %>
+        View Full Details
+      </a>
+      <button type="button" class="close-modal-btn w-full sm:w-auto px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 text-sm font-medium rounded-lg transition-colors duration-300 text-center border border-transparent dark:border-gray-600">
+        <%= icon "x", class: "w-4 h-4 mr-1 inline-block" %>
+        Close
+      </button>
+    </div>
+  </div>
+</div>

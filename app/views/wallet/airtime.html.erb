@@ -1,0 +1,893 @@
+<%# Enhanced Mobile Services View (Airtime & Data) %>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen" data-controller="airtime">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Modern Header with Animated Gradient Background -->
+    <div class="mb-8 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-3xl shadow-xl overflow-hidden">
+      <div class="relative p-6 md:p-8">
+        <!-- Enhanced decorative elements with subtle animation -->
+        <div class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full -mt-32 -mr-32 blur-3xl animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-56 h-56 bg-white/10 rounded-full -mb-24 -ml-24 blur-2xl animate-float"></div>
+        <div class="absolute top-1/3 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-xl animate-float"></div>
+
+        <!-- Decorative icons with improved visibility -->
+        <div class="absolute top-1/4 right-1/4 text-white/10 transform rotate-12 hidden lg:block">
+          <%= icon("phone", class: "w-32 h-32") %>
+        </div>
+        <div class="absolute bottom-1/4 left-1/3 text-white/10 transform -rotate-12 hidden lg:block">
+          <%= icon("wifi", class: "w-24 h-24") %>
+        </div>
+
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between">
+          <div class="flex items-center mb-6 md:mb-0">
+            <a href="<%= wallet_bills_path %>" class="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300 mr-4 shadow-md hover:scale-105 backdrop-blur-sm">
+              <%= icon("arrow-left", class: "w-5 h-5") %>
+            </a>
+
+            <div class="flex items-center">
+              <div class="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mr-5 shadow-lg backdrop-blur-sm border border-white/20">
+                <%= icon("smartphone", class: "w-8 h-8 text-white") %>
+              </div>
+
+              <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-white">Mobile Services</h1>
+                <p class="mt-2 text-white/90 max-w-md font-medium">
+                  Buy airtime or data bundles for any network instantly
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Enhanced quick action buttons -->
+          <div class="flex flex-wrap gap-3">
+            <a href="<%= wallet_path %>" class="flex items-center px-5 py-2.5 bg-white/15 hover:bg-white/25 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg backdrop-blur-sm border border-white/20 hover:-translate-y-0.5">
+              <%= icon("home", class: "w-4 h-4 mr-2") %>
+              Dashboard
+            </a>
+            <a href="<%= transactions_wallet_path %>" class="flex items-center px-5 py-2.5 bg-white/15 hover:bg-white/25 text-white rounded-xl text-sm font-medium transition-all duration-300 shadow-md hover:shadow-lg backdrop-blur-sm border border-white/20 hover:-translate-y-0.5">
+              <%= icon("history", class: "w-4 h-4 mr-2") %>
+              History
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content - Redesigned Form with Modern Styling -->
+    <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+      <!-- Form with improved styling and layout -->
+      <div class="p-8 md:p-10">
+        <%= form_with url: process_bill_payment_path, method: :post, class: "space-y-8", data: { action: "submit->airtime#submitForm" } do |f| %>
+          <%= f.hidden_field :bill_type, value: "airtime" %>
+
+          <!-- Success Message (hidden by default) -->
+          <div data-airtime-target="successMessage" class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 mb-6 hidden transform transition-all duration-300 scale-100">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <%= icon("check-circle", class: "h-5 w-5 text-green-500") %>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-green-800 dark:text-green-300">Contact saved successfully!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Message (hidden by default) -->
+          <div data-airtime-target="errorMessage" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-6 hidden transform transition-all duration-300 scale-100">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <%= icon("alert-triangle", class: "h-5 w-5 text-red-500") %>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800 dark:text-red-300">Please check your information</h3>
+                <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <li>Select a network provider</li>
+                    <li>Enter a valid phone number</li>
+                    <li>Enter an amount greater than 0</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Purchase Type Selection - Redesigned with Modern Cards -->
+          <div class="space-y-5">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+              <%= icon("credit-card", class: "w-5 h-5 mr-2 text-indigo-500") %>
+              What would you like to buy?
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="cursor-pointer group">
+                <input type="radio" name="purchase_type" value="airtime" class="sr-only" checked data-airtime-target="purchaseType">
+                <div class="flex items-center p-5 border-2 border-gray-200 dark:border-gray-700 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-300 group-hover:shadow-md bg-white dark:bg-gray-800 h-full">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white mr-4 shadow-md">
+                    <%= icon("phone", class: "w-6 h-6") %>
+                  </div>
+                  <div>
+                    <span class="font-bold text-gray-900 dark:text-white text-lg">Airtime</span>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">For voice calls and SMS messaging</p>
+                  </div>
+                </div>
+              </label>
+
+              <label class="cursor-pointer group">
+                <input type="radio" name="purchase_type" value="data" class="sr-only" data-airtime-target="purchaseType">
+                <div class="flex items-center p-5 border-2 border-gray-200 dark:border-gray-700 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-300 group-hover:shadow-md bg-white dark:bg-gray-800 h-full">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-indigo-600 flex items-center justify-center text-white mr-4 shadow-md">
+                    <%= icon("wifi", class: "w-6 h-6") %>
+                  </div>
+                  <div>
+                    <span class="font-bold text-gray-900 dark:text-white text-lg">Data Bundle</span>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">For internet access and browsing</p>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Phone Number Input - Redesigned -->
+          <div class="space-y-3 mt-8 bg-gray-50 dark:bg-gray-900/30 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                <%= icon("smartphone", class: "w-5 h-5 mr-2 text-indigo-500") %>
+                Phone Number
+              </h3>
+
+              <button type="button" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center px-3 py-1.5 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/30 transition-colors" data-action="airtime#saveContact">
+                <%= icon("save", class: "w-3.5 h-3.5 mr-1.5") %>
+                Save Contact
+              </button>
+            </div>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <%= icon("phone", class: "w-5 h-5 text-indigo-500") %>
+              </div>
+              <%= f.telephone_field :account_number,
+                  type: "tel",
+                  pattern: "[0-9]*",
+                  maxlength: "12",
+                  class: "form-input block w-full pl-12 py-3.5 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-600 shadow-sm text-base",
+                  placeholder: "Enter phone number",
+                  data: { airtime_target: "phoneNumber" }
+              %>
+            </div>
+
+            <div class="flex items-center text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 p-2.5 rounded-lg border border-gray-100 dark:border-gray-700">
+              <%= icon("info", class: "w-4 h-4 mr-2 text-indigo-500 flex-shrink-0") %>
+              <span>Enter the phone number you want to recharge. You can save this number for future transactions.</span>
+            </div>
+          </div>
+
+          <!-- Network Provider Selection - Redesigned -->
+          <div class="space-y-4 mt-8" data-airtime-target="airtimeSection">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                <%= icon("globe", class: "w-5 h-5 mr-2 text-indigo-500") %>
+                Select Network Provider
+              </h3>
+
+              <button type="button" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center px-3 py-1.5 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/30 transition-colors" data-action="airtime#showRecentContacts">
+                <%= icon("users", class: "w-3.5 h-3.5 mr-1.5") %>
+                Recent Contacts
+              </button>
+            </div>
+
+            <!-- Recent Contacts Dropdown (hidden by default) -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 mb-4 hidden transform transition-all duration-300 scale-100" data-airtime-target="recentContacts">
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100 dark:border-gray-700">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white flex items-center">
+                  <%= icon("star", class: "w-4 h-4 mr-2 text-yellow-500") %>
+                  Recent Contacts
+                </h4>
+                <button type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700" data-action="airtime#showRecentContacts">
+                  <%= icon("x", class: "w-4 h-4") %>
+                </button>
+              </div>
+
+              <div class="space-y-2 max-h-56 overflow-y-auto" data-airtime-target="contactsList">
+                <!-- Contacts will be populated by JavaScript -->
+                <div class="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+                  <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-2">
+                    <%= icon("users", class: "w-6 h-6 text-gray-400 dark:text-gray-500") %>
+                  </div>
+                  No saved contacts yet
+                </div>
+              </div>
+            </div>
+
+            <!-- Provider Selection Cards with Logos - Redesigned -->
+            <div class="grid grid-cols-3 gap-4">
+              <%
+                providers = [
+                  { name: "MTN", value: "MTN", color: "yellow", bg_color: "from-yellow-400 to-amber-500", text_color: "text-yellow-900", border_color: "border-yellow-300", hover_border: "hover:border-yellow-400" },
+                  { name: "Vodafone", value: "VODAFONE", color: "red", bg_color: "from-red-400 to-rose-500", text_color: "text-red-900", border_color: "border-red-300", hover_border: "hover:border-red-400" },
+                  { name: "AirtelTigo", value: "AIRTELTIGO", color: "blue", bg_color: "from-blue-400 to-sky-500", text_color: "text-blue-900", border_color: "border-blue-300", hover_border: "hover:border-blue-400" }
+                ]
+              %>
+
+              <% providers.each do |provider| %>
+                <label class="provider-option cursor-pointer group">
+                  <%= f.radio_button :provider, provider[:value], class: "hidden provider-radio", data: { airtime_target: "provider", hover_border: provider[:hover_border] } %>
+                  <div class="flex flex-col items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl <%= provider[:hover_border] %> dark:hover:border-indigo-700 transition-all duration-300 group-hover:shadow-md bg-white dark:bg-gray-800 h-full">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br <%= provider[:bg_color] %> flex items-center justify-center mb-3 shadow-md">
+                      <img src="/assets/providers/<%= provider[:value].downcase %>-logo.png" alt="<%= provider[:name] %>" class="w-10 h-10 object-contain" data-airtime-target="providerLogo" data-provider="<%= provider[:value] %>">
+                    </div>
+                    <span class="font-bold text-gray-900 dark:text-white"><%= provider[:name] %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Data Provider Selection - Redesigned -->
+          <div class="space-y-4 mt-8 hidden" data-airtime-target="dataSection">
+            <div class="flex justify-between items-center">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                <%= icon("globe", class: "w-5 h-5 mr-2 text-purple-500") %>
+                Select Data Provider
+              </h3>
+            </div>
+
+            <!-- Data Provider Selection Cards - Redesigned -->
+            <div class="grid grid-cols-3 gap-4">
+              <%
+                data_providers = [
+                  { name: "MTN", value: "MTN", color: "yellow", bg_color: "from-yellow-400 to-amber-500", text_color: "text-yellow-900", border_color: "border-yellow-300", hover_border: "hover:border-yellow-400" },
+                  { name: "Vodafone", value: "VODAFONE", color: "red", bg_color: "from-red-400 to-rose-500", text_color: "text-red-900", border_color: "border-red-300", hover_border: "hover:border-red-400" },
+                  { name: "AirtelTigo", value: "AIRTELTIGO", color: "blue", bg_color: "from-blue-400 to-sky-500", text_color: "text-blue-900", border_color: "border-blue-300", hover_border: "hover:border-blue-400" }
+                ]
+              %>
+
+              <% data_providers.each do |provider| %>
+                <label class="provider-option cursor-pointer group">
+                  <%= f.radio_button :data_provider, provider[:value], class: "hidden provider-radio", data: { airtime_target: "dataProvider", hover_border: provider[:hover_border] } %>
+                  <div class="flex flex-col items-center p-4 border-2 border-gray-200 dark:border-gray-700 rounded-xl <%= provider[:hover_border] %> dark:hover:border-purple-700 transition-all duration-300 group-hover:shadow-md bg-white dark:bg-gray-800 h-full">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br <%= provider[:bg_color] %> flex items-center justify-center mb-3 shadow-md">
+                      <img src="/assets/providers/<%= provider[:value].downcase %>-logo.png" alt="<%= provider[:name] %>" class="w-10 h-10 object-contain" data-airtime-target="providerLogo" data-provider="<%= provider[:value] %>">
+                    </div>
+                    <span class="font-bold text-gray-900 dark:text-white"><%= provider[:name] %></span>
+                  </div>
+                </label>
+              <% end %>
+            </div>
+
+            <!-- Data Packages - Redesigned -->
+            <div class="mt-8">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center mb-4">
+                <%= icon("package", class: "w-5 h-5 mr-2 text-purple-500") %>
+                Select Data Package
+              </h3>
+
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <%
+                  data_packages = [
+                    { name: "Daily 50MB", amount: 1, duration: "1 Day", data: "50MB", icon: "clock" },
+                    { name: "Daily 100MB", amount: 2, duration: "1 Day", data: "100MB", icon: "clock" },
+                    { name: "Weekly 500MB", amount: 5, duration: "7 Days", data: "500MB", icon: "calendar" },
+                    { name: "Weekly 1GB", amount: 10, duration: "7 Days", data: "1GB", icon: "calendar" },
+                    { name: "Monthly 2GB", amount: 20, duration: "30 Days", data: "2GB", icon: "calendar-check" },
+                    { name: "Monthly 5GB", amount: 50, duration: "30 Days", data: "5GB", icon: "calendar-check" }
+                  ]
+                %>
+
+                <% data_packages.each do |package| %>
+                  <div class="border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-purple-400 dark:hover:border-purple-600 transition-all duration-300 cursor-pointer hover:shadow-md bg-white dark:bg-gray-800 data-package" data-amount="<%= package[:amount] %>" data-airtime-target="dataPackage" data-action="click->airtime#selectDataPackage">
+                    <div class="flex justify-between items-start mb-3">
+                      <span class="font-bold text-gray-900 dark:text-white text-base"><%= package[:name] %></span>
+                      <span class="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 text-xs font-medium px-2.5 py-1 rounded-full flex items-center">
+                        <%= icon(package[:icon], class: "w-3 h-3 mr-1") %>
+                        <%= package[:duration] %>
+                      </span>
+                    </div>
+                    <div class="flex justify-between items-end">
+                      <span class="text-sm text-gray-500 dark:text-gray-400 font-medium"><%= package[:data] %></span>
+                      <span class="font-bold text-purple-600 dark:text-purple-400 text-lg">₵<%= package[:amount] %></span>
+                    </div>
+                  </div>
+                <% end %>
+                <%= f.hidden_field :data_amount, value: "", data: { airtime_target: "dataAmount" } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amount Section - Redesigned -->
+          <div class="mt-8 space-y-5 bg-gray-50 dark:bg-gray-900/30 p-6 rounded-2xl border border-gray-100 dark:border-gray-700">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+              <%= icon("dollar-sign", class: "w-5 h-5 mr-2 text-indigo-500") %>
+              Enter Amount
+            </h3>
+
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <%= icon("dollar-sign", class: "w-5 h-5 text-indigo-500") %>
+              </div>
+              <div class="absolute inset-y-0 left-10 flex items-center pointer-events-none">
+                <span class="text-gray-500 dark:text-gray-400 font-medium">₵</span>
+              </div>
+              <%= f.number_field :amount,
+                  id: "amount",
+                  class: "form-input block w-full pl-14 py-3.5 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-600 shadow-sm text-lg font-bold",
+                  placeholder: "0.00",
+                  min: "0",
+                  step: "0.01",
+                  data: { airtime_target: "amount" }
+              %>
+            </div>
+
+            <!-- Quick Amount Buttons - Redesigned -->
+            <div class="grid grid-cols-5 gap-3">
+              <% [5, 10, 20, 50, 100].each do |amount| %>
+                <button type="button"
+                  class="px-3 py-2.5 bg-white dark:bg-gray-800 text-indigo-700 dark:text-indigo-300 rounded-xl text-sm font-bold hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-300 shadow-sm border border-indigo-100 dark:border-indigo-800 hover:shadow hover:-translate-y-0.5"
+                  data-amount="<%= amount %>"
+                  data-airtime-target="quickAmount">
+                  ₵<%= amount %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Saved Contacts Container (hidden by default) - Redesigned -->
+          <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm hidden" data-airtime-target="savedContactsContainer">
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+                <%= icon("star", class: "w-5 h-5 mr-2 text-yellow-500") %>
+                Saved Contacts
+              </h4>
+              <button type="button" class="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 px-3 py-1.5 rounded-lg border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-800/30 transition-colors">
+                View All
+              </button>
+            </div>
+
+            <div class="space-y-2" data-airtime-target="contactsList">
+              <!-- Contacts will be populated by JavaScript -->
+              <div class="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+                <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-2">
+                  <%= icon("users", class: "w-6 h-6 text-gray-400 dark:text-gray-500") %>
+                </div>
+                No saved contacts yet
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Options Section - Redesigned -->
+          <div class="mt-8 space-y-6">
+            <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center">
+              <%= icon("settings", class: "w-5 h-5 mr-2 text-indigo-500") %>
+              Additional Options
+            </h3>
+
+            <!-- Gift Option - Redesigned -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300">
+              <div class="flex items-start">
+                <div class="flex items-center h-5 mt-1">
+                  <input id="gift_option" name="gift_option" type="checkbox" class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-airtime-target="giftCheckbox" data-action="change->airtime#toggleGiftOption">
+                </div>
+                <div class="ml-3">
+                  <label for="gift_option" class="font-bold text-gray-900 dark:text-white cursor-pointer text-base flex items-center">
+                    <%= icon("gift", class: "w-5 h-5 mr-2 text-pink-500") %>
+                    Send as a Gift
+                  </label>
+                  <p class="text-gray-500 dark:text-gray-400 mt-1">Send airtime or data to someone as a gift with a personalized message</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recipient Information (hidden by default) - Redesigned -->
+            <div class="p-6 bg-gradient-to-br from-pink-50 to-purple-50 dark:from-pink-900/10 dark:to-purple-900/10 rounded-xl border border-pink-100 dark:border-pink-800/50 hidden shadow-sm transition-all duration-300 transform scale-95 opacity-0" data-airtime-target="recipientSection">
+              <h4 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center text-base">
+                <%= icon("gift", class: "w-5 h-5 mr-2 text-pink-500") %>
+                Recipient Information
+              </h4>
+
+              <div class="space-y-5">
+                <div>
+                  <label for="recipient_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Recipient Name</label>
+                  <div class="relative mt-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <%= icon("user", class: "w-5 h-5 text-pink-500") %>
+                    </div>
+                    <input type="text" name="recipient_name" id="recipient_name" class="form-input block w-full pl-10 py-3 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-pink-500 dark:focus:ring-pink-600 focus:border-pink-500 dark:focus:border-pink-600 shadow-sm" placeholder="Enter recipient's name">
+                  </div>
+                </div>
+
+                <div>
+                  <label for="recipient_phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Recipient Phone (optional)</label>
+                  <div class="relative mt-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <%= icon("phone", class: "w-5 h-5 text-pink-500") %>
+                    </div>
+                    <input type="tel" name="recipient_phone" id="recipient_phone" class="form-input block w-full pl-10 py-3 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-pink-500 dark:focus:ring-pink-600 focus:border-pink-500 dark:focus:border-pink-600 shadow-sm" placeholder="Enter recipient's phone number">
+                  </div>
+                  <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Only needed if different from the recharge number</p>
+                </div>
+
+                <div>
+                  <label for="gift_message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gift Message (optional)</label>
+                  <div class="relative mt-1">
+                    <textarea name="gift_message" id="gift_message" rows="3" class="form-textarea block w-full py-3 px-4 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-pink-500 dark:focus:ring-pink-600 focus:border-pink-500 dark:focus:border-pink-600 shadow-sm" placeholder="Add a personal message"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule Option - Redesigned -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300">
+              <div class="flex items-start">
+                <div class="flex items-center h-5 mt-1">
+                  <input id="schedule_option" name="schedule_option" type="checkbox" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" data-airtime-target="scheduleCheckbox" data-action="change->airtime#toggleScheduleOption">
+                </div>
+                <div class="ml-3">
+                  <label for="schedule_option" class="font-bold text-gray-900 dark:text-white cursor-pointer text-base flex items-center">
+                    <%= icon("calendar", class: "w-5 h-5 mr-2 text-blue-500") %>
+                    Schedule for Later
+                  </label>
+                  <p class="text-gray-500 dark:text-gray-400 mt-1">Schedule this purchase for a future date or make it recurring</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Schedule Information (hidden by default) - Redesigned -->
+            <div class="p-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-xl border border-blue-100 dark:border-blue-800/50 hidden shadow-sm transition-all duration-300 transform scale-95 opacity-0" data-airtime-target="scheduleSection">
+              <h4 class="font-bold text-gray-900 dark:text-white mb-4 flex items-center text-base">
+                <%= icon("calendar", class: "w-5 h-5 mr-2 text-blue-500") %>
+                Schedule Information
+              </h4>
+
+              <div class="space-y-5">
+                <div>
+                  <label for="schedule_frequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frequency</label>
+                  <div class="relative mt-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <%= icon("repeat", class: "w-5 h-5 text-blue-500") %>
+                    </div>
+                    <select id="schedule_frequency" name="schedule_frequency" class="form-select block w-full pl-10 py-3 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm" data-airtime-target="scheduleFrequency">
+                      <option value="once">One time</option>
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="schedule_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
+                  <div class="relative mt-1">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <%= icon("calendar", class: "w-5 h-5 text-blue-500") %>
+                    </div>
+                    <input type="date" name="schedule_date" id="schedule_date" class="form-input block w-full pl-10 py-3 rounded-xl border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 shadow-sm" data-airtime-target="scheduleDate">
+                  </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                  <div class="flex items-start text-sm text-gray-600 dark:text-gray-400">
+                    <%= icon("info", class: "w-5 h-5 mr-2 text-blue-500 flex-shrink-0 mt-0.5") %>
+                    <p>Scheduled purchases will be processed automatically on the specified date and frequency. You can manage your scheduled transactions from your account dashboard.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Payment Summary - Redesigned -->
+          <div class="mt-10 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/10 dark:to-purple-900/10 rounded-2xl p-6 shadow-lg border border-indigo-100 dark:border-indigo-800/50">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center">
+              <%= icon("clipboard-list", class: "w-5 h-5 mr-2 text-indigo-500") %>
+              Payment Summary
+            </h3>
+
+            <div class="space-y-4">
+              <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                  <%= icon("credit-card", class: "w-5 h-5 mr-2 text-indigo-500") %>
+                  Amount
+                </span>
+                <span class="font-bold text-gray-900 dark:text-white" data-airtime-target="displayAmount">₵0.00</span>
+              </div>
+
+              <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <span class="font-medium text-gray-700 dark:text-gray-300 flex items-center group relative">
+                  <%= icon("plus", class: "w-5 h-5 mr-2 text-indigo-500") %>
+                  Service Fee
+                  <button type="button" class="ml-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none">
+                    <%= icon("help-circle", class: "w-4 h-4") %>
+                    <div class="absolute left-0 bottom-full mb-2 w-72 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 text-sm text-left transform scale-0 group-hover:scale-100 transition-transform origin-bottom-left z-10 border border-gray-200 dark:border-gray-700">
+                      <p class="font-semibold mb-2 text-gray-900 dark:text-white">Fee Structure:</p>
+                      <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                        <li class="flex items-start">
+                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 mr-2 flex-shrink-0">•</span>
+                          <span>1% service fee for all mobile services</span>
+                        </li>
+                        <li class="flex items-start">
+                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 mr-2 flex-shrink-0">•</span>
+                          <span>Minimum fee of ₵0.50</span>
+                        </li>
+                        <li class="flex items-start">
+                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-500 mr-2 flex-shrink-0">•</span>
+                          <span>Includes SMS confirmation</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </button>
+                </span>
+                <span class="font-bold text-gray-900 dark:text-white" data-airtime-target="feeAmount">₵0.00</span>
+              </div>
+
+              <!-- Promo Code Section - Redesigned -->
+              <div class="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <div class="flex justify-between items-center mb-3">
+                  <label for="promo_code" class="font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                    <%= icon("tag", class: "w-5 h-5 mr-2 text-indigo-500") %>
+                    Promo Code
+                  </label>
+                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400" data-airtime-target="promoStatus"></span>
+                </div>
+
+                <div class="flex">
+                  <input type="text" id="promo_code" name="promo_code" class="flex-grow form-input block border-gray-200 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-l-xl focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-600 focus:border-indigo-500 dark:focus:border-indigo-600 shadow-sm py-3" placeholder="Enter promo code" data-airtime-target="promoCode">
+                  <button type="button" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 rounded-r-xl text-sm font-medium transition-colors shadow-sm" data-action="airtime#applyPromoCode" data-airtime-target="promoApplyButton">
+                    Apply
+                  </button>
+                </div>
+
+                <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                  <%= icon("info", class: "w-4 h-4 mr-1.5 text-indigo-500") %>
+                  Try promo codes: WELCOME10, BONUS20, FREEBIES
+                </div>
+              </div>
+
+              <!-- Discount (hidden by default) - Redesigned -->
+              <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hidden">
+                <span class="font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                  <%= icon("minus", class: "w-5 h-5 mr-2 text-green-500") %>
+                  Discount
+                </span>
+                <span class="font-bold text-green-600 dark:text-green-400" data-airtime-target="discountAmount">-₵0.00</span>
+              </div>
+
+              <!-- Total - Redesigned -->
+              <div class="flex justify-between items-center p-4 bg-indigo-600 dark:bg-indigo-700 rounded-xl shadow-md">
+                <span class="font-bold text-white flex items-center">
+                  <%= icon("check-circle", class: "w-5 h-5 mr-2") %>
+                  Total Amount
+                </span>
+                <span class="font-bold text-xl text-white" data-airtime-target="totalAmount">₵0.00</span>
+              </div>
+
+              <!-- Payment Details - Redesigned -->
+              <div class="mt-4 grid grid-cols-2 gap-3">
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block mb-1">Provider</span>
+                  <span class="font-bold text-gray-900 dark:text-white flex items-center" data-airtime-target="selectedProvider">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 mr-2">
+                      <%= icon("globe", class: "w-3 h-3") %>
+                    </div>
+                    Not selected
+                  </span>
+                </div>
+                <div class="p-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+                  <span class="text-xs font-medium text-gray-500 dark:text-gray-400 block mb-1">Phone Number</span>
+                  <span class="font-bold text-gray-900 dark:text-white flex items-center" data-airtime-target="selectedPhone">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 mr-2">
+                      <%= icon("phone", class: "w-3 h-3") %>
+                    </div>
+                    Not entered
+                  </span>
+                </div>
+              </div>
+
+              <!-- Security Features - Redesigned -->
+              <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 mr-2 shadow-sm">
+                    <%= icon("shield", class: "w-4 h-4") %>
+                  </div>
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Secure Payment</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-2 shadow-sm">
+                    <%= icon("zap", class: "w-4 h-4") %>
+                  </div>
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Instant Processing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <!-- Submit Button - Redesigned -->
+            <div class="mt-10">
+              <!-- Airtime Submit Button -->
+              <div data-airtime-target="airtimeSection">
+                <%= f.button type: "submit", class: "w-full py-5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transform transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed", data: { airtime_target: "submitButton", action: "airtime#submitForm" } do %>
+                  <div class="flex items-center justify-center">
+                    <%= icon("phone", class: "w-6 h-6 mr-3") %>
+                    <span class="text-lg">Buy Airtime Now</span>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Data Submit Button -->
+              <div class="hidden" data-airtime-target="dataSection">
+                <%= f.button type: "submit", class: "w-full py-5 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-xl shadow-xl hover:shadow-2xl transform transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed", data: { airtime_target: "submitButton", action: "airtime#submitForm" } do %>
+                  <div class="flex items-center justify-center">
+                    <%= icon("wifi", class: "w-6 h-6 mr-3") %>
+                    <span class="text-lg">Buy Data Bundle Now</span>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Loading Indicator (hidden by default) - Redesigned -->
+              <div class="hidden w-full py-5 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-xl" data-airtime-target="loadingIndicator">
+                <div class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span class="text-lg">Processing Your Purchase...</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-center mt-4 text-center">
+                <div class="w-5 h-5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 mr-2">
+                  <%= icon("lock", class: "w-3 h-3") %>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  By clicking the button above, you agree to our <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Terms of Service</a>
+                </p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <!-- Recent Mobile Purchases -->
+    <div class="mt-10">
+      <!-- Section header with gradient underline -->
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+            <%= icon("clock", class: "w-5 h-5 mr-2 text-green-500") %>
+            Recent Mobile Purchases
+          </h2>
+          <div class="h-1 w-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full mt-2"></div>
+        </div>
+        <a href="<%= transactions_wallet_path %>" class="text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center">
+          View All
+          <%= icon("chevron-right", class: "w-4 h-4 ml-1") %>
+        </a>
+      </div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+        <% if @recent_bill_payments.present? && @recent_bill_payments.any? %>
+          <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <% @recent_bill_payments.select { |p| p.bill_type.to_s == 'airtime' || p.bill_type.to_s == 'data' }.take(3).each do |payment| %>
+              <%
+                # Set icon and color based on bill type
+                if payment.bill_type.to_s == 'data'
+                  icon_name = "wifi"
+                  gradient_class = "bg-gradient-to-r from-purple-500 to-indigo-600"
+                else
+                  icon_name = "phone"
+                  gradient_class = "bg-gradient-to-r from-green-500 to-emerald-600"
+                end
+              %>
+              <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-lg <%= gradient_class %> flex items-center justify-center mr-3 shadow-md text-white">
+                      <%= icon(icon_name, class: "w-5 h-5") %>
+                    </div>
+                    <div>
+                      <p class="font-bold text-gray-900 dark:text-white"><%= payment.provider %></p>
+                      <div class="flex items-center mt-1">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("phone", class: "w-3 h-3 mr-1 opacity-70") %>
+                          <%= payment.account_number %>
+                        </span>
+                        <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                          <%= icon("calendar", class: "w-3 h-3 mr-1 opacity-70") %>
+                          <%= payment.created_at.strftime("%b %d, %Y") %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-bold text-gray-900 dark:text-white">
+                      ₵<%= number_with_delimiter(payment.amount, delimiter: ',') %>
+                    </p>
+                    <%
+                      # Set status colors and styles
+                      if payment.status.to_s == 'completed'
+                        status_bg = "bg-green-100 dark:bg-green-900/30"
+                        status_text = "text-green-800 dark:text-green-300"
+                        status_icon = "check-circle"
+                      elsif payment.status.to_s == 'pending'
+                        status_bg = "bg-amber-100 dark:bg-amber-900/30"
+                        status_text = "text-amber-800 dark:text-amber-300"
+                        status_icon = "clock"
+                      else
+                        status_bg = "bg-red-100 dark:bg-red-900/30"
+                        status_text = "text-red-800 dark:text-red-300"
+                        status_icon = "x-circle"
+                      end
+                    %>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium <%= status_bg %> <%= status_text %> mt-1">
+                      <%= icon(status_icon, class: "w-3 h-3 mr-1") %>
+                      <%= payment.status.titleize %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="p-8 text-center">
+            <div class="relative w-20 h-20 mx-auto mb-4">
+              <div class="absolute inset-0 w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-lg transform -translate-x-2 -translate-y-1">
+                <%= icon("phone", class: "w-8 h-8") %>
+              </div>
+              <div class="absolute inset-0 w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-lg transform translate-x-4 translate-y-4">
+                <%= icon("wifi", class: "w-8 h-8") %>
+              </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No recent mobile purchases</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">Your airtime and data purchase history will appear here</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <!-- Quick Tips Section -->
+    <div class="mt-10 mb-10">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+            <%= icon("lightbulb", class: "w-5 h-5 mr-2 text-yellow-500") %>
+            Quick Tips
+          </h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Helpful information for mobile services</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Tip 1 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-green-500 to-emerald-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("save", class: "w-4 h-4 mr-2 text-green-500") %>
+              Save Frequent Contacts
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Save phone numbers you frequently recharge for quick access in future transactions.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
+              Learn how
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+        <!-- Tip 2 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("repeat", class: "w-4 h-4 mr-2 text-blue-500") %>
+              Schedule Auto-Recharge
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Set up automatic recharges for airtime or data bundles on a regular schedule.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+              Set schedule
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tip 3 -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-purple-500 to-indigo-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("gift", class: "w-4 h-4 mr-2 text-purple-500") %>
+              Send as a Gift
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Send airtime or data bundles as a gift to friends and family with a personalized message.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300">
+              Learn more
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tip 4 (New) -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-yellow-500 to-amber-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("tag", class: "w-4 h-4 mr-2 text-yellow-500") %>
+              Promo Codes
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Use promo codes to get discounts on your airtime and data bundle purchases.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300">
+              View active promos
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tip 5 (New) -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-red-500 to-rose-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("trending-up", class: "w-4 h-4 mr-2 text-red-500") %>
+              Data Usage Tracker
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Track your data usage and get notifications when you're running low on data.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+              Track usage
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tip 6 (New) -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div class="h-3 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+          <div class="p-5">
+            <h3 class="font-bold text-gray-900 dark:text-white mb-2 flex items-center">
+              <%= icon("award", class: "w-4 h-4 mr-2 text-emerald-500") %>
+              Earn Rewards
+            </h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Earn cashback and rewards points every time you purchase mobile services through our platform.
+            </p>
+            <a href="#" class="mt-3 inline-flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300">
+              View rewards
+              <%= icon("chevron-right", class: "w-3 h-3 ml-1") %>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom CSS for animations -->
+  <style>
+    .animate-pulse-slow {
+      animation: pulse 6s infinite;
+    }
+
+    .animate-float {
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+  </style>
+</div>

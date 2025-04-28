@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background-color: #f97316;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 5px 5px 0 0;
+    }
+    .content {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+    .product-info {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+    .review-content {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #fff9f0;
+      border-left: 4px solid #f97316;
+    }
+    .feedback {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: #fef2f2;
+      border-left: 4px solid #ef4444;
+      border-radius: 5px;
+    }
+    .button {
+      display: inline-block;
+      background-color: #f97316;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Your Review Needs Some Changes</h1>
+  </div>
+  
+  <div class="content">
+    <p>Hello <%= @user.username || @user.email %>,</p>
+    
+    <p>Thank you for submitting your review for <strong><%= @product.name %></strong>. We appreciate your feedback, but we need you to make some changes before we can publish it.</p>
+    
+    <div class="product-info">
+      <h3>Product: <%= @product.name %></h3>
+      <p>Your rating: <%= @review.rating %>/5</p>
+    </div>
+    
+    <div class="review-content">
+      <p><em>"<%= @review.comment %>"</em></p>
+    </div>
+    
+    <% if @admin_comment.present? %>
+      <div class="feedback">
+        <h3>Feedback from our team:</h3>
+        <p><%= @admin_comment %></p>
+      </div>
+    <% end %>
+    
+    <p>You can edit your review by clicking the button below. Please make the necessary changes according to our feedback.</p>
+    
+    <a href="<%= edit_product_review_url(@product, @review) %>" class="button">Edit Your Review</a>
+    
+    <p>If you have any questions about our review guidelines, please contact our customer support team.</p>
+    
+    <div class="footer">
+      <p>This email was sent from Super Ghana App. Please do not reply to this email.</p>
+      <p>&copy; <%= Date.today.year %> Super Ghana App. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

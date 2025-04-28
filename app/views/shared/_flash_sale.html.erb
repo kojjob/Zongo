@@ -1,0 +1,125 @@
+<%
+# This partial renders a flash sale section
+# Parameters:
+# - flash_sale: The flash sale to display (optional, will use the current featured flash sale if not provided)
+# - limit: Maximum number of products to show (default: 8)
+%>
+
+<% 
+  # Get the flash sale if not provided
+  flash_sale = local_assigns[:flash_sale] || FlashSale.current.featured.first
+  
+  # Return if no flash sale is available
+  return unless flash_sale
+  
+  # Get the limit
+  limit = local_assigns.fetch(:limit, 8)
+  
+  # Get available flash sale items
+  flash_sale_items = flash_sale.flash_sale_items.with_available_quantity.includes(:product).limit(limit)
+  
+  # Return if no items are available
+  return if flash_sale_items.empty?
+%>
+
+<div class="flash-sale bg-gradient-to-r from-red-600 to-orange-500 rounded-lg overflow-hidden shadow-lg mb-8">
+  <div class="p-4 sm:p-6 text-white">
+    <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold"><%= flash_sale.name %></h2>
+        <% if flash_sale.description.present? %>
+          <p class="mt-1 text-white text-opacity-90"><%= flash_sale.description %></p>
+        <% end %>
+      </div>
+      
+      <div class="mt-4 sm:mt-0 flex items-center space-x-1 bg-white bg-opacity-20 rounded-lg px-4 py-2">
+        <div class="countdown-timer" data-controller="countdown" data-countdown-ends-at-value="<%= flash_sale.ends_at.iso8601 %>">
+          <div class="flex items-center space-x-2 text-white">
+            <div class="flex flex-col items-center">
+              <span class="text-2xl font-bold" data-countdown-target="days">00</span>
+              <span class="text-xs">Days</span>
+            </div>
+            <span class="text-xl font-bold">:</span>
+            <div class="flex flex-col items-center">
+              <span class="text-2xl font-bold" data-countdown-target="hours">00</span>
+              <span class="text-xs">Hours</span>
+            </div>
+            <span class="text-xl font-bold">:</span>
+            <div class="flex flex-col items-center">
+              <span class="text-2xl font-bold" data-countdown-target="minutes">00</span>
+              <span class="text-xs">Mins</span>
+            </div>
+            <span class="text-xl font-bold">:</span>
+            <div class="flex flex-col items-center">
+              <span class="text-2xl font-bold" data-countdown-target="seconds">00</span>
+              <span class="text-xs">Secs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="relative h-2 bg-white bg-opacity-20 rounded-full overflow-hidden">
+      <div class="absolute top-0 left-0 h-full bg-white" style="width: <%= flash_sale.progress_percentage %>%;"></div>
+    </div>
+  </div>
+  
+  <div class="bg-white dark:bg-gray-900 p-4 sm:p-6">
+    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <% flash_sale_items.each do |item| %>
+        <% product = item.product %>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+          <div class="relative">
+            <% if product.images.attached? %>
+              <%= image_tag product.images.first.variant(resize_to_fill: [300, 300]), class: "w-full h-48 object-cover" %>
+            <% else %>
+              <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                <%= icon "image", class: "h-12 w-12 text-gray-400 dark:text-gray-500" %>
+              </div>
+            <% end %>
+            
+            <div class="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-bold">
+              <%= item.formatted_discount %>
+            </div>
+            
+            <% if item.quantity_limit.present? %>
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white px-2 py-1 text-xs">
+                <% if item.sold_out? %>
+                  <span class="font-bold">SOLD OUT</span>
+                <% else %>
+                  <div class="flex items-center justify-between">
+                    <span><%= item.quantity_remaining %> left</span>
+                    <span><%= item.percentage_sold %>% sold</span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="p-4">
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate"><%= product.name %></h3>
+            
+            <div class="mt-2 flex items-center justify-between">
+              <div>
+                <span class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= item.discounted_price(product.price) %></span>
+                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400 line-through">GHS <%= product.price %></span>
+              </div>
+              
+              <% if item.available? %>
+                <%= button_to add_to_cart_path, method: :post, params: { product_id: product.id, quantity: 1 }, class: "p-1 rounded-full bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" do %>
+                  <%= icon "shopping-cart", class: "h-5 w-5" %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="mt-6 text-center">
+      <a href="<%= shop_path(flash_sale: flash_sale.id) %>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+        View All Flash Sale Items
+      </a>
+    </div>
+  </div>
+</div>

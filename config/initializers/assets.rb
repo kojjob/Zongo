@@ -7,4 +7,4 @@ Rails.application.config.assets.version = "1.0"
 # Rails.application.config.assets.paths << Emoji.images_path
 
 # Precompile additional assets.
-Rails.application.config.assets.precompile += %w[ button_fixes.css ]
+Rails.application.config.assets.precompile += %w[ button_fixes.css admin_patterns.css admin_design_system.css enhanced_landing_page.css ]

@@ -42,8 +42,31 @@ module ApplicationHelper
   # Helper method to render an icon from our SVG sprite
   def icon(name, options = {})
     options[:class] ||= ""
-    content_tag :svg, options do
-      content_tag :use, nil, "xlink:href" => "#icon-#{name}"
+    options[:class] = "icon #{options[:class]}"
+
+    # Check if there's a partial for this icon
+    if lookup_context.exists?("shared/icons/#{name}", [], true)
+      render partial: "shared/icons/#{name}", locals: { classes: options[:class] }
+    else
+      # Check if the icon exists in the SVG sprite
+      icon_exists = false
+      begin
+        # Try to find the icon in the SVG sprite
+        icon_exists = Rails.application.assets_manifest.assets["icon-#{name}.svg"].present? rescue false
+      rescue
+        # If there's an error, assume the icon doesn't exist
+        icon_exists = false
+      end
+
+      # Fallback to SVG sprite with error handling
+      content_tag :svg, class: options[:class], viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg" do
+        if icon_exists || true # Always use the icon name, even if we're not sure it exists
+          content_tag :use, nil, "xlink:href" => "#icon-#{name}"
+        else
+          # Fallback to a generic icon if the requested one doesn't exist
+          content_tag :path, nil, d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z", fill: "currentColor"
+        end
+      end
     end
   end
 

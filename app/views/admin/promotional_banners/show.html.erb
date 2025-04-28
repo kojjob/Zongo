@@ -1,0 +1,197 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_promotional_banners_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Promotional Banners
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @promotional_banner.title %></h1>
+    <div class="flex items-center space-x-3">
+      <%= button_to toggle_active_admin_promotional_banner_path(@promotional_banner), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white #{@promotional_banner.active? ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <% if @promotional_banner.active? %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Deactivate
+        <% else %>
+          <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
+          Activate
+        <% end %>
+      <% end %>
+      <%= link_to edit_admin_promotional_banner_path(@promotional_banner), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+        Edit
+      <% end %>
+      <%= button_to admin_promotional_banner_path(@promotional_banner), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this banner?" } }, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "trash", class: "h-4 w-4 mr-1.5" %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <% if @promotional_banner.has_image? %>
+            <%= image_tag @promotional_banner.image.variant(resize_to_fill: [48, 48]), class: "h-12 w-12 rounded-md object-cover" %>
+          <% else %>
+            <div class="h-12 w-12 rounded-md flex items-center justify-center" style="background-color: <%= @promotional_banner.background_color %>;">
+              <span class="text-sm font-medium" style="color: <%= @promotional_banner.text_color %>;"><%= @promotional_banner.title.first(2) %></span>
+            </div>
+          <% end %>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white flex items-center">
+            <%= @promotional_banner.title %>
+            <% if @promotional_banner.active? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                Active
+              </span>
+            <% else %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                Inactive
+              </span>
+            <% end %>
+            <% if @promotional_banner.expired? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                Expired
+              </span>
+            <% end %>
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+            <%= @promotional_banner.description %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.location.titleize %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Position</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.position %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.starts_at ? @promotional_banner.starts_at.strftime("%B %d, %Y %I:%M %p") : "No start date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.ends_at ? @promotional_banner.ends_at.strftime("%B %d, %Y %I:%M %p") : "No end date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Button Text</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.button_text || "None" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Link URL</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @promotional_banner.link_url.present? %>
+              <a href="<%= @promotional_banner.link_url %>" target="_blank" class="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300">
+                <%= @promotional_banner.link_url %>
+                <%= icon "external-link", class: "inline-block h-4 w-4 ml-1" %>
+              </a>
+            <% else %>
+              None
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @promotional_banner.shop_category %>
+              <%= link_to @promotional_banner.shop_category.name, admin_category_path(@promotional_banner.shop_category), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+            <% else %>
+              All categories
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Colors</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <div class="flex items-center space-x-4">
+              <div class="flex items-center">
+                <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @promotional_banner.background_color %>;"></span>
+                <span>Background: <%= @promotional_banner.background_color %></span>
+              </div>
+              <div class="flex items-center">
+                <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @promotional_banner.text_color %>;"></span>
+                <span>Text: <%= @promotional_banner.text_color %></span>
+              </div>
+            </div>
+            <% if @promotional_banner.has_button? %>
+              <div class="flex items-center space-x-4 mt-2">
+                <div class="flex items-center">
+                  <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @promotional_banner.button_color %>;"></span>
+                  <span>Button: <%= @promotional_banner.button_color %></span>
+                </div>
+                <div class="flex items-center">
+                  <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @promotional_banner.button_text_color %>;"></span>
+                  <span>Button Text: <%= @promotional_banner.button_text_color %></span>
+                </div>
+              </div>
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.created_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Updated At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @promotional_banner.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <% if @promotional_banner.has_image? %>
+    <div class="mt-8">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Banner Preview</h2>
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="p-4">
+          <%= image_tag @promotional_banner.image.variant(resize_to_limit: [1200, 300]), class: "w-full h-auto rounded-lg" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mt-8">
+    <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Banner Preview</h2>
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+      <div class="p-4">
+        <div class="rounded-lg overflow-hidden" style="background-color: <%= @promotional_banner.background_color %>;">
+          <div class="p-6 text-center" style="color: <%= @promotional_banner.text_color %>;">
+            <h3 class="text-xl md:text-2xl font-bold mb-2"><%= @promotional_banner.title %></h3>
+            <% if @promotional_banner.description.present? %>
+              <p class="text-sm md:text-base mb-4"><%= @promotional_banner.description %></p>
+            <% end %>
+            <% if @promotional_banner.has_button? %>
+              <a href="<%= @promotional_banner.link_url %>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm" style="background-color: <%= @promotional_banner.button_color %>; color: <%= @promotional_banner.button_text_color %>;">
+                <%= @promotional_banner.button_text %>
+              </a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

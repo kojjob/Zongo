@@ -1,0 +1,208 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_coupons_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Coupons
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @coupon.name %></h1>
+    <div class="flex items-center space-x-3">
+      <%= button_to toggle_active_admin_coupon_path(@coupon), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white #{@coupon.active? ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <% if @coupon.active? %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Deactivate
+        <% else %>
+          <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
+          Activate
+        <% end %>
+      <% end %>
+      <%= link_to edit_admin_coupon_path(@coupon), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+        Edit
+      <% end %>
+      <%= button_to admin_coupon_path(@coupon), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this coupon?" } }, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "trash", class: "h-4 w-4 mr-1.5" %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+            <%= icon "ticket", class: "h-6 w-6 text-primary-600 dark:text-primary-400" %>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white flex items-center">
+            <%= @coupon.name %>
+            <% if @coupon.active? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                Active
+              </span>
+            <% else %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                Inactive
+              </span>
+            <% end %>
+            <% if @coupon.expired? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                Expired
+              </span>
+            <% end %>
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+            <%= @coupon.description %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Coupon Code</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white font-mono font-medium">
+            <%= @coupon.code %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount Value</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @coupon.discount_type == 'percentage' %>
+              <%= @coupon.value.to_i %>% off
+            <% else %>
+              GHS <%= @coupon.value %> off
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Discount Type</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.discount_type.titleize %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Minimum Order Amount</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.minimum_order_amount ? "GHS #{@coupon.minimum_order_amount}" : "None" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.starts_at ? @coupon.starts_at.strftime("%B %d, %Y %I:%M %p") : "No start date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.ends_at ? @coupon.ends_at.strftime("%B %d, %Y %I:%M %p") : "No end date" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Limit</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.usage_limit || "Unlimited" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Count</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.usage_count %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <% if @coupon.shop_category %>
+              <%= link_to @coupon.shop_category.name, admin_category_path(@coupon.shop_category), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+            <% else %>
+              All categories
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">First Time Purchase Only</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.first_time_purchase_only ? "Yes" : "No" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.created_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Updated At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @coupon.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <% if @coupon.active? && !@coupon.expired? && @coupon.time_remaining %>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Time Remaining</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+              <% if @coupon.days_remaining && @coupon.days_remaining > 0 %>
+                <%= @coupon.days_remaining %> days
+              <% elsif @coupon.hours_remaining && @coupon.hours_remaining > 0 %>
+                <%= @coupon.hours_remaining %> hours
+              <% else %>
+                <%= @coupon.minutes_remaining %> minutes
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <% if @orders.any? %>
+    <div class="mt-8">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Recent Orders with this Coupon</h2>
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @orders.each do |order| %>
+            <li>
+              <div class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="flex items-center">
+                      <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                        <%= link_to "Order ##{order.id}", admin_order_path(order), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+                      </h3>
+                      <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-<%= order_status_color(order.status) %>-100 dark:bg-<%= order_status_color(order.status) %>-900 text-<%= order_status_color(order.status) %>-800 dark:text-<%= order_status_color(order.status) %>-300">
+                        <%= order.status.titleize %>
+                      </span>
+                    </div>
+                    <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <span><%= order.user.email %></span>
+                      <span class="mx-2">&middot;</span>
+                      <span><%= order.created_at.strftime("%b %d, %Y %I:%M %p") %></span>
+                      <span class="mx-2">&middot;</span>
+                      <span>GHS <%= order.total_amount %></span>
+                      <span class="mx-2">&middot;</span>
+                      <span class="text-green-600 dark:text-green-400">-GHS <%= order.coupon_discount %></span>
+                    </div>
+                  </div>
+                  <div>
+                    <%= link_to admin_order_path(order), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" do %>
+                      <%= icon "eye", class: "h-5 w-5" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+        <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 sm:px-6 text-right">
+          <%= link_to "View All Orders", admin_orders_path(coupon_id: @coupon.id), class: "text-sm text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

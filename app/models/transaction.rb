@@ -6,6 +6,7 @@ class Transaction < ApplicationRecord
   has_many :wallet_transactions, dependent: :destroy
   has_many :bill_payments, foreign_key: "transaction_id", dependent: :destroy
   has_many :security_logs, as: :loggable, dependent: :destroy
+  has_many :orders, foreign_key: "transaction_id", dependent: :nullify
 
   # Indirect relationships via wallets
   has_one :sender, through: :source_wallet, source: :user

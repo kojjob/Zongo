@@ -1,0 +1,135 @@
+<%= form_with(model: [:admin, discount], local: true, class: "space-y-8") do |form| %>
+  <% if discount.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "alert-triangle", class: "h-5 w-5 text-red-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(discount.errors.count, "error") %> prohibited this discount from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5 space-y-1">
+              <% discount.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+        <%= discount.persisted? ? "Edit Discount" : "New Discount" %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+        <%= discount.persisted? ? "Update the discount details below." : "Fill in the details below to create a new discount." %>
+      </p>
+    </div>
+    <div class="px-4 py-5 sm:p-6 space-y-6">
+      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :name, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Summer Sale" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_area :description, rows: 3, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Special discount for summer products" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Brief description of the discount.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :value, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.number_field :value, step: "0.01", min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "10" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">For percentage, enter a number between 0 and 100. For fixed amount, enter the amount in GHS.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :discount_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :discount_type, [["Percentage", "percentage"], ["Fixed Amount", "fixed_amount"]], {}, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :starts_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :starts_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for no start date.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :ends_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :ends_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for no end date.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :usage_limit, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.number_field :usage_limit, min: 0, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "100" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Leave blank for unlimited usage.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :shop_category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :shop_category_id, options_from_collection_for_select(@categories, :id, :name, discount.shop_category_id), { include_blank: "Select a category" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Select a category to apply the discount to all products in that category.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :product_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.select :product_id, options_from_collection_for_select(@products, :id, :name, discount.product_id), { include_blank: "Select a product" }, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Select a specific product to apply the discount to. Leave blank if you selected a category.</p>
+        </div>
+
+        <div class="sm:col-span-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= form.check_box :active, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :active, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">If checked, the discount will be active.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= form.check_box :featured, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :featured, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">If checked, the discount will be featured on the shop page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6 border-t border-gray-200 dark:border-gray-700">
+      <%= link_to "Cancel", discount.persisted? ? admin_discount_path(discount) : admin_discounts_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+  </div>
+<% end %>

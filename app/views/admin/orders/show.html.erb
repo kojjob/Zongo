@@ -1,0 +1,314 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_orders_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Orders
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Order #<%= @order.id %></h1>
+    <div class="flex items-center space-x-3">
+      <% case @order.status %>
+      <% when 'pending' %>
+        <%= button_to process_order_admin_order_path(@order), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+          <%= icon "refresh", class: "h-4 w-4 mr-1.5" %>
+          Process
+        <% end %>
+        <%= button_to cancel_admin_order_path(@order), method: :post, form: { data: { turbo_confirm: "Are you sure you want to cancel this order?" } }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" do %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Cancel
+        <% end %>
+      <% when 'processing' %>
+        <%= button_to ship_admin_order_path(@order), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+          <%= icon "truck", class: "h-4 w-4 mr-1.5" %>
+          Ship
+        <% end %>
+        <%= button_to cancel_admin_order_path(@order), method: :post, form: { data: { turbo_confirm: "Are you sure you want to cancel this order?" } }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" do %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Cancel
+        <% end %>
+      <% when 'shipped' %>
+        <%= button_to deliver_admin_order_path(@order), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+          <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
+          Mark Delivered
+        <% end %>
+      <% when 'delivered' %>
+        <%= button_to refund_admin_order_path(@order), method: :post, form: { data: { turbo_confirm: "Are you sure you want to refund this order?" } }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" do %>
+          <%= icon "currency-dollar", class: "h-4 w-4 mr-1.5" %>
+          Refund
+        <% end %>
+      <% end %>
+      <%= link_to edit_admin_order_path(@order), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+        Edit
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white flex items-center">
+              Order Details
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                <% case @order.status %>
+                <% when 'pending' %>
+                  bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300
+                <% when 'processing' %>
+                  bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300
+                <% when 'shipped' %>
+                  bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-300
+                <% when 'delivered' %>
+                  bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300
+                <% when 'cancelled' %>
+                  bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300
+                <% when 'refunded' %>
+                  bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300
+                <% else %>
+                  bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300
+                <% end %>
+              ">
+                <%= @order.status&.titleize %>
+              </span>
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              <%= @order.created_at.strftime("%B %d, %Y %I:%M %p") %>
+            </p>
+          </div>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+          <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Order Number</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                <%= @order.order_number || @order.id %>
+              </dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Customer</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                <% if @order.user %>
+                  <%= link_to @order.user.username, admin_user_path(@order.user), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+                <% else %>
+                  Guest
+                <% end %>
+              </dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Method</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                <%= @order.payment_method&.titleize || "Wallet" %>
+              </dd>
+            </div>
+            <div class="sm:col-span-1">
+              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Payment Status</dt>
+              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <% if @order.paid? %>
+                    bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300
+                  <% else %>
+                    bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300
+                  <% end %>
+                ">
+                  <%= @order.paid? ? "Paid" : "Unpaid" %>
+                </span>
+              </dd>
+            </div>
+            <% if @order.tracking_number.present? %>
+              <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Tracking Number</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <%= @order.tracking_number %>
+                </dd>
+              </div>
+            <% end %>
+            <% if @order.shipped_at.present? %>
+              <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Shipped At</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <%= @order.shipped_at.strftime("%B %d, %Y %I:%M %p") %>
+                </dd>
+              </div>
+            <% end %>
+            <% if @order.delivered_at.present? %>
+              <div class="sm:col-span-1">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Delivered At</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <%= @order.delivered_at.strftime("%B %d, %Y %I:%M %p") %>
+                </dd>
+              </div>
+            <% end %>
+            <% if @order.notes.present? %>
+              <div class="sm:col-span-2">
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Notes</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <%= @order.notes %>
+                </dd>
+              </div>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Order Items</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Product</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Quantity</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <% @order_items.each do |item| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700">
+                        <% if item.product&.images&.attached? %>
+                          <%= image_tag item.product.images.first.variant(resize_to_fill: [40, 40]), class: "h-10 w-10 object-cover" %>
+                        <% else %>
+                          <div class="h-10 w-10 flex items-center justify-center">
+                            <%= icon "image", class: "h-5 w-5 text-gray-400 dark:text-gray-500" %>
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                          <% if item.product %>
+                            <%= link_to item.product.name, admin_product_path(item.product), class: "text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300" %>
+                          <% else %>
+                            <%= item.product_name || "Product Removed" %>
+                          <% end %>
+                        </div>
+                        <% if item.product&.sku.present? %>
+                          <div class="text-xs text-gray-500 dark:text-gray-400">
+                            SKU: <%= item.product.sku %>
+                          </div>
+                        <% end %>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 dark:text-white">GHS <%= item.unit_price %></div>
+                    <% if item.original_price.present? && item.original_price > item.unit_price %>
+                      <div class="text-xs text-gray-500 dark:text-gray-400 line-through">GHS <%= item.original_price %></div>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    <%= item.quantity %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                    GHS <%= item.total_price %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+            <tfoot class="bg-gray-50 dark:bg-gray-700">
+              <tr>
+                <td colspan="3" class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white text-right">Subtotal</td>
+                <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">GHS <%= @order.subtotal_amount %></td>
+              </tr>
+              <% if @order.shipping_amount.present? && @order.shipping_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white text-right">Shipping</td>
+                  <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">GHS <%= @order.shipping_amount %></td>
+                </tr>
+              <% end %>
+              <% if @order.tax_amount.present? && @order.tax_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white text-right">Tax</td>
+                  <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">GHS <%= @order.tax_amount %></td>
+                </tr>
+              <% end %>
+              <% if @order.discount_amount.present? && @order.discount_amount > 0 %>
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white text-right">Discount</td>
+                  <td class="px-6 py-4 text-sm text-green-600 dark:text-green-400">-GHS <%= @order.discount_amount %></td>
+                </tr>
+              <% end %>
+              <% if @order.coupon_discount.present? && @order.coupon_discount > 0 %>
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white text-right">Coupon Discount</td>
+                  <td class="px-6 py-4 text-sm text-green-600 dark:text-green-400">-GHS <%= @order.coupon_discount %></td>
+                </tr>
+              <% end %>
+              <tr class="bg-gray-100 dark:bg-gray-600">
+                <td colspan="3" class="px-6 py-4 text-base font-bold text-gray-900 dark:text-white text-right">Total</td>
+                <td class="px-6 py-4 text-base font-bold text-gray-900 dark:text-white">GHS <%= @order.total_amount %></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1 space-y-6">
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Shipping Address</h3>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <% if @order.shipping_address.present? %>
+            <address class="not-italic text-sm text-gray-700 dark:text-gray-300">
+              <%= simple_format @order.shipping_address %>
+            </address>
+          <% else %>
+            <p class="text-sm text-gray-500 dark:text-gray-400">No shipping address provided.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Billing Address</h3>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <% if @order.billing_address.present? %>
+            <address class="not-italic text-sm text-gray-700 dark:text-gray-300">
+              <%= simple_format @order.billing_address %>
+            </address>
+          <% else %>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Same as shipping address.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @order.coupon.present? %>
+        <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Applied Coupon</h3>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                  <%= icon "ticket", class: "h-5 w-5 text-primary-600 dark:text-primary-400" %>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= @order.coupon.name %></h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Code: <span class="font-mono"><%= @order.coupon.code %></span></p>
+                <p class="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                  <% if @order.coupon.discount_type == 'percentage' %>
+                    <%= @order.coupon.value.to_i %>% off
+                  <% else %>
+                    GHS <%= @order.coupon.value %> off
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

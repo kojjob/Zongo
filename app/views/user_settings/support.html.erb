@@ -5,42 +5,63 @@
     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get help and support for your account</p>
   </div>
 
-  <%# Tabs Navigation %>
-  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex flex-wrap -mb-px">
-      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
-        Overview
+  <%# Tabs Navigation - Enhanced for mobile %>
+  <div class="mb-8 overflow-x-auto">
+    <div class="flex flex-nowrap min-w-full pb-1" data-controller="tabs">
+      <%# Overview Tab %>
+      <%= link_to user_settings_path, class: "flex flex-col items-center mr-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "user", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Overview</span>
       <% end %>
-      
-      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
-        Profile
+
+      <%# Profile Tab %>
+      <%= link_to user_settings_profile_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_profile_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_profile_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_profile_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_profile_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "profile", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Profile</span>
       <% end %>
-      
-      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
-        Security
+
+      <%# Security Tab %>
+      <%= link_to user_settings_security_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_security_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_security_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_security_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_security_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "shield-check", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Security</span>
       <% end %>
-      
-      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
-        Notifications
+
+      <%# Notifications Tab %>
+      <%= link_to user_settings_notifications_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_notifications_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_notifications_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_notifications_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_notifications_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "bell", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Notifications</span>
       <% end %>
-      
-      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
-        Appearance
+
+      <%# Appearance Tab %>
+      <%= link_to user_settings_appearance_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_appearance_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_appearance_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_appearance_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_appearance_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "paint-brush", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Appearance</span>
       <% end %>
-      
-      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
-        Payment
+
+      <%# Payment Tab %>
+      <%= link_to user_settings_payment_path, class: "flex flex-col items-center mx-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_payment_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_payment_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_payment_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_payment_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "money", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Payment</span>
       <% end %>
-      
-      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
-        Support
+
+      <%# Support Tab %>
+      <%= link_to user_settings_support_path, class: "flex flex-col items-center ml-1 p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_support_path) ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}" do %>
+        <div class="w-12 h-12 rounded-full flex items-center justify-center mb-1 <%= current_page?(user_settings_support_path) ? 'bg-primary-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>" style="background-color: <%= current_page?(user_settings_support_path) ? '#4f46e5' : '#e5e7eb' %>; color: <%= current_page?(user_settings_support_path) ? 'white' : '#4b5563' %>;">
+          <%= icon "support", class: "text-xl" %>
+        </div>
+        <span class="text-sm font-medium whitespace-nowrap">Support</span>
       <% end %>
     </div>
   </div>
@@ -49,33 +70,39 @@
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Contact Support</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mb-3">
-            <%= icon "chat", class: "h-6 w-6" %>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center mb-3">
+            <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-3">
+              <%= icon "chat", class: "h-6 w-6" %>
+            </div>
+            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Live Chat</h3>
           </div>
-          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Live Chat</h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Chat with our support team in real-time.</p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Available: 8am - 8pm GMT</p>
           <button type="button" class="btn btn-primary-outline w-full">Start Chat</button>
         </div>
-        
-        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3">
-            <%= icon "mail", class: "h-6 w-6" %>
+
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center mb-3">
+            <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-3">
+              <%= icon "mail", class: "h-6 w-6" %>
+            </div>
+            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Email Support</h3>
           </div>
-          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Email Support</h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Send us an email and we'll get back to you.</p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Response time: Within 24 hours</p>
           <a href="mailto:support@superghana.app" class="btn btn-primary-outline w-full">Send Email</a>
         </div>
-        
-        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mb-3">
-            <%= icon "phone", class: "h-6 w-6" %>
+
+        <div class="p-5 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow duration-300">
+          <div class="flex items-center mb-3">
+            <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-3">
+              <%= icon "phone", class: "h-6 w-6" %>
+            </div>
+            <h3 class="text-base font-semibold text-gray-900 dark:text-white">Phone Support</h3>
           </div>
-          <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2">Phone Support</h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Call us directly for immediate assistance.</p>
           <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Available: 8am - 8pm GMT</p>
           <a href="tel:+233302123456" class="btn btn-primary-outline w-full">Call Support</a>
@@ -83,17 +110,17 @@
       </div>
     </div>
   </div>
-  
-  <%# FAQs Section %>
+
+  <%# FAQs Section - Improved for mobile %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
-    <div class="p-6">
+    <div class="p-4 sm:p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Frequently Asked Questions</h2>
-      
+
       <div class="space-y-4" data-controller="accordion">
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
           <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item1">
-            <span>How do I add money to my wallet?</span>
-            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+            <span class="flex-1 pr-2">How do I add money to my wallet?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200 flex-shrink-0" %>
           </button>
           <div id="item1" class="p-4 hidden">
             <p class="text-gray-500 dark:text-gray-400">
@@ -109,11 +136,11 @@
             </p>
           </div>
         </div>
-        
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
           <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item2">
-            <span>How do I send money to someone?</span>
-            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+            <span class="flex-1 pr-2">How do I send money to someone?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200 flex-shrink-0" %>
           </button>
           <div id="item2" class="p-4 hidden">
             <p class="text-gray-500 dark:text-gray-400">
@@ -132,11 +159,11 @@
             </p>
           </div>
         </div>
-        
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
           <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item3">
-            <span>How do I change my PIN?</span>
-            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+            <span class="flex-1 pr-2">How do I change my PIN?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200 flex-shrink-0" %>
           </button>
           <div id="item3" class="p-4 hidden">
             <p class="text-gray-500 dark:text-gray-400">
@@ -154,11 +181,11 @@
             </p>
           </div>
         </div>
-        
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
           <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item4">
-            <span>What happens if I forget my PIN?</span>
-            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+            <span class="flex-1 pr-2">What happens if I forget my PIN?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200 flex-shrink-0" %>
           </button>
           <div id="item4" class="p-4 hidden">
             <p class="text-gray-500 dark:text-gray-400">
@@ -175,11 +202,11 @@
             </p>
           </div>
         </div>
-        
-        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+
+        <div class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
           <button class="w-full p-4 flex items-center justify-between bg-gray-50 dark:bg-gray-700 text-left font-medium text-gray-900 dark:text-white" data-action="accordion#toggle" data-accordion-target="item5">
-            <span>How do I withdraw money from my wallet?</span>
-            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200" %>
+            <span class="flex-1 pr-2">How do I withdraw money from my wallet?</span>
+            <%= icon "chevron-down", class: "h-5 w-5 transform transition-transform duration-200 flex-shrink-0" %>
           </button>
           <div id="item5" class="p-4 hidden">
             <p class="text-gray-500 dark:text-gray-400">
@@ -200,15 +227,15 @@
       </div>
     </div>
   </div>
-  
+
   <%# Help Resources %>
   <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Help Resources</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
-          <div class="h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-4">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <a href="#" class="group flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all duration-300">
+          <div class="h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-4 flex-shrink-0">
             <%= icon "book-open", class: "h-5 w-5" %>
           </div>
           <div>
@@ -216,9 +243,9 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Complete guide to using all features of Super Ghana App</p>
           </div>
         </a>
-        
-        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
-          <div class="h-10 w-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-4">
+
+        <a href="#" class="group flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all duration-300">
+          <div class="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-400 mr-4 flex-shrink-0">
             <%= icon "video", class: "h-5 w-5" %>
           </div>
           <div>
@@ -226,9 +253,9 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Step-by-step video guides for common tasks</p>
           </div>
         </a>
-        
-        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
-          <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-4">
+
+        <a href="#" class="group flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all duration-300">
+          <div class="h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 mr-4 flex-shrink-0">
             <%= icon "information-circle", class: "h-5 w-5" %>
           </div>
           <div>
@@ -236,9 +263,9 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Browse articles on specific topics and features</p>
           </div>
         </a>
-        
-        <a href="#" class="group flex items-start p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 transition">
-          <div class="h-10 w-10 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-4">
+
+        <a href="#" class="group flex items-center p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:shadow-md transition-all duration-300">
+          <div class="h-12 w-12 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-400 mr-4 flex-shrink-0">
             <%= icon "community", class: "h-5 w-5" %>
           </div>
           <div>
@@ -257,12 +284,12 @@
 
   export default class extends Controller {
     static targets = ["item1", "item2", "item3", "item4", "item5"]
-    
+
     toggle(event) {
       const target = event.currentTarget.getAttribute('data-accordion-target')
       const content = document.getElementById(target)
       const arrow = event.currentTarget.querySelector('svg')
-      
+
       if (content.classList.contains('hidden')) {
         content.classList.remove('hidden')
         arrow.classList.add('rotate-180')

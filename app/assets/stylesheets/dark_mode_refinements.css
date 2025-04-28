@@ -1,0 +1,158 @@
+/**
+ * Dark Mode Refinements - Enhanced dark theme styles for better contrast and visual appeal
+ * These styles improve the dark mode appearance of our updated components
+ */
+
+/* Improved dark mode background colors with better contrast */
+.dark .bg-gray-800 {
+  background-color: #1a2234 !important; /* Slightly bluer dark background */
+}
+
+.dark .bg-gray-900 {
+  background-color: #111827 !important; /* Deeper background for contrast */
+}
+
+.dark .bg-gray-950 {
+  background-color: #0b111e !important; /* Even deeper background for body */
+}
+
+/* Enhanced gradient backgrounds for dark mode */
+.dark .from-teal-500\/10.to-emerald-500\/10 {
+  background-image: linear-gradient(to right, rgba(20, 184, 166, 0.15), rgba(16, 185, 129, 0.15)) !important;
+}
+
+.dark .from-teal-500\/20.to-emerald-500\/20 {
+  background-image: linear-gradient(to right, rgba(20, 184, 166, 0.25), rgba(16, 185, 129, 0.25)) !important;
+}
+
+/* Improved card and container styling */
+.dark .bg-white.dark\:bg-gray-800 {
+  background-color: #1a2234 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Enhanced border colors for better definition */
+.dark .border-gray-100.dark\:border-gray-700 {
+  border-color: #2d3748 !important; /* Slightly lighter for better visibility */
+}
+
+.dark .border-gray-200.dark\:border-gray-700 {
+  border-color: #2d3748 !important;
+}
+
+/* Improved text colors for better readability */
+.dark .text-gray-600.dark\:text-gray-300 {
+  color: #d1d5db !important; /* Slightly brighter for better readability */
+}
+
+.dark .text-gray-500.dark\:text-gray-400 {
+  color: #9ca3af !important; /* Maintained for secondary text */
+}
+
+/* Enhanced form elements */
+.dark .border-gray-300.dark\:border-gray-600 {
+  border-color: #4b5563 !important; /* Better contrast for form elements */
+}
+
+.dark .focus\:border-teal-500:focus {
+  border-color: #14b8a6 !important; /* Brighter focus state */
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.2) !important;
+}
+
+.dark .focus\:ring-teal-200:focus {
+  --tw-ring-color: rgba(20, 184, 166, 0.3) !important; /* Enhanced focus ring */
+}
+
+/* Improved hover states */
+.dark .hover\:bg-gray-50.dark\:hover\:bg-gray-700:hover {
+  background-color: #374151 !important; /* Better hover contrast */
+}
+
+.dark .hover\:bg-teal-50:hover {
+  background-color: rgba(20, 184, 166, 0.1) !important; /* Subtle teal hover in dark mode */
+}
+
+/* Enhanced table styling */
+.dark .bg-gray-50.dark\:bg-gray-700\/50 {
+  background-color: rgba(55, 65, 81, 0.5) !important; /* Semi-transparent for better layering */
+}
+
+.dark .divide-gray-200.dark\:divide-gray-700 > * + * {
+  border-color: #374151 !important; /* Better divider visibility */
+}
+
+.dark .hover\:bg-gray-50.dark\:hover\:bg-gray-700\/30:hover {
+  background-color: rgba(55, 65, 81, 0.4) !important; /* Enhanced hover state */
+}
+
+/* Improved badge and status indicators */
+.dark .bg-teal-100.dark\:bg-teal-900 {
+  background-color: rgba(15, 118, 110, 0.3) !important; /* More visible but not too bright */
+}
+
+.dark .text-teal-800.dark\:text-teal-200 {
+  color: #99f6e4 !important; /* Brighter text for badges */
+}
+
+/* Enhanced info panels */
+.dark .bg-teal-50.dark\:bg-teal-900\/20 {
+  background-color: rgba(15, 118, 110, 0.15) !important; /* Subtle background */
+}
+
+.dark .border-teal-100.dark\:border-teal-800\/30 {
+  border-color: rgba(15, 118, 110, 0.3) !important; /* Subtle border */
+}
+
+/* Improved icon colors */
+.dark .text-teal-600.dark\:text-teal-400 {
+  color: #2dd4bf !important; /* Brighter icons for better visibility */
+}
+
+/* Enhanced help section styling */
+.dark .from-teal-50.to-emerald-50.dark\:from-teal-900\/20.dark\:to-emerald-800\/20 {
+  background-image: linear-gradient(to right, rgba(15, 118, 110, 0.15), rgba(6, 95, 70, 0.15)) !important;
+}
+
+.dark .border-teal-200.dark\:border-teal-800\/50 {
+  border-color: rgba(15, 118, 110, 0.3) !important;
+}
+
+/* Improved button styling */
+.dark .from-teal-500.to-emerald-500.hover\:from-teal-600.hover\:to-emerald-600:hover {
+  background-image: linear-gradient(to right, #0d9488, #059669) !important;
+}
+
+.dark .from-teal-500.to-emerald-500 {
+  background-image: linear-gradient(to right, #14b8a6, #10b981) !important;
+}
+
+/* Toggle switch refinements */
+.dark .toggle-checkbox:checked {
+  border-color: #14b8a6 !important;
+}
+
+.dark .toggle-checkbox:checked + .toggle-label {
+  background-color: #14b8a6 !important;
+}
+
+/* Timeline refinements */
+.dark .bg-teal-500 {
+  background-color: #14b8a6 !important;
+}
+
+.dark .bg-green-500 {
+  background-color: #10b981 !important;
+}
+
+.dark .bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+.dark .bg-gray-300.dark\:bg-gray-600 {
+  background-color: #4b5563 !important;
+}
+
+/* Transaction modal refinements */
+.dark .transaction-details-modal .bg-gray-50.dark\:bg-gray-700 {
+  background-color: #2d3748 !important; /* Slightly lighter for better contrast */
+}

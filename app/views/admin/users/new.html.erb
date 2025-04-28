@@ -37,35 +37,35 @@
           <div class="sm:col-span-3">
             <%= f.label :username, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.text_field :username, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "johndoe" %>
+              <%= f.text_field :username, class: "py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "johndoe" %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.email_field :email, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "john.doe@example.com" %>
+              <%= f.email_field :email, class: "py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "john.doe@example.com" %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <%= f.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.telephone_field :phone, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "+233501234567" %>
+              <%= f.telephone_field :phone, class: "py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "+233501234567" %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <%= f.label :kyc_level, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.select :kyc_level, User.kyc_levels.keys.map { |k| [k.capitalize, k] }, { selected: 'basic' }, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+              <%= f.select :kyc_level, User.kyc_levels.keys.map { |k| [k.capitalize, k] }, { selected: 'basic' }, class: "py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
             </div>
           </div>
 
           <div class="sm:col-span-3">
             <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.select :status, User.statuses.keys.map { |k| [k.capitalize, k] }, { selected: 'active' }, class: "shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+              <%= f.select :status, User.statuses.keys.map { |k| [k.capitalize, k] }, { selected: 'active' }, class: "py-2 px-3 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
             </div>
           </div>
 
@@ -75,7 +75,7 @@
               <div class="mt-1">
                 <div class="flex items-center">
                   <%= f.check_box :admin, class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
-                  <label for="user_admin" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  <label for="user_admin" class="py-2 px-3 ml-2 block text-sm text-gray-700 dark:text-gray-300">
                     Grant admin privileges to this user
                   </label>
                 </div>

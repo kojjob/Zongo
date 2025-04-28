@@ -1,0 +1,229 @@
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-6">
+    <%= link_to admin_flash_sales_path, class: "inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" do %>
+      <%= icon "arrow-left", class: "h-4 w-4 mr-1" %>
+      Back to Flash Sales
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white"><%= @flash_sale.name %></h1>
+    <div class="flex items-center space-x-3">
+      <%= button_to toggle_active_admin_flash_sale_path(@flash_sale), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white #{@flash_sale.active? ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <% if @flash_sale.active? %>
+          <%= icon "x-circle", class: "h-4 w-4 mr-1.5" %>
+          Deactivate
+        <% else %>
+          <%= icon "check-circle", class: "h-4 w-4 mr-1.5" %>
+          Activate
+        <% end %>
+      <% end %>
+      <%= link_to edit_admin_flash_sale_path(@flash_sale), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+        Edit
+      <% end %>
+      <%= button_to admin_flash_sale_path(@flash_sale), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this flash sale?" } }, class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "trash", class: "h-4 w-4 mr-1.5" %>
+        Delete
+      <% end %>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <div class="h-12 w-12 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+            <%= icon "bolt", class: "h-6 w-6 text-red-600 dark:text-red-400" %>
+          </div>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white flex items-center">
+            <%= @flash_sale.name %>
+            <% if @flash_sale.featured? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300">
+                Featured
+              </span>
+            <% end %>
+            <% if @flash_sale.active? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300">
+                Active
+              </span>
+            <% else %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                Inactive
+              </span>
+            <% end %>
+            <% if @flash_sale.upcoming? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300">
+                Upcoming
+              </span>
+            <% elsif @flash_sale.expired? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                Expired
+              </span>
+            <% elsif @flash_sale.active? %>
+              <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300">
+                In Progress
+              </span>
+            <% end %>
+          </h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+            <%= @flash_sale.description %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @flash_sale.starts_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">End Date</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @flash_sale.ends_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Banner Text</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @flash_sale.banner_text || "None" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Banner Colors</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white flex items-center">
+            <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @flash_sale.banner_color %>;"></span>
+            <%= @flash_sale.banner_color %>
+            <span class="mx-2">/</span>
+            <span class="inline-block h-4 w-4 rounded mr-2" style="background-color: <%= @flash_sale.banner_text_color %>;"></span>
+            <%= @flash_sale.banner_text_color %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @flash_sale.created_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Updated At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+            <%= @flash_sale.updated_at.strftime("%B %d, %Y %I:%M %p") %>
+          </dd>
+        </div>
+        <% if @flash_sale.active? && !@flash_sale.expired? && @flash_sale.time_remaining %>
+          <div class="sm:col-span-2">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Time Remaining</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+              <% if @flash_sale.days_remaining && @flash_sale.days_remaining > 0 %>
+                <%= @flash_sale.days_remaining %> days
+              <% elsif @flash_sale.hours_remaining && @flash_sale.hours_remaining > 0 %>
+                <%= @flash_sale.hours_remaining %> hours
+              <% else %>
+                <%= @flash_sale.minutes_remaining %> minutes
+              <% end %>
+              <div class="mt-2 relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div class="absolute top-0 left-0 h-full bg-red-600" style="width: <%= @flash_sale.progress_percentage %>%;"></div>
+              </div>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+    </div>
+  </div>
+
+  <div class="mt-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white">Flash Sale Products</h2>
+      <%= link_to add_product_admin_flash_sale_path(@flash_sale), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <%= icon "plus", class: "h-4 w-4 mr-1.5" %>
+        Add Products
+      <% end %>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
+      <% if @flash_sale_items.any? %>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+          <% @flash_sale_items.each do |item| %>
+            <li>
+              <div class="px-4 py-4 sm:px-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700">
+                      <% if item.product.images.attached? %>
+                        <%= image_tag item.product.images.first.variant(resize_to_fill: [40, 40]), class: "h-10 w-10 object-cover" %>
+                      <% else %>
+                        <div class="h-10 w-10 flex items-center justify-center">
+                          <%= icon "image", class: "h-5 w-5 text-gray-400 dark:text-gray-500" %>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="ml-4">
+                      <div class="flex items-center">
+                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                          <%= link_to item.product.name, admin_product_path(item.product), class: "hover:text-primary-600 dark:hover:text-primary-400" %>
+                        </h3>
+                        <% if item.sold_out? %>
+                          <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+                            Sold Out
+                          </span>
+                        <% end %>
+                      </div>
+                      <div class="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <span>Regular price: GHS <%= item.product.price %></span>
+                        <span class="mx-2">&middot;</span>
+                        <% if item.discount_type == 'percentage' %>
+                          <span><%= item.discount_value.to_i %>% off</span>
+                        <% else %>
+                          <span>GHS <%= item.discount_value %> off</span>
+                        <% end %>
+                        <span class="mx-2">&middot;</span>
+                        <span class="text-green-600 dark:text-green-400">Sale price: GHS <%= item.discounted_price(item.product.price) %></span>
+                      </div>
+                      <% if item.quantity_limit.present? %>
+                        <div class="mt-1 flex items-center text-xs text-gray-500 dark:text-gray-400">
+                          <span>Limit: <%= item.quantity_limit %></span>
+                          <span class="mx-2">&middot;</span>
+                          <span>Sold: <%= item.sold_count %></span>
+                          <span class="mx-2">&middot;</span>
+                          <span>Remaining: <%= item.quantity_remaining %></span>
+                          <div class="ml-2 w-24 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-green-600" style="width: <%= item.percentage_sold %>%;"></div>
+                          </div>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                  <div>
+                    <%= button_to remove_product_admin_flash_sale_path(@flash_sale, product_id: item.product_id), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to remove this product from the flash sale?" } }, class: "text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" do %>
+                      <%= icon "trash", class: "h-5 w-5" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="px-4 py-12 text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No products in this flash sale</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding products to this flash sale.</p>
+          <div class="mt-6">
+            <%= link_to add_product_admin_flash_sale_path(@flash_sale), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+              <%= icon "plus", class: "h-4 w-4 mr-1.5" %>
+              Add Products
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

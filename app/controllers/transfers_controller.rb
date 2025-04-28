@@ -6,8 +6,19 @@ class TransfersController < ApplicationController
 
   # GET /transfers/new
   def new
-    @recent_recipients = current_user.recent_transfer_recipients(5)
-    @beneficiaries = current_user.beneficiaries.recent.limit(5)
+    @recent_recipients = current_user.respond_to?(:recent_transfer_recipients) ?
+                         current_user.recent_transfer_recipients(5) : []
+    @beneficiaries = current_user.respond_to?(:beneficiaries) ?
+                     current_user.beneficiaries.order(created_at: :desc).limit(5) : []
+
+    # Handle recipient_id parameter (from beneficiary cards)
+    if params[:recipient_id].present?
+      @beneficiary = current_user.beneficiaries.find_by(id: params[:recipient_id])
+      if @beneficiary
+        @recipient_name = @beneficiary.name
+        @account_number = @beneficiary.account_number
+      end
+    end
 
     # For demo purposes - handle test user creation
     if params[:create_test_user].present?

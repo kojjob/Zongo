@@ -1,55 +1,83 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "control", "content", "icon" ]
+  static targets = ["content", "icon"]
 
   connect() {
-    // Initialize the accordion in closed state
-    this.close();
+    // Initialize all accordions in closed state
+    if (this.hasContentTarget) {
+      this.contentTarget.classList.add("hidden");
+      this.contentTarget.style.maxHeight = "0";
+      
+      // Initialize icon state
+      if (this.hasIconTarget) {
+        this.iconTarget.classList.remove("rotate-180");
+      }
+    }
   }
 
   toggle(event) {
     event.preventDefault();
 
-    if (!this.hasContentTarget) return;
+    // Find the button that was clicked
+    const button = event.currentTarget;
 
-    // Check if the accordion is currently open
-    const isOpen = !this.contentTarget.classList.contains("hidden");
+    // Find the content and icon associated with this button
+    const contentIndex = this.contentTargets.findIndex(content =>
+      content.previousElementSibling === button
+    );
 
-    if (isOpen) {
-      this.close();
+    if (contentIndex === -1) {
+      // Try another approach - the content might be the next element sibling
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('[data-accordion-target="icon"]');
+
+      if (content && content.matches('[data-accordion-target="content"]')) {
+        const isOpen = !content.classList.contains("hidden");
+
+        if (isOpen) {
+          this.closeItem(content, icon);
+        } else {
+          this.openItem(content, icon);
+        }
+      }
     } else {
-      this.open();
+      const content = this.contentTargets[contentIndex];
+      const icon = this.iconTargets[contentIndex];
+
+      const isOpen = !content.classList.contains("hidden");
+
+      if (isOpen) {
+        this.closeItem(content, icon);
+      } else {
+        this.openItem(content, icon);
+      }
     }
   }
 
-  open() {
-    if (!this.hasContentTarget) return;
-
+  openItem(content, icon) {
     // Show the content
-    this.contentTarget.classList.remove("hidden");
+    content.classList.remove("hidden");
+
+    // Animate the height - use a small timeout to ensure the browser recognizes the display change
+    setTimeout(() => {
+      content.style.maxHeight = `${content.scrollHeight}px`;
+    }, 10);
 
     // Rotate the icon if it exists
-    if (this.hasIconTarget) {
-      this.iconTarget.classList.add("rotate-180");
+    if (icon) {
+      icon.classList.add("rotate-180");
     }
-
-    // Animate the height
-    setTimeout(() => {
-      this.contentTarget.style.maxHeight = this.contentTarget.scrollHeight + "px";
-    }, 10);
   }
 
-  close() {
-    if (!this.hasContentTarget) return;
-
+  closeItem(content, icon) {
     // Hide the content
-    this.contentTarget.classList.add("hidden");
-    this.contentTarget.style.maxHeight = "0";
+    content.classList.add("hidden");
+    content.style.maxHeight = "0";
 
     // Reset the icon if it exists
-    if (this.hasIconTarget) {
-      this.iconTarget.classList.remove("rotate-180");
+    if (icon) {
+      icon.classList.remove("rotate-180");
     }
   }
 }

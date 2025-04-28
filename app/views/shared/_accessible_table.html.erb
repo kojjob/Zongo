@@ -1,0 +1,110 @@
+<%# 
+  Accessible Table Partial
+  
+  Parameters:
+  - caption: The table caption (optional)
+  - headers: Array of table headers (required)
+  - rows: Array of table rows (required)
+  - responsive: Whether the table should be responsive (default: true)
+  - striped: Whether the table should have striped rows (default: true)
+  - bordered: Whether the table should have borders (default: false)
+  - hover: Whether the table should have hover effects (default: true)
+  - compact: Whether the table should be compact (default: false)
+  - class: Additional CSS classes (optional)
+  - id: The ID of the table (optional)
+  - empty_message: Message to display when there are no rows (default: "No data available")
+  
+  Usage:
+  <%= render 'shared/accessible_table', 
+    caption: 'User List',
+    headers: ['Name', 'Email', 'Role', 'Actions'],
+    rows: @users.map { |user| [
+      user.name,
+      user.email,
+      user.role,
+      link_to('Edit', edit_user_path(user), class: 'btn-sm btn-primary')
+    ]},
+    responsive: true,
+    striped: true,
+    bordered: false,
+    hover: true,
+    compact: false,
+    class: 'my-custom-class',
+    id: 'users-table',
+    empty_message: 'No users found'
+  %>
+%>
+
+<% 
+  # Set default values
+  caption ||= nil
+  responsive = true if responsive.nil?
+  striped = true if striped.nil?
+  bordered = false if bordered.nil?
+  hover = true if hover.nil?
+  compact = false if compact.nil?
+  table_class ||= nil
+  table_id ||= nil
+  empty_message ||= "No data available"
+  
+  # Generate table classes
+  table_classes = ['accessible-table w-full']
+  table_classes << 'table-striped' if striped
+  table_classes << 'table-bordered' if bordered
+  table_classes << 'table-hover' if hover
+  table_classes << 'table-compact' if compact
+  table_classes << table_class if table_class.present?
+  
+  # Generate unique ID if not provided
+  table_id ||= "table-#{SecureRandom.hex(4)}"
+%>
+
+<% if responsive %>
+  <div class="overflow-x-auto">
+<% end %>
+
+<table id="<%= table_id %>" class="<%= table_classes.join(' ') %>">
+  <% if caption.present? %>
+    <caption class="text-left text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><%= caption %></caption>
+  <% end %>
+  
+  <thead class="bg-gray-50 dark:bg-gray-700">
+    <tr>
+      <% headers.each do |header| %>
+        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+          <%= header %>
+        </th>
+      <% end %>
+    </tr>
+  </thead>
+  
+  <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+    <% if rows.present? && rows.any? %>
+      <% rows.each do |row| %>
+        <tr class="<%= hover ? 'hover:bg-gray-50 dark:hover:bg-gray-700' : '' %> transition-colors duration-150">
+          <% row.each_with_index do |cell, index| %>
+            <% if index == 0 %>
+              <th scope="row" class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                <%= cell %>
+              </th>
+            <% else %>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <%= cell %>
+              </td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="<%= headers.length %>" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+          <%= empty_message %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if responsive %>
+  </div>
+<% end %>

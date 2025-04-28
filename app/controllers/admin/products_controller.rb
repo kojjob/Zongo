@@ -68,6 +68,23 @@ module Admin
     def create
       @product = Product.new(product_params)
 
+      # Set a default shop category if none is selected
+      if @product.shop_category_id.blank?
+        default_category = ShopCategory.first
+        if default_category
+          @product.shop_category_id = default_category.id
+        else
+          # Create a default category if none exists
+          default_category = ShopCategory.create(name: "General", description: "Default category")
+          @product.shop_category_id = default_category.id
+        end
+      end
+
+      # Set the current user as the seller if none is selected
+      if @product.user_id.blank?
+        @product.user_id = current_user.id
+      end
+
       if @product.save
         redirect_to admin_product_path(@product), notice: "Product was successfully created."
       else
@@ -83,7 +100,26 @@ module Admin
     end
 
     def update
-      if @product.update(product_params)
+      product_attributes = product_params
+
+      # Set a default shop category if none is selected
+      if product_attributes[:shop_category_id].blank?
+        default_category = ShopCategory.first
+        if default_category
+          product_attributes[:shop_category_id] = default_category.id
+        else
+          # Create a default category if none exists
+          default_category = ShopCategory.create(name: "General", description: "Default category")
+          product_attributes[:shop_category_id] = default_category.id
+        end
+      end
+
+      # Set the current user as the seller if none is selected
+      if product_attributes[:user_id].blank?
+        product_attributes[:user_id] = current_user.id
+      end
+
+      if @product.update(product_attributes)
         redirect_to admin_product_path(@product), notice: "Product was successfully updated."
       else
         @categories = ShopCategory.all.order(:name)
@@ -130,9 +166,9 @@ module Admin
     def product_params
       params.require(:product).permit(
         :name, :description, :price, :original_price, :stock_quantity, :sku,
-        :shop_category_id, :user_id, :status, :featured, :brand,
+        :shop_category_id, :user_id, :status, :featured, :brand, :product_type,
         :weight, :weight_unit, :length, :width, :height, :dimension_unit,
-        specifications: {}, tags: [], images: []
+        :digital_file, specifications: {}, tags: [], images: []
       )
     end
   end

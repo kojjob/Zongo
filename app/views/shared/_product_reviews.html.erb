@@ -1,0 +1,146 @@
+<%# 
+  This partial renders the reviews section for a product
+  Parameters:
+  - product: The product object
+  - reviews: Collection of reviews to display
+  - limit: Maximum number of reviews to show (default: all)
+%>
+
+<% limit = local_assigns.fetch(:limit, reviews.count) %>
+<% reviews_to_display = reviews.first(limit) %>
+<% total_reviews_count = product.reviews.approved.count %>
+<% average_rating = product.average_rating %>
+
+<div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+    <div class="flex items-center justify-between">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white">Customer Reviews</h3>
+      
+      <% if user_signed_in? && current_user.orders.completed.joins(:order_items).where(order_items: { product_id: product.id }).exists? %>
+        <%= link_to new_product_review_path(product), class: "inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+          <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+          Write a Review
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="px-4 py-5 sm:p-6">
+    <% if total_reviews_count > 0 %>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Review Summary -->
+        <div class="lg:col-span-4">
+          <div class="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div class="text-5xl font-bold text-gray-900 dark:text-white"><%= average_rating.round(1) %></div>
+            <div class="mt-2">
+              <%= render 'shared/star_rating', rating: average_rating, size: 6 %>
+            </div>
+            <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              Based on <%= total_reviews_count %> <%= "review".pluralize(total_reviews_count) %>
+            </div>
+            
+            <!-- Rating Distribution -->
+            <div class="w-full mt-6 space-y-2">
+              <% 5.downto(1) do |star| %>
+                <% 
+                  count = product.reviews.approved.where(rating: star).count
+                  percentage = total_reviews_count > 0 ? (count.to_f / total_reviews_count * 100).round : 0
+                %>
+                <div class="flex items-center">
+                  <div class="w-12 text-sm text-gray-600 dark:text-gray-400 flex items-center">
+                    <%= star %> <%= icon "star", class: "ml-1 h-3 w-3 text-yellow-400" %>
+                  </div>
+                  <div class="flex-1 h-4 mx-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-400" style="width: <%= percentage %>%"></div>
+                  </div>
+                  <div class="w-9 text-xs text-gray-500 dark:text-gray-400 text-right">
+                    <%= percentage %>%
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Review List -->
+        <div class="lg:col-span-8">
+          <% if reviews_to_display.any? %>
+            <div class="space-y-8">
+              <% reviews_to_display.each do |review| %>
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 last:pb-0">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <% if review.user.avatar.attached? %>
+                        <%= image_tag review.user.avatar, class: "h-10 w-10 rounded-full" %>
+                      <% else %>
+                        <div class="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold">
+                          <%= review.user.initials %>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="ml-4 flex-1">
+                      <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-medium text-gray-900 dark:text-white"><%= review.user.username || "User#{review.user.id}" %></h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400"><%= review.created_at.strftime("%B %d, %Y") %></p>
+                      </div>
+                      <div class="mt-1">
+                        <%= render 'shared/star_rating', rating: review.rating, size: 4 %>
+                      </div>
+                      <div class="mt-2 text-sm text-gray-600 dark:text-gray-300 prose prose-sm dark:prose-invert max-w-none">
+                        <%= review.comment %>
+                      </div>
+                      
+                      <% if user_signed_in? && review.user_id == current_user.id %>
+                        <div class="mt-4 flex space-x-2">
+                          <%= link_to edit_product_review_path(product, review), class: "text-xs text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300" do %>
+                            Edit
+                          <% end %>
+                          <%= button_to product_review_path(product, review), method: :delete, form: { data: { turbo_confirm: "Are you sure you want to delete this review?" } }, class: "text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300" do %>
+                            Delete
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <% if total_reviews_count > limit %>
+              <div class="mt-6 text-center">
+                <%= link_to product_path(product, anchor: "reviews"), class: "inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" do %>
+                  View all <%= total_reviews_count %> reviews
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-12">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No reviews yet</h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Be the first to review this product.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="text-center py-12">
+        <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No reviews yet</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Be the first to review this product.</p>
+        
+        <% if user_signed_in? && current_user.orders.completed.joins(:order_items).where(order_items: { product_id: product.id }).exists? %>
+          <div class="mt-6">
+            <%= link_to new_product_review_path(product), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+              <%= icon "pencil", class: "h-4 w-4 mr-1.5" %>
+              Write a Review
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

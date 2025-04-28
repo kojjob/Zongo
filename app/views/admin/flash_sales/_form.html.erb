@@ -1,0 +1,126 @@
+<%= form_with(model: [:admin, flash_sale], local: true, class: "space-y-8") do |form| %>
+  <% if flash_sale.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <%= icon "alert-triangle", class: "h-5 w-5 text-red-400" %>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+            <%= pluralize(flash_sale.errors.count, "error") %> prohibited this flash sale from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5 space-y-1">
+              <% flash_sale.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+        <%= flash_sale.persisted? ? "Edit Flash Sale" : "New Flash Sale" %>
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+        <%= flash_sale.persisted? ? "Update the flash sale details below." : "Fill in the details below to create a new flash sale." %>
+      </p>
+    </div>
+    <div class="px-4 py-5 sm:p-6 space-y-6">
+      <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :name, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Black Friday Sale" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_area :description, rows: 3, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Special discounts for Black Friday" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Brief description of the flash sale.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :starts_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :starts_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :ends_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.datetime_field :ends_at, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-3">
+          <%= form.label :banner_text, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+          <div class="mt-1">
+            <%= form.text_field :banner_text, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md", placeholder: "Limited Time Offer!" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Text to display on the flash sale banner.</p>
+        </div>
+
+        <div class="sm:col-span-3">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <%= form.label :banner_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= flash_sale.banner_color || '#FF0000' %>;"></div>
+                </span>
+                <%= form.text_field :banner_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#FF0000" %>
+              </div>
+            </div>
+            <div>
+              <%= form.label :banner_text_color, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+              <div class="mt-1 flex rounded-md shadow-sm">
+                <span class="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400 sm:text-sm">
+                  <div class="h-4 w-4 rounded" style="background-color: <%= flash_sale.banner_text_color || '#FFFFFF' %>;"></div>
+                </span>
+                <%= form.text_field :banner_text_color, class: "flex-1 focus:ring-primary-500 focus:border-primary-500 block w-full min-w-0 rounded-none rounded-r-md sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white", placeholder: "#FFFFFF" %>
+              </div>
+            </div>
+          </div>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Colors for the flash sale banner (hex format).</p>
+        </div>
+
+        <div class="sm:col-span-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= form.check_box :active, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :active, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">If checked, the flash sale will be active.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <%= form.check_box :featured, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded" %>
+            </div>
+            <div class="ml-3 text-sm">
+              <%= form.label :featured, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              <p class="text-gray-500 dark:text-gray-400">If checked, the flash sale will be featured on the shop page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6 border-t border-gray-200 dark:border-gray-700">
+      <%= link_to "Cancel", flash_sale.persisted? ? admin_flash_sale_path(flash_sale) : admin_flash_sales_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+      <%= form.submit class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    </div>
+  </div>
+<% end %>

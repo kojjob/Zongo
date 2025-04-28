@@ -1,231 +1,427 @@
 <% content_for :title, "User Details: #{@user.username}" %>
 
-<div class="space-y-6">
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-    <div class="flex items-center">
-      <%= link_to admin_users_path, class: "text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 mr-2" do %>
-        <%= icon "arrow-left", class: "w-5 h-5" %>
-      <% end %>
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">User Details</h1>
-    </div>
+<div class="space-y-8">
+  <%# Hero Section with User Banner %>
+  <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-800 dark:to-purple-900 rounded-xl overflow-hidden shadow-lg">
+    <div class="absolute inset-0 bg-pattern opacity-10"></div>
 
-    <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
-      <% if current_user.super_admin? || (!@user.admin? && !@user.super_admin?) %>
-        <%= link_to edit_admin_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
-          <%= icon "pencil", class: "w-4 h-4 mr-2" %>
-          Edit User
-        <% end %>
-
-        <% if @user.status == 'active' %>
-          <%= button_to suspend_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } } do %>
-            <%= icon "ban", class: "w-4 h-4 mr-2" %>
-            Suspend User
+    <div class="relative px-6 py-8 sm:px-10 sm:py-12">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center">
+          <%= link_to admin_users_path, class: "flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors mr-4" do %>
+            <%= render partial: "shared/icons/arrow-left", locals: { classes: "w-5 h-5" } %>
           <% end %>
-        <% elsif @user.status == 'suspended' %>
-          <%= button_to activate_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
-            <%= icon "check-circle", class: "w-4 h-4 mr-2" %>
-            Activate User
-          <% end %>
-        <% end %>
 
-        <% if current_user.super_admin? && !@user.super_admin? %>
-          <% if !@user.admin? %>
-            <%= button_to promote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } } do %>
-              <%= icon "arrow-up", class: "w-4 h-4 mr-2" %>
-              Promote to Admin
+          <div>
+            <h1 class="text-3xl font-bold text-white">
+              <%= @user.username %>
+            </h1>
+            <p class="mt-1 text-indigo-100">User Profile Management</p>
+          </div>
+        </div>
+
+        <div class="mt-6 md:mt-0 flex flex-wrap gap-3">
+          <% if current_user.super_admin? || (!@user.admin? && !@user.super_admin?) %>
+            <%= link_to edit_admin_user_path(@user), class: "inline-flex items-center px-4 py-2 border border-white/30 rounded-lg text-sm font-medium text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all shadow-md" do %>
+              <%= render partial: "shared/icons/pencil", locals: { classes: "w-4 h-4 mr-2" } %>
+              Edit User
             <% end %>
-          <% else %>
-            <%= button_to demote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } } do %>
-              <%= icon "arrow-down", class: "w-4 h-4 mr-2" %>
-              Demote to Regular User
+
+            <% if @user.status == 'active' %>
+              <%= button_to suspend_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-red-300/30 rounded-lg text-sm font-medium text-white bg-red-500/80 hover:bg-red-600/90 focus:outline-none focus:ring-2 focus:ring-red-500/50 transition-all shadow-md", form: { data: { turbo_confirm: "Are you sure you want to suspend this user?" } } do %>
+                <%= render partial: "shared/icons/ban", locals: { classes: "w-4 h-4 mr-2" } %>
+                Suspend User
+              <% end %>
+            <% elsif @user.status == 'suspended' %>
+              <%= button_to activate_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-green-300/30 rounded-lg text-sm font-medium text-white bg-green-500/80 hover:bg-green-600/90 focus:outline-none focus:ring-2 focus:ring-green-500/50 transition-all shadow-md" do %>
+                <%= render partial: "shared/icons/check-circle", locals: { classes: "w-4 h-4 mr-2" } %>
+                Activate User
+              <% end %>
+            <% end %>
+
+            <% if current_user.super_admin? && !@user.super_admin? %>
+              <% if !@user.admin? %>
+                <%= button_to promote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-purple-300/30 rounded-lg text-sm font-medium text-white bg-purple-500/80 hover:bg-purple-600/90 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all shadow-md", form: { data: { turbo_confirm: "Are you sure you want to promote this user to admin?" } } do %>
+                  <%= render partial: "shared/icons/arrow-up", locals: { classes: "w-4 h-4 mr-2" } %>
+                  Promote to Admin
+                <% end %>
+              <% else %>
+                <%= button_to demote_admin_user_path(@user), method: :post, class: "inline-flex items-center px-4 py-2 border border-orange-300/30 rounded-lg text-sm font-medium text-white bg-orange-500/80 hover:bg-orange-600/90 focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all shadow-md", form: { data: { turbo_confirm: "Are you sure you want to demote this admin to regular user?" } } do %>
+                  <%= render partial: "shared/icons/arrow-down", locals: { classes: "w-4 h-4 mr-2" } %>
+                  Demote to Regular User
+                <% end %>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      <% end %>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- User Profile Card -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-      <div class="p-6">
-        <div class="flex items-center">
-          <div class="flex-shrink-0 h-20 w-20">
-            <% if @user.respond_to?(:avatar) && @user.avatar.attached? %>
-              <%= image_tag @user.avatar, class: "h-20 w-20 rounded-full", alt: "User avatar" %>
-            <% else %>
-              <div class="h-20 w-20 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-300 font-semibold text-3xl">
-                <%= (@user.username.presence || @user.email[0]).first.upcase %>
-              </div>
-            <% end %>
-          </div>
-          <div class="ml-6">
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+      <div class="relative">
+        <div class="absolute top-0 left-0 right-0 h-24 bg-gradient-to-r from-indigo-500/20 to-purple-500/20"></div>
+
+        <div class="relative p-6">
+          <div class="flex flex-col items-center">
+            <div class="flex-shrink-0 h-24 w-24 mb-4 ring-4 ring-white dark:ring-gray-700 shadow-lg rounded-full overflow-hidden">
+              <% if @user.respond_to?(:avatar) && @user.avatar.attached? %>
+                <%= image_tag @user.avatar, class: "h-24 w-24 object-cover", alt: "User avatar" %>
+              <% else %>
+                <div class="h-24 w-24 bg-gradient-to-br from-indigo-500 to-purple-600 dark:from-indigo-600 dark:to-purple-800 flex items-center justify-center text-white font-bold text-3xl">
+                  <%= (@user.username.presence || @user.email[0]).first.upcase %>
+                </div>
+              <% end %>
+            </div>
+
             <h2 class="text-xl font-bold text-gray-900 dark:text-white"><%= @user.username %></h2>
-            <div class="mt-1 flex items-center">
+
+            <div class="mt-2 flex items-center space-x-2">
               <% if @user.super_admin? %>
-                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300 border border-purple-200 dark:border-purple-800/50">
+                  <span class="w-2 h-2 rounded-full bg-purple-500 mr-1.5"></span>
                   Super Admin
                 </span>
               <% elsif @user.admin? %>
-                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50">
+                  <span class="w-2 h-2 rounded-full bg-blue-500 mr-1.5"></span>
                   Admin
+                </span>
+              <% else %>
+                <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
+                  <span class="w-2 h-2 rounded-full bg-gray-500 mr-1.5"></span>
+                  Regular User
                 </span>
               <% end %>
 
-              <% status_class = case @user.status
-                 when 'active' then 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                 when 'suspended' then 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                 when 'locked' then 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                 when 'closed' then 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
-                 end %>
-              <span class="ml-2 px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+              <%
+                status_class = case @user.status
+                when 'active'
+                  'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 border border-green-200 dark:border-green-800/50'
+                when 'suspended'
+                  'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border border-red-200 dark:border-red-800/50'
+                when 'locked'
+                  'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300 border border-yellow-200 dark:border-yellow-800/50'
+                when 'closed'
+                  'bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-300 border border-gray-200 dark:border-gray-700'
+                end
+
+                status_dot = case @user.status
+                when 'active' then 'bg-green-500'
+                when 'suspended' then 'bg-red-500'
+                when 'locked' then 'bg-yellow-500'
+                when 'closed' then 'bg-gray-500'
+                end
+              %>
+
+              <span class="px-3 py-1 inline-flex items-center text-xs leading-5 font-semibold rounded-full <%= status_class %>">
+                <span class="w-2 h-2 rounded-full <%= status_dot %> mr-1.5"></span>
                 <%= @user.status.capitalize %>
               </span>
             </div>
           </div>
-        </div>
 
-        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.email %></dd>
+          <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div class="col-span-2">
+              <div class="bg-indigo-50 dark:bg-indigo-900/20 rounded-lg p-4 border border-indigo-100 dark:border-indigo-800/30">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 rounded-md bg-indigo-500/10 dark:bg-indigo-500/20">
+                    <%= render partial: "shared/icons/mail", locals: { classes: "w-5 h-5 text-indigo-600 dark:text-indigo-400" } %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-indigo-800 dark:text-indigo-300">Email Address</h3>
+                    <p class="text-sm text-indigo-700 dark:text-indigo-200 font-medium"><%= @user.email %></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Phone</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.phone || "Not provided" %></dd>
+
+            <div>
+              <div class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-100 dark:border-gray-700/30">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 rounded-md bg-gray-500/10 dark:bg-gray-500/20">
+                    <%= render partial: "shared/icons/phone", locals: { classes: "w-5 h-5 text-gray-600 dark:text-gray-400" } %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-gray-800 dark:text-gray-300">Phone</h3>
+                    <p class="text-sm text-gray-700 dark:text-gray-200 font-medium"><%= @user.phone || "Not provided" %></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">KYC Level</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.kyc_level.capitalize %></dd>
+
+            <div>
+              <div class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4 border border-purple-100 dark:border-purple-800/30">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 rounded-md bg-purple-500/10 dark:bg-purple-500/20">
+                    <%= render partial: "shared/icons/shield-check", locals: { classes: "w-5 h-5 text-purple-600 dark:text-purple-400" } %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-purple-800 dark:text-purple-300">KYC Level</h3>
+                    <p class="text-sm text-purple-700 dark:text-purple-200 font-medium"><%= @user.kyc_level.capitalize %></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Joined</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.created_at.strftime("%b %d, %Y") %></dd>
+
+            <div>
+              <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-100 dark:border-blue-800/30">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 rounded-md bg-blue-500/10 dark:bg-blue-500/20">
+                    <%= render partial: "shared/icons/calendar", locals: { classes: "w-5 h-5 text-blue-600 dark:text-blue-400" } %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800 dark:text-blue-300">Joined</h3>
+                    <p class="text-sm text-blue-700 dark:text-blue-200 font-medium"><%= @user.created_at.strftime("%b %d, %Y") %></p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="sm:col-span-2">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">User ID</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.id %></dd>
+
+            <div class="col-span-2">
+              <div class="bg-amber-50 dark:bg-amber-900/20 rounded-lg p-4 border border-amber-100 dark:border-amber-800/30">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 rounded-md bg-amber-500/10 dark:bg-amber-500/20">
+                    <%= render partial: "shared/icons/tag", locals: { classes: "w-5 h-5 text-amber-600 dark:text-amber-400" } %>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-amber-800 dark:text-amber-300">User ID</h3>
+                    <p class="text-sm text-amber-700 dark:text-amber-200 font-medium"><%= @user.id %></p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </dl>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Wallet Information -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Wallet Information</h3>
-      </div>
-      <div class="p-6">
-        <% if @user.wallet %>
-          <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Balance</dt>
-              <dd class="mt-1 text-sm font-bold text-gray-900 dark:text-white"><%= @user.wallet.formatted_balance %></dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Currency</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.wallet.currency %></dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Transactions</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @user.wallet.transactions.count %></dd>
-            </div>
-            <div class="sm:col-span-1">
-              <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Transaction</dt>
-              <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                <% if @user.wallet.transactions.any? %>
-                  <%= @user.wallet.transactions.order(created_at: :desc).first.created_at.strftime("%b %d, %Y") %>
-                <% else %>
-                  No transactions
-                <% end %>
-              </dd>
-            </div>
-          </dl>
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+      <div class="relative">
+        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-green-400 to-blue-500"></div>
 
-          <% if @recent_transactions.any? %>
-            <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Transactions</h4>
-              <div class="space-y-2">
-                <% @recent_transactions.each do |transaction| %>
-                  <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="flex items-center">
-                      <%
-                        icon_color = case transaction.transaction_type
-                                     when 'deposit' then 'text-green-500'
-                                     when 'withdrawal' then 'text-red-500'
-                                     when 'transfer' then 'text-blue-500'
-                                     when 'payment' then 'text-purple-500'
-                                     end
+        <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div class="flex items-center">
+            <%= render partial: "shared/icons/wallet", locals: { classes: "w-5 h-5 text-blue-500 dark:text-blue-400 mr-3" } %>
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Wallet Information</h3>
+          </div>
 
-                        icon_name = case transaction.transaction_type
-                                    when 'deposit' then 'money-in'
-                                    when 'withdrawal' then 'money-out'
-                                    when 'transfer' then 'transfer'
-                                    when 'payment' then 'shopping'
-                                    end
-                      %>
-                      <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center <%= icon_color %>">
-                        <%= icon icon_name, class: "h-4 w-4" %>
+          <% if @user.wallet %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+              <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
+              Active
+            </span>
+          <% else %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
+              <span class="w-1.5 h-1.5 rounded-full bg-gray-500 mr-1"></span>
+              Not Available
+            </span>
+          <% end %>
+        </div>
+
+        <div class="p-6">
+          <% if @user.wallet %>
+            <div class="bg-gradient-to-br from-blue-500 to-indigo-600 dark:from-blue-600 dark:to-indigo-800 rounded-xl p-5 mb-6 shadow-md">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-blue-100 text-sm font-medium">Available Balance</p>
+                  <h4 class="text-white text-2xl font-bold mt-1"><%= @user.wallet.formatted_balance %></h4>
+                  <p class="text-blue-200 text-xs mt-1"><%= @user.wallet.currency %></p>
+                </div>
+                <div class="bg-white/20 p-2 rounded-lg">
+                  <%= render partial: "shared/icons/credit-card", locals: { classes: "w-6 h-6 text-white" } %>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-4 border-t border-white/20 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-blue-100 text-xs">Transactions</p>
+                  <p class="text-white text-sm font-medium"><%= @user.wallet.transactions.count %></p>
+                </div>
+                <div>
+                  <p class="text-blue-100 text-xs">Last Activity</p>
+                  <p class="text-white text-sm font-medium">
+                    <% if @user.wallet.transactions.any? %>
+                      <%= @user.wallet.transactions.order(created_at: :desc).first.created_at.strftime("%b %d, %Y") %>
+                    <% else %>
+                      No activity
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <% if @recent_transactions.any? %>
+              <div class="mb-4">
+                <div class="flex items-center justify-between mb-4">
+                  <h4 class="text-sm font-semibold text-gray-900 dark:text-white flex items-center">
+                    <%= render partial: "shared/icons/cash", locals: { classes: "w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" } %>
+                    Recent Transactions
+                  </h4>
+                  <%= link_to admin_transactions_path(user_id: @user.id), class: "text-xs font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 flex items-center" do %>
+                    View all
+                    <%= render partial: "shared/icons/arrow-right", locals: { classes: "w-3 h-3 ml-1" } %>
+                  <% end %>
+                </div>
+
+                <div class="space-y-3">
+                  <% @recent_transactions.each do |transaction| %>
+                    <%
+                      bg_color = case transaction.transaction_type
+                                 when 'deposit' then 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-800/30'
+                                 when 'withdrawal' then 'bg-red-50 dark:bg-red-900/20 border-red-100 dark:border-red-800/30'
+                                 when 'transfer' then 'bg-blue-50 dark:bg-blue-900/20 border-blue-100 dark:border-blue-800/30'
+                                 when 'payment' then 'bg-purple-50 dark:bg-purple-900/20 border-purple-100 dark:border-purple-800/30'
+                                 else 'bg-gray-50 dark:bg-gray-800/50 border-gray-100 dark:border-gray-700/30'
+                                 end
+
+                      icon_bg = case transaction.transaction_type
+                               when 'deposit' then 'bg-green-500/10 dark:bg-green-500/20'
+                               when 'withdrawal' then 'bg-red-500/10 dark:bg-red-500/20'
+                               when 'transfer' then 'bg-blue-500/10 dark:bg-blue-500/20'
+                               when 'payment' then 'bg-purple-500/10 dark:bg-purple-500/20'
+                               else 'bg-gray-500/10 dark:bg-gray-500/20'
+                               end
+
+                      icon_color = case transaction.transaction_type
+                                  when 'deposit' then 'text-green-600 dark:text-green-400'
+                                  when 'withdrawal' then 'text-red-600 dark:text-red-400'
+                                  when 'transfer' then 'text-blue-600 dark:text-blue-400'
+                                  when 'payment' then 'text-purple-600 dark:text-purple-400'
+                                  else 'text-gray-600 dark:text-gray-400'
+                                  end
+
+                      icon_name = case transaction.transaction_type
+                                 when 'deposit' then 'money-in'
+                                 when 'withdrawal' then 'money-out'
+                                 when 'transfer' then 'transfer'
+                                 when 'payment' then 'shopping'
+                                 else 'cash'
+                                 end
+                    %>
+                    <div class="flex items-center justify-between p-3 <%= bg_color %> rounded-lg border">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 p-2 rounded-md <%= icon_bg %>">
+                          <% if lookup_context.exists?("shared/icons/#{icon_name}", [], true) %>
+                            <%= render partial: "shared/icons/#{icon_name}", locals: { classes: "w-4 h-4 #{icon_color}" } %>
+                          <% else %>
+                            <%= render partial: "shared/icons/cash", locals: { classes: "w-4 h-4 #{icon_color}" } %>
+                          <% end %>
+                        </div>
+                        <div class="ml-3">
+                          <p class="text-sm font-medium text-gray-900 dark:text-white"><%= transaction.transaction_type_description %></p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.created_at.strftime("%b %d, %Y %H:%M") %></p>
+                        </div>
                       </div>
-                      <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-900 dark:text-white"><%= transaction.transaction_type_description %></p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400"><%= transaction.created_at.strftime("%b %d, %Y %H:%M") %></p>
+                      <div class="text-sm font-bold <%= transaction.direction_for_user(@user.id) == :incoming ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' %>">
+                        <%= transaction.signed_amount_for_user(@user.id) %>
                       </div>
                     </div>
-                    <div class="text-sm font-medium <%= transaction.direction_for_user(@user.id) == :incoming ? 'text-green-600' : 'text-red-600' %>">
-                      <%= transaction.signed_amount_for_user(@user.id) %>
-                    </div>
-                  </div>
-                <% end %>
+                  <% end %>
+                </div>
               </div>
-              <div class="mt-3 text-right">
-                <%= link_to admin_transactions_path(user_id: @user.id), class: "text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300" do %>
-                  View all transactions
-                <% end %>
+            <% end %>
+          <% else %>
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+              <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-full mb-4">
+                <%= render partial: "shared/icons/wallet", locals: { classes: "w-8 h-8 text-gray-500 dark:text-gray-400" } %>
               </div>
+              <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Wallet Available</h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400 max-w-xs">This user doesn't have a wallet set up yet.</p>
             </div>
           <% end %>
-        <% else %>
-          <div class="text-center py-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400">No wallet information available</p>
-          </div>
-        <% end %>
+        </div>
       </div>
     </div>
 
     <!-- Recent Activity -->
-    <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
-      <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Activity</h3>
-      </div>
-      <div class="p-6">
-        <% if @recent_logins.any? %>
-          <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Recent Logins</h4>
-          <div class="space-y-2">
-            <% @recent_logins.each do |log| %>
-              <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-600 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                    <%= icon "login", class: "h-4 w-4" %>
+    <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden transform transition-all duration-300 hover:shadow-xl">
+      <div class="relative">
+        <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+
+        <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div class="flex items-center">
+            <%= render partial: "shared/icons/bell", locals: { classes: "w-5 h-5 text-amber-500 dark:text-amber-400 mr-3" } %>
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">Recent Activity</h3>
+          </div>
+
+          <% if @recent_logins.any? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+              <%= @recent_logins.count %> login<%= @recent_logins.count > 1 ? 's' : '' %>
+            </span>
+          <% end %>
+        </div>
+
+        <div class="p-6">
+          <% if @recent_logins.any? %>
+            <div class="relative">
+              <div class="absolute left-4 inset-y-0 w-0.5 bg-gradient-to-b from-amber-400 to-amber-100 dark:from-amber-600 dark:to-amber-900/20"></div>
+
+              <div class="space-y-6 relative">
+                <% @recent_logins.each_with_index do |log, index| %>
+                  <div class="relative pl-8">
+                    <div class="absolute left-0 top-1 w-8 flex items-center justify-center">
+                      <div class="h-8 w-8 rounded-full bg-amber-100 dark:bg-amber-900/30 border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-sm">
+                        <%= render partial: "shared/icons/login", locals: { classes: "h-3 w-3 text-amber-600 dark:text-amber-400" } %>
+                      </div>
+                    </div>
+
+                    <div class="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-4 border border-amber-100 dark:border-amber-800/20 shadow-sm">
+                      <div class="flex items-center justify-between">
+                        <div>
+                          <h4 class="text-sm font-medium text-amber-800 dark:text-amber-300">Login Session</h4>
+                          <p class="text-xs text-amber-600 dark:text-amber-400 mt-1"><%= log.created_at.strftime("%b %d, %Y %H:%M") %></p>
+                        </div>
+
+                        <% if log.details && log.details["ip_address"] %>
+                          <div class="bg-white dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300 border border-gray-100 dark:border-gray-700">
+                            <%= log.details["ip_address"] %>
+                          </div>
+                        <% end %>
+                      </div>
+
+                      <% if log.details && (log.details["device"] || log.details["browser"] || log.details["location"]) %>
+                        <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+                          <% if log.details["device"] %>
+                            <div class="flex items-center">
+                              <%= render partial: "shared/icons/device-mobile", locals: { classes: "w-3 h-3 text-amber-500 dark:text-amber-400 mr-1.5" } %>
+                              <span class="text-gray-600 dark:text-gray-400"><%= log.details["device"] %></span>
+                            </div>
+                          <% end %>
+
+                          <% if log.details["browser"] %>
+                            <div class="flex items-center">
+                              <%= render partial: "shared/icons/globe", locals: { classes: "w-3 h-3 text-amber-500 dark:text-amber-400 mr-1.5" } %>
+                              <span class="text-gray-600 dark:text-gray-400"><%= log.details["browser"] %></span>
+                            </div>
+                          <% end %>
+
+                          <% if log.details["location"] %>
+                            <div class="flex items-center col-span-2">
+                              <%= render partial: "shared/icons/map-pin", locals: { classes: "w-3 h-3 text-amber-500 dark:text-amber-400 mr-1.5" } %>
+                              <span class="text-gray-600 dark:text-gray-400"><%= log.details["location"] %></span>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% end %>
+                    </div>
                   </div>
-                  <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">Login</p>
-                    <p class="text-xs text-gray-500 dark:text-gray-400"><%= log.created_at.strftime("%b %d, %Y %H:%M") %></p>
-                  </div>
-                </div>
-                <div class="text-xs text-gray-500 dark:text-gray-400">
-                  <%= log.details["ip_address"] if log.details && log.details["ip_address"] %>
-                </div>
+                <% end %>
               </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="text-center py-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400">No recent activity</p>
-          </div>
-        <% end %>
+            </div>
+          <% else %>
+            <div class="flex flex-col items-center justify-center py-8 text-center">
+              <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-full mb-4">
+                <%= render partial: "shared/icons/bell", locals: { classes: "w-8 h-8 text-gray-500 dark:text-gray-400" } %>
+              </div>
+              <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Recent Activity</h4>
+              <p class="text-sm text-gray-500 dark:text-gray-400 max-w-xs">There is no recent login activity for this user.</p>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

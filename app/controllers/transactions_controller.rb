@@ -3,6 +3,7 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [ :show, :process_transaction, :reverse ]
   before_action :authorize_transaction, only: [ :show, :process_transaction, :reverse ]
 
+  include ResultHandler
   include Pagy::Backend
 
   # GET /transactions
@@ -32,9 +33,9 @@ class TransactionsController < ApplicationController
     source_wallet = current_user.wallet
 
     # Create the appropriate transaction based on type
-    case transaction_params[:transaction_type]
+    result = case transaction_params[:transaction_type]
     when "deposit"
-      @transaction = Transaction.create_deposit(
+      TransactionService.create_deposit(
         wallet: source_wallet,
         amount: transaction_params[:amount].to_f,
         payment_method: transaction_params[:payment_method],
@@ -42,7 +43,7 @@ class TransactionsController < ApplicationController
         metadata: { destination: transaction_params[:destination] }
       )
     when "withdrawal"
-      @transaction = Transaction.create_withdrawal(
+      TransactionService.create_withdrawal(
         wallet: source_wallet,
         amount: transaction_params[:amount].to_f,
         payment_method: transaction_params[:payment_method],
@@ -51,7 +52,7 @@ class TransactionsController < ApplicationController
       )
     when "transfer"
       destination_wallet = Wallet.find(transaction_params[:destination_wallet_id])
-      @transaction = Transaction.create_transfer(
+      TransactionService.create_transfer(
         source_wallet: source_wallet,
         destination_wallet: destination_wallet,
         amount: transaction_params[:amount].to_f,
@@ -59,42 +60,39 @@ class TransactionsController < ApplicationController
       )
     when "payment"
       destination_wallet = Wallet.find(transaction_params[:destination_wallet_id])
-      @transaction = Transaction.create_payment(
+      TransactionService.create_transfer(
         source_wallet: source_wallet,
         destination_wallet: destination_wallet,
         amount: transaction_params[:amount].to_f,
         description: transaction_params[:description],
-        metadata: { destination: transaction_params[:destination] }
+        metadata: {
+          destination: transaction_params[:destination],
+          transaction_type: "payment"
+        }
       )
     else
-      return redirect_to wallet_path, alert: "Invalid transaction type"
+      Result.failure(ValidationError.new("Invalid transaction type"))
     end
 
-    # --- Debug Logging Start ---
-    Rails.logger.debug "Transaction object before persist check: #{@transaction.inspect}"
-    Rails.logger.debug "Transaction valid?: #{@transaction.valid?}"
-    Rails.logger.debug "Transaction errors: #{@transaction.errors.full_messages.join(', ')}" unless @transaction.valid?
-    # --- Debug Logging End ---
+    handle_result(result) do |data|
+      @transaction = data[:transaction]
 
-    if @transaction&.persisted? # Added safe navigation just in case @transaction is nil
       # Perform security check
       if @transaction.security_check(current_user, request.remote_ip, request.user_agent)
         # Process the transaction
         process_result = process_transaction_with_service(@transaction)
 
-        if process_result[:success]
-          redirect_to transaction_path(@transaction), notice: "Transaction created successfully"
-        else
-          redirect_to transaction_path(@transaction), alert: process_result[:message]
-        end
+        handle_result(process_result,
+          success_redirect: transaction_path(@transaction),
+          success_message: "Transaction processed successfully",
+          failure_redirect: transaction_path(@transaction)
+        )
       else
-        redirect_to transaction_path(@transaction), alert: "Transaction blocked by security checks"
+        handle_result(
+          Result.failure(SecurityViolationError.new("Transaction blocked by security checks")),
+          failure_redirect: transaction_path(@transaction)
+        )
       end
-    else
-      # --- Debug Logging Start ---
-      Rails.logger.error "Failed to persist transaction. Errors: #{@transaction&.errors&.full_messages&.join(', ')}"
-      # --- Debug Logging End ---
-      redirect_to wallet_path, alert: "Failed to create transaction: #{@transaction&.errors&.full_messages&.join(', ')}" # Add errors to alert
     end
   end
 
@@ -102,31 +100,48 @@ class TransactionsController < ApplicationController
   def process_transaction
     # Only process pending transactions
     unless @transaction.status_pending?
-      return redirect_to transaction_path(@transaction), alert: "Transaction cannot be processed"
+      error = BusinessRuleError.new(
+        "Transaction cannot be processed in its current state",
+        :invalid_transaction_state
+      )
+      return handle_result(Result.failure(error),
+        failure_redirect: transaction_path(@transaction)
+      )
     end
 
     # Process the transaction
     process_result = process_transaction_with_service(@transaction)
 
-    if process_result[:success]
-      redirect_to transaction_path(@transaction), notice: "Transaction processed successfully"
-    else
-      redirect_to transaction_path(@transaction), alert: process_result[:message]
-    end
+    handle_result(process_result,
+      success_redirect: transaction_path(@transaction),
+      success_message: "Transaction processed successfully",
+      failure_redirect: transaction_path(@transaction)
+    )
   end
 
   # POST /transactions/:id/reverse
   def reverse
     # Only reverse completed transactions
     unless @transaction.status_completed?
-      return redirect_to transaction_path(@transaction), alert: "Transaction cannot be reversed"
+      error = BusinessRuleError.new(
+        "Transaction cannot be reversed in its current state",
+        :invalid_transaction_state
+      )
+      return handle_result(Result.failure(error),
+        failure_redirect: transaction_path(@transaction)
+      )
     end
 
     # Reverse the transaction
     if @transaction.reverse!(reason: params[:reason])
-      redirect_to transaction_path(@transaction), notice: "Transaction reversed successfully"
+      handle_result(Result.success({message: "Transaction reversed successfully"}),
+        success_redirect: transaction_path(@transaction)
+      )
     else
-      redirect_to transaction_path(@transaction), alert: "Failed to reverse transaction"
+      error = BusinessRuleError.new("Failed to reverse transaction", :reversal_failed)
+      handle_result(Result.failure(error),
+        failure_redirect: transaction_path(@transaction)
+      )
     end
   end
 
@@ -134,15 +149,20 @@ class TransactionsController < ApplicationController
 
   # Set the transaction from the ID parameter
   def set_transaction
-    @transaction = Transaction.find(params[:id])
+    result = TransactionService.find_by_id(params[:id])
+
+    handle_result(result,
+      success_action: :render,
+      failure_redirect: wallet_path,
+      skip_flash: true
+    ) do |data|
+      @transaction = data[:transaction]
+    end
   end
 
   # Authorize the user to access the transaction
   def authorize_transaction
-    # Check if the user is associated with the transaction
-    unless @transaction.sender == current_user || @transaction.recipient == current_user
-      redirect_to wallet_path, alert: "You are not authorized to access this transaction"
-    end
+    authorize_resource(@transaction, "You are not authorized to access this transaction")
   end
 
   # Process a transaction using the TransactionService

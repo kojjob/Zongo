@@ -1,0 +1,226 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">
+      <% if @query.present? %>
+        Search Results for "<%= @query %>"
+      <% else %>
+        All Products
+      <% end %>
+    </h1>
+    <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">
+      <%= @pagy.count %> <%= "product".pluralize(@pagy.count) %> found
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Filters -->
+    <div class="lg:col-span-1">
+      <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden sticky top-24">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-medium text-gray-900 dark:text-white">Filters</h2>
+        </div>
+
+        <%= form_with url: search_path, method: :get, class: "p-4 space-y-6", data: { turbo_frame: "search_results", turbo_action: "advance" } do |f| %>
+          <%= f.hidden_field :q, value: @query %>
+
+          <!-- Category Filter -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Category</h3>
+            <%= f.select :category_id,
+                options_from_collection_for_select(@categories, :id, :name, @category_id),
+                { include_blank: "All Categories" },
+                class: "block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Price Range</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <%= f.number_field :min_price, value: @min_price, min: @price_range[:min], max: @price_range[:max], placeholder: "Min", class: "block w-full pl-3 pr-3 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+              </div>
+              <div>
+                <%= f.number_field :max_price, value: @max_price, min: @price_range[:min], max: @price_range[:max], placeholder: "Max", class: "py-2 px-3 block w-full pl-3 pr-3 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rating Filter -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Rating</h3>
+            <div class="space-y-2">
+              <% [5, 4, 3, 2, 1].each do |rating| %>
+                <div class="flex items-center">
+                  <%= f.radio_button :rating, rating, id: "rating_#{rating}", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                  <label for="rating_<%= rating %>" class="ml-3 text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                    <% rating.times do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    <% end %>
+                    <% (5 - rating).times do %>
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 dark:text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    <% end %>
+                    <span class="ml-1">& Up</span>
+                  </label>
+                </div>
+              <% end %>
+              <div class="flex items-center">
+                <%= f.radio_button :rating, "", checked: @rating.blank?, id: "rating_all", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                <label for="rating_all" class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  All Ratings
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Type Filter -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Product Type</h3>
+            <div class="space-y-2">
+              <div class="flex items-center">
+                <%= f.radio_button :product_type, "physical", id: "type_physical", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                <label for="type_physical" class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  Physical Products
+                </label>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :product_type, "digital", id: "type_digital", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                <label for="type_digital" class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  Digital Products
+                </label>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :product_type, "service", id: "type_service", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                <label for="type_service" class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  Services
+                </label>
+              </div>
+              <div class="flex items-center">
+                <%= f.radio_button :product_type, "", checked: @product_type.blank?, id: "type_all", class: "h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-800" %>
+                <label for="type_all" class="ml-3 text-sm text-gray-700 dark:text-gray-300">
+                  All Types
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sort Order -->
+          <div>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Sort By</h3>
+            <%= f.select :sort,
+                options_for_select([
+                  ["Relevance", "relevance"],
+                  ["Price: Low to High", "price_asc"],
+                  ["Price: High to Low", "price_desc"],
+                  ["Newest", "newest"],
+                  ["Rating", "rating"],
+                  ["Popularity", "popularity"]
+                ], @sort),
+                {},
+                class: "py-2 px-3 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white sm:text-sm rounded-md" %>
+          </div>
+
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+            <%= link_to "Clear Filters", search_path(q: @query), class: "text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" %>
+            <%= f.submit "Apply Filters", class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="lg:col-span-3">
+      <% if @products.any? %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="search_results">
+          <% @products.each do |product| %>
+            <div class="group relative bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="relative aspect-w-4 aspect-h-3 bg-gray-200 dark:bg-gray-700">
+                <% if product.images.attached? %>
+                  <%= image_tag product.images.first.variant(resize_to_fill: [400, 300]), class: "w-full h-full object-cover" %>
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center">
+                    <%= icon "image", class: "h-12 w-12 text-gray-400 dark:text-gray-500" %>
+                  </div>
+                <% end %>
+
+                <% if product.on_sale? %>
+                  <div class="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-bold">
+                    <%= product.discount_percentage %>% OFF
+                  </div>
+                <% end %>
+
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
+
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div class="flex justify-center space-x-2">
+                    <a href="<%= product_path(product) %>" class="p-2 rounded-full bg-white text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                      <%= icon "eye", class: "h-5 w-5" %>
+                    </a>
+
+                    <%= button_to add_to_cart_path, method: :post, params: { product_id: product.id, quantity: 1 }, class: "p-2 rounded-full bg-primary-600 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                      <%= icon "shopping-cart", class: "h-5 w-5" %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4">
+                <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                  <a href="<%= product_path(product) %>" class="hover:text-primary-600 dark:hover:text-primary-400">
+                    <span aria-hidden="true" class="absolute inset-0"></span>
+                    <%= product.name %>
+                  </a>
+                </h3>
+
+                <div class="mt-2 flex items-center">
+                  <% if product.reviews.approved.any? %>
+                    <%= render 'shared/star_rating', rating: product.average_rating, size: 4, show_number: true, reviews_count: product.reviews.approved.count %>
+                  <% else %>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">No reviews yet</span>
+                  <% end %>
+                </div>
+
+                <div class="mt-2 flex items-center justify-between">
+                  <div>
+                    <% if product.on_sale? %>
+                      <span class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= product.price %></span>
+                      <span class="ml-2 text-sm text-gray-500 dark:text-gray-400 line-through">GHS <%= product.original_price %></span>
+                    <% else %>
+                      <span class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= product.price %></span>
+                    <% end %>
+                  </div>
+
+                  <% if product.digital? %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
+                      Digital
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% if @pagy.pages > 1 %>
+          <div class="mt-8">
+            <%== pagy_nav(@pagy) %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No products found</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Try adjusting your search or filter to find what you're looking for.</p>
+          <div class="mt-6">
+            <%= link_to "Clear all filters", search_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

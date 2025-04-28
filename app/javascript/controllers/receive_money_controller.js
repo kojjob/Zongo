@@ -2,12 +2,12 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [
-    "toast", 
-    "toastMessage", 
-    "requestAmount", 
-    "requestPurpose", 
-    "linkAmount", 
-    "linkPurpose", 
+    "toast",
+    "toastMessage",
+    "requestAmount",
+    "requestPurpose",
+    "linkAmount",
+    "linkPurpose",
     "linkExpiry"
   ]
 
@@ -22,9 +22,9 @@ export default class extends Controller {
   // Copy to clipboard functionality
   copyToClipboard(event) {
     const textToCopy = event.currentTarget.dataset.copyText
-    
+
     if (!textToCopy) return
-    
+
     navigator.clipboard.writeText(textToCopy)
       .then(() => {
         this.showToast("Copied to clipboard!")
@@ -34,27 +34,27 @@ export default class extends Controller {
         this.showToast("Failed to copy. Please try again.")
       })
   }
-  
+
   // Show toast notification
   showToast(message) {
     this.toastMessageTarget.textContent = message
     this.toastTarget.classList.remove("hidden")
-    
+
     setTimeout(() => {
       this.toastTarget.classList.add("hidden")
     }, 3000)
   }
-  
+
   // QR Code Generator for specific amount
   generateAmountQR() {
     const amount = this.requestAmountTarget.value
     const purpose = this.requestPurposeTarget.value
-    
+
     if (!amount || parseFloat(amount) <= 0) {
       this.showToast("Please enter a valid amount")
       return
     }
-    
+
     // Call to backend endpoint to generate a QR code with amount
     fetch(`/api/wallet/generate_qr?amount=${amount}&purpose=${encodeURIComponent(purpose)}`, {
       method: 'GET',
@@ -82,41 +82,78 @@ export default class extends Controller {
   downloadQRCode() {
     // Find the SVG element
     const svgElement = document.querySelector('.qr-code-container svg')
-    
+
     if (!svgElement) {
       this.showToast("QR code not found")
       return
     }
-    
+
+    // Show loading toast
+    this.showToast("Preparing QR code for download...")
+
     // Create a canvas element
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
-    
+
     // Set canvas dimensions to match QR code (with some padding)
-    canvas.width = svgElement.width.baseVal.value + 40
-    canvas.height = svgElement.height.baseVal.value + 40
-    
+    canvas.width = svgElement.width.baseVal.value + 80
+    canvas.height = svgElement.height.baseVal.value + 120
+
     // Fill with white background
     context.fillStyle = '#FFFFFF'
     context.fillRect(0, 0, canvas.width, canvas.height)
-    
+
+    // Add a border
+    context.strokeStyle = '#E5E7EB'
+    context.lineWidth = 1
+    context.strokeRect(10, 10, canvas.width - 20, canvas.height - 20)
+
+    // Add account information at the bottom
+    context.font = 'bold 14px Arial'
+    context.fillStyle = '#111827'
+    context.textAlign = 'center'
+    context.fillText(`${this.accountName}`, canvas.width / 2, canvas.height - 60)
+
+    context.font = '12px Arial'
+    context.fillStyle = '#4B5563'
+    context.fillText(`Account: ${this.accountNumber}`, canvas.width / 2, canvas.height - 40)
+    context.fillText(`${this.bankName}`, canvas.width / 2, canvas.height - 20)
+
     // Convert SVG to data URL
     const svgData = new XMLSerializer().serializeToString(svgElement)
     const img = new Image()
-    
+
     img.onload = () => {
-      // Draw the image centered on the canvas
-      context.drawImage(img, 20, 20)
-      
-      // Convert to data URL and download
-      const dataUrl = canvas.toDataURL('image/png')
-      const link = document.createElement('a')
-      link.download = `payment-qr-${this.accountNumber}.png`
-      link.href = dataUrl
-      link.click()
+      try {
+        // Draw the image centered on the canvas
+        context.drawImage(img, (canvas.width - img.width) / 2, 30)
+
+        // Convert to data URL and download
+        const dataUrl = canvas.toDataURL('image/png')
+        const link = document.createElement('a')
+        link.download = `payment-qr-${this.accountNumber}.png`
+        link.href = dataUrl
+        link.click()
+
+        // Show success toast
+        this.showToast("QR code downloaded successfully!")
+      } catch (error) {
+        console.error("Error creating QR code image:", error)
+        this.showToast("Failed to download QR code. Please try again.")
+      }
     }
-    
-    img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
+
+    img.onerror = () => {
+      console.error("Error loading SVG image")
+      this.showToast("Failed to download QR code. Please try again.")
+    }
+
+    try {
+      img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)))
+    } catch (error) {
+      console.error("Error encoding SVG:", error)
+      this.showToast("Failed to download QR code. Please try again.")
+    }
   }
 
   // Share QR Code
@@ -126,10 +163,10 @@ export default class extends Controller {
       this.showToast("Sharing is not available on your device")
       return
     }
-    
+
     // Get account information for sharing
     const shareText = `Send money to ${this.accountName} (Acc: ${this.accountNumber}) via ${this.bankName}.`
-    
+
     // Share the information
     navigator.share({
       title: 'Payment QR Code',
@@ -146,7 +183,7 @@ export default class extends Controller {
     const amount = this.linkAmountTarget.value
     const purpose = this.linkPurposeTarget.value
     const expiry = this.linkExpiryTarget.value
-    
+
     // Call to backend to generate custom link
     fetch('/api/wallet/generate_payment_link', {
       method: 'POST',
@@ -179,11 +216,11 @@ export default class extends Controller {
   // Delete payment link
   deletePaymentLink(event) {
     const linkId = event.currentTarget.dataset.linkId
-    
+
     if (!confirm("Are you sure you want to delete this payment link?")) {
       return
     }
-    
+
     fetch(`/api/wallet/payment_links/${linkId}`, {
       method: 'DELETE',
       headers: {
@@ -219,7 +256,7 @@ export default class extends Controller {
     if (paymentLinkTab) {
       paymentLinkTab.click()
     }
-    
+
     // Focus on amount field
     setTimeout(() => {
       this.linkAmountTarget.focus()
@@ -230,26 +267,26 @@ export default class extends Controller {
   shareViaWhatsApp(event) {
     const shareType = event.currentTarget.dataset.shareType || 'account'
     let shareText = ''
-    
+
     if (shareType === 'link') {
       shareText = `Send money to me using this payment link: ${this.paymentLink}`
     } else {
       shareText = `Send money to my account:\nName: ${this.accountName}\nAccount: ${this.accountNumber}\nBank: ${this.bankName}`
     }
-    
+
     window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`)
   }
-  
+
   shareViaSMS(event) {
     const shareType = event.currentTarget.dataset.shareType || 'account'
     let shareText = ''
-    
+
     if (shareType === 'link') {
       shareText = `Send money to me using this payment link: ${this.paymentLink}`
     } else {
       shareText = `Send money to my account: Name: ${this.accountName}, Account: ${this.accountNumber}, Bank: ${this.bankName}`
     }
-    
+
     // Use SMS URI scheme if available, otherwise fallback to clipboard
     if (/android|iphone|ipad|ipod/i.test(navigator.userAgent)) {
       window.location.href = `sms:?body=${encodeURIComponent(shareText)}`
@@ -259,31 +296,31 @@ export default class extends Controller {
         .catch(() => this.showToast("Couldn't copy text. Please try again."))
     }
   }
-  
+
   shareViaEmail(event) {
     const shareType = event.currentTarget.dataset.shareType || 'account'
     let subject = 'Payment Details'
     let body = ''
-    
+
     if (shareType === 'link') {
       body = `Hello,\n\nPlease use the following link to send money to me:\n\n${this.paymentLink}\n\nThank you!`
     } else {
       body = `Hello,\n\nPlease use the following details to send money to my account:\n\nName: ${this.accountName}\nAccount Number: ${this.accountNumber}\nBank: ${this.bankName}\n\nThank you!`
     }
-    
+
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
   }
-  
+
   shareViaOther(event) {
     const shareType = event.currentTarget.dataset.shareType || 'account'
     let shareText = ''
-    
+
     if (shareType === 'link') {
       shareText = `Send money to me using this payment link: ${this.paymentLink}`
     } else {
       shareText = `Send money to my account:\nName: ${this.accountName}\nAccount: ${this.accountNumber}\nBank: ${this.bankName}`
     }
-    
+
     // Use Web Share API if available
     if (navigator.share) {
       navigator.share({

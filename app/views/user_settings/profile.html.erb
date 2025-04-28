@@ -1,237 +1,424 @@
 <%# User Profile Settings %>
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <div class="mb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Profile Settings</h1>
-    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Update your personal information and profile settings</p>
-  </div>
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+  <%# Page Header with Visual Elements - Updated with teal-emerald colors and improved mobile responsiveness %>
+  <div class="mb-6 sm:mb-8">
+    <div class="bg-gradient-to-r from-teal-600 to-emerald-600 rounded-xl sm:rounded-2xl shadow-md text-white relative overflow-hidden p-4 sm:p-6 md:p-8">
+      <!-- Decorative elements -->
+      <div class="absolute top-0 right-0 w-32 sm:w-48 h-32 sm:h-48 bg-white/10 rounded-full -mt-16 sm:-mt-24 -mr-16 sm:-mr-24 blur-xl sm:blur-2xl"></div>
+      <div class="absolute bottom-0 left-0 w-24 sm:w-32 h-24 sm:h-32 bg-white/10 rounded-full -mb-12 sm:-mb-16 -ml-12 sm:-ml-16 blur-lg sm:blur-xl"></div>
+      <div class="absolute inset-0 bg-pattern-dots opacity-5"></div>
 
-  <%# Tabs Navigation %>
-  <div class="mb-6 border-b border-gray-200 dark:border-gray-700">
-    <div class="flex flex-wrap -mb-px">
-      <%= link_to user_settings_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "user", class: "w-5 h-5 inline-block mr-2" %>
-        Overview
-      <% end %>
+      <div class="relative flex flex-col md:flex-row md:items-center">
+        <!-- User avatar with subtle glow effect -->
+        <div class="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center md:mr-6 shadow-md border border-white/20 mx-auto md:mx-0 mb-4 md:mb-0">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, class: "w-full h-full rounded-full object-cover" %>
+          <% else %>
+            <div class="w-full h-full rounded-full bg-teal-500/30 flex items-center justify-center text-white text-2xl sm:text-3xl md:text-4xl font-bold">
+              <%= current_user.initials %>
+            </div>
+          <% end %>
+        </div>
 
-      <%= link_to user_settings_profile_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_profile_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "profile", class: "w-5 h-5 inline-block mr-2" %>
-        Profile
-      <% end %>
+        <div class="text-center md:text-left">
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2">Profile Settings</h1>
+          <p class="text-white/90 text-sm sm:text-base max-w-2xl">
+            Update your personal information and profile settings
+          </p>
 
-      <%= link_to user_settings_security_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_security_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "shield-check", class: "w-5 h-5 inline-block mr-2" %>
-        Security
-      <% end %>
+          <div class="mt-3 sm:mt-4 flex flex-wrap justify-center md:justify-start gap-2 sm:gap-3">
+            <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-white/15 text-white backdrop-blur-sm">
+              <%= icon "user", class: "w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" %>
+              <%= current_user.username || "Username not set" %>
+            </span>
 
-      <%= link_to user_settings_notifications_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_notifications_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "bell", class: "w-5 h-5 inline-block mr-2" %>
-        Notifications
-      <% end %>
+            <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-white/15 text-white backdrop-blur-sm">
+              <%= icon "envelope", class: "w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" %>
+              <span class="truncate max-w-[120px] sm:max-w-none"><%= current_user.email %></span>
+            </span>
 
-      <%= link_to user_settings_appearance_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_appearance_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "paint-brush", class: "w-5 h-5 inline-block mr-2" %>
-        Appearance
-      <% end %>
-
-      <%= link_to user_settings_payment_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_payment_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "money", class: "w-5 h-5 inline-block mr-2" %>
-        Payment
-      <% end %>
-
-      <%= link_to user_settings_support_path, class: "inline-block py-4 px-4 text-center border-b-2 font-medium text-sm #{current_page?(user_settings_support_path) ? 'border-primary-500 text-primary-600 dark:text-primary-500' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'}" do %>
-        <%= icon "support", class: "w-5 h-5 inline-block mr-2" %>
-        Support
-      <% end %>
+            <% if current_user.respond_to?(:admin?) && current_user.admin? %>
+              <span class="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-amber-500/80 text-white">
+                <%= icon "shield", class: "w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" %>
+                Admin Account
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <%# Profile Form %>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden mb-6">
+  <%# Tabs Navigation - Using shared component for better mobile responsiveness %>
+  <%= render 'shared/settings_tabs' %>
+
+  <%# Profile Form - Updated with teal-emerald colors %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+    <div class="bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <%= icon "user-circle", class: "w-6 h-6 mr-2 text-teal-600 dark:text-teal-400" %>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Personal Information</h2>
+        </div>
+      </div>
+    </div>
     <div class="p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Personal Information</h2>
 
-      <%= form_with url: update_profile_path, method: :patch, local: true, class: "space-y-6" do |form| %>
-        <div class="flex flex-col md:flex-row md:space-x-6">
-          <%# Avatar Upload %>
-          <div class="md:w-1/3 mb-6 md:mb-0">
+      <%= form_with url: update_profile_path, method: :patch, local: true, multipart: true, class: "space-y-6", data: { turbo: false } do |form| %>
+        <div class="flex flex-col lg:flex-row lg:space-x-6">
+          <%# Avatar Upload - Enhanced with teal-emerald colors and better visual elements %>
+          <div class="w-full lg:w-1/3 mb-8 lg:mb-0" data-controller="avatar-upload">
             <div class="flex flex-col items-center">
-              <% if current_user.avatar.attached? %>
-                <%= image_tag current_user.avatar, class: "h-32 w-32 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow" %>
-              <% else %>
-                <div class="h-32 w-32 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400 text-3xl font-bold">
-                  <%= current_user.initials %>
-                </div>
-              <% end %>
+              <div class="relative group">
+                <div class="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full opacity-75 group-hover:opacity-100 blur transition duration-200"></div>
+                <div class="relative">
+                  <% if current_user.avatar.attached? %>
+                    <%= image_tag current_user.avatar, class: "h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover ring-4 ring-white dark:ring-gray-800 shadow-md", data: { avatar_upload_target: "currentAvatar" } %>
+                  <% else %>
+                    <div class="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 dark:from-teal-600 dark:to-emerald-600 flex items-center justify-center text-white text-3xl sm:text-4xl font-bold shadow-md" data-avatar-upload-target="placeholderAvatar">
+                      <%= current_user.initials %>
+                    </div>
+                  <% end %>
 
-              <div class="mt-4 flex items-center">
-                <label for="avatar-upload" class="btn btn-sm btn-outline-primary cursor-pointer">
-                  <%= icon "upload", class: "h-4 w-4 mr-1" %>
-                  Upload Photo
-                </label>
-                <input id="avatar-upload" name="user[avatar]" type="file" accept="image/jpeg,image/png" class="hidden" />
+                  <!-- Preview container for new avatar -->
+                  <div class="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover ring-4 ring-teal-500 shadow-md absolute top-0 left-0 hidden" data-avatar-upload-target="previewContainer">
+                    <img src="" class="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover" data-avatar-upload-target="preview">
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-6 flex flex-wrap justify-center gap-3">
+                <%= form.label "user[avatar]", class: "cursor-pointer border-2 border-teal-500 text-teal-600 hover:bg-teal-50 px-4 py-2 rounded-lg shadow-sm flex items-center transition-colors duration-200" do %>
+                  <span data-avatar-upload-target="uploadIcon">
+                    <%= icon "camera", class: "w-5 h-5 mr-2" %>
+                    Upload Photo
+                  </span>
+                  <span data-avatar-upload-target="loadingIcon" class="hidden">
+                    <svg class="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Uploading...
+                  </span>
+                <% end %>
+                <%= form.file_field "user[avatar]", accept: "image/jpeg,image/png", class: "hidden", direct_upload: true, data: { avatar_upload_target: "input", action: "change->avatar-upload#previewImage direct-upload:initialize->avatar-upload#beginUpload direct-upload:progress->avatar-upload#uploadProgress direct-upload:error->avatar-upload#uploadError direct-upload:end->avatar-upload#uploadEnd" } %>
 
                 <% if current_user.avatar.attached? %>
-                  <%= link_to remove_avatar_path, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove your profile photo?" }, class: "btn btn-sm btn-outline-error ml-2" do %>
-                    <%= icon "trash", class: "h-4 w-4 mr-1" %>
+                  <%= link_to remove_avatar_path, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove your profile photo?" }, class: "border-2 border-red-500 text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg shadow-sm flex items-center transition-colors duration-200" do %>
+                    <%= icon "trash", class: "w-5 h-5 mr-2" %>
                     Remove
                   <% end %>
                 <% end %>
               </div>
-              <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                JPG or PNG. Max size 5MB.
-              </p>
+              <div class="mt-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center w-full max-w-xs">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  <%= icon "info-circle", class: "w-4 h-4 mr-1 text-teal-500" %>
+                  JPG or PNG. Max size 5MB.
+                </p>
+                <div class="mt-1 text-sm text-teal-600 hidden" data-avatar-upload-target="progressText"></div>
+              </div>
             </div>
           </div>
 
-          <%# Profile Form Fields %>
-          <div class="md:w-2/3">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="col-span-1">
-                <%= form.label :username, "Username", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_username, name: "user[username]", value: current_user.username, class: "form-input w-full rounded-lg", placeholder: "Enter a username" %>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <%# Profile Form Fields - Enhanced with better visual elements and mobile responsiveness %>
+          <div class="w-full lg:w-2/3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-8">
+              <%# Username Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1 group">
+                <label for="user_username" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "at", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Username
+                </label>
+                <div class="relative">
+                  <%= form.text_field :user_username, name: "user[username]", value: current_user.username, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Enter a username" %>
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <%= icon "check-circle", class: "w-5 h-5 text-green-500" %>
+                  </div>
+                </div>
+                <p class="mt-2 mb-4 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg">
+                  <%= icon "info-circle", class: "w-4 h-4 mr-1 text-teal-500" %>
                   Your username will be visible to other users. Only letters, numbers, dots and underscore allowed.
                 </p>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :email, "Email Address", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.email_field :user_email, name: "user[email]", value: current_user.email, class: "form-input w-full rounded-lg", placeholder: "Your email address" %>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <%# Email Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1 group">
+                <label for="user_email" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "envelope", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Email Address
+                </label>
+                <div class="relative">
+                  <%= form.email_field :user_email, name: "user[email]", value: current_user.email, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Your email address" %>
+                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <%= icon "check-circle", class: "w-5 h-5 text-green-500" %>
+                  </div>
+                </div>
+                <p class="mt-2 mb-4 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg">
+                  <%= icon "info-circle", class: "w-4 h-4 mr-1 text-teal-500" %>
                   This email will be used for account notifications and recovery.
                 </p>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :first_name, "First Name", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_first_name, name: "user[first_name]", value: current_user.first_name, class: "form-input w-full rounded-lg", placeholder: "Your first name" %>
+              <%# First Name Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_first_name" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "user", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  First Name
+                </label>
+                <%= form.text_field :user_first_name, name: "user[first_name]", value: current_user.first_name, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Your first name" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :last_name, "Last Name", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_last_name, name: "user[last_name]", value: current_user.last_name, class: "form-input w-full rounded-lg", placeholder: "Your last name" %>
+              <%# Last Name Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_last_name" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "user", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Last Name
+                </label>
+                <%= form.text_field :user_last_name, name: "user[last_name]", value: current_user.last_name, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Your last name" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :phone_number, "Phone Number", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+              <%# Phone Number Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_phone_number" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "phone", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Phone Number
+                </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <span class="text-gray-500 dark:text-gray-400">+233</span>
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">+233</span>
                   </div>
-                  <%= form.telephone_field :user_phone_number, name: "user[phone_number]", value: current_user.phone_number&.gsub(/^\+233/, ''), class: "form-input w-full rounded-lg pl-12", placeholder: "Your phone number" %>
+                  <%= form.telephone_field :user_phone_number, name: "user[phone_number]", value: current_user.phone_number&.gsub(/^\+233/, ''), class: "py-3 px-4 form-input w-full rounded-lg pl-14 border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Your phone number", inputmode: "numeric", pattern: "[0-9]*" %>
                 </div>
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p class="mt-2 mb-4 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg">
+                  <%= icon "info-circle", class: "w-4 h-4 mr-1 text-teal-500" %>
                   Your phone number is used for mobile money transactions and verification.
                 </p>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :date_of_birth, "Date of Birth", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.date_field :user_date_of_birth, name: "user[date_of_birth]", value: current_user.date_of_birth, class: "form-input w-full rounded-lg", placeholder: "YYYY-MM-DD" %>
+              <%# Date of Birth Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_date_of_birth" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "calendar", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Date of Birth
+                </label>
+                <%= form.date_field :user_date_of_birth, name: "user[date_of_birth]", value: current_user.date_of_birth, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "YYYY-MM-DD" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :gender, "Gender", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.select :user_gender, name: "user[gender]", options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other'], ['Prefer not to say', 'prefer_not_to_say']], current_user.gender), { include_blank: 'Select gender' }, { class: "form-select w-full rounded-lg" } %>
+              <%# Gender Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="gender" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "user-group", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Gender
+                </label>
+                <div class="relative">
+                  <%= form.select :gender, options_for_select([['Male', 'male'], ['Female', 'female'], ['Other', 'other'], ['Prefer not to say', 'prefer_not_to_say']], current_user.gender), { include_blank: 'Select gender' }, { class: "py-3 px-4 form-select w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200" } %>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                    <%= icon "chevron-down", class: "w-4 h-4 text-gray-400" %>
+                  </div>
+                </div>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :occupation, "Occupation", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_occupation, name: "user[occupation]", value: current_user.occupation, class: "form-input w-full rounded-lg", placeholder: "Your occupation" %>
+              <%# Occupation Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_occupation" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "briefcase", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Occupation
+                </label>
+                <%= form.text_field :user_occupation, name: "user[occupation]", value: current_user.occupation, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Your occupation" %>
               </div>
 
+              <%# Bio Field - Updated with teal-emerald colors %>
               <div class="col-span-2">
-                <%= form.label :bio, "About Me (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_area :user_bio, name: "user[bio]", value: current_user.bio, rows: 3, class: "form-textarea w-full rounded-lg", placeholder: "Tell us a little about yourself" %>
+                <label for="user_bio" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "chat-alt", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  About Me (Optional)
+                </label>
+                <%= form.text_area :user_bio, name: "user[bio]", value: current_user.bio, rows: 4, class: "py-3 px-4 form-textarea w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Tell us a little about yourself" %>
               </div>
 
-              <div class="col-span-2 border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Contact Information</h3>
+              <div class="col-span-2 border-t border-gray-200 dark:border-gray-700 pt-6 mt-4">
+                <div class="flex items-center mb-4">
+                  <%= icon "location-marker", class: "w-5 h-5 mr-2 text-teal-500" %>
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Contact Information</h3>
+                </div>
               </div>
 
+              <%# Address Field - Updated with teal-emerald colors %>
               <div class="col-span-2">
-                <%= form.label :address, "Address", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_address, name: "user[address]", value: current_user.address, class: "form-input w-full rounded-lg", placeholder: "Street address" %>
+                <label for="user_address" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "home", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Address
+                </label>
+                <%= form.text_field :user_address, name: "user[address]", value: current_user.address, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Street address" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :city, "City", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_city, name: "user[city]", value: current_user.city, class: "form-input w-full rounded-lg", placeholder: "City" %>
+              <%# City Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_city" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "office-building", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  City
+                </label>
+                <%= form.text_field :user_city, name: "user[city]", value: current_user.city, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "City" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :state, "State/Region", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_state, name: "user[state]", value: current_user.state, class: "form-input w-full rounded-lg", placeholder: "State or region" %>
+              <%# State/Region Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_state" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "map", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  State/Region
+                </label>
+                <%= form.text_field :user_state, name: "user[state]", value: current_user.state, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "State or region" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :postal_code, "Postal Code", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_postal_code, name: "user[postal_code]", value: current_user.postal_code, class: "form-input w-full rounded-lg", placeholder: "Postal code" %>
+              <%# Postal Code Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_postal_code" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "mail", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Postal Code
+                </label>
+                <%= form.text_field :user_postal_code, name: "user[postal_code]", value: current_user.postal_code, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Postal code" %>
               </div>
 
-              <div class="col-span-1">
-                <%= form.label :country, "Country", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.text_field :user_country, name: "user[country]", value: current_user.country || "Ghana", class: "form-input w-full rounded-lg", placeholder: "Country" %>
+              <%# Country Field - Updated with teal-emerald colors %>
+              <div class="col-span-2 sm:col-span-1">
+                <label for="user_country" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "globe", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Country
+                </label>
+                <%= form.text_field :user_country, name: "user[country]", value: current_user.country || "Ghana", class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "Country" %>
               </div>
 
+              <%# Website Field - Updated with teal-emerald colors %>
               <div class="col-span-2">
-                <%= form.label :website, "Website (Optional)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-                <%= form.url_field :user_website, name: "user[website]", value: current_user.website, class: "form-input w-full rounded-lg", placeholder: "https://example.com" %>
+                <label for="user_website" class="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <%= icon "globe-alt", class: "w-4 h-4 mr-2 text-teal-500" %>
+                  Website (Optional)
+                </label>
+                <%= form.url_field :user_website, name: "user[website]", value: current_user.website, class: "py-3 px-4 form-input w-full rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200", placeholder: "https://example.com" %>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex justify-end">
-          <%= link_to "Cancel", user_settings_path, class: "btn btn-white mr-3" %>
-          <%= form.submit "Save Changes", class: "btn btn-primary" %>
+        <div class="flex flex-col sm:flex-row justify-between items-center mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+          <div class="flex space-x-4 mb-4 sm:mb-0">
+            <%= form.submit "Save Changes", class: "px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-medium rounded-lg shadow-md transition-colors duration-200 flex items-center", data: { profile_target: "submitButton" } %>
+            <%= link_to "Cancel", user_settings_path, class: "px-6 py-3 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 transition-colors duration-200 flex items-center", data: { action: "click->profile#showLinkLoading" } %>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            <%= icon "shield-check", class: "w-4 h-4 mr-1 text-teal-500" %>
+            Your information is securely stored and protected
+          </p>
         </div>
       <% end %>
     </div>
   </div>
 
-  <%# Additional Settings %>
-  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden">
+  <%# Help Section - Using shared component for better mobile responsiveness %>
+  <%= render 'shared/settings_help_section',
+    title: "Need help updating your profile?",
+    description: "Our support team is available 24/7 to assist you with any questions about your profile settings.",
+    faq_type: "Profile"
+  %>
+
+  <%# Account Preferences Section - Updated with teal-emerald colors %>
+  <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden mb-8 border border-gray-100 dark:border-gray-700 transform transition-all duration-300 hover:shadow-xl">
+    <div class="bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <%= icon "adjustments", class: "w-6 h-6 mr-2 text-teal-600 dark:text-teal-400" %>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">Account Preferences</h2>
+        </div>
+      </div>
+    </div>
     <div class="p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">Account Preferences</h2>
-
-      <div class="space-y-4">
-        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Language</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Select your preferred language for the app</p>
+      <%= form_with url: user_settings_update_appearance_path, method: :patch, local: true, class: "space-y-6", data: { controller: "profile", profile_target: "form", action: "submit->profile#submitForm" } do |form| %>
+        <div class="hidden h-1 bg-teal-500 absolute top-0 left-0 transition-all duration-300" data-profile-target="saveIndicator"></div>
+        <%# Language Preference - Updated with teal-emerald colors %>
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+          <div class="mb-4 lg:mb-0 lg:mr-4">
+            <div class="flex items-center">
+              <%= icon "translate", class: "w-5 h-5 mr-2 text-teal-500" %>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Language</h3>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-7">
+              Select your preferred language for the app
+            </p>
           </div>
-          <div>
-            <select class="form-select rounded-lg">
-              <option value="en">English</option>
-              <option value="fr">French</option>
-              <option value="es">Spanish</option>
-            </select>
+          <div class="relative w-full lg:w-auto">
+            <%= form.select "user[settings][language]",
+              options_for_select([
+                ['English', 'en'],
+                ['French', 'fr'],
+                ['Spanish', 'es'],
+                ['German', 'de'],
+                ['Portuguese', 'pt']
+              ], current_user.user_settings.language),
+              {},
+              { class: "py-3 px-4 pr-10 form-select rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200 w-full lg:min-w-[200px]" }
+            %>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+              <%= icon "chevron-down", class: "w-4 h-4 text-gray-400" %>
+            </div>
           </div>
         </div>
 
-        <div class="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Currency Display</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Choose your preferred currency display format</p>
+        <%# Currency Display Preference - Updated with teal-emerald colors %>
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between py-4 border-b border-gray-200 dark:border-gray-700">
+          <div class="mb-4 lg:mb-0 lg:mr-4">
+            <div class="flex items-center">
+              <%= icon "currency-dollar", class: "w-5 h-5 mr-2 text-teal-500" %>
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">Currency Display</h3>
+            </div>
+            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-7">
+              Choose your preferred currency display format
+            </p>
           </div>
-          <div>
-            <select class="form-select rounded-lg">
-              <option value="GHS">Ghana Cedi (₵)</option>
-              <option value="USD">US Dollar ($)</option>
-              <option value="EUR">Euro (€)</option>
-              <option value="GBP">British Pound (£)</option>
-            </select>
+          <div class="relative w-full lg:w-auto">
+            <%= form.select "user[settings][currency_display]",
+              options_for_select([
+                ['Ghana Cedi (₵)', 'ghs'],
+                ['US Dollar ($)', 'usd'],
+                ['Euro (€)', 'eur'],
+                ['British Pound (£)', 'gbp'],
+                ['Nigerian Naira (₦)', 'ngn']
+              ], current_user.user_settings.currency_display),
+              {},
+              { class: "py-3 px-4 pr-10 form-select rounded-lg border-2 border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring focus:ring-teal-200 focus:ring-opacity-50 transition-colors duration-200 w-full lg:min-w-[200px]" }
+            %>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+              <%= icon "chevron-down", class: "w-4 h-4 text-gray-400" %>
+            </div>
           </div>
         </div>
 
-        <div class="flex items-center justify-between py-3">
-          <div>
-            <h3 class="text-base font-medium text-gray-900 dark:text-white">Delete Account</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Permanently delete your account and all your data</p>
-          </div>
-          <button type="button" class="btn btn-error-outline">Delete Account</button>
+        <%# Save Preferences Button - Updated with teal-emerald colors and loading state %>
+        <div class="flex justify-end pt-4">
+          <%= form.submit "Save Preferences", class: "px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-medium rounded-lg shadow-md transition-colors duration-200 flex items-center", data: { profile_target: "submitButton" } %>
         </div>
+      <% end %>
+
+      <%# Delete Account Section - Updated with improved design %>
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between py-4 mt-8 border-t border-gray-200 dark:border-gray-700">
+        <div class="mb-4 lg:mb-0 lg:mr-4">
+          <div class="flex items-center">
+            <%= icon "exclamation", class: "w-5 h-5 mr-2 text-red-500" %>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">Delete Account</h3>
+          </div>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 ml-7">
+            Permanently delete your account and all your data
+          </p>
+          <div class="mt-2 ml-7 p-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-800/30">
+            <p class="text-xs text-red-600 dark:text-red-400 flex items-start">
+              <%= icon "information-circle", class: "w-3 h-3 mt-0.5 mr-1" %>
+              This action cannot be undone. All your data will be permanently deleted.
+            </p>
+          </div>
+        </div>
+        <button type="button" class="px-6 py-3 bg-white hover:bg-red-50 border-2 border-red-500 text-red-600 font-medium rounded-lg shadow-sm transition-colors duration-200 flex items-center" data-action="click->profile#showLinkLoading">
+          <%= icon "trash", class: "w-4 h-4 mr-2" %>
+          Delete Account
+        </button>
       </div>
     </div>
   </div>

@@ -1,0 +1,133 @@
+<%
+# This partial renders a featured products section
+# Parameters:
+# - title: Section title (default: "Featured Products")
+# - subtitle: Section subtitle (optional)
+# - category_id: Filter products by category (optional)
+# - limit: Maximum number of products to show (default: 8)
+# - columns: Number of columns to display (default: 4, options: 2, 3, 4, 5)
+%>
+
+<% 
+  # Get parameters
+  title = local_assigns.fetch(:title, "Featured Products")
+  subtitle = local_assigns[:subtitle]
+  category_id = local_assigns[:category_id]
+  limit = local_assigns.fetch(:limit, 8)
+  columns = local_assigns.fetch(:columns, 4)
+  
+  # Query for featured products
+  products_query = Product.active.in_stock.featured
+  
+  # Filter by category if provided
+  products_query = products_query.where(shop_category_id: category_id) if category_id.present?
+  
+  # Get products
+  products = products_query.order(created_at: :desc).limit(limit)
+  
+  # Return if no products are available
+  return if products.empty?
+  
+  # Determine grid columns class
+  grid_class = case columns
+               when 2
+                 "grid-cols-1 sm:grid-cols-2"
+               when 3
+                 "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+               when 5
+                 "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+               else
+                 "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+               end
+%>
+
+<div class="featured-products mb-12">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white"><%= title %></h2>
+      <% if subtitle.present? %>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><%= subtitle %></p>
+      <% end %>
+    </div>
+    
+    <% if category_id.present? %>
+      <a href="<%= shop_category_path(ShopCategory.find(category_id).slug) %>" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+        View All <span aria-hidden="true">→</span>
+      </a>
+    <% else %>
+      <a href="<%= shop_path %>" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300">
+        View All <span aria-hidden="true">→</span>
+      </a>
+    <% end %>
+  </div>
+  
+  <div class="grid <%= grid_class %> gap-6">
+    <% products.each do |product| %>
+      <div class="group relative bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+        <div class="relative aspect-w-4 aspect-h-3 bg-gray-200 dark:bg-gray-700">
+          <% if product.images.attached? %>
+            <%= image_tag product.images.first.variant(resize_to_fill: [400, 300]), class: "w-full h-full object-cover" %>
+          <% else %>
+            <div class="w-full h-full flex items-center justify-center">
+              <%= icon "image", class: "h-12 w-12 text-gray-400 dark:text-gray-500" %>
+            </div>
+          <% end %>
+          
+          <% if product.on_sale? %>
+            <div class="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-bold">
+              <%= product.discount_percentage %>% OFF
+            </div>
+          <% end %>
+          
+          <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity duration-300"></div>
+          
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div class="flex justify-center space-x-2">
+              <a href="<%= product_path(product) %>" class="p-2 rounded-full bg-white text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <%= icon "eye", class: "h-5 w-5" %>
+              </a>
+              
+              <%= button_to add_to_cart_path, method: :post, params: { product_id: product.id, quantity: 1 }, class: "p-2 rounded-full bg-primary-600 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                <%= icon "shopping-cart", class: "h-5 w-5" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-4">
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+            <a href="<%= product_path(product) %>" class="hover:text-primary-600 dark:hover:text-primary-400">
+              <span aria-hidden="true" class="absolute inset-0"></span>
+              <%= product.name %>
+            </a>
+          </h3>
+          
+          <div class="mt-2 flex items-center">
+            <% if product.reviews.approved.any? %>
+              <%= render 'shared/star_rating', rating: product.average_rating, size: 4, show_number: true, reviews_count: product.reviews.approved.count %>
+            <% else %>
+              <span class="text-xs text-gray-500 dark:text-gray-400">No reviews yet</span>
+            <% end %>
+          </div>
+          
+          <div class="mt-2 flex items-center justify-between">
+            <div>
+              <% if product.on_sale? %>
+                <span class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= product.price %></span>
+                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400 line-through">GHS <%= product.original_price %></span>
+              <% else %>
+                <span class="text-lg font-bold text-gray-900 dark:text-white">GHS <%= product.price %></span>
+              <% end %>
+            </div>
+            
+            <% if product.digital? %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
+                Digital
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

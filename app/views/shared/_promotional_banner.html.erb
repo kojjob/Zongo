@@ -1,0 +1,64 @@
+<%
+# This partial renders a promotional banner
+# Parameters:
+# - location: The location where the banner should be displayed (required)
+# - category_id: The category ID for category-specific banners (optional)
+%>
+
+<% 
+  # Get banners for this location
+  banners = PromotionalBanner.current.by_location(location)
+  
+  # Filter by category if provided
+  banners = banners.by_category(category_id) if defined?(category_id) && category_id.present?
+  
+  # Order by position
+  banners = banners.ordered
+%>
+
+<% if banners.any? %>
+  <div class="promotional-banners space-y-4 mb-8">
+    <% banners.each do |banner| %>
+      <% 
+        # Set default styles if not provided
+        bg_color = banner.background_color.presence || '#F3F4F6'
+        text_color = banner.text_color.presence || '#111827'
+        button_color = banner.button_color.presence || '#4F46E5'
+        button_text_color = banner.button_text_color.presence || '#FFFFFF'
+      %>
+      
+      <div class="promotional-banner rounded-lg overflow-hidden shadow-sm" style="background-color: <%= bg_color %>;">
+        <% if banner.has_image? %>
+          <div class="relative">
+            <%= image_tag banner.image.variant(resize_to_fill: [1200, 300]), class: "w-full h-auto object-cover" %>
+            <div class="absolute inset-0 flex items-center justify-center p-6 bg-black bg-opacity-40">
+              <div class="text-center">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-2"><%= banner.title %></h3>
+                <% if banner.description.present? %>
+                  <p class="text-white text-sm md:text-base mb-4"><%= banner.description %></p>
+                <% end %>
+                <% if banner.has_button? %>
+                  <a href="<%= banner.link_url %>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-<%= button_text_color %>" style="background-color: <%= button_color %>;">
+                    <%= banner.button_text %>
+                  </a>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="p-6 text-center" style="color: <%= text_color %>;">
+            <h3 class="text-xl md:text-2xl font-bold mb-2"><%= banner.title %></h3>
+            <% if banner.description.present? %>
+              <p class="text-sm md:text-base mb-4"><%= banner.description %></p>
+            <% end %>
+            <% if banner.has_button? %>
+              <a href="<%= banner.link_url %>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-<%= button_text_color %>" style="background-color: <%= button_color %>;">
+                <%= banner.button_text %>
+              </a>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

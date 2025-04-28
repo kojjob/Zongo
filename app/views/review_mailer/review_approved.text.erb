@@ -1,0 +1,19 @@
+Your Review Has Been Approved!
+===============================
+
+Hello <%= @user.username || @user.email %>,
+
+Great news! Your review for <%= @product.name %> has been approved and is now visible to other customers.
+
+Product: <%= @product.name %>
+Your rating: <%= @review.rating %>/5
+
+Your review:
+"<%= @review.comment %>"
+
+Thank you for taking the time to share your experience with our community. Your feedback helps other customers make informed decisions.
+
+View your review: <%= product_url(@product) %>
+
+This email was sent from Super Ghana App. Please do not reply to this email.
+© <%= Date.today.year %> Super Ghana App. All rights reserved.

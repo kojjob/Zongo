@@ -1,7 +1,12 @@
 <!-- Footer -->
-<footer class="bg-gray-900 text-white pt-16 pb-8">
-  <div class="container mx-auto px-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+<footer id="footer" class="bg-gray-900 text-white pt-16 pb-8 relative overflow-hidden" tabindex="-1">
+  <!-- Background decorative elements -->
+  <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 opacity-50"></div>
+  <div class="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 rounded-full filter blur-3xl"></div>
+  <div class="absolute bottom-0 left-0 w-64 h-64 bg-secondary-500/5 rounded-full filter blur-3xl"></div>
+
+  <div class="container mx-auto px-4 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
       <!-- Column 1: Logo & About -->
       <div class="lg:col-span-2">
         <div class="flex items-center mb-4">
@@ -15,86 +20,149 @@
         <p class="text-gray-400 mb-4">
           Ghana's first all-in-one super app that brings together essential services to simplify your daily life and empower your community.
         </p>
+
+        <!-- Newsletter Subscription -->
+        <div class="mb-6">
+          <h4 class="text-sm font-semibold text-gray-300 mb-2">Subscribe to our newsletter</h4>
+          <form action="#" method="POST" class="flex flex-col sm:flex-row gap-2">
+            <div class="relative flex-grow">
+              <input type="email" name="email" placeholder="Your email address" required
+                class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-300 placeholder-gray-500">
+            </div>
+            <button type="submit" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors duration-300 whitespace-nowrap">
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+        <!-- Social Media Links -->
         <div class="flex space-x-4">
-          <a href="#" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
+          <a href="https://twitter.com/superghana" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
             <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <svg class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
             </svg>
           </a>
-          <a href="#" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
+          <a href="https://instagram.com/superghana" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
             <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <svg class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
             </svg>
           </a>
-          <a href="#" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
+          <a href="https://linkedin.com/company/superghana" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
             <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             <svg class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
             </svg>
           </a>
+          <a href="https://facebook.com/superghana" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
+            <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <svg class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+            </svg>
+          </a>
+          <a href="https://youtube.com/superghana" target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="group relative p-2 rounded-lg hover:bg-gradient-to-br from-primary-500 to-secondary-500 transition-all duration-300 ease-in-out">
+            <div class="absolute inset-0 rounded-lg bg-gradient-to-br from-primary-500/20 to-secondary-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <svg class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path>
+            </svg>
+          </a>
         </div>
       </div>
-      
+
       <!-- Column 2: Features -->
       <div>
         <h3 class="text-lg font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500">Features</h3>
         <ul class="space-y-3">
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Wallet & Payments</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Shopping</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Transportation</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Agricultural Services</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Financial Services</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Community</a></li>
+          <li><a href="<%= wallet_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Wallet & Payments</a></li>
+          <li><a href="<%= root_path %>#shopping" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Shopping</a></li>
+          <li><a href="<%= root_path %>#transportation" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Transportation</a></li>
+          <li><a href="<%= root_path %>#agriculture" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Agricultural Services</a></li>
+          <li><a href="<%= loans_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Financial Services</a></li>
+          <li><a href="<%= events_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Events & Community</a></li>
         </ul>
       </div>
-      
+
       <!-- Column 3: Company -->
       <div>
         <h3 class="text-lg font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500">Company</h3>
         <ul class="space-y-3">
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">About Us</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Careers</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Blog</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Press</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Partners</a></li>
+          <li><a href="<%= about_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">About Us</a></li>
+          <li><a href="<%= root_path %>#careers" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Careers</a></li>
+          <li><a href="<%= root_path %>#testimonials" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Testimonials</a></li>
+          <li><a href="<%= events_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Events</a></li>
+          <li><a href="<%= contact_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Contact Us</a></li>
         </ul>
       </div>
-      
+
       <!-- Column 4: Support -->
       <div>
         <h3 class="text-lg font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-secondary-500">Support</h3>
         <ul class="space-y-3">
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Help Center</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">FAQs</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Contact Us</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Privacy Policy</a></li>
-          <li><a href="#" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Terms of Service</a></li>
+          <li><a href="<%= support_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Help Center</a></li>
+          <li><a href="<%= root_path %>#faq" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">FAQs</a></li>
+          <li><a href="<%= contact_path %>" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Contact Us</a></li>
+          <li><a href="<%= root_path %>#privacy" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Privacy Policy</a></li>
+          <li><a href="<%= root_path %>#terms" class="text-gray-400 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-primary-400 hover:to-secondary-400 transition-all duration-300">Terms of Service</a></li>
         </ul>
       </div>
     </div>
-    
+
     <div class="border-t border-gray-800 pt-8 mt-8 text-sm text-gray-400">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="mb-4 md:mb-0">
-          &copy; 2025 Super Ghana App. All rights reserved.
+          &copy; <%= Date.current.year %> Super Ghana App. All rights reserved.
         </div>
         <div class="flex space-x-6">
-          <a href="#" class="hover:text-white transition">Privacy Policy</a>
-          <a href="#" class="hover:text-white transition">Terms of Service</a>
-          <a href="#" class="hover:text-white transition">Cookies</a>
+          <a href="<%= root_path %>#privacy" class="hover:text-white transition">Privacy Policy</a>
+          <a href="<%= root_path %>#terms" class="hover:text-white transition">Terms of Service</a>
+          <a href="<%= root_path %>#cookies" class="hover:text-white transition">Cookies</a>
         </div>
       </div>
     </div>
   </div>
 </footer>
 
-<!-- Fixed Floating Action Button -->
-<div class="fixed bottom-20 right-6 z-50">
-  <a href="#download" class="bg-primary-600 hover:bg-primary-700 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all">
+<!-- Fixed Floating Action Buttons -->
+<div class="fixed bottom-20 right-6 z-50 flex flex-col space-y-4">
+  <!-- Download App Button -->
+  <a href="#download" class="bg-primary-600 hover:bg-primary-700 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all" aria-label="Download App">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
     </svg>
   </a>
+
+  <!-- Back to Top Button -->
+  <a href="#" id="back-to-top" class="bg-gray-700 hover:bg-gray-600 w-14 h-14 rounded-full flex items-center justify-center text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all opacity-0 invisible transform translate-y-10" aria-label="Back to Top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </a>
 </div>
+
+<!-- Back to Top Button JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const backToTopButton = document.getElementById('back-to-top');
+
+    // Show button when page is scrolled down
+    window.addEventListener('scroll', function() {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible', 'translate-y-10');
+        backToTopButton.classList.add('opacity-100', 'visible', 'translate-y-0');
+      } else {
+        backToTopButton.classList.add('opacity-0', 'invisible', 'translate-y-10');
+        backToTopButton.classList.remove('opacity-100', 'visible', 'translate-y-0');
+      }
+    });
+
+    // Smooth scroll to top when button is clicked
+    backToTopButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  });
+</script>

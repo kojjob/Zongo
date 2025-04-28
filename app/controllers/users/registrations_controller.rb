@@ -13,6 +13,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # Override Devise's method to handle already authenticated users
+  def require_no_authentication
+    return unless is_navigational_format?
+
+    if user_signed_in?
+      # Only redirect if trying to access sign-up page
+      if request.path == new_user_registration_path
+        redirect_to user_settings_profile_path
+        return
+      end
+    end
+  end
+
   # GET /resource/sign_up
   # def new
   #   super

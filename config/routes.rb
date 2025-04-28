@@ -300,6 +300,42 @@ Rails.application.routes.draw do
   # Flash message management
   post "clear_flash", to: "flash#clear", as: :clear_flash
 
+  # Transportation Services routes
+  get "services/transportation", to: "transportation#index", as: "transportation"
+
+  # Transportation namespace for all transportation-related routes
+  namespace :transportation do
+    get "rides", to: "rides#index", as: "rides"
+    get "tickets", to: "tickets#index", as: "tickets"
+    post "search_rides", to: "rides#search", as: "search_rides"
+    post "search_tickets", to: "tickets#search", as: "search_tickets"
+    post "book_ride", to: "rides#book", as: "book_ride"
+    post "book_ticket", to: "tickets#book", as: "book_ticket"
+    get "my_rides", to: "rides#my_rides", as: "my_rides"
+    get "my_tickets", to: "tickets#my_tickets", as: "my_tickets"
+  end
+
+  # Education Services routes
+  get "services/education", to: "education#index", as: "education"
+
+  # Education routes
+  get "education/school_fees", to: "education#school_fees", as: "education_school_fees"
+  get "education/resources", to: "education#resources", as: "education_resources"
+  post "education/search_schools", to: "education#search_schools", as: "education_search_schools"
+  post "education/search_resources", to: "education#search_resources", as: "education_search_resources"
+  post "education/pay_fees", to: "education#pay_fees", as: "education_pay_fees"
+
+  # Community Services routes
+  get "services/community", to: "community#index", as: "community"
+
+  # Community routes
+  get "community/groups", to: "community#groups", as: "community_groups"
+  get "community/gatherings", to: "community#gatherings", as: "community_gatherings"
+  post "community/search_groups", to: "community#search_groups", as: "community_search_groups"
+  post "community/search_gatherings", to: "community#search_gatherings", as: "community_search_gatherings"
+  post "community/join_group", to: "community#join_group", as: "community_join_group"
+  post "community/attend_gathering", to: "community#attend_gathering", as: "community_attend_gathering"
+
   # Agricultural Services routes
   get "services/agriculture", to: "agriculture#index", as: "agriculture"
 
@@ -386,6 +422,10 @@ Rails.application.routes.draw do
         post :approve
         post :reject
       end
+      collection do
+        post :bulk_approve
+        post :bulk_reject
+      end
     end
 
     resources :orders, only: [:index, :show, :edit, :update] do
@@ -397,13 +437,54 @@ Rails.application.routes.draw do
         post :refund
       end
     end
+
+    # Promotional features
+    resources :discounts do
+      member do
+        post :toggle_active
+      end
+    end
+
+    resources :coupons do
+      member do
+        post :toggle_active
+      end
+      collection do
+        get :generate_code
+      end
+    end
+
+    resources :flash_sales do
+      member do
+        post :toggle_active
+        get :add_product
+        post :add_product
+        delete :remove_product
+      end
+    end
+
+    resources :promotional_banners do
+      member do
+        post :toggle_active
+      end
+      collection do
+        post :reorder
+      end
+    end
   end
+
+  # Coupon routes
+  post 'coupons/apply', to: 'coupons#apply', as: :apply_coupon
+  delete 'coupons/remove', to: 'coupons#remove', as: :remove_coupon
 
   # Shop routes
   get 'shop', to: 'shop#index', as: :shop
   get 'shop/category/:slug', to: 'shop#category', as: :shop_category
   get 'shop/product/:id', to: 'shop#product', as: :product
-  get 'shop/search', to: 'shop#search', as: :shop_search
+
+  # Search routes
+  get 'search', to: 'search#index', as: :search
+  get 'search/autocomplete', to: 'search#autocomplete', as: :search_autocomplete
 
   # Marketplace routes
   get 'marketplace', to: 'marketplace#index', as: :marketplace

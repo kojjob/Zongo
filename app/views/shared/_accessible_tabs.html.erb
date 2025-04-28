@@ -1,0 +1,134 @@
+<%# 
+  Accessible Tabs Partial
+  
+  Parameters:
+  - tabs: Array of tab objects with :id, :label, and :content keys (required)
+  - active_tab: The ID of the active tab (default: first tab)
+  - style: The style of the tabs (default: 'bordered', options: 'bordered', 'pills', 'underline', 'minimal')
+  - orientation: The orientation of the tabs (default: 'horizontal', options: 'horizontal', 'vertical')
+  - class: Additional CSS classes (optional)
+  - id: The ID of the tabs container (optional)
+  - persist: Whether to persist the active tab in localStorage (default: false)
+  - persist_key: The key to use for localStorage persistence (default: 'active_tab')
+  
+  Usage:
+  <%= render 'shared/accessible_tabs', 
+    tabs: [
+      {
+        id: 'tab1',
+        label: 'Tab 1',
+        content: render('tab1_content')
+      },
+      {
+        id: 'tab2',
+        label: 'Tab 2',
+        content: render('tab2_content')
+      }
+    ],
+    active_tab: 'tab1',
+    style: 'bordered',
+    orientation: 'horizontal',
+    class: 'my-custom-class',
+    id: 'my-tabs',
+    persist: true,
+    persist_key: 'my_tabs_active_tab'
+  %>
+%>
+
+<% 
+  # Set default values
+  active_tab ||= tabs.first[:id] if tabs.present?
+  style ||= 'bordered'
+  orientation ||= 'horizontal'
+  tabs_class ||= nil
+  tabs_id ||= "tabs-#{SecureRandom.hex(4)}"
+  persist = false if persist.nil?
+  persist_key ||= 'active_tab'
+  
+  # Generate tab classes based on style
+  tab_button_classes = case style
+  when 'bordered'
+    'px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
+  when 'pills'
+    'px-4 py-2 text-sm font-medium rounded-md hover:bg-gray-100 dark:hover:bg-gray-700'
+  when 'underline'
+    'px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
+  when 'minimal'
+    'px-4 py-2 text-sm font-medium hover:text-gray-700 dark:hover:text-gray-300'
+  else
+    'px-4 py-2 text-sm font-medium border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600'
+  end
+  
+  # Generate active tab classes based on style
+  active_tab_classes = case style
+  when 'bordered'
+    'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400'
+  when 'pills'
+    'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-300'
+  when 'underline'
+    'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400'
+  when 'minimal'
+    'text-primary-600 dark:text-primary-400 font-semibold'
+  else
+    'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400'
+  end
+  
+  # Generate tabs list classes based on orientation
+  tabs_list_classes = if orientation == 'vertical'
+    'flex flex-col space-y-2'
+  else
+    'flex space-x-4 border-b border-gray-200 dark:border-gray-700'
+  end
+  
+  # Generate tabs content classes based on orientation
+  tabs_content_classes = if orientation == 'vertical'
+    'ml-4'
+  else
+    'mt-4'
+  end
+  
+  # Generate container classes based on orientation
+  container_classes = if orientation == 'vertical'
+    'flex'
+  else
+    'block'
+  end
+%>
+
+<div id="<%= tabs_id %>" class="<%= container_classes %> <%= tabs_class %>" data-controller="tabs" data-tabs-active-tab-value="<%= active_tab %>" data-tabs-orientation-value="<%= orientation %>" data-tabs-persist-value="<%= persist %>" data-tabs-persist-key-value="<%= persist_key %>">
+  <%# Tabs list %>
+  <div class="<%= tabs_list_classes %>" role="tablist" aria-orientation="<%= orientation %>" data-tabs-target="tabsList">
+    <% tabs.each_with_index do |tab, index| %>
+      <button 
+        id="<%= tab[:id] %>-tab" 
+        class="<%= tab_button_classes %> <%= active_tab == tab[:id] ? active_tab_classes : 'text-gray-500 dark:text-gray-400' %>" 
+        role="tab" 
+        aria-selected="<%= active_tab == tab[:id] %>" 
+        aria-controls="<%= tab[:id] %>-panel"
+        tabindex="<%= active_tab == tab[:id] ? '0' : '-1' %>"
+        data-tabs-target="tab"
+        data-action="tabs#switchTab"
+        data-tab-id="<%= tab[:id] %>"
+      >
+        <%= tab[:label] %>
+      </button>
+    <% end %>
+  </div>
+  
+  <%# Tabs content %>
+  <div class="<%= tabs_content_classes %>">
+    <% tabs.each do |tab| %>
+      <div 
+        id="<%= tab[:id] %>-panel" 
+        class="<%= active_tab == tab[:id] ? '' : 'hidden' %>" 
+        role="tabpanel" 
+        aria-labelledby="<%= tab[:id] %>-tab"
+        tabindex="0"
+        data-tabs-target="tabPanel"
+        data-tab-id="<%= tab[:id] %>"
+      >
+        <%= tab[:content] %>
+      </div>
+    <% end %>
+  </div>
+</div>

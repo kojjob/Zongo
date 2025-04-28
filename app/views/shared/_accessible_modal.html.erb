@@ -1,0 +1,93 @@
+<%# 
+  Accessible Modal Partial
+  
+  Parameters:
+  - id: The ID of the modal (required)
+  - title: The title of the modal (required)
+  - description: A description of the modal (optional)
+  - size: The size of the modal (default: 'md', options: 'sm', 'md', 'lg', 'xl', 'full')
+  - close_button: Whether to show a close button (default: true)
+  - footer: Whether to show a footer (default: false)
+  - footer_content: The content of the footer (optional)
+  
+  Usage:
+  <%= render 'shared/accessible_modal', 
+    id: 'my-modal', 
+    title: 'Modal Title', 
+    description: 'Modal description',
+    size: 'md',
+    close_button: true,
+    footer: true,
+    footer_content: content_tag(:div, class: 'flex justify-end space-x-3') do
+      button_tag('Cancel', type: 'button', class: 'btn-secondary', data: { action: 'accessibility#closeModal' }) +
+      button_tag('Save', type: 'button', class: 'btn-primary')
+    end do %>
+    
+    <!-- Modal content goes here -->
+    
+  <% end %>
+%>
+
+<% 
+  # Set default values
+  id ||= "modal-#{SecureRandom.hex(4)}"
+  title ||= "Modal"
+  description ||= nil
+  size ||= "md"
+  close_button = true if close_button.nil?
+  footer = false if footer.nil?
+  
+  # Size classes
+  size_classes = {
+    "sm" => "max-w-sm",
+    "md" => "max-w-md",
+    "lg" => "max-w-lg",
+    "xl" => "max-w-xl",
+    "2xl" => "max-w-2xl",
+    "3xl" => "max-w-3xl",
+    "4xl" => "max-w-4xl",
+    "5xl" => "max-w-5xl",
+    "full" => "max-w-full"
+  }
+  
+  modal_size = size_classes[size] || size_classes["md"]
+%>
+
+<div id="<%= id %>" class="fixed inset-0 z-50 hidden" data-controller="accessibility" data-accessibility-target="modal focusTrap" data-accessibility-trap-active-value="false" data-accessibility-return-focus-to-value="#<%= id %>-trigger">
+  <%# Modal backdrop %>
+  <div class="modal-overlay" aria-hidden="true" data-action="click->accessibility#closeModal"></div>
+  
+  <%# Modal container %>
+  <div class="modal-container bg-white dark:bg-gray-800 rounded-xl shadow-xl <%= modal_size %> w-full">
+    <%# Modal header %>
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h2 id="<%= id %>-title" class="text-xl font-bold text-gray-900 dark:text-white"><%= title %></h2>
+      <% if description.present? %>
+        <p id="<%= id %>-description" class="mt-1 text-sm text-gray-600 dark:text-gray-400" data-description><%= description %></p>
+      <% end %>
+      
+      <% if close_button %>
+        <button type="button" class="modal-close-button text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Close modal" data-action="accessibility#closeModal">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      <% end %>
+    </div>
+    
+    <%# Modal body %>
+    <div class="px-6 py-4 max-h-[calc(90vh-10rem)] overflow-y-auto">
+      <%= yield %>
+    </div>
+    
+    <%# Modal footer %>
+    <% if footer %>
+      <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-b-xl">
+        <%= footer_content %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Trigger button (hidden, for accessibility return focus) %>
+<button id="<%= id %>-trigger" class="sr-only" aria-hidden="true" tabindex="-1"></button>

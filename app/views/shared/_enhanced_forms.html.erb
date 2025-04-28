@@ -1,0 +1,713 @@
+<%# Text Input Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced text input with floating label, validation states, and animated focus effects
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - field: The field name (Symbol)
+    - label: The label text (String)
+    - type: Input type (default: 'text')
+    - required: Whether the field is required (Boolean)
+    - hint: Help text that appears below the input (String, optional)
+    - placeholder: Placeholder text (String, optional)
+    - icon: Icon name from custom icon system (String, optional)
+    - error: Error message (String, optional) - will be auto-populated from form object errors if not provided
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/text_input', 
+      form: form,
+      field: :email,
+      label: 'Email Address',
+      type: 'email',
+      required: true,
+      hint: 'We will never share your email',
+      icon: 'mail'
+    %>
+  %>
+  
+  <div
+    class="form-field relative"
+    data-controller="form-field"
+    data-form-field-has-value="<%= form.object.send(field).present? ? 'true' : 'false' %>"
+    data-form-field-valid="<%= form.object.errors[field].empty? ? 'true' : 'false' %>"
+  >
+    <%# Input Container with Animation %>
+    <div class="input-container group relative">
+      <%# Icon (if provided) %>
+      <% if defined?(icon) && icon.present? %>
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 transition-colors duration-300 group-focus-within:text-primary-500">
+          <%= render partial: "shared/icon", locals: { name: icon, size: "md" } %>
+        </div>
+      <% end %>
+      
+      <%# Input Field %>
+      <%= form.send(
+        "#{type || 'text'}_field",
+        field,
+        class: "peer w-full px-4 py-3 #{'pl-10' if defined?(icon) && icon.present?} rounded-xl border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 #{'pr-10' if defined?(required) && required} #{'!border-red-500 !ring-red-500 dark:!border-red-400 dark:!ring-red-400' if form.object.errors[field].any?}",
+        placeholder: placeholder || label,
+        required: defined?(required) && required,
+        aria: { 
+          required: defined?(required) && required ? "true" : "false", 
+          invalid: form.object.errors[field].any? ? "true" : "false",
+          describedby: "#{field}-hint #{field}-error"
+        },
+        data: {
+          action: "input->form-field#onInput blur->form-field#onBlur focus->form-field#onFocus",
+          form_field_target: "input"
+        }
+      ) %>
+      
+      <%# Floating Label %>
+      <label 
+        for="<%= "#{form.object_name}_#{field}" %>"
+        class="absolute left-4 #{'left-10' if defined?(icon) && icon.present?} top-3 text-gray-500 dark:text-gray-400 transition-all duration-300 transform origin-0 pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-primary-600 dark:peer-focus:text-primary-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-500 dark:peer-placeholder-shown:text-gray-400"
+        data-form-field-target="label"
+      >
+        <%= label %>
+        <% if defined?(required) && required %>
+          <span class="text-red-500 dark:text-red-400 ml-1">*</span>
+        <% end %>
+      </label>
+      
+      <%# Required Mark (Top Right) %>
+      <% if defined?(required) && required %>
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-red-500 dark:text-red-400 opacity-50 peer-focus:opacity-100 transition-opacity duration-300">
+          <%= render partial: "shared/icon", locals: { name: "star", size: "sm" } %>
+        </div>
+      <% end %>
+      
+      <%# Validation State Icons %>
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="validIcon">
+        <%= render partial: "shared/icon", locals: { name: "success", size: "md", class_name: "text-green-500 dark:text-green-400" } %>
+      </div>
+      
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="errorIcon">
+        <%= render partial: "shared/icon", locals: { name: "error", size: "md", class_name: "text-red-500 dark:text-red-400" } %>
+      </div>
+    </div>
+    
+    <%# Help Text and Error Messages %>
+    <div class="mt-1.5 flex min-h-[1.5rem]">
+      <% if form.object.errors[field].any? %>
+        <p class="text-red-500 dark:text-red-400 text-sm animate-fadeInUp" id="<%= field %>-error" data-form-field-target="errorText">
+          <%= form.object.errors.full_messages_for(field).first %>
+        </p>
+      <% elsif defined?(hint) && hint.present? %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm" id="<%= field %>-hint">
+          <%= hint %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# Password Input Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced password input with toggle visibility button and strength indicator
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - field: The field name (Symbol)
+    - label: The label text (String)
+    - required: Whether the field is required (Boolean)
+    - hint: Help text that appears below the input (String, optional)
+    - strength_meter: Show password strength meter (Boolean, default: true)
+    - error: Error message (String, optional) - will be auto-populated from form object errors if not provided
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/password_input', 
+      form: form,
+      field: :password,
+      label: 'Password',
+      required: true,
+      hint: 'Use at least 8 characters with letters and numbers'
+    %>
+  %>
+  
+  <div
+    class="form-field relative"
+    data-controller="form-field password-field"
+    data-form-field-has-value="<%= form.object.send(field).present? ? 'true' : 'false' %>"
+    data-form-field-valid="<%= form.object.errors[field].empty? ? 'true' : 'false' %>"
+  >
+    <%# Input Container with Animation %>
+    <div class="input-container group relative">
+      <%# Icon %>
+      <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 transition-colors duration-300 group-focus-within:text-primary-500">
+        <%= render partial: "shared/icon", locals: { name: "security", size: "md" } %>
+      </div>
+      
+      <%# Input Field %>
+      <%= form.password_field(
+        field,
+        class: "peer w-full pl-10 pr-10 py-3 rounded-xl border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 #{'!border-red-500 !ring-red-500 dark:!border-red-400 dark:!ring-red-400' if form.object.errors[field].any?}",
+        placeholder: label,
+        required: defined?(required) && required,
+        aria: { 
+          required: defined?(required) && required ? "true" : "false", 
+          invalid: form.object.errors[field].any? ? "true" : "false",
+          describedby: "#{field}-hint #{field}-error"
+        },
+        data: {
+          action: "input->form-field#onInput input->password-field#checkStrength blur->form-field#onBlur focus->form-field#onFocus",
+          form_field_target: "input",
+          password_field_target: "input"
+        }
+      ) %>
+      
+      <%# Floating Label %>
+      <label 
+        for="<%= "#{form.object_name}_#{field}" %>"
+        class="absolute left-10 top-3 text-gray-500 dark:text-gray-400 transition-all duration-300 transform origin-0 pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-primary-600 dark:peer-focus:text-primary-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-500 dark:peer-placeholder-shown:text-gray-400"
+        data-form-field-target="label"
+      >
+        <%= label %>
+        <% if defined?(required) && required %>
+          <span class="text-red-500 dark:text-red-400 ml-1">*</span>
+        <% end %>
+      </label>
+      
+      <%# Toggle Password Visibility Button %>
+      <button 
+        type="button" 
+        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition-colors duration-300"
+        data-action="password-field#toggleVisibility"
+        data-password-field-target="toggleButton"
+        aria-label="Toggle password visibility">
+        <%= render partial: "shared/icon", locals: { name: "eye", size: "md", class_name: "data-password-field-target='showIcon'" } %>
+        <%= render partial: "shared/icon", locals: { name: "eye-off", size: "md", class_name: "hidden data-password-field-target='hideIcon'" } %>
+      </button>
+      
+      <%# Validation State Icons %>
+      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="validIcon">
+        <%= render partial: "shared/icon", locals: { name: "success", size: "md", class_name: "text-green-500 dark:text-green-400" } %>
+      </div>
+      
+      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="errorIcon">
+        <%= render partial: "shared/icon", locals: { name: "error", size: "md", class_name: "text-red-500 dark:text-red-400" } %>
+      </div>
+    </div>
+    
+    <%# Password Strength Meter %>
+    <% strength_meter = true if !defined?(strength_meter) %>
+    <% if strength_meter %>
+      <div class="mt-1.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 h-1.5 flex" data-password-field-target="strengthMeter">
+        <div class="h-full w-0 transition-all duration-500 ease-out" data-password-field-target="strengthBar"></div>
+      </div>
+      <div class="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+        <span>Weak</span>
+        <span>Medium</span>
+        <span>Strong</span>
+      </div>
+    <% end %>
+    
+    <%# Help Text and Error Messages %>
+    <div class="mt-1.5 flex min-h-[1.5rem]">
+      <% if form.object.errors[field].any? %>
+        <p class="text-red-500 dark:text-red-400 text-sm animate-fadeInUp" id="<%= field %>-error" data-form-field-target="errorText">
+          <%= form.object.errors.full_messages_for(field).first %>
+        </p>
+      <% elsif defined?(hint) && hint.present? %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm" id="<%= field %>-hint">
+          <%= hint %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# Select Input Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced select input with custom styling and animations
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - field: The field name (Symbol)
+    - label: The label text (String)
+    - options: Array of options for the select (Array)
+    - include_blank: Whether to include a blank option (Boolean or String)
+    - required: Whether the field is required (Boolean)
+    - hint: Help text that appears below the input (String, optional)
+    - icon: Icon name from custom icon system (String, optional)
+    - error: Error message (String, optional) - will be auto-populated from form object errors if not provided
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/select', 
+      form: form,
+      field: :country,
+      label: 'Country',
+      options: Country.all.map { |c| [c.name, c.id] },
+      include_blank: 'Select your country',
+      required: true,
+      icon: 'globe'
+    %>
+  %>
+  
+  <div
+    class="form-field relative"
+    data-controller="form-field"
+    data-form-field-has-value="<%= form.object.send(field).present? ? 'true' : 'false' %>"
+    data-form-field-valid="<%= form.object.errors[field].empty? ? 'true' : 'false' %>"
+  >
+    <%# Select Container with Animation %>
+    <div class="select-container group relative">
+      <%# Icon (if provided) %>
+      <% if defined?(icon) && icon.present? %>
+        <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 transition-colors duration-300 group-focus-within:text-primary-500 pointer-events-none">
+          <%= render partial: "shared/icon", locals: { name: icon, size: "md" } %>
+        </div>
+      <% end %>
+      
+      <%# Select Field %>
+      <div class="relative">
+        <%= form.select(
+          field,
+          options,
+          { include_blank: defined?(include_blank) ? include_blank : false },
+          class: "peer w-full appearance-none px-4 py-3 #{'pl-10' if defined?(icon) && icon.present?} pr-10 rounded-xl border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 #{'!border-red-500 !ring-red-500 dark:!border-red-400 dark:!ring-red-400' if form.object.errors[field].any?}",
+          required: defined?(required) && required,
+          aria: { 
+            required: defined?(required) && required ? "true" : "false", 
+            invalid: form.object.errors[field].any? ? "true" : "false",
+            describedby: "#{field}-hint #{field}-error"
+          },
+          data: {
+            action: "change->form-field#onInput blur->form-field#onBlur focus->form-field#onFocus",
+            form_field_target: "input"
+          }
+        ) %>
+        
+        <%# Dropdown Arrow %>
+        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none">
+          <%= render partial: "shared/icon", locals: { name: "chevron-down", size: "md" } %>
+        </div>
+      </div>
+      
+      <%# Floating Label %>
+      <label 
+        for="<%= "#{form.object_name}_#{field}" %>"
+        class="absolute left-4 #{'left-10' if defined?(icon) && icon.present?} top-3 text-gray-500 dark:text-gray-400 transition-all duration-300 transform origin-0 pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-primary-600 dark:peer-focus:text-primary-400"
+        data-form-field-target="label"
+      >
+        <%= label %>
+        <% if defined?(required) && required %>
+          <span class="text-red-500 dark:text-red-400 ml-1">*</span>
+        <% end %>
+      </label>
+      
+      <%# Validation State Icons %>
+      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="validIcon">
+        <%= render partial: "shared/icon", locals: { name: "success", size: "md", class_name: "text-green-500 dark:text-green-400" } %>
+      </div>
+      
+      <div class="absolute right-10 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="errorIcon">
+        <%= render partial: "shared/icon", locals: { name: "error", size: "md", class_name: "text-red-500 dark:text-red-400" } %>
+      </div>
+    </div>
+    
+    <%# Help Text and Error Messages %>
+    <div class="mt-1.5 flex min-h-[1.5rem]">
+      <% if form.object.errors[field].any? %>
+        <p class="text-red-500 dark:text-red-400 text-sm animate-fadeInUp" id="<%= field %>-error" data-form-field-target="errorText">
+          <%= form.object.errors.full_messages_for(field).first %>
+        </p>
+      <% elsif defined?(hint) && hint.present? %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm" id="<%= field %>-hint">
+          <%= hint %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# File Upload Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced file upload with drag and drop, preview, and progress indicator
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - field: The field name (Symbol)
+    - label: The label text (String)
+    - required: Whether the field is required (Boolean)
+    - hint: Help text that appears below the input (String, optional)
+    - accept: File types to accept (String, optional, e.g. "image/*,.pdf")
+    - multiple: Allow multiple files (Boolean, default: false)
+    - max_size: Maximum file size in MB (Number, default: 5)
+    - error: Error message (String, optional) - will be auto-populated from form object errors if not provided
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/file_upload', 
+      form: form,
+      field: :avatar,
+      label: 'Profile Photo',
+      required: true,
+      accept: 'image/*',
+      max_size: 2,
+      hint: 'JPG, PNG or GIF up to 2MB'
+    %>
+  %>
+  
+  <div
+    class="form-field relative"
+    data-controller="form-field file-upload"
+    data-form-field-has-value="<%= form.object.send(field).attached? ? 'true' : 'false' %>"
+    data-form-field-valid="<%= form.object.errors[field].empty? ? 'true' : 'false' %>"
+    data-file-upload-max-size-value="<%= defined?(max_size) ? max_size : 5 %>"
+  >
+    <label 
+      for="<%= "#{form.object_name}_#{field}" %>"
+      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+    >
+      <%= label %>
+      <% if defined?(required) && required %>
+        <span class="text-red-500 dark:text-red-400 ml-1">*</span>
+      <% end %>
+    </label>
+    
+    <%# Drag and Drop Area %>
+    <div 
+      class="file-drop-zone relative flex flex-col items-center justify-center w-full h-32 px-4 py-6 border-2 border-dashed rounded-xl transition-all duration-300
+      <%= form.object.errors[field].any? ? 
+        'border-red-500 dark:border-red-400 bg-red-50 dark:bg-red-900/20' : 
+        'border-gray-300 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-400 bg-gray-50 dark:bg-gray-800/50' %>"
+      data-file-upload-target="dropZone"
+      data-action="dragover->file-upload#onDragOver dragleave->file-upload#onDragLeave drop->file-upload#onDrop click->file-upload#triggerFileInput"
+    >
+      <%# Hidden File Input %>
+      <%= form.file_field(
+        field,
+        class: "sr-only",
+        accept: defined?(accept) ? accept : nil,
+        multiple: defined?(multiple) && multiple,
+        required: defined?(required) && required,
+        data: {
+          action: "change->file-upload#onFileSelected",
+          file_upload_target: "input"
+        }
+      ) %>
+      
+      <%# Upload Icon and Text - Shown when no file is selected %>
+      <div data-file-upload-target="placeholder" class="text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <span class="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
+            Upload <%= defined?(multiple) && multiple ? 'files' : 'a file' %>
+          </span>
+          or drag and drop
+        </p>
+        <% if defined?(accept) && accept.present? %>
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-500">
+            <%= accept.gsub('*', '').tr(',.', ' ').upcase %> <%= defined?(max_size) ? "up to #{max_size}MB" : "" %>
+          </p>
+        <% end %>
+      </div>
+      
+      <%# File Preview - Shown when a file is selected %>
+      <div data-file-upload-target="preview" class="hidden w-full">
+        <%# Single File Preview - for non-multiple uploads %>
+        <% unless defined?(multiple) && multiple %>
+          <div class="flex items-center justify-between p-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+                <%= render partial: "shared/icon", locals: { name: "document", size: "md", class_name: "text-primary-600 dark:text-primary-400" } %>
+              </div>
+              <div class="ml-3 truncate">
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate" data-file-upload-target="fileName">filename.jpg</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400" data-file-upload-target="fileSize">0 KB</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              class="ml-2 flex-shrink-0 text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              data-action="file-upload#removeFile">
+              <%= render partial: "shared/icon", locals: { name: "trash", size: "md" } %>
+            </button>
+          </div>
+        <% else %>
+          <%# Multiple Files Preview - will be dynamically populated by JS %>
+          <div data-file-upload-target="multipleFilesContainer" class="space-y-2"></div>
+        <% end %>
+      </div>
+      
+      <%# Upload Progress - Shown during upload %>
+      <div data-file-upload-target="progress" class="hidden w-full mt-2">
+        <div class="relative h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div data-file-upload-target="progressBar" class="absolute left-0 top-0 h-full bg-primary-500 dark:bg-primary-400 transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 text-center" data-file-upload-target="progressText">0%</p>
+      </div>
+    </div>
+    
+    <%# Help Text and Error Messages %>
+    <div class="mt-1.5 flex min-h-[1.5rem]">
+      <% if form.object.errors[field].any? %>
+        <p class="text-red-500 dark:text-red-400 text-sm animate-fadeInUp" id="<%= field %>-error" data-file-upload-target="errorText" data-form-field-target="errorText">
+          <%= form.object.errors.full_messages_for(field).first %>
+        </p>
+      <% elsif defined?(hint) && hint.present? %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm" id="<%= field %>-hint">
+          <%= hint %>
+        </p>
+      <% end %>
+    </div>
+    
+    <%# Current Attachment Display (for edit forms) %>
+    <% if form.object.send(field).attached? %>
+      <div class="mt-3 flex items-center space-x-2" data-file-upload-target="currentAttachment">
+        <% if form.object.send(field).content_type.include?('image/') %>
+          <div class="w-12 h-12 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800">
+            <%= image_tag url_for(form.object.send(field)), class: "w-full h-full object-cover" %>
+          </div>
+        <% else %>
+          <div class="w-12 h-12 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
+            <%= render partial: "shared/icon", locals: { name: "document", size: "md", class_name: "text-gray-500 dark:text-gray-400" } %>
+          </div>
+        <% end %>
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+            <%= form.object.send(field).filename %>
+          </p>
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            <%= number_to_human_size(form.object.send(field).byte_size) %>
+          </p>
+        </div>
+        <div class="flex-shrink-0">
+          <%= form.check_box :"remove_#{field}", class: "hidden", data: { file_upload_target: "removeCheckbox" } %>
+          <button 
+            type="button" 
+            class="text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400"
+            data-action="click->file-upload#removeCurrentFile">
+            <%= render partial: "shared/icon", locals: { name: "trash", size: "md" } %>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%# Phone Number Input Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced phone number input with country code selection and formatting
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - field: The field name (Symbol)
+    - label: The label text (String)
+    - required: Whether the field is required (Boolean)
+    - hint: Help text that appears below the input (String, optional)
+    - default_country: Default country code (String, default: 'GH')
+    - error: Error message (String, optional) - will be auto-populated from form object errors if not provided
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/phone_input', 
+      form: form,
+      field: :phone,
+      label: 'Phone Number',
+      required: true,
+      default_country: 'GH',
+      hint: 'Enter your mobile number with country code'
+    %>
+  %>
+  
+  <div
+    class="form-field relative"
+    data-controller="form-field phone-input"
+    data-form-field-has-value="<%= form.object.send(field).present? ? 'true' : 'false' %>"
+    data-form-field-valid="<%= form.object.errors[field].empty? ? 'true' : 'false' %>"
+    data-phone-input-default-country-value="<%= defined?(default_country) ? default_country : 'GH' %>"
+  >
+    <%# Input Container with Animation %>
+    <div class="input-container group relative">
+      <%# Country Code Selector %>
+      <div class="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center">
+        <button
+          type="button"
+          class="flex items-center space-x-1 text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
+          data-action="click->phone-input#toggleCountrySelect"
+          data-phone-input-target="countryButton"
+        >
+          <span data-phone-input-target="countryFlag" class="w-5 h-5 rounded-full overflow-hidden">🇬🇭</span>
+          <span data-phone-input-target="countryCode" class="text-sm font-medium">+233</span>
+          <%= render partial: "shared/icon", locals: { name: "chevron-down", size: "sm" } %>
+        </button>
+        
+        <%# Country dropdown - hidden by default %>
+        <div
+          class="absolute left-0 top-full mt-1 z-50 w-72 max-h-72 overflow-y-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hidden opacity-0 transform scale-95 transition-all duration-200 origin-top-left"
+          data-phone-input-target="countryDropdown"
+        >
+          <div class="sticky top-0 bg-white dark:bg-gray-800 p-2 border-b border-gray-200 dark:border-gray-700">
+            <div class="relative">
+              <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <%= render partial: "shared/icon", locals: { name: "search", size: "sm", class_name: "text-gray-400 dark:text-gray-500" } %>
+              </div>
+              <input
+                type="search"
+                placeholder="Search countries..."
+                class="w-full pl-9 pr-3 py-2 bg-gray-100 dark:bg-gray-700 border-0 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+                data-action="input->phone-input#filterCountries"
+                data-phone-input-target="countrySearch"
+              />
+            </div>
+          </div>
+          <ul class="py-2" data-phone-input-target="countriesList"></ul>
+        </div>
+      </div>
+      
+      <%# Input Field %>
+      <%= form.telephone_field(
+        field,
+        class: "peer w-full pl-20 pr-4 py-3 rounded-xl border bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-300 #{'!border-red-500 !ring-red-500 dark:!border-red-400 dark:!ring-red-400' if form.object.errors[field].any?}",
+        placeholder: label,
+        required: defined?(required) && required,
+        aria: { 
+          required: defined?(required) && required ? "true" : "false", 
+          invalid: form.object.errors[field].any? ? "true" : "false",
+          describedby: "#{field}-hint #{field}-error"
+        },
+        data: {
+          action: "input->form-field#onInput input->phone-input#formatNumber blur->form-field#onBlur focus->form-field#onFocus",
+          form_field_target: "input",
+          phone_input_target: "phoneInput"
+        }
+      ) %>
+      
+      <%= form.hidden_field(
+        "#{field}_country_code",
+        data: {
+          phone_input_target: "countryCodeInput"
+        }
+      ) %>
+      
+      <%# Floating Label %>
+      <label 
+        for="<%= "#{form.object_name}_#{field}" %>"
+        class="absolute left-20 top-3 text-gray-500 dark:text-gray-400 transition-all duration-300 transform origin-0 pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-primary-600 dark:peer-focus:text-primary-400 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-500 dark:peer-placeholder-shown:text-gray-400"
+        data-form-field-target="label"
+      >
+        <%= label %>
+        <% if defined?(required) && required %>
+          <span class="text-red-500 dark:text-red-400 ml-1">*</span>
+        <% end %>
+      </label>
+      
+      <%# Validation State Icons %>
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="validIcon">
+        <%= render partial: "shared/icon", locals: { name: "success", size: "md", class_name: "text-green-500 dark:text-green-400" } %>
+      </div>
+      
+      <div class="absolute right-3 top-1/2 transform -translate-y-1/2 hidden" data-form-field-target="errorIcon">
+        <%= render partial: "shared/icon", locals: { name: "error", size: "md", class_name: "text-red-500 dark:text-red-400" } %>
+      </div>
+    </div>
+    
+    <%# Help Text and Error Messages %>
+    <div class="mt-1.5 flex min-h-[1.5rem]">
+      <% if form.object.errors[field].any? %>
+        <p class="text-red-500 dark:text-red-400 text-sm animate-fadeInUp" id="<%= field %>-error" data-form-field-target="errorText">
+          <%= form.object.errors.full_messages_for(field).first %>
+        </p>
+      <% elsif defined?(hint) && hint.present? %>
+        <p class="text-gray-500 dark:text-gray-400 text-sm" id="<%= field %>-hint">
+          <%= hint %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%# Submit Button Component %>
+<div class="mb-6">
+  <%# Component Documentation:
+    Enhanced submit button with loading state and ripple effect
+    
+    Parameters:
+    - form: The form object (from form_with or form_for)
+    - label: The button text (String)
+    - loading_label: Text to show when loading (String, optional)
+    - color: Button color scheme (String, default: 'primary', options: 'primary', 'secondary', 'success', 'warning', 'error')
+    - size: Button size (String, default: 'md', options: 'sm', 'md', 'lg', 'xl')
+    - full_width: Whether button should take full width (Boolean, default: false)
+    - icon: Icon name from custom icon system (String, optional)
+    - icon_position: Position of icon (String, default: 'left', options: 'left', 'right')
+    
+    Usage:
+    <%= render 'shared/enhanced_forms/submit_button', 
+      form: form,
+      label: 'Create Account',
+      loading_label: 'Creating Account...',
+      color: 'primary',
+      size: 'lg',
+      icon: 'check',
+      full_width: true
+    %>
+  %>
+  
+  <%= form.button(
+    class: "
+      relative overflow-hidden btn-ripple
+      #{'w-full' if defined?(full_width) && full_width}
+      #{case defined?(size) ? size : 'md'
+        when 'sm' then 'px-3 py-1.5 text-sm'
+        when 'md' then 'px-4 py-2 text-base'
+        when 'lg' then 'px-5 py-3 text-lg'
+        when 'xl' then 'px-6 py-4 text-xl'
+        else 'px-4 py-2 text-base'
+      end}
+      #{case defined?(color) ? color : 'primary'
+        when 'primary' then 'bg-primary-600 hover:bg-primary-700 text-white'
+        when 'secondary' then 'bg-secondary-500 hover:bg-secondary-600 text-white'
+        when 'success' then 'bg-green-600 hover:bg-green-700 text-white'
+        when 'warning' then 'bg-yellow-500 hover:bg-yellow-600 text-white'
+        when 'error' then 'bg-red-600 hover:bg-red-700 text-white'
+        else 'bg-primary-600 hover:bg-primary-700 text-white'
+      end}
+      font-medium rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2
+      #{case defined?(color) ? color : 'primary'
+        when 'primary' then 'focus:ring-primary-500'
+        when 'secondary' then 'focus:ring-secondary-500'
+        when 'success' then 'focus:ring-green-500'
+        when 'warning' then 'focus:ring-yellow-500'
+        when 'error' then 'focus:ring-red-500'
+        else 'focus:ring-primary-500'
+      end}
+      transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
+    ",
+    data: {
+      controller: "button",
+      action: "click->button#startLoading",
+      button_loading_text_value: (defined?(loading_label) && loading_label.present?) ? loading_label : "#{label}..."
+    }
+  ) do %>
+    <span class="flex items-center justify-center" data-button-target="label">
+      <% if defined?(icon) && icon.present? && (!defined?(icon_position) || icon_position == 'left') %>
+        <span class="mr-2 -ml-1" data-button-target="icon">
+          <%= render partial: "shared/icon", locals: { name: icon, size: "md" } %>
+        </span>
+      <% end %>
+      
+      <%= label %>
+      
+      <% if defined?(icon) && icon.present? && defined?(icon_position) && icon_position == 'right' %>
+        <span class="ml-2 -mr-1" data-button-target="icon">
+          <%= render partial: "shared/icon", locals: { name: icon, size: "md" } %>
+        </span>
+      <% end %>
+    </span>
+    
+    <span class="absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none" data-button-target="loader">
+      <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+    </span>
+  <% end %>
+</div>
