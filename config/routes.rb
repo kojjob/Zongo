@@ -314,11 +314,13 @@ Rails.application.routes.draw do
     post "book_ride", to: "rides#book", as: "book_ride"
     get "my_rides", to: "rides#my_rides", as: "my_rides"
     get "rides/:id", to: "rides#show", as: "ride"
+    get "rides/:id/track", to: "rides#track", as: "track_ride"
     post "rides/:id/cancel", to: "rides#cancel", as: "cancel_ride"
 
     # Ticket booking routes
     get "tickets", to: "tickets#index", as: "tickets"
     post "search_tickets", to: "tickets#search", as: "search_tickets"
+    get "tickets/select_seats", to: "tickets#select_seats", as: "select_seats"
     post "book_ticket", to: "tickets#book", as: "book_ticket"
     get "my_tickets", to: "tickets#my_tickets", as: "my_tickets"
     get "tickets/:id", to: "tickets#show", as: "ticket"
@@ -327,6 +329,9 @@ Rails.application.routes.draw do
     # Admin routes for transport companies and routes
     resources :transport_companies
     resources :routes
+
+    # Analytics routes
+    get "analytics", to: "analytics#index", as: "analytics"
   end
 
   # Admin Transportation routes

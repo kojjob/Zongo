@@ -1,0 +1,195 @@
+<%# Seat Selection Page %>
+<div class="bg-white dark:bg-gray-900 shadow-sm rounded-lg overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+    <div>
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Select Your Seats</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Choose <%= pluralize(@passengers, 'seat') %> for your journey</p>
+    </div>
+    <div>
+      <%= link_to transportation_tickets_path, class: "inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-700 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to Search
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="px-4 py-5 sm:p-6">
+    <div class="bg-secondary-50 dark:bg-secondary-900/30 border border-secondary-200 dark:border-secondary-800 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3 flex-1 md:flex md:justify-between">
+          <p class="text-sm text-secondary-700 dark:text-secondary-300">
+            <%= @ticket[:company] %> • <%= @ticket[:transport_type] %> • <%= @ticket[:departure_time].strftime("%b %d, %Y at %I:%M %p") %>
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Available</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-secondary-500 bg-secondary-100 dark:bg-secondary-900"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Selected</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 bg-gray-300 dark:bg-gray-600"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Occupied</span>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Selected: <span id="selected-count" class="font-medium text-secondary-600 dark:text-secondary-400">0</span>/<%= @passengers %></span>
+        </div>
+      </div>
+    </div>
+    
+    <%= form_with(url: transportation_book_ticket_path, method: :post, id: "seat-selection-form") do |form| %>
+      <%= form.hidden_field :ticket_id, value: @ticket[:id] %>
+      <%= form.hidden_field :origin, value: @origin %>
+      <%= form.hidden_field :destination, value: @destination %>
+      <%= form.hidden_field :date, value: @date %>
+      <%= form.hidden_field :time, value: @ticket[:departure_time].strftime("%H:%M") %>
+      <%= form.hidden_field :passengers, value: @passengers %>
+      <%= form.hidden_field :transport_type, value: @ticket[:transport_type] %>
+      <%= form.hidden_field :company_name, value: @ticket[:company] %>
+      <%= form.hidden_field :price, value: @ticket[:price] %>
+      
+      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+        <div class="flex justify-center mb-4">
+          <div class="w-20 h-10 rounded-t-lg bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+            <span class="text-xs text-gray-700 dark:text-gray-300">Driver</span>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-5 gap-4 max-w-md mx-auto">
+          <% 
+            # Generate a seating layout based on transport type
+            total_seats = @ticket[:transport_type].downcase == 'train' ? 60 : 40
+            seats_per_row = @ticket[:transport_type].downcase == 'train' ? 5 : 4
+            
+            # Generate some random occupied seats
+            occupied_seats = []
+            (total_seats / 3).times do
+              occupied_seats << rand(1..total_seats)
+            end
+            
+            # Ensure we have enough available seats for the booking
+            available_seats = (1..total_seats).to_a - occupied_seats
+            if available_seats.size < @passengers.to_i
+              # If not enough seats, free up some occupied seats
+              seats_to_free = @passengers.to_i - available_seats.size
+              seats_to_free.times do
+                seat = occupied_seats.pop
+                available_seats << seat if seat
+              end
+            end
+          %>
+          
+          <% (1..total_seats).each do |seat_number| %>
+            <% 
+              # Add aisle for train layout
+              if @ticket[:transport_type].downcase == 'train' && seat_number % seats_per_row == 3 
+            %>
+              <div class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            <% end %>
+            
+            <div class="seat-container">
+              <input type="checkbox" id="seat-<%= seat_number %>" name="selected_seats[]" value="<%= seat_number %>" class="hidden seat-checkbox" <%= 'disabled' if occupied_seats.include?(seat_number) %>>
+              <label for="seat-<%= seat_number %>" class="block w-10 h-10 rounded border-2 <%= occupied_seats.include?(seat_number) ? 'border-gray-300 dark:border-gray-600 bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer hover:border-secondary-500 dark:hover:border-secondary-400' %> flex items-center justify-center transition-colors">
+                <span class="text-xs font-medium <%= occupied_seats.include?(seat_number) ? 'text-gray-500 dark:text-gray-400' : 'text-gray-700 dark:text-gray-300' %>"><%= seat_number %></span>
+              </label>
+            </div>
+            
+            <% 
+              # Add row break
+              if seat_number % seats_per_row == 0 && seat_number < total_seats 
+            %>
+              <div class="col-span-5 h-2"></div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Price per seat:</p>
+          <p class="text-lg font-medium text-gray-900 dark:text-white"><%= @ticket[:currency] %> <%= sprintf('%.2f', @ticket[:price]) %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Total:</p>
+          <p class="text-lg font-medium text-gray-900 dark:text-white"><%= @ticket[:currency] %> <span id="total-price"><%= sprintf('%.2f', @ticket[:price] * @passengers.to_i) %></span></p>
+        </div>
+      </div>
+      
+      <div class="mt-6 flex justify-end space-x-3">
+        <%= link_to transportation_tickets_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500" do %>
+          Back
+        <% end %>
+        <%= form.submit "Continue to Payment", id: "continue-button", disabled: true, class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 opacity-50 cursor-not-allowed" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const seatCheckboxes = document.querySelectorAll('.seat-checkbox:not([disabled])');
+    const selectedCountElement = document.getElementById('selected-count');
+    const continueButton = document.getElementById('continue-button');
+    const maxSeats = <%= @passengers.to_i %>;
+    const selectedSeats = [];
+    
+    // Handle seat selection
+    seatCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const seatNumber = this.value;
+        
+        if (this.checked) {
+          // If we've already selected the maximum number of seats, uncheck this one
+          if (selectedSeats.length >= maxSeats) {
+            this.checked = false;
+            return;
+          }
+          
+          selectedSeats.push(seatNumber);
+          this.parentElement.querySelector('label').classList.remove('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-800');
+          this.parentElement.querySelector('label').classList.add('border-secondary-500', 'bg-secondary-100', 'dark:bg-secondary-900');
+        } else {
+          const index = selectedSeats.indexOf(seatNumber);
+          if (index > -1) {
+            selectedSeats.splice(index, 1);
+          }
+          
+          this.parentElement.querySelector('label').classList.remove('border-secondary-500', 'bg-secondary-100', 'dark:bg-secondary-900');
+          this.parentElement.querySelector('label').classList.add('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-800');
+        }
+        
+        // Update selected count
+        selectedCountElement.textContent = selectedSeats.length;
+        
+        // Enable/disable continue button
+        if (selectedSeats.length === maxSeats) {
+          continueButton.disabled = false;
+          continueButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+          continueButton.disabled = true;
+          continueButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      });
+    });
+  });
+</script>

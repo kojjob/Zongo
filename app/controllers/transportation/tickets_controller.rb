@@ -114,6 +114,24 @@ module Transportation
       @page_title = "Ticket Details"
     end
 
+    def select_seats
+      @page_title = "Select Seats"
+      @origin = params[:origin]
+      @destination = params[:destination]
+      @date = params[:date]
+      @passengers = params[:passengers] || 1
+      @ticket_id = params[:ticket_id]
+      @transport_type = params[:transport_type]
+
+      # Find the ticket in the sample data
+      @ticket = sample_tickets(@origin, @destination, @transport_type).find { |t| t[:id].to_s == @ticket_id.to_s }
+
+      if @ticket.nil?
+        flash[:alert] = "Ticket not found."
+        redirect_to transportation_tickets_path
+      end
+    end
+
     def cancel
       if @ticket_booking.status == "confirmed"
         @ticket_booking.update(status: :cancelled)

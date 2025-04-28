@@ -1,0 +1,240 @@
+<%# Ride Tracking Page %>
+<div class="bg-white dark:bg-gray-900 shadow-sm rounded-lg overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+    <div>
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white">Track Your Ride</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Real-time tracking of your current ride</p>
+    </div>
+    <div>
+      <%= link_to transportation_my_rides_path, class: "inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-700 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Back to My Rides
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="px-4 py-5 sm:p-6">
+    <div class="bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <div class="flex-shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3 flex-1 md:flex md:justify-between">
+          <p class="text-sm text-primary-700 dark:text-primary-300">
+            Your driver is on the way. Estimated arrival in <span id="eta" class="font-medium"><%= @ride_booking.eta || '5 minutes' %></span>.
+          </p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-2">
+        <div class="bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden h-96 relative">
+          <div id="map" class="w-full h-full"></div>
+          
+          <div class="absolute bottom-4 right-4">
+            <button type="button" id="recenter-map" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-white">Ride Details</h2>
+          </div>
+          
+          <div class="px-4 py-5 sm:p-6">
+            <dl class="grid grid-cols-1 gap-x-4 gap-y-6">
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+                <dd class="mt-1">
+                  <span id="ride-status" class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200">
+                    <%= @ride_booking.status.titleize %>
+                  </span>
+                </dd>
+              </div>
+              
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Driver</dt>
+                <dd class="mt-1 flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900 dark:text-white"><%= @ride_booking.driver_name %></p>
+                    <div class="flex items-center mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span class="ml-1 text-xs text-gray-500 dark:text-gray-400">4.8</span>
+                    </div>
+                  </div>
+                </dd>
+              </div>
+              
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Vehicle</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                  <%= @ride_booking.vehicle_color %> <%= @ride_booking.vehicle_model %><br>
+                  <span class="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-0.5 rounded">
+                    <%= @ride_booking.license_plate %>
+                  </span>
+                </dd>
+              </div>
+              
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">From</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @ride_booking.origin_address %></dd>
+              </div>
+              
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">To</dt>
+                <dd class="mt-1 text-sm text-gray-900 dark:text-white"><%= @ride_booking.destination_address %></dd>
+              </div>
+              
+              <div>
+                <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Price</dt>
+                <dd class="mt-1 text-sm font-medium text-gray-900 dark:text-white"><%= @ride_booking.currency %> <%= sprintf('%.2f', @ride_booking.price) %></dd>
+              </div>
+            </dl>
+            
+            <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+              <button type="button" id="contact-driver" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                </svg>
+                Contact Driver
+              </button>
+              
+              <button type="button" id="cancel-ride" class="mt-3 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                Cancel Ride
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# JavaScript for ride tracking %>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Simulate ride tracking with dummy data
+    const rideStatuses = ['driver_assigned', 'driver_en_route', 'arrived', 'in_progress', 'completed'];
+    const statusColors = {
+      'driver_assigned': { bg: 'bg-yellow-100 dark:bg-yellow-900', text: 'text-yellow-800 dark:text-yellow-200' },
+      'driver_en_route': { bg: 'bg-blue-100 dark:bg-blue-900', text: 'text-blue-800 dark:text-blue-200' },
+      'arrived': { bg: 'bg-purple-100 dark:bg-purple-900', text: 'text-purple-800 dark:text-purple-200' },
+      'in_progress': { bg: 'bg-indigo-100 dark:bg-indigo-900', text: 'text-indigo-800 dark:text-indigo-200' },
+      'completed': { bg: 'bg-green-100 dark:bg-green-900', text: 'text-green-800 dark:text-green-200' }
+    };
+    
+    const statusLabels = {
+      'driver_assigned': 'Driver Assigned',
+      'driver_en_route': 'Driver En Route',
+      'arrived': 'Driver Arrived',
+      'in_progress': 'In Progress',
+      'completed': 'Completed'
+    };
+    
+    const etaTimes = ['5 minutes', '4 minutes', '3 minutes', '2 minutes', '1 minute', 'Less than a minute'];
+    
+    let currentStatusIndex = 0;
+    let currentEtaIndex = 0;
+    
+    const statusElement = document.getElementById('ride-status');
+    const etaElement = document.getElementById('eta');
+    
+    // Update status every 30 seconds
+    const statusInterval = setInterval(() => {
+      if (currentStatusIndex < rideStatuses.length) {
+        const status = rideStatuses[currentStatusIndex];
+        statusElement.className = `px-2 py-1 text-xs font-medium rounded-full ${statusColors[status].bg} ${statusColors[status].text}`;
+        statusElement.textContent = statusLabels[status];
+        
+        // If ride is completed, clear the interval
+        if (status === 'completed') {
+          clearInterval(statusInterval);
+          clearInterval(etaInterval);
+          etaElement.parentElement.parentElement.parentElement.parentElement.style.display = 'none';
+        }
+        
+        currentStatusIndex++;
+      } else {
+        clearInterval(statusInterval);
+      }
+    }, 30000);
+    
+    // Update ETA every 20 seconds
+    const etaInterval = setInterval(() => {
+      if (currentEtaIndex < etaTimes.length) {
+        etaElement.textContent = etaTimes[currentEtaIndex];
+        currentEtaIndex++;
+      } else {
+        clearInterval(etaInterval);
+      }
+    }, 20000);
+    
+    // Initialize map (this would use a real mapping API in production)
+    const initMap = () => {
+      const mapElement = document.getElementById('map');
+      if (mapElement) {
+        // This is a placeholder for a real map implementation
+        mapElement.innerHTML = `
+          <div class="flex items-center justify-center h-full">
+            <div class="text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+              <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Map would be displayed here in production.</p>
+              <p class="text-xs text-gray-400 dark:text-gray-500">Using Google Maps, Mapbox, or another mapping service.</p>
+            </div>
+          </div>
+        `;
+      }
+    };
+    
+    // Initialize the map
+    initMap();
+    
+    // Handle recenter map button
+    const recenterButton = document.getElementById('recenter-map');
+    if (recenterButton) {
+      recenterButton.addEventListener('click', () => {
+        // This would recenter the map in a real implementation
+        alert('Map would be recentered in production.');
+      });
+    }
+    
+    // Handle contact driver button
+    const contactButton = document.getElementById('contact-driver');
+    if (contactButton) {
+      contactButton.addEventListener('click', () => {
+        // This would open a contact modal in a real implementation
+        alert('Contact driver functionality would be implemented in production.');
+      });
+    }
+    
+    // Handle cancel ride button
+    const cancelButton = document.getElementById('cancel-ride');
+    if (cancelButton) {
+      cancelButton.addEventListener('click', () => {
+        if (confirm('Are you sure you want to cancel this ride?')) {
+          // This would send a cancellation request in a real implementation
+          window.location.href = '<%= transportation_cancel_ride_path(@ride_booking) %>';
+        }
+      });
+    }
+  });
+</script>

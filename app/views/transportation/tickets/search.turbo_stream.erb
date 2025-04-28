@@ -12,7 +12,7 @@
         <%= @tickets.length %> tickets found from <%= @origin %> to <%= @destination %> for <%= @passengers %> passenger<%= @passengers.to_i > 1 ? 's' : '' %>
       </p>
     </div>
-    
+
     <div class="p-6">
       <% if @tickets.any? %>
         <div class="space-y-4">
@@ -75,13 +75,19 @@
                   <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
                     Total: <%= ticket[:currency] %> <%= sprintf('%.2f', ticket[:price] * @passengers.to_i) %> for <%= @passengers %> passenger<%= @passengers.to_i > 1 ? 's' : '' %>
                   </div>
-                  <%= form_with url: transportation_book_ticket_path, method: :post, class: "flex" do |f| %>
-                    <%= f.hidden_field :ticket_id, value: ticket[:id] %>
-                    <%= f.hidden_field :payment_method, value: "wallet" %>
-                    <%= f.hidden_field :passengers, value: @passengers %>
-                    <button type="submit" class="px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-lg text-sm transition">
-                      Book Now
-                    </button>
+                  <%= link_to transportation_select_seats_path(
+                    ticket_id: ticket[:id],
+                    origin: @origin,
+                    destination: @destination,
+                    date: @date,
+                    time: ticket[:departure_time].strftime("%H:%M"),
+                    passengers: @passengers,
+                    transport_type: ticket[:transport_type]
+                  ), class: "px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-lg text-sm transition flex items-center" do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                    </svg>
+                    Select Seats
                   <% end %>
                 </div>
               </div>

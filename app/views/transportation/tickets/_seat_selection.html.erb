@@ -1,0 +1,205 @@
+<%# Seat Selection Partial %>
+<div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+    <h2 class="text-lg font-medium text-gray-900 dark:text-white">Select Your Seats</h2>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Choose <%= pluralize(passengers, 'seat') %> for your journey</p>
+  </div>
+  
+  <div class="px-4 py-5 sm:p-6">
+    <% if defined?(error) && error.present? %>
+      <div class="bg-red-50 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline"><%= error %></span>
+      </div>
+    <% end %>
+    
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Available</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-secondary-500 bg-secondary-100 dark:bg-secondary-900"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Selected</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 bg-gray-300 dark:bg-gray-600"></div>
+            <span class="ml-2 text-sm text-gray-500 dark:text-gray-400">Occupied</span>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm text-gray-500 dark:text-gray-400">Selected: <span id="selected-count" class="font-medium text-secondary-600 dark:text-secondary-400">0</span>/<%= passengers %></span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+      <div class="flex justify-center mb-4">
+        <div class="w-20 h-10 rounded-t-lg bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+          <span class="text-xs text-gray-700 dark:text-gray-300">Driver</span>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-5 gap-4 max-w-md mx-auto">
+        <% 
+          # Generate a seating layout based on transport type
+          total_seats = ticket[:transport_type].downcase == 'train' ? 60 : 40
+          seats_per_row = ticket[:transport_type].downcase == 'train' ? 5 : 4
+          
+          # Generate some random occupied seats
+          occupied_seats = []
+          (total_seats / 3).times do
+            occupied_seats << rand(1..total_seats)
+          end
+          
+          # Ensure we have enough available seats for the booking
+          available_seats = (1..total_seats).to_a - occupied_seats
+          if available_seats.size < passengers.to_i
+            # If not enough seats, free up some occupied seats
+            seats_to_free = passengers.to_i - available_seats.size
+            seats_to_free.times do
+              seat = occupied_seats.pop
+              available_seats << seat if seat
+            end
+          end
+        %>
+        
+        <% (1..total_seats).each do |seat_number| %>
+          <% 
+            # Add aisle for train layout
+            if ticket[:transport_type].downcase == 'train' && seat_number % seats_per_row == 3 
+          %>
+            <div class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          <% end %>
+          
+          <div class="seat-container">
+            <input type="checkbox" id="seat-<%= seat_number %>" name="selected_seats[]" value="<%= seat_number %>" class="hidden seat-checkbox" <%= 'disabled' if occupied_seats.include?(seat_number) %>>
+            <label for="seat-<%= seat_number %>" class="block w-10 h-10 rounded border-2 <%= occupied_seats.include?(seat_number) ? 'border-gray-300 dark:border-gray-600 bg-gray-300 dark:bg-gray-600 cursor-not-allowed' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 cursor-pointer hover:border-secondary-500 dark:hover:border-secondary-400' %> flex items-center justify-center transition-colors">
+              <span class="text-xs font-medium <%= occupied_seats.include?(seat_number) ? 'text-gray-500 dark:text-gray-400' : 'text-gray-700 dark:text-gray-300' %>"><%= seat_number %></span>
+            </label>
+          </div>
+          
+          <% 
+            # Add row break
+            if seat_number % seats_per_row == 0 && seat_number < total_seats 
+          %>
+            <div class="col-span-5 h-2"></div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="flex justify-between items-center">
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Price per seat:</p>
+        <p class="text-lg font-medium text-gray-900 dark:text-white"><%= ticket[:currency] %> <%= sprintf('%.2f', ticket[:price]) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Total:</p>
+        <p class="text-lg font-medium text-gray-900 dark:text-white"><%= ticket[:currency] %> <span id="total-price"><%= sprintf('%.2f', ticket[:price] * passengers.to_i) %></span></p>
+      </div>
+    </div>
+    
+    <div class="mt-6 flex justify-end space-x-3">
+      <button type="button" id="back-button" class="inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+        Back
+      </button>
+      <button type="button" id="continue-button" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-secondary-600 hover:bg-secondary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500">
+        Continue to Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const seatCheckboxes = document.querySelectorAll('.seat-checkbox:not([disabled])');
+    const selectedCountElement = document.getElementById('selected-count');
+    const continueButton = document.getElementById('continue-button');
+    const backButton = document.getElementById('back-button');
+    const maxSeats = <%= passengers.to_i %>;
+    const selectedSeats = [];
+    
+    // Handle seat selection
+    seatCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const seatNumber = this.value;
+        
+        if (this.checked) {
+          // If we've already selected the maximum number of seats, uncheck this one
+          if (selectedSeats.length >= maxSeats) {
+            this.checked = false;
+            return;
+          }
+          
+          selectedSeats.push(seatNumber);
+          this.parentElement.querySelector('label').classList.remove('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-800');
+          this.parentElement.querySelector('label').classList.add('border-secondary-500', 'bg-secondary-100', 'dark:bg-secondary-900');
+        } else {
+          const index = selectedSeats.indexOf(seatNumber);
+          if (index > -1) {
+            selectedSeats.splice(index, 1);
+          }
+          
+          this.parentElement.querySelector('label').classList.remove('border-secondary-500', 'bg-secondary-100', 'dark:bg-secondary-900');
+          this.parentElement.querySelector('label').classList.add('border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-800');
+        }
+        
+        // Update selected count
+        selectedCountElement.textContent = selectedSeats.length;
+        
+        // Enable/disable continue button
+        if (selectedSeats.length === maxSeats) {
+          continueButton.disabled = false;
+          continueButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+          continueButton.disabled = true;
+          continueButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      });
+    });
+    
+    // Initially disable continue button
+    continueButton.disabled = true;
+    continueButton.classList.add('opacity-50', 'cursor-not-allowed');
+    
+    // Handle continue button click
+    continueButton.addEventListener('click', function() {
+      if (selectedSeats.length === maxSeats) {
+        // In a real implementation, we would store the selected seats
+        // For now, we'll just show the payment form
+        const seatSelectionForm = document.getElementById('seat-selection-form');
+        const paymentForm = document.getElementById('payment-form');
+        
+        if (seatSelectionForm && paymentForm) {
+          // Add selected seats to hidden inputs in the payment form
+          let seatsInput = document.getElementById('selected-seats-input');
+          if (!seatsInput) {
+            seatsInput = document.createElement('input');
+            seatsInput.type = 'hidden';
+            seatsInput.id = 'selected-seats-input';
+            seatsInput.name = 'selected_seats';
+            paymentForm.appendChild(seatsInput);
+          }
+          seatsInput.value = selectedSeats.join(',');
+          
+          // Hide seat selection, show payment form
+          seatSelectionForm.classList.add('hidden');
+          paymentForm.classList.remove('hidden');
+        }
+      }
+    });
+    
+    // Handle back button click
+    backButton.addEventListener('click', function() {
+      // In a real implementation, we would go back to the search results
+      // For now, we'll just reload the page
+      window.history.back();
+    });
+  });
+</script>

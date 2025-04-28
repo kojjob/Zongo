@@ -1,7 +1,7 @@
 module Transportation
   class RidesController < ApplicationController
     before_action :authenticate_user!, except: [:index]
-    before_action :set_ride_booking, only: [:show, :edit, :update, :cancel]
+    before_action :set_ride_booking, only: [:show, :edit, :update, :cancel, :track]
 
     def index
       @page_title = "Book a Ride"
@@ -99,6 +99,20 @@ module Transportation
 
     def show
       @page_title = "Ride Details"
+    end
+
+    def track
+      @page_title = "Track Your Ride"
+
+      # Only allow tracking of confirmed or in_progress rides
+      unless @ride_booking.confirmed? || @ride_booking.in_progress?
+        flash[:alert] = "This ride cannot be tracked."
+        redirect_to transportation_my_rides_path
+      end
+
+      # In a real implementation, we would fetch the current location of the driver
+      # For now, we'll just set a random ETA
+      @ride_booking.eta = "#{rand(1..10)} minutes"
     end
 
     def cancel
