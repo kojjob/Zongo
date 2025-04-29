@@ -6,36 +6,34 @@ class Notification < ApplicationRecord
 
   # Validations
   validates :title, presence: true
-  validates :message, presence: true
-  validates :severity, presence: true
-  validates :category, presence: true
+  validates :content, presence: true
+  validates :notification_type, presence: true
 
   # Callbacks
   before_create :set_sent_at
 
   # Enums
-  enum :severity, {
-    info: 0,
-    warning: 1,
-    critical: 2
-  }, default: :info
-
-  enum :category, {
+  enum :notification_type, {
     general: 0,
     security: 1,
     financial: 2,
     account: 3,
-    system: 4
+    system: 4,
+    loan: 5,
+    payment: 6,
+    event: 7,
+    marketplace: 8
   }, default: :general
 
   # Scopes
   scope :unread, -> { where(read: false) }
-  scope :security, -> { where(category: :security) }
-  scope :financial, -> { where(category: :financial) }
-  scope :by_severity, ->(severity) { where(severity: severity) }
-  scope :recent, -> { order(sent_at: :desc) }
-  scope :recent_first, -> { order(sent_at: :desc) }
-  scope :oldest_first, -> { order(sent_at: :asc) }
+  scope :security, -> { where(notification_type: :security) }
+  scope :financial, -> { where(notification_type: :financial) }
+  scope :loan, -> { where(notification_type: :loan) }
+  scope :by_type, ->(type) { where(notification_type: type) }
+  scope :recent, -> { order(created_at: :desc) }
+  scope :recent_first, -> { order(created_at: :desc) }
+  scope :oldest_first, -> { order(created_at: :asc) }
 
   # Instance methods
 

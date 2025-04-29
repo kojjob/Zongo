@@ -68,6 +68,28 @@ class AdminNotificationService
     end
   end
 
+  # Generic method to notify all admins with a custom message
+  def notify_admins(title:, content:, notification_type: "general", source_type: nil, source_id: nil)
+    # Get all admin users
+    admin_users = User.where(admin: true)
+
+    admin_users.each do |admin|
+      # Create notification record for each admin
+      admin.create_notification(
+        title: title,
+        content: content,
+        notification_type: notification_type,
+        source_type: source_type,
+        source_id: source_id
+      )
+
+      # Send email notification if admin has email notifications enabled
+      if admin.user_settings&.email_notifications
+        Rails.logger.info "Email notification sent to admin #{admin.email}: #{title}"
+      end
+    end
+  end
+
   private
 
   def create_notification(user:, title:, body:, category:, action_url:, severity: "normal")
