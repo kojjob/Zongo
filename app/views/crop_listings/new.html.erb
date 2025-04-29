@@ -1,0 +1,189 @@
+<%# New Crop Listing Page %>
+<% content_for :title, "Create New Crop Listing" %>
+
+<!-- Header Section -->
+<section class="bg-gradient-to-r from-emerald-600 to-teal-500 py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-white mb-2">Create New Crop Listing</h1>
+        <p class="text-white/90">
+          List your crops for sale in the agricultural marketplace
+        </p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <a href="<%= agriculture_marketplace_path %>" class="inline-flex items-center px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors duration-300">
+          <%= icon "arrow-left", class: "w-4 h-4 mr-2" %>
+          Back to Marketplace
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-3xl mx-auto">
+    <!-- Form Card -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700">
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Listing Details</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          Fill in the details about your crop listing
+        </p>
+      </div>
+
+      <div class="p-6">
+        <%= form_with model: @crop_listing, class: "space-y-6" do |f| %>
+          <% if @crop_listing.errors.any? %>
+            <div class="p-4 mb-6 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-800/30">
+              <div class="flex items-start">
+                <%= icon "alert-triangle", class: "w-5 h-5 text-red-500 dark:text-red-400 mt-0.5 mr-2 flex-shrink-0" %>
+                <div>
+                  <h3 class="text-sm font-medium text-red-800 dark:text-red-300">
+                    <%= pluralize(@crop_listing.errors.count, "error") %> prohibited this listing from being saved:
+                  </h3>
+                  <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+                    <ul class="list-disc pl-5 space-y-1">
+                      <% @crop_listing.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Basic Information -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Basic Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= f.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.text_field :title, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50", placeholder: "e.g., Fresh Organic Tomatoes" %>
+              </div>
+
+              <div>
+                <%= f.label :crop_id, "Crop Type", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.select :crop_id, @crops.map { |c| [c.name, c.id] }, { include_blank: "Select a crop" }, { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" } %>
+              </div>
+
+              <div>
+                <%= f.label :region_id, "Region", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.select :region_id, @regions.map { |r| [r.name, r.id] }, { include_blank: "Select a region" }, { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" } %>
+              </div>
+
+              <div>
+                <%= f.label :location, "Specific Location", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.text_field :location, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50", placeholder: "e.g., Kumasi Central Market" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing and Quantity -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Pricing and Quantity</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <%= f.label :price, "Price (GHS)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.number_field :price, step: 0.01, min: 0, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" %>
+              </div>
+
+              <div>
+                <%= f.label :quantity, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.number_field :quantity, min: 1, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" %>
+              </div>
+
+              <div>
+                <%= f.label :unit, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.select :unit, ["kg", "g", "ton", "lb", "box", "crate", "sack", "piece", "dozen", "bunch"], { include_blank: "Select unit" }, { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" } %>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center">
+                <%= f.check_box :negotiable, class: "h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded" %>
+                <%= f.label :negotiable, "Price is negotiable", class: "ml-2 block text-sm text-gray-700 dark:text-gray-300" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Listing Type -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Listing Type</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <%= f.label :listing_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+                <%= f.select :listing_type, [["For Sale", "sale"], ["Wanted", "wanted"]], {}, { class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50" } %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Description</h3>
+            <div>
+              <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+              <%= f.text_area :description, rows: 5, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50", placeholder: "Describe your crop, quality, harvest date, etc." %>
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Terms and Conditions</h3>
+            <div>
+              <%= f.label :terms, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+              <%= f.text_area :terms, rows: 3, class: "w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-emerald-500 focus:ring focus:ring-emerald-500 focus:ring-opacity-50", placeholder: "Payment terms, delivery options, etc." %>
+            </div>
+          </div>
+
+          <!-- Images -->
+          <div>
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Images</h3>
+            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+              <%= f.label :images, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
+              <%= f.file_field :images, multiple: true, direct_upload: true, class: "w-full text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-emerald-50 file:text-emerald-700 dark:file:bg-emerald-900/20 dark:file:text-emerald-300 hover:file:bg-emerald-100 dark:hover:file:bg-emerald-900/30" %>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Upload up to 5 images of your crop (JPEG, PNG, max 5MB each)</p>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
+            <%= f.submit "Create Listing", class: "w-full px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="mt-8 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl shadow-md overflow-hidden border border-emerald-100 dark:border-emerald-800/30 p-6">
+      <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+        <%= icon "light-bulb", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2" %>
+        Tips for a Successful Listing
+      </h3>
+      <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+        <li class="flex items-start">
+          <%= icon "check", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2 flex-shrink-0 mt-0.5" %>
+          <span>Use a clear, descriptive title that includes the crop name and key features</span>
+        </li>
+        <li class="flex items-start">
+          <%= icon "check", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2 flex-shrink-0 mt-0.5" %>
+          <span>Add high-quality photos showing the crop from different angles</span>
+        </li>
+        <li class="flex items-start">
+          <%= icon "check", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2 flex-shrink-0 mt-0.5" %>
+          <span>Be specific about quantity, quality, and harvest date in your description</span>
+        </li>
+        <li class="flex items-start">
+          <%= icon "check", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2 flex-shrink-0 mt-0.5" %>
+          <span>Clearly state your delivery options and payment terms</span>
+        </li>
+        <li class="flex items-start">
+          <%= icon "check", class: "w-5 h-5 text-emerald-500 dark:text-emerald-400 mr-2 flex-shrink-0 mt-0.5" %>
+          <span>Respond promptly to inquiries to increase your chances of selling</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

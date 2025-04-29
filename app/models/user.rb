@@ -75,6 +75,7 @@ class User < ApplicationRecord
 
   # Add loans and credit_scores associations if the tables exist
   has_many :loans, dependent: :restrict_with_error if ActiveRecord::Base.connection.table_exists?(:loans)
+  has_many :loan_refinancings, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:loan_refinancings)
   has_many :credit_scores, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:credit_scores)
   has_many :credit_improvement_plans, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:credit_improvement_plans)
 

@@ -125,10 +125,10 @@
         </div>
 
         <!-- Pagination -->
-        <% if @resources.total_pages > 1 %>
+        <% if @pagy && @pagy.pages > 1 %>
           <div class="mt-8 flex justify-center">
             <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-              <%= paginate @resources %>
+              <%== pagy_nav(@pagy) %>
             </nav>
           </div>
         <% end %>
