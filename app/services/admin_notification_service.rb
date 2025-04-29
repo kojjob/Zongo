@@ -92,13 +92,13 @@ class AdminNotificationService
 
   private
 
-  def create_notification(user:, title:, body:, category:, action_url:, severity: "normal")
+  def create_notification(user:, title:, body:, category:, action_url:, severity: "info")
     # Check if Notification model exists
     if defined?(Notification)
       Notification.create(
         user: user,
         title: title,
-        body: body,
+        message: body,
         category: category,
         action_url: action_url,
         severity: severity,

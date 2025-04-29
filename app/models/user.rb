@@ -219,6 +219,21 @@ class User < ApplicationRecord
   # @param attributes [Hash] Notification attributes
   # @return [Notification] The created notification
   def create_notification(attributes = {})
+    # Map notification_type to category if present
+    if attributes[:notification_type].present? && !attributes[:category].present?
+      attributes[:category] = attributes[:notification_type]
+      attributes.delete(:notification_type)
+    end
+
+    # Map content to message if present
+    if attributes[:content].present? && !attributes[:message].present?
+      attributes[:message] = attributes[:content]
+      attributes.delete(:content)
+    end
+
+    # Set default severity if not present
+    attributes[:severity] ||= :info
+
     notification = notifications.create!(attributes)
     notification.broadcast_to_user if attributes[:broadcast] != false
     notification

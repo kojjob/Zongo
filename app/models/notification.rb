@@ -6,14 +6,21 @@ class Notification < ApplicationRecord
 
   # Validations
   validates :title, presence: true
-  validates :content, presence: true
-  validates :notification_type, presence: true
+  validates :message, presence: true
+  validates :severity, presence: true
+  validates :category, presence: true
 
   # Callbacks
   before_create :set_sent_at
 
   # Enums
-  enum :notification_type, {
+  enum :severity, {
+    info: 0,
+    warning: 1,
+    critical: 2
+  }, default: :info
+
+  enum :category, {
     general: 0,
     security: 1,
     financial: 2,
@@ -27,13 +34,14 @@ class Notification < ApplicationRecord
 
   # Scopes
   scope :unread, -> { where(read: false) }
-  scope :security, -> { where(notification_type: :security) }
-  scope :financial, -> { where(notification_type: :financial) }
-  scope :loan, -> { where(notification_type: :loan) }
-  scope :by_type, ->(type) { where(notification_type: type) }
-  scope :recent, -> { order(created_at: :desc) }
-  scope :recent_first, -> { order(created_at: :desc) }
-  scope :oldest_first, -> { order(created_at: :asc) }
+  scope :security, -> { where(category: :security) }
+  scope :financial, -> { where(category: :financial) }
+  scope :loan, -> { where(category: :loan) }
+  scope :by_category, ->(category) { where(category: category) }
+  scope :by_severity, ->(severity) { where(severity: severity) }
+  scope :recent, -> { order(sent_at: :desc) }
+  scope :recent_first, -> { order(sent_at: :desc) }
+  scope :oldest_first, -> { order(sent_at: :asc) }
 
   # Instance methods
 
@@ -66,7 +74,7 @@ class Notification < ApplicationRecord
     end
   end
 
-  # Get icon name for notification type
+  # Get icon name for notification category
   # @return [String] Icon name
   def icon_name
     case category.to_sym
@@ -79,6 +87,10 @@ class Notification < ApplicationRecord
     when :financial then "credit-card"
     when :account then "user"
     when :system then "settings"
+    when :loan then "dollar-sign"
+    when :payment then "credit-card"
+    when :event then "calendar"
+    when :marketplace then "shopping-bag"
     else "bell"
     end
   end
@@ -116,8 +128,12 @@ class Notification < ApplicationRecord
           status: 'pending'
         )
 
-        # Queue delivery job
-        NotificationDeliveryJob.perform_later(delivery.id)
+        # Queue delivery job if the job exists
+        if defined?(NotificationDeliveryJob)
+          NotificationDeliveryJob.perform_later(delivery.id)
+        else
+          Rails.logger.info "NotificationDeliveryJob not defined, skipping delivery for notification #{id}"
+        end
 
         deliveries << delivery
       end
@@ -145,6 +161,7 @@ class Notification < ApplicationRecord
         action_url: action_url,
         action_text: action_button_text,
         icon: icon_name,
+        sent_at: sent_at.iso8601,
         created_at: created_at.iso8601,
         html: ApplicationController.render(
           partial: 'notifications/notification',
