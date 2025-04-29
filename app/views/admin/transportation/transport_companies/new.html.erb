@@ -1,0 +1,21 @@
+<%# Admin New Transport Company Page %>
+<div class="bg-white dark:bg-gray-900 shadow-sm rounded-lg overflow-hidden">
+  <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+    <div>
+      <h1 class="text-xl font-semibold text-gray-900 dark:text-white">New Transport Company</h1>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Create a new transport company</p>
+    </div>
+    <div>
+      <%= link_to admin_transportation_transport_companies_path, class: "inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to List
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="border-t border-gray-200 dark:border-gray-700 px-4 py-5 sm:p-6">
+    <%= render 'form', transport_company: @transport_company %>
+  </div>
+</div>

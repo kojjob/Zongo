@@ -1,0 +1,119 @@
+<%= form_with(model: [:admin, :transportation, transport_company], class: "space-y-6") do |form| %>
+  <% if transport_company.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900 border-l-4 border-red-400 p-4 mb-6">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+            <%= pluralize(transport_company.errors.count, "error") %> prohibited this transport company from being saved:
+          </h3>
+          <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+            <ul class="list-disc pl-5 space-y-1">
+              <% transport_company.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+    <div class="sm:col-span-4">
+      <%= form.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.text_field :name, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">The name of the transport company.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= form.label :transport_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.select :transport_type, TransportCompany.transport_types.keys.map { |type| [type.titleize, type] }, {}, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">The type of transport service provided.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= form.label :logo_url, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.text_field :logo_url, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">URL to the company's logo image.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= form.label :website, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.text_field :website, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">The company's website URL.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= form.label :phone, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.text_field :phone, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Contact phone number.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <%= form.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.email_field :email, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Contact email address.</p>
+    </div>
+
+    <div class="sm:col-span-6">
+      <%= form.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <%= form.text_area :description, rows: 4, class: "shadow-sm focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-md" %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">A description of the transport company and its services.</p>
+    </div>
+
+    <div class="sm:col-span-6">
+      <%= form.label :amenities, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+      <div class="mt-1">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <% ["WiFi", "Air Conditioning", "Refreshments", "Entertainment", "Power Outlets", "Restroom", "Reclining Seats", "Luggage Storage", "Wheelchair Access", "Pet Friendly"].each do |amenity| %>
+            <div class="relative flex items-start">
+              <div class="flex items-center h-5">
+                <%= check_box_tag "transport_company[amenities][]", amenity, transport_company.amenities&.include?(amenity), id: "transport_company_amenities_#{amenity.parameterize}", class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded" %>
+              </div>
+              <div class="ml-3 text-sm">
+                <%= label_tag "transport_company_amenities_#{amenity.parameterize}", amenity, class: "font-medium text-gray-700 dark:text-gray-300" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Amenities offered by this transport company.</p>
+    </div>
+
+    <div class="sm:col-span-3">
+      <div class="flex items-start">
+        <div class="flex items-center h-5">
+          <%= form.check_box :active, class: "focus:ring-primary-500 h-4 w-4 text-primary-600 border-gray-300 dark:border-gray-700 dark:bg-gray-800 rounded" %>
+        </div>
+        <div class="ml-3 text-sm">
+          <%= form.label :active, "Active", class: "font-medium text-gray-700 dark:text-gray-300" %>
+          <p class="text-gray-500 dark:text-gray-400">Indicates whether this transport company is currently active.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end space-x-3">
+    <%= link_to "Cancel", admin_transportation_transport_companies_path, class: "inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+    <%= form.submit class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" %>
+  </div>
+<% end %>
