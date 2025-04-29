@@ -8,9 +8,9 @@ class Loan < ApplicationRecord
   belongs_to :refinanced_from_loan, class_name: "Loan", optional: true, foreign_key: "refinanced_from_loan_id"
   belongs_to :refinanced_to_loan, class_name: "Loan", optional: true, foreign_key: "refinanced_to_loan_id"
 
-  # Store credit score data, processing fee, and amount due as JSON in the metadata column if it exists
+  # Store credit score data, processing fee, amount due, and rejection reason as JSON in the metadata column if it exists
   # or use instance variables if the columns don't exist
-  attr_accessor :_credit_score_data, :_processing_fee, :_amount_due
+  attr_accessor :_credit_score_data, :_processing_fee, :_amount_due, :_rejection_reason
 
   enum :status, {
     pending: 0,
@@ -247,6 +247,31 @@ class Loan < ApplicationRecord
     else
       # Otherwise use instance variable
       @_credit_score_data
+    end
+  end
+
+  # Method to store rejection reason
+  # @param reason [String] Rejection reason to store
+  def rejection_reason=(reason)
+    if respond_to?(:write_attribute) && has_attribute?(:rejection_reason)
+      write_attribute(:rejection_reason, reason)
+    elsif respond_to?(:metadata=)
+      self.metadata ||= {}
+      self.metadata['rejection_reason'] = reason
+    else
+      @_rejection_reason = reason
+    end
+  end
+
+  # Method to retrieve rejection reason
+  # @return [String, nil] The stored rejection reason or nil if not set
+  def rejection_reason
+    if respond_to?(:read_attribute) && has_attribute?(:rejection_reason)
+      read_attribute(:rejection_reason)
+    elsif respond_to?(:metadata) && metadata.present?
+      metadata['rejection_reason']
+    else
+      @_rejection_reason
     end
   end
 

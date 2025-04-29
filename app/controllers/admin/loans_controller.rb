@@ -35,7 +35,10 @@ module Admin
     end
 
     def reject
-      if @loan.update(status: :rejected, rejection_reason: params[:rejection_reason])
+      # Store the rejection reason in the loan
+      @loan.rejection_reason = params[:rejection_reason]
+
+      if @loan.update(status: :rejected)
         # Notify user about rejection
         UserNotificationService.new.notify_loan_rejected(@loan)
         redirect_to admin_loan_path(@loan), notice: "Loan rejected successfully"

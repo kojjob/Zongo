@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_30_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -672,6 +672,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
     t.decimal "amount_due", precision: 10, scale: 2
     t.bigint "refinanced_from_loan_id"
     t.bigint "refinanced_to_loan_id"
+    t.text "rejection_reason"
     t.index ["loan_type"], name: "index_loans_on_loan_type"
     t.index ["reference_number"], name: "index_loans_on_reference_number", unique: true
     t.index ["refinanced_from_loan_id"], name: "index_loans_on_refinanced_from_loan_id"
