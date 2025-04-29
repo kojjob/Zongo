@@ -15,12 +15,21 @@ class LoanRepaymentService
     end
 
     # Create transaction from user's wallet
+    # Check if wallet exists
+    if @loan.wallet.nil?
+      return { success: false, message: "User wallet not found" }
+    end
+
+    # Get the wallet object
+    wallet = @loan.wallet
+
     transaction = Transaction.new(
-      wallet: @loan.wallet,
-      transaction_type: "loan_repayment",
+      source_wallet: wallet,
+      transaction_type: "payment",
       amount: amount,
       status: "pending",
-      description: "Loan repayment for #{@loan.reference_number}"
+      description: "Loan repayment for #{@loan.reference_number}",
+      metadata: { loan_id: @loan.id }
     )
 
     # Process the transaction

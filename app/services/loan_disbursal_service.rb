@@ -10,9 +10,17 @@ class LoanDisbursalService
     end
 
     # Create transaction to user's wallet
+    # Check if wallet exists
+    if @loan.wallet.nil?
+      return { success: false, message: "User wallet not found" }
+    end
+
+    # Get the wallet object
+    wallet = @loan.wallet
+
     transaction = Transaction.new(
-      wallet: @loan.wallet,
-      transaction_type: "loan_disbursement",
+      destination_wallet: wallet,
+      transaction_type: "deposit",
       amount: @loan.amount,
       status: "pending",
       description: "Loan disbursement for #{@loan.reference_number}"
