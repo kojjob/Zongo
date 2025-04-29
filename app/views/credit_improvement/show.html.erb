@@ -1,0 +1,338 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to credit_improvement_index_path, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Credit Improvement
+    <% end %>
+  </div>
+
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white">Your Credit Improvement Plan</h1>
+        <div>
+          <%= button_to refresh_plan_credit_improvement_path(@plan), method: :post, class: "btn-secondary text-sm" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 inline" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+            </svg>
+            Refresh Plan
+          <% end %>
+        </div>
+      </div>
+      
+      <div class="p-6">
+        <div class="mb-8">
+          <div class="flex flex-col md:flex-row items-center justify-between bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+            <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Your Progress</h2>
+              <div class="mt-2 flex items-center">
+                <div class="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl bg-primary-600">
+                  <%= @progress[:progress_percentage] %>%
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                    <%= @progress[:completed_steps] %> of <%= @progress[:total_steps] %> steps completed
+                  </div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <% if @plan.on_track? %>
+                      <span class="text-green-600 dark:text-green-400">On track</span>
+                    <% else %>
+                      <span class="text-yellow-600 dark:text-yellow-400">Needs attention</span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex flex-col items-center md:items-end">
+              <div class="flex items-center space-x-4">
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Starting Score</div>
+                  <div class="text-xl font-bold text-gray-900 dark:text-white"><%= @plan.starting_score %></div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Current Score</div>
+                  <div class="text-xl font-bold text-gray-900 dark:text-white"><%= @progress[:current_score] %></div>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Target Score</div>
+                  <div class="text-xl font-bold text-gray-900 dark:text-white"><%= @plan.target_score %></div>
+                </div>
+              </div>
+              <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mt-4">
+                <% current_progress = ((@progress[:current_score] - @plan.starting_score).to_f / (@plan.target_score - @plan.starting_score) * 100).round %>
+                <div class="bg-primary-600 h-2.5 rounded-full" style="width: <%= current_progress %>%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-8">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Action Plan</h2>
+          
+          <div class="space-y-4">
+            <% @steps.each do |step| %>
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg
+                <%= step.completed? ? 'border-l-4 border-green-500' : 
+                   (step.in_progress? ? 'border-l-4 border-yellow-500' : 
+                   (step.skipped? ? 'border-l-4 border-gray-500' : 
+                   (step.overdue? ? 'border-l-4 border-red-500' : 'border-l-4 border-primary-500'))) %>">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mt-1">
+                    <% if step.completed? %>
+                      <div class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                        <svg class="h-5 w-5 text-green-600 dark:text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    <% elsif step.in_progress? %>
+                      <div class="w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
+                        <svg class="h-5 w-5 text-yellow-600 dark:text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    <% elsif step.skipped? %>
+                      <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                        <svg class="h-5 w-5 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    <% elsif step.overdue? %>
+                      <div class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+                        <svg class="h-5 w-5 text-red-600 dark:text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    <% else %>
+                      <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                        <svg class="h-5 w-5 text-primary-600 dark:text-primary-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="ml-4 flex-1">
+                    <div class="flex items-center justify-between">
+                      <h3 class="text-md font-medium text-gray-900 dark:text-white"><%= step.action %></h3>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">
+                        <% if step.completed? %>
+                          Completed
+                        <% elsif step.in_progress? %>
+                          In Progress
+                        <% elsif step.skipped? %>
+                          Skipped
+                        <% elsif step.overdue? %>
+                          Overdue
+                        <% else %>
+                          Due by <%= step.expected_completion_date.strftime("%b %d") %>
+                        <% end %>
+                      </div>
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400"><%= step.description %></p>
+                    
+                    <div class="mt-2 flex items-center">
+                      <span class="text-xs font-medium text-gray-500 dark:text-gray-400">Impact:</span>
+                      <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">+<%= step.impact %> points</span>
+                      
+                      <span class="ml-4 text-xs font-medium text-gray-500 dark:text-gray-400">Difficulty:</span>
+                      <span class="ml-2 px-2 py-0.5 text-xs rounded-full 
+                        <%= step.easy? ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 
+                           (step.medium? ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : 
+                           'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200') %>">
+                        <%= step.difficulty.titleize %>
+                      </span>
+                    </div>
+                    
+                    <% unless step.completed? || step.skipped? %>
+                      <div class="mt-3 flex space-x-2">
+                        <% if step.pending? %>
+                          <%= button_to update_step_credit_improvement_path(@plan, step_id: step.id, status: "in_progress"), method: :patch, class: "btn-secondary text-xs" do %>
+                            Start
+                          <% end %>
+                        <% end %>
+                        
+                        <%= button_to update_step_credit_improvement_path(@plan, step_id: step.id, status: "completed"), method: :patch, class: "btn-primary text-xs" do %>
+                          Mark as Completed
+                        <% end %>
+                        
+                        <%= button_to update_step_credit_improvement_path(@plan, step_id: step.id, status: "skipped"), method: :patch, class: "btn-secondary text-xs" do %>
+                          Skip
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <% if @score_history.present? %>
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Score History</h2>
+            <div class="bg-white dark:bg-gray-800 overflow-hidden">
+              <div class="relative" style="height: 200px;">
+                <canvas id="creditScoreChart"></canvas>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+          <h2 class="text-md font-semibold text-gray-900 dark:text-white mb-2">Plan Details</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div>
+              <p class="text-gray-500 dark:text-gray-400">Start Date</p>
+              <p class="font-medium text-gray-900 dark:text-white"><%= @plan.start_date.strftime("%B %d, %Y") %></p>
+            </div>
+            <div>
+              <p class="text-gray-500 dark:text-gray-400">Target Completion</p>
+              <p class="font-medium text-gray-900 dark:text-white"><%= @plan.end_date.strftime("%B %d, %Y") %></p>
+            </div>
+            <div>
+              <p class="text-gray-500 dark:text-gray-400">Last Updated</p>
+              <p class="font-medium text-gray-900 dark:text-white"><%= @plan.updated_at.strftime("%B %d, %Y") %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @score_history.present? %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('creditScoreChart').getContext('2d');
+      
+      // Prepare data
+      const labels = <%= raw @score_history.map { |s| s.calculated_at.strftime("%b %d") }.to_json %>;
+      const scores = <%= raw @score_history.map(&:score).to_json %>;
+      
+      // Add plan start and target markers
+      const planStartDate = new Date('<%= @plan.start_date.strftime("%Y-%m-%d") %>');
+      const planEndDate = new Date('<%= @plan.end_date.strftime("%Y-%m-%d") %>');
+      
+      // Create gradient
+      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
+      gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+      
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.reverse(),
+          datasets: [{
+            label: 'Credit Score',
+            data: scores.reverse(),
+            borderColor: 'rgb(79, 70, 229)',
+            backgroundColor: gradient,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: 'rgb(79, 70, 229)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              min: 300,
+              max: 850,
+              grid: {
+                color: 'rgba(160, 174, 192, 0.1)'
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(17, 24, 39, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                title: function(tooltipItems) {
+                  return 'Credit Score';
+                },
+                label: function(context) {
+                  return context.parsed.y;
+                }
+              }
+            },
+            annotation: {
+              annotations: {
+                targetLine: {
+                  type: 'line',
+                  yMin: <%= @plan.target_score %>,
+                  yMax: <%= @plan.target_score %>,
+                  borderColor: 'rgba(34, 197, 94, 0.5)',
+                  borderWidth: 2,
+                  borderDash: [6, 6],
+                  label: {
+                    enabled: true,
+                    content: 'Target: <%= @plan.target_score %>',
+                    position: 'end',
+                    backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                    color: '#fff',
+                    font: {
+                      size: 12
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      
+      // Update chart colors based on dark mode
+      function updateChartColors() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+        
+        chart.options.scales.y.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+        chart.options.scales.y.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+        chart.options.scales.x.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+        
+        chart.update();
+      }
+      
+      // Initial update
+      updateChartColors();
+      
+      // Listen for dark mode changes
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'class') {
+            updateChartColors();
+          }
+        });
+      });
+      
+      observer.observe(document.documentElement, {
+        attributes: true
+      });
+    });
+  </script>
+<% end %>

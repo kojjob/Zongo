@@ -1,0 +1,347 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to user_settings_path, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Settings
+    <% end %>
+  </div>
+
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white">Credit Score</h1>
+      </div>
+
+      <div class="p-6">
+        <% if @current_score.present? %>
+          <div class="mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+              <div class="flex items-center mb-4 md:mb-0">
+                <div class="w-32 h-32 rounded-full flex items-center justify-center text-white font-bold text-3xl
+                  <%= @current_score.score >= 700 ? 'bg-gradient-to-r from-green-400 to-green-600' :
+                     (@current_score.score >= 600 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
+                     (@current_score.score >= 500 ? 'bg-gradient-to-r from-orange-400 to-orange-600' :
+                     'bg-gradient-to-r from-red-400 to-red-600')) %>">
+                  <%= @current_score.score %>
+                </div>
+                <div class="ml-6">
+                  <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <%= @current_score.score >= 700 ? 'Excellent' :
+                       (@current_score.score >= 600 ? 'Good' :
+                       (@current_score.score >= 500 ? 'Fair' : 'Poor')) %>
+                  </h2>
+                  <p class="text-gray-500 dark:text-gray-400">
+                    Last updated: <%= @current_score.calculated_at.strftime("%B %d, %Y") %>
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Score range: 300-850
+                  </p>
+                </div>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">What This Means</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <% if @current_score.score >= 700 %>
+                    You have an excellent credit score. You're eligible for the best loan rates and highest loan limits.
+                  <% elsif @current_score.score >= 600 %>
+                    You have a good credit score. You're eligible for most loan types with competitive rates.
+                  <% elsif @current_score.score >= 500 %>
+                    You have a fair credit score. You're eligible for most loan types, but may not receive the best rates.
+                  <% else %>
+                    You have a poor credit score. You may have limited loan options and higher interest rates.
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <% if @factors.present? %>
+            <div class="mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Score Factors</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <% @factors.each do |key, value| %>
+                  <% next if key == "last_update" %>
+                  <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"><%= key.to_s.titleize %></h3>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                      <div class="bg-primary-600 h-2.5 rounded-full" style="width: <%= value %>%"></div>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                      <%= value %>/100
+                    </p>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @last_update.present? %>
+            <div class="mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Last Update</h2>
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <% if @last_update["adjustment"].to_i > 0 %>
+                      <svg class="h-8 w-8 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    <% elsif @last_update["adjustment"].to_i < 0 %>
+                      <svg class="h-8 w-8 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd" />
+                      </svg>
+                    <% else %>
+                      <svg class="h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                      </svg>
+                    <% end %>
+                  </div>
+                  <div class="ml-4">
+                    <h3 class="text-md font-medium text-gray-900 dark:text-white">
+                      <%= @last_update["reason"] %>
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      <%= @last_update["adjustment"].to_i > 0 ? "+" : "" %><%= @last_update["adjustment"] %> points
+                      (from <%= @last_update["previous_score"] %> to <%= @current_score.score %>)
+                    </p>
+                    <% if @last_update["loan_id"].present? %>
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Loan: <%= link_to "View Details", loan_path(@last_update["loan_id"]), class: "text-primary-600 hover:text-primary-500 dark:text-primary-400" %>
+                      </p>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Score History</h2>
+            <% if @score_history.present? %>
+              <div class="bg-white dark:bg-gray-800 overflow-hidden">
+                <div class="relative" style="height: 200px;">
+                  <canvas id="creditScoreChart"></canvas>
+                </div>
+              </div>
+
+              <div class="mt-6 overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead class="bg-gray-50 dark:bg-gray-700">
+                    <tr>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Score</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Change</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    <% @score_history.each_with_index do |score, index| %>
+                      <%
+                        factors = score.factors.present? ? JSON.parse(score.factors) : {}
+                        last_update = factors["last_update"]
+                        previous_score = last_update.present? ? last_update["previous_score"] : (index < @score_history.length - 1 ? @score_history[index + 1].score : score.score)
+                        change = score.score - previous_score
+                        reason = last_update.present? ? last_update["reason"] : "Initial score"
+                      %>
+                      <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <%= score.calculated_at.strftime("%B %d, %Y") %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                          <%= score.score %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                          <% if change > 0 %>
+                            <span class="text-green-600 dark:text-green-400">+<%= change %></span>
+                          <% elsif change < 0 %>
+                            <span class="text-red-600 dark:text-red-400"><%= change %></span>
+                          <% else %>
+                            <span class="text-gray-500 dark:text-gray-400">0</span>
+                          <% end %>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                          <%= reason %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            <% else %>
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg text-center">
+                <p class="text-gray-500 dark:text-gray-400">No score history available yet.</p>
+              </div>
+            <% end %>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">How to Improve Your Score</h2>
+              <%= link_to credit_improvement_index_path, class: "btn-primary" do %>
+                Get Personalized Plan
+              <% end %>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <ul class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                <li class="flex items-start">
+                  <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Make loan repayments on time or early</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Complete your identity verification</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Use your wallet regularly for transactions</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Maintain a stable account with regular deposits</span>
+                </li>
+                <li class="flex items-start">
+                  <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                  </svg>
+                  <span>Avoid defaulting on loans</span>
+                </li>
+              </ul>
+
+              <div class="mt-4 text-center">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  Get a personalized credit improvement plan with step-by-step guidance to boost your score.
+                </p>
+                <%= link_to credit_improvement_index_path, class: "btn-primary w-full" do %>
+                  Improve Your Credit Score
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg text-center">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Credit Score Available</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-4">
+              We haven't calculated your credit score yet. This usually happens after you've been using your account for a while.
+            </p>
+            <p class="text-gray-500 dark:text-gray-400">
+              Continue using your account and apply for loans to build your credit history.
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if @score_history.present? %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('creditScoreChart').getContext('2d');
+
+      // Prepare data
+      const labels = <%= raw @score_history.map { |s| s.calculated_at.strftime("%b %d") }.to_json %>;
+      const scores = <%= raw @score_history.map(&:score).to_json %>;
+
+      // Create gradient
+      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+      gradient.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
+      gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels.reverse(),
+          datasets: [{
+            label: 'Credit Score',
+            data: scores.reverse(),
+            borderColor: 'rgb(79, 70, 229)',
+            backgroundColor: gradient,
+            tension: 0.3,
+            fill: true,
+            pointBackgroundColor: 'rgb(79, 70, 229)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              min: 300,
+              max: 850,
+              grid: {
+                color: 'rgba(160, 174, 192, 0.1)'
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(17, 24, 39, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                title: function(tooltipItems) {
+                  return 'Credit Score';
+                },
+                label: function(context) {
+                  return context.parsed.y;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // Update chart colors based on dark mode
+      function updateChartColors() {
+        const isDarkMode = document.documentElement.classList.contains('dark');
+
+        chart.options.scales.y.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+        chart.options.scales.y.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+        chart.options.scales.x.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+
+        chart.update();
+      }
+
+      // Initial update
+      updateChartColors();
+
+      // Listen for dark mode changes
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'class') {
+            updateChartColors();
+          }
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true
+      });
+    });
+  </script>
+<% end %>

@@ -76,6 +76,7 @@ class User < ApplicationRecord
   # Add loans and credit_scores associations if the tables exist
   has_many :loans, dependent: :restrict_with_error if ActiveRecord::Base.connection.table_exists?(:loans)
   has_many :credit_scores, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:credit_scores)
+  has_many :credit_improvement_plans, dependent: :destroy if ActiveRecord::Base.connection.table_exists?(:credit_improvement_plans)
 
   # Callbacks
   before_save :normalize_phone_fields
@@ -496,6 +497,47 @@ class User < ApplicationRecord
   # @return [Wallet] The user's primary wallet
   def primary_wallet
     wallet
+  end
+
+  # Credit improvement plan methods
+
+  # Get the user's current active credit improvement plan
+  # @return [CreditImprovementPlan, nil] The current active plan or nil if none exists
+  def current_credit_improvement_plan
+    return nil unless ActiveRecord::Base.connection.table_exists?(:credit_improvement_plans)
+    credit_improvement_plans.current.first
+  end
+
+  # Check if the user has an active credit improvement plan
+  # @return [Boolean] True if an active plan exists
+  def has_active_credit_improvement_plan?
+    current_credit_improvement_plan.present?
+  end
+
+  # Get or create a credit improvement plan for the user
+  # @return [CreditImprovementPlan] The current or newly created plan
+  def get_or_create_credit_improvement_plan
+    return current_credit_improvement_plan if has_active_credit_improvement_plan?
+
+    # Create a new plan
+    CreditImprovementPlan.generate_for(self)
+  end
+
+  # Get the user's credit improvement progress
+  # @return [Hash] Hash containing progress information
+  def credit_improvement_progress
+    plan = current_credit_improvement_plan
+    return {} unless plan.present?
+
+    {
+      progress_percentage: plan.progress_percentage,
+      starting_score: plan.starting_score,
+      current_score: current_credit_score&.score || plan.starting_score,
+      target_score: plan.target_score,
+      on_track: plan.on_track?,
+      completed_steps: plan.credit_improvement_steps.completed.count,
+      total_steps: plan.credit_improvement_steps.count
+    }
   end
 
   # Get all transactions for this user (both sent and received)

@@ -174,11 +174,24 @@ Rails.application.routes.draw do
   get "user_settings/appearance", to: "user_settings#appearance"
   get "user_settings/payment", to: "user_settings#payment"
   get "user_settings/support", to: "user_settings#support"
+  get "user_settings/credit_score", to: "user_settings#credit_score"
 
   # Shortcut routes for better UX
   get "profile", to: "user_settings#profile", as: "profile"
   get "settings", to: "user_settings#index", as: "settings"
   get "support", to: "user_settings#support", as: "support"
+  get "credit_score", to: "user_settings#credit_score", as: "credit_score"
+
+  # Credit improvement routes
+  resources :credit_improvement, only: [:index, :show, :create] do
+    collection do
+      post :create_plan
+    end
+    member do
+      patch :update_step
+      post :refresh_plan
+    end
+  end
 
   # user_Settings update routes
   patch "user_settings/update_profile", to: "user_settings#update_profile", as: "update_profile"
@@ -213,6 +226,7 @@ Rails.application.routes.draw do
     get "dashboard/events", to: "dashboard#events", as: "events_dashboard"
     get "dashboard/system", to: "dashboard#system", as: "system"
     get "dashboard/loans", to: "dashboard#loans", as: "loans_dashboard"
+    get "dashboard/loan_analytics", to: "dashboard#loan_analytics", as: "loan_analytics_dashboard"
 
     # Admin Help Center
     get "help", to: "help#index", as: "help"

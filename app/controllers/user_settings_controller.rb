@@ -40,6 +40,24 @@ class UserSettingsController < ApplicationController
     # Template will be automatically rendered from app/views/user_settings/support.html.erb
   end
 
+  # Credit score
+  def credit_score
+    @current_score = current_user.credit_scores.current.first
+
+    if @current_score.present?
+      # Get score history (most recent first)
+      @score_history = current_user.credit_scores.order(calculated_at: :desc).limit(10)
+
+      # Parse factors
+      if @current_score.factors.present?
+        @factors = JSON.parse(@current_score.factors) rescue {}
+
+        # Extract last update information
+        @last_update = @factors["last_update"] if @factors.key?("last_update")
+      end
+    end
+  end
+
   # Update profile information
   def update_profile
     # Add additional error handling

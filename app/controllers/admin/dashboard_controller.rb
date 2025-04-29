@@ -347,6 +347,113 @@ class Admin::DashboardController < ApplicationController
     end
   end
 
+  def loan_analytics
+    # Handle case where loans table might not exist
+    begin
+      if ActiveRecord::Base.connection.table_exists?(:loans)
+        # Loan statistics
+        @active_loans_count = Loan.where(status: :active).count
+        @completed_loans_count = Loan.where(status: :completed).count
+        @defaulted_loans_count = Loan.where(status: :defaulted).count
+
+        # Loan values
+        @active_loans_value = Loan.where(status: :active).sum(:amount)
+        @completed_loans_value = Loan.where(status: :completed).sum(:amount)
+        @defaulted_loans_value = Loan.where(status: :defaulted).sum(:amount)
+
+        # Calculate default rate
+        total_loans = @completed_loans_count + @defaulted_loans_count
+        @default_rate = total_loans > 0 ? (@defaulted_loans_count.to_f / total_loans) * 100 : 0
+
+        # Loan type distribution
+        @loan_types_data = Loan.group(:loan_type).count
+
+        # Monthly loan performance
+        @monthly_performance = {}
+
+        # Get data for the last 6 months
+        6.times do |i|
+          month = (Date.today - i.months).beginning_of_month
+          month_name = month.strftime("%b %Y")
+
+          # Get loans disbursed, repaid, and defaulted in this month
+          disbursed = Loan.where(disbursed_at: month.beginning_of_month..month.end_of_month).sum(:amount)
+          repaid = Loan.where(completed_at: month.beginning_of_month..month.end_of_month).sum(:amount)
+          defaulted = Loan.where(defaulted_at: month.beginning_of_month..month.end_of_month).sum(:amount)
+
+          @monthly_performance[month_name] = {
+            disbursed: disbursed,
+            repaid: repaid,
+            defaulted: defaulted
+          }
+        end
+
+        # Reverse the hash to show oldest month first
+        @monthly_performance = @monthly_performance.to_a.reverse.to_h
+
+        # Credit score distribution
+        @credit_score_distribution = [0, 0, 0, 0, 0, 0] # Initialize with zeros
+
+        # Get the latest credit score for each user
+        CreditScore.where(is_current: true).find_each do |score|
+          case score.score
+          when 300..400
+            @credit_score_distribution[0] += 1
+          when 401..500
+            @credit_score_distribution[1] += 1
+          when 501..600
+            @credit_score_distribution[2] += 1
+          when 601..700
+            @credit_score_distribution[3] += 1
+          when 701..800
+            @credit_score_distribution[4] += 1
+          when 801..850
+            @credit_score_distribution[5] += 1
+          end
+        end
+
+        # Top borrowers
+        @top_borrowers = User.joins(:loans)
+                            .select('users.*, COUNT(loans.id) as loans_count, SUM(loans.amount) as total_amount')
+                            .group('users.id')
+                            .order('total_amount DESC')
+                            .limit(5)
+
+        # Recent loans
+        @recent_loans = Loan.order(created_at: :desc).limit(10)
+      else
+        # Set default values if loans table doesn't exist
+        @active_loans_count = 0
+        @completed_loans_count = 0
+        @defaulted_loans_count = 0
+        @active_loans_value = 0
+        @completed_loans_value = 0
+        @defaulted_loans_value = 0
+        @default_rate = 0
+        @loan_types_data = {}
+        @monthly_performance = {}
+        @credit_score_distribution = [0, 0, 0, 0, 0, 0]
+        @top_borrowers = []
+        @recent_loans = []
+      end
+    rescue => e
+      Rails.logger.error("Error in loan_analytics action: #{e.message}")
+      # Set default values in case of error
+      @active_loans_count = 0
+      @completed_loans_count = 0
+      @defaulted_loans_count = 0
+      @active_loans_value = 0
+      @completed_loans_value = 0
+      @defaulted_loans_value = 0
+      @default_rate = 0
+      @loan_types_data = {}
+      @monthly_performance = {}
+      @credit_score_distribution = [0, 0, 0, 0, 0, 0]
+      @top_borrowers = []
+      @recent_loans = []
+    end
+  end
+
   private
 
   def require_admin_privileges

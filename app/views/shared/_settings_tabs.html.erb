@@ -49,6 +49,14 @@
       <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Payment</span>
     <% end %>
 
+    <%# Credit Score Tab %>
+    <%= link_to user_settings_credit_score_path, class: "flex items-center mx-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_credit_score_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_credit_score_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">
+        <%= icon "chart-bar", class: "w-4 h-4 sm:w-5 sm:h-5" %>
+      </div>
+      <span class="text-xs sm:text-sm font-medium whitespace-nowrap">Credit Score</span>
+    <% end %>
+
     <%# Support Tab %>
     <%= link_to user_settings_support_path, class: "flex items-center ml-1 p-2 sm:p-3 rounded-lg transition-all duration-200 #{current_page?(user_settings_support_path) ? 'bg-gradient-to-r from-teal-500/10 to-emerald-500/10 dark:from-teal-500/20 dark:to-emerald-500/20 text-teal-600 dark:text-teal-400 shadow-sm dark:shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'}" do %>
       <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-2 sm:mr-3 <%= current_page?(user_settings_support_path) ? 'bg-gradient-to-r from-teal-500 to-emerald-500 text-white shadow-sm dark:shadow-teal-500/20' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300' %>">

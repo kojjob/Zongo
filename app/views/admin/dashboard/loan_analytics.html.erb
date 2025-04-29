@@ -1,0 +1,441 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Loan Analytics</h1>
+    <div class="mt-4 md:mt-0 flex space-x-2">
+      <%= link_to admin_loans_path, class: "btn-secondary" do %>
+        <i class="fas fa-list mr-1"></i>
+        Manage Loans
+      <% end %>
+      <%= link_to admin_dashboard_path, class: "btn-secondary" do %>
+        <i class="fas fa-tachometer-alt mr-1"></i>
+        Dashboard
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Active Loans</h2>
+        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <i class="fas fa-money-bill-wave text-blue-600 dark:text-blue-400"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @active_loans_count %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Total value: <%= number_to_currency(@active_loans_value, unit: "GHS ") %></p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Completed Loans</h2>
+        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+          <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @completed_loans_count %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Total value: <%= number_to_currency(@completed_loans_value, unit: "GHS ") %></p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Defaulted Loans</h2>
+        <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center">
+          <i class="fas fa-exclamation-circle text-red-600 dark:text-red-400"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= @defaulted_loans_count %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Total value: <%= number_to_currency(@defaulted_loans_value, unit: "GHS ") %></p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Default Rate</h2>
+        <div class="w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900 flex items-center justify-center">
+          <i class="fas fa-percentage text-yellow-600 dark:text-yellow-400"></i>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-gray-900 dark:text-white"><%= number_to_percentage(@default_rate, precision: 2) %></p>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Industry avg: 5.00%</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Loan Distribution by Type</h2>
+      </div>
+      <div class="p-4">
+        <div class="h-80 relative">
+          <canvas id="loanTypeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Monthly Loan Performance</h2>
+      </div>
+      <div class="p-4">
+        <div class="h-80 relative">
+          <canvas id="loanPerformanceChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 mb-8">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Credit Score Distribution</h2>
+        <div class="flex space-x-2">
+          <button class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200">
+            Last 30 Days
+          </button>
+          <button class="px-3 py-1 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-md text-sm font-medium">
+            All Time
+          </button>
+        </div>
+      </div>
+      <div class="p-4">
+        <div class="h-80 relative">
+          <canvas id="creditScoreChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Top Borrowers</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Loans</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Amount</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Credit Score</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <% @top_borrowers.each do |user| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                      <% if user.avatar.attached? %>
+                        <%= image_tag user.avatar, class: "h-10 w-10 rounded-full" %>
+                      <% else %>
+                        <div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                          <i class="fas fa-user text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white">
+                        <%= user.display_name %>
+                      </div>
+                      <div class="text-sm text-gray-500 dark:text-gray-400">
+                        <%= user.email %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= user.loans.count %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= number_to_currency(user.loans.sum(:amount), unit: "GHS ") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% credit_score = user.current_credit_score&.score || 0 %>
+                  <div class="flex items-center">
+                    <div class="w-16 h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div class="h-full <%= credit_score >= 700 ? 'bg-green-500' : (credit_score >= 600 ? 'bg-yellow-500' : (credit_score >= 500 ? 'bg-orange-500' : 'bg-red-500')) %>" style="width: <%= (credit_score / 850.0 * 100).to_i %>%"></div>
+                    </div>
+                    <span class="ml-2 text-sm text-gray-500 dark:text-gray-400"><%= credit_score %></span>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Recent Loan Activity</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <% @recent_loans.each do |loan| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <%= link_to loan.reference_number, admin_loan_path(loan), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= loan.user.display_name %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= number_to_currency(loan.amount, unit: "GHS ") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% case loan.status %>
+                  <% when "pending" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                      Pending
+                    </span>
+                  <% when "approved" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100">
+                      Approved
+                    </span>
+                  <% when "active" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                      Active
+                    </span>
+                  <% when "completed" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100">
+                      Completed
+                    </span>
+                  <% when "defaulted" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                      Defaulted
+                    </span>
+                  <% when "rejected" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100">
+                      Rejected
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= loan.created_at.strftime("%b %d, %Y") %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Loan Type Distribution Chart
+    const loanTypeCtx = document.getElementById('loanTypeChart').getContext('2d');
+    const loanTypeChart = new Chart(loanTypeCtx, {
+      type: 'doughnut',
+      data: {
+        labels: <%= raw @loan_types_data.keys.to_json %>,
+        datasets: [{
+          data: <%= raw @loan_types_data.values.to_json %>,
+          backgroundColor: [
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(255, 99, 132, 0.8)'
+          ],
+          borderColor: [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 99, 132, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563'
+            }
+          }
+        }
+      }
+    });
+    
+    // Loan Performance Chart
+    const loanPerformanceCtx = document.getElementById('loanPerformanceChart').getContext('2d');
+    const loanPerformanceChart = new Chart(loanPerformanceCtx, {
+      type: 'bar',
+      data: {
+        labels: <%= raw @monthly_performance.keys.to_json %>,
+        datasets: [
+          {
+            label: 'Disbursed',
+            data: <%= raw @monthly_performance.map { |_, data| data[:disbursed] }.to_json %>,
+            backgroundColor: 'rgba(54, 162, 235, 0.8)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Repaid',
+            data: <%= raw @monthly_performance.map { |_, data| data[:repaid] }.to_json %>,
+            backgroundColor: 'rgba(75, 192, 192, 0.8)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Defaulted',
+            data: <%= raw @monthly_performance.map { |_, data| data[:defaulted] }.to_json %>,
+            backgroundColor: 'rgba(255, 99, 132, 0.8)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)'
+            },
+            ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)'
+            },
+            ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: document.documentElement.classList.contains('dark') ? '#e5e7eb' : '#4b5563'
+            }
+          }
+        }
+      }
+    });
+    
+    // Credit Score Distribution Chart
+    const creditScoreCtx = document.getElementById('creditScoreChart').getContext('2d');
+    const creditScoreChart = new Chart(creditScoreCtx, {
+      type: 'bar',
+      data: {
+        labels: ['300-400', '400-500', '500-600', '600-700', '700-800', '800-850'],
+        datasets: [{
+          label: 'Number of Users',
+          data: <%= raw @credit_score_distribution.to_json %>,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(153, 102, 255, 0.8)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(153, 102, 255, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)'
+            },
+            ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: document.documentElement.classList.contains('dark') ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)'
+            },
+            ticks: {
+              color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+    
+    // Update chart colors based on dark mode
+    function updateChartColors() {
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      
+      // Update Loan Type Chart
+      loanTypeChart.options.plugins.legend.labels.color = isDarkMode ? '#e5e7eb' : '#4b5563';
+      
+      // Update Loan Performance Chart
+      loanPerformanceChart.options.scales.x.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+      loanPerformanceChart.options.scales.y.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+      loanPerformanceChart.options.scales.x.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+      loanPerformanceChart.options.scales.y.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+      loanPerformanceChart.options.plugins.legend.labels.color = isDarkMode ? '#e5e7eb' : '#4b5563';
+      
+      // Update Credit Score Chart
+      creditScoreChart.options.scales.x.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+      creditScoreChart.options.scales.y.grid.color = isDarkMode ? 'rgba(75, 85, 99, 0.2)' : 'rgba(160, 174, 192, 0.1)';
+      creditScoreChart.options.scales.x.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+      creditScoreChart.options.scales.y.ticks.color = isDarkMode ? '#9CA3AF' : '#6B7280';
+      
+      // Update all charts
+      loanTypeChart.update();
+      loanPerformanceChart.update();
+      creditScoreChart.update();
+    }
+    
+    // Initial update
+    updateChartColors();
+    
+    // Listen for dark mode changes
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'class') {
+          updateChartColors();
+        }
+      });
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true
+    });
+  });
+</script>
