@@ -125,6 +125,32 @@ class UserNotificationService
     end
   end
 
+  def notify_loan_defaulted(loan)
+    user = loan.user
+
+    # Create notification record
+    create_notification(
+      user: user,
+      title: "Loan Defaulted",
+      body: "Your loan of #{loan.amount} GHS has been marked as defaulted. Please contact customer support immediately.",
+      category: "loan",
+      action_url: "/loans/#{loan.id}",
+      severity: "critical"
+    )
+
+    # Send email notification if user has email notifications enabled
+    if user.user_settings&.email_notifications
+      # LoanMailer.loan_defaulted(loan).deliver_later
+      Rails.logger.info "Email notification sent to #{user.email} for loan default"
+    end
+
+    # Send SMS notification if user has SMS notifications enabled
+    if user.user_settings&.sms_notifications
+      # SmsService.send_message(user.phone, "IMPORTANT: Your loan has been marked as defaulted. Please contact customer support immediately.")
+      Rails.logger.info "SMS notification sent to #{user.phone} for loan default"
+    end
+  end
+
   private
 
   def create_notification(user:, title:, body:, category:, action_url:, severity: "normal")

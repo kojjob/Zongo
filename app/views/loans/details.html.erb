@@ -1,0 +1,169 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to @loan, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Loan Details
+    <% end %>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+      <h1 class="text-xl font-bold text-gray-900 dark:text-white">
+        Loan Terms and Conditions: <%= @loan.reference_number %>
+      </h1>
+    </div>
+
+    <div class="p-6">
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Loan Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Loan Details</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Loan Type:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.loan_type.titleize %></span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Principal Amount:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.amount, unit: "GHS ") %></span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Interest Rate:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.interest_rate %>%</span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Processing Fee:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.processing_fee, unit: "GHS ") %></span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Total Amount Due:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.get_amount_due, unit: "GHS ") %></span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Term:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.term_days %> days</span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Due Date:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.due_date.strftime("%B %d, %Y") %></span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Status Information</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Current Status:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.status.titleize %></span>
+              </div>
+              
+              <div class="flex justify-between">
+                <span class="text-gray-500 dark:text-gray-400">Application Date:</span>
+                <span class="text-gray-900 dark:text-white font-medium"><%= @loan.created_at.strftime("%B %d, %Y") %></span>
+              </div>
+              
+              <% if @loan.approved_at.present? %>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Approval Date:</span>
+                  <span class="text-gray-900 dark:text-white font-medium"><%= @loan.approved_at.strftime("%B %d, %Y") %></span>
+                </div>
+              <% end %>
+              
+              <% if @loan.disbursed_at.present? %>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Disbursement Date:</span>
+                  <span class="text-gray-900 dark:text-white font-medium"><%= @loan.disbursed_at.strftime("%B %d, %Y") %></span>
+                </div>
+              <% end %>
+              
+              <% if @loan.completed_at.present? %>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Completion Date:</span>
+                  <span class="text-gray-900 dark:text-white font-medium"><%= @loan.completed_at.strftime("%B %d, %Y") %></span>
+                </div>
+              <% end %>
+              
+              <% if @loan.active? || @loan.completed? %>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Current Balance:</span>
+                  <span class="text-gray-900 dark:text-white font-medium"><%= number_to_currency(@loan.current_balance, unit: "GHS ") %></span>
+                </div>
+              <% end %>
+              
+              <% if @loan.overdue? %>
+                <div class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Days Overdue:</span>
+                  <span class="text-red-600 dark:text-red-400 font-medium"><%= @loan.days_overdue %> days</span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Terms and Conditions</h2>
+        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+          <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Repayment Terms</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <% if @loan.installment? %>
+              This is an installment loan. You are required to make regular payments according to the repayment schedule.
+              Failure to make payments on time may result in additional fees and affect your credit score.
+            <% else %>
+              This loan requires full repayment by the due date. The total amount due is <%= number_to_currency(@loan.get_amount_due, unit: "GHS ") %>.
+              You can make partial payments at any time before the due date.
+            <% end %>
+          </p>
+          
+          <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Late Payment Policy</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Late payments may incur a penalty fee of 2% of the outstanding balance per week.
+            If your loan becomes more than 30 days overdue, it may be marked as defaulted, which will negatively impact your credit score.
+          </p>
+          
+          <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Early Repayment</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            You can repay your loan early without any penalty. Early repayment will reduce the total interest paid.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Credit Score Impact</h2>
+        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Your loan activity will be reported to our internal credit scoring system. Timely repayments will positively impact your credit score,
+            while late payments or defaults will negatively impact it. A good credit score will increase your loan limit and may reduce your interest rates for future loans.
+          </p>
+          
+          <% if @loan.credit_score_data.present? %>
+            <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Your Credit Score at Application</h3>
+            <div class="flex items-center mb-4">
+              <div class="w-16 h-16 rounded-full bg-gradient-to-r <%= @loan.credit_score_data["score"] >= 700 ? 'from-green-400 to-green-600' : (@loan.credit_score_data["score"] >= 600 ? 'from-yellow-400 to-yellow-600' : 'from-red-400 to-red-600') %> flex items-center justify-center text-white font-bold text-xl">
+                <%= @loan.credit_score_data["score"] %>
+              </div>
+              <div class="ml-4">
+                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                  <%= @loan.credit_score_data["score"] >= 700 ? 'Excellent' : (@loan.credit_score_data["score"] >= 600 ? 'Good' : (@loan.credit_score_data["score"] >= 500 ? 'Fair' : 'Poor')) %>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  Score range: 300-850
+                </p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

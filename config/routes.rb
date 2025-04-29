@@ -157,7 +157,14 @@ Rails.application.routes.draw do
       post :repay
       get :schedule
       get :details
+      get :refinancing_eligibility
+      get :calculate_savings
     end
+  end
+
+  # Loan refinancing routes
+  resources :loan_refinancings, only: [:index, :show, :new, :create] do
+    post :cancel, on: :member
   end
 
   # Payment methods routes
@@ -250,6 +257,14 @@ Rails.application.routes.draw do
         post :approve
         post :reject
         post :disburse
+      end
+    end
+
+    # Loan refinancing management
+    resources :loan_refinancings, only: [:index, :show] do
+      member do
+        post :approve
+        post :reject
       end
     end
 

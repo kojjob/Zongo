@@ -13,9 +13,9 @@
       <div class="p-4 border-b border-gray-200 dark:border-gray-700">
         <h1 class="text-xl font-bold text-gray-900 dark:text-white">Apply for a Loan</h1>
       </div>
-      
+
       <div class="p-6">
-        <%= form_with model: @loan, class: "space-y-6" do |f| %>
+        <%= form_with model: @loan, class: "space-y-6", data: { controller: "loan-application" } do |f| %>
           <% if @loan.errors.any? %>
             <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-md">
               <div class="flex">
@@ -39,41 +39,72 @@
               </div>
             </div>
           <% end %>
-          
+
           <div>
             <%= f.label :loan_type, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.select :loan_type, @loan_types, { include_blank: "Select loan type" }, { class: "block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md dark:text-white", required: true } %>
+              <%= f.select :loan_type, @loan_types, { include_blank: "Select loan type" }, {
+                class: "py-2 px-3 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md dark:text-white",
+                required: true,
+                data: { loan_application_target: "loanType" }
+              } %>
             </div>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Not sure which loan type to choose? <%= link_to "View loan types", types_loans_path, class: "text-primary-600 hover:text-primary-500 dark:text-primary-400" %>
             </p>
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 italic" data-loan-application-target="loanTypeDescription"></p>
           </div>
-          
+
           <div>
             <%= f.label :amount, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1 relative rounded-md shadow-sm">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="text-gray-500 dark:text-gray-400 sm:text-sm">GHS</span>
               </div>
-              <%= f.number_field :amount, min: 50, max: @max_amount, step: 0.01, class: "block w-full pl-12 pr-12 py-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:text-white", placeholder: "0.00", required: true %>
+              <%= f.number_field :amount, min: 50, max: @max_amount, step: 0.01, class: "py-2 px-3 block w-full pl-12 pr-12 py-2 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md focus:ring-primary-500 focus:border-primary-500 dark:text-white", placeholder: "0.00", required: true, data: { loan_application_target: "amount" } %>
             </div>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Your maximum loan amount is <%= number_to_currency(@max_amount, unit: "GHS ") %>
             </p>
           </div>
-          
+
           <div>
             <%= f.label :term_days, "Loan Term (days)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
             <div class="mt-1">
-              <%= f.number_field :term_days, min: 7, max: 365, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white", required: true %>
+              <%= f.number_field :term_days, min: 7, max: 365, class: "block w-full py-2 px-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm dark:text-white", required: true, data: { loan_application_target: "termDays" } %>
             </div>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               Choose between 7 and 365 days
             </p>
           </div>
-          
+
           <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Loan Summary</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Interest Rate:</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white" data-loan-application-target="interestRate">-</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Processing Fee:</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white" data-loan-application-target="processingFee">-</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Total Amount Due:</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white" data-loan-application-target="totalDue">-</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <% if @loan.installment? %>Monthly Payment:<% else %>Payment Amount:<% end %>
+                </p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white" data-loan-application-target="monthlyPayment">-</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">Due Date:</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white" data-loan-application-target="dueDate">-</p>
+              </div>
+            </div>
+
             <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Terms and Conditions</h3>
             <div class="text-xs text-gray-500 dark:text-gray-400 space-y-2">
               <p>By submitting this application, you agree to the following terms:</p>
@@ -85,7 +116,7 @@
                 <li>You confirm that all information provided is accurate and complete.</li>
               </ul>
             </div>
-            
+
             <div class="mt-4">
               <div class="flex items-start">
                 <div class="flex items-center h-5">
@@ -97,7 +128,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="flex items-center justify-end">
             <%= link_to "Cancel", loans_path, class: "btn-secondary mr-3" %>
             <%= f.submit "Submit Application", class: "btn-primary" %>

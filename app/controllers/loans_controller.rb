@@ -142,16 +142,32 @@ class LoansController < ApplicationController
 
   def schedule
     @schedule = @loan.repayment_schedule
+
+    # If the loan is not active or approved, generate a sample schedule
+    if @schedule.blank? && (@loan.pending? || @loan.approved?)
+      # Generate a sample schedule for display purposes
+      @schedule = generate_sample_schedule(@loan)
+    end
   end
 
   def details
-    # Detailed loan information including terms, conditions, etc.
+    # Load credit score data if available
+    if @loan.credit_score_data.blank?
+      credit_score_service = CreditScoreService.new(@loan.user)
+      @loan.credit_score_data = credit_score_service.calculate
+      @loan.save
+    end
   end
 
   private
 
   def set_loan
-    @loan = current_user.loans.find(params[:id])
+    @loan = current_user.loans.find_by(id: params[:id])
+
+    unless @loan
+      redirect_to loans_path, alert: "Loan not found."
+      return
+    end
   end
 
   def loan_params
@@ -189,5 +205,46 @@ class LoansController < ApplicationController
 
     # Set due date
     @loan.due_date = Time.current + @loan.term_days.days
+  end
+
+  def generate_sample_schedule(loan)
+    # This is a sample schedule for display purposes only
+    # The actual schedule will be generated when the loan is approved
+
+    schedule = []
+
+    # For installment loans, generate multiple installments
+    if ["installment", "business", "agricultural"].include?(loan.loan_type)
+      # Calculate number of installments (approximately monthly)
+      num_installments = [loan.term_days / 30, 1].max
+
+      # Calculate installment amount
+      total_amount = loan.amount + (loan.amount * loan.interest_rate / 100 * loan.term_days / 365) + loan.processing_fee
+      installment_amount = (total_amount / num_installments).round(2)
+
+      # Generate installments
+      num_installments.times do |i|
+        due_date = Time.current + ((i + 1) * (loan.term_days / num_installments)).days
+
+        schedule << {
+          installment_number: i + 1,
+          due_date: due_date,
+          amount: installment_amount,
+          status: "upcoming"
+        }
+      end
+    else
+      # For non-installment loans, generate a single payment
+      total_amount = loan.amount + (loan.amount * loan.interest_rate / 100 * loan.term_days / 365) + loan.processing_fee
+
+      schedule << {
+        installment_number: 1,
+        due_date: loan.due_date,
+        amount: total_amount,
+        status: "upcoming"
+      }
+    end
+
+    schedule
   end
 end

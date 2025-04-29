@@ -195,6 +195,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
     t.index ["shop_category_id"], name: "index_coupons_on_shop_category_id"
   end
 
+  create_table "credit_improvement_plans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "starting_score", null: false
+    t.integer "target_score", null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.integer "status", default: 0, null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "status"], name: "index_credit_improvement_plans_on_user_id_and_status"
+    t.index ["user_id"], name: "index_credit_improvement_plans_on_user_id"
+  end
+
+  create_table "credit_improvement_steps", force: :cascade do |t|
+    t.bigint "credit_improvement_plan_id", null: false
+    t.string "action", null: false
+    t.text "description", null: false
+    t.integer "impact", null: false
+    t.integer "timeframe", default: 0, null: false
+    t.integer "difficulty", default: 0, null: false
+    t.integer "category", default: 4, null: false
+    t.integer "status", default: 0, null: false
+    t.integer "position", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["credit_improvement_plan_id", "position"], name: "idx_on_credit_improvement_plan_id_position_ca0bb73854"
+    t.index ["credit_improvement_plan_id", "status"], name: "idx_on_credit_improvement_plan_id_status_598a1d27a8"
+    t.index ["credit_improvement_plan_id"], name: "index_credit_improvement_steps_on_credit_improvement_plan_id"
+  end
+
   create_table "credit_scores", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "score", null: false
@@ -576,6 +608,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
     t.index ["resource_category_id"], name: "index_learning_resources_on_resource_category_id"
   end
 
+  create_table "loan_refinancings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "original_loan_id", null: false
+    t.bigint "new_loan_id"
+    t.decimal "requested_amount", precision: 10, scale: 2, null: false
+    t.decimal "original_rate", precision: 5, scale: 2, null: false
+    t.decimal "requested_rate", precision: 5, scale: 2, null: false
+    t.decimal "estimated_savings", precision: 10, scale: 2
+    t.integer "term_days", null: false
+    t.integer "status", default: 0, null: false
+    t.text "reason"
+    t.text "rejection_reason"
+    t.datetime "approved_at"
+    t.datetime "rejected_at"
+    t.datetime "cancelled_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["new_loan_id"], name: "index_loan_refinancings_on_new_loan_id"
+    t.index ["original_loan_id"], name: "index_loan_refinancings_on_original_loan_id"
+    t.index ["status"], name: "index_loan_refinancings_on_status"
+    t.index ["user_id"], name: "index_loan_refinancings_on_user_id"
+  end
+
   create_table "loan_repayments", force: :cascade do |t|
     t.bigint "loan_id", null: false
     t.bigint "transaction_id"
@@ -615,8 +670,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
     t.jsonb "metadata", default: {}
     t.decimal "processing_fee", precision: 10, scale: 2
     t.decimal "amount_due", precision: 10, scale: 2
+    t.bigint "refinanced_from_loan_id"
+    t.bigint "refinanced_to_loan_id"
     t.index ["loan_type"], name: "index_loans_on_loan_type"
     t.index ["reference_number"], name: "index_loans_on_reference_number", unique: true
+    t.index ["refinanced_from_loan_id"], name: "index_loans_on_refinanced_from_loan_id"
+    t.index ["refinanced_to_loan_id"], name: "index_loans_on_refinanced_to_loan_id"
     t.index ["status"], name: "index_loans_on_status"
     t.index ["user_id"], name: "index_loans_on_user_id"
   end
@@ -1334,6 +1393,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
   add_foreign_key "cart_items", "products"
   add_foreign_key "carts", "users"
   add_foreign_key "coupons", "shop_categories"
+  add_foreign_key "credit_improvement_plans", "users"
+  add_foreign_key "credit_improvement_steps", "credit_improvement_plans"
   add_foreign_key "credit_scores", "users"
   add_foreign_key "crop_listing_inquiries", "crop_listings"
   add_foreign_key "crop_listing_inquiries", "users"
@@ -1379,8 +1440,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_29_000005) do
   add_foreign_key "group_memberships", "users"
   add_foreign_key "groups", "group_categories"
   add_foreign_key "learning_resources", "resource_categories"
+  add_foreign_key "loan_refinancings", "loans", column: "new_loan_id"
+  add_foreign_key "loan_refinancings", "loans", column: "original_loan_id"
+  add_foreign_key "loan_refinancings", "users"
   add_foreign_key "loan_repayments", "loans"
   add_foreign_key "loan_repayments", "transactions"
+  add_foreign_key "loans", "loans", column: "refinanced_from_loan_id"
+  add_foreign_key "loans", "loans", column: "refinanced_to_loan_id"
   add_foreign_key "loans", "users"
   add_foreign_key "navigation_items", "navigation_items", column: "parent_id"
   add_foreign_key "notification_channels", "users"

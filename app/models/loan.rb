@@ -3,6 +3,11 @@ class Loan < ApplicationRecord
   belongs_to :wallet
   has_many :loan_repayments, dependent: :destroy
 
+  # Refinancing associations
+  has_many :refinancing_applications, class_name: "LoanRefinancing", foreign_key: "original_loan_id", dependent: :destroy
+  belongs_to :refinanced_from_loan, class_name: "Loan", optional: true, foreign_key: "refinanced_from_loan_id"
+  belongs_to :refinanced_to_loan, class_name: "Loan", optional: true, foreign_key: "refinanced_to_loan_id"
+
   # Store credit score data, processing fee, and amount due as JSON in the metadata column if it exists
   # or use instance variables if the columns don't exist
   attr_accessor :_credit_score_data, :_processing_fee, :_amount_due
@@ -15,7 +20,8 @@ class Loan < ApplicationRecord
     completed: 4,
     defaulted: 5,
     rejected: 6,
-    cancelled: 7
+    cancelled: 7,
+    refinanced: 8
   }, default: :pending
 
   enum :loan_type, {
@@ -165,6 +171,60 @@ class Loan < ApplicationRecord
     (Time.current.to_date - due_date.to_date).to_i
   end
 
+  # Refinancing methods
+
+  # Check if this loan was refinanced
+  def refinanced?
+    status == "refinanced"
+  end
+
+  # Check if this loan is a result of refinancing
+  def is_refinanced_loan?
+    refinanced_from_loan_id.present?
+  end
+
+  # Get the original loan if this is a refinanced loan
+  def original_loan
+    refinanced_from_loan
+  end
+
+  # Get the new loan if this loan was refinanced
+  def new_loan
+    refinanced_to_loan
+  end
+
+  # Check if this loan is eligible for refinancing
+  def eligible_for_refinancing?
+    return false unless active?
+    return false if overdue?
+
+    # Must be at least 30 days old
+    days_since_creation = (Date.today - created_at.to_date).to_i
+    return false if days_since_creation < 30
+
+    # Must have at least 25% remaining
+    remaining_percentage = (current_balance / get_amount_due) * 100
+    return false if remaining_percentage < 25
+
+    # Must have at least 30 days remaining
+    days_remaining = due_date.present? ? (due_date.to_date - Date.today).to_i : 0
+    return false if days_remaining < 30
+
+    # Must have made at least 2 payments
+    return false if loan_repayments.count < 2
+
+    true
+  end
+
+  # Get the credit score recorded when this loan was created
+  def credit_score
+    if credit_score_data.present? && credit_score_data.is_a?(Hash)
+      credit_score_data["score"]
+    else
+      nil
+    end
+  end
+
   # Method to store credit score data
   # @param data [Hash] Credit score data to store
   def credit_score_data=(data)
@@ -235,8 +295,16 @@ class Loan < ApplicationRecord
   def determine_installment_status(date)
     return "paid" if completed?
 
-    if date < Time.current
+    # Check if this specific installment has been paid
+    # This would require more complex logic with actual installment tracking
+    # For now, we'll use a simplified approach
+
+    today = Time.current.to_date
+
+    if date.to_date < today
       "overdue"
+    elsif date.to_date == today
+      "due"
     else
       "upcoming"
     end

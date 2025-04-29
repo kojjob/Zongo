@@ -1,0 +1,396 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <%= link_to admin_loan_refinancings_path, class: "flex items-center text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back to Refinancing Applications
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+          <h1 class="text-xl font-bold text-gray-900 dark:text-white">Refinancing Application: REF-<%= @refinancing.id %></h1>
+          <span class="px-3 py-1 rounded-full text-sm font-medium
+            <%= case @refinancing.status
+                when 'pending'
+                  'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                when 'approved'
+                  'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                when 'rejected'
+                  'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                when 'cancelled'
+                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                end %>">
+            <%= @refinancing.status_text %>
+          </span>
+        </div>
+
+        <div class="p-6">
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Application Details</h2>
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Application Date</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.created_at.strftime("%B %d, %Y") %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">User</p>
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    <%= link_to @user.display_name, admin_user_path(@user), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Original Loan</p>
+                  <p class="font-medium text-gray-900 dark:text-white">
+                    <%= link_to @original_loan.reference_number, admin_loan_path(@original_loan), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                  </p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Loan Type</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= @original_loan.loan_type.titleize %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Requested Amount</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= number_to_currency(@refinancing.requested_amount, unit: "GHS ") %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Term (Days)</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.term_days %> days</p>
+                </div>
+              </div>
+
+              <% if @refinancing.reason.present? %>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Reason for Refinancing</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.reason %></p>
+                </div>
+              <% end %>
+
+              <% if @refinancing.rejected? && @refinancing.rejection_reason.present? %>
+                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Rejection Reason</p>
+                  <p class="font-medium text-red-600 dark:text-red-400"><%= @refinancing.rejection_reason %></p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Interest Rate Comparison</h2>
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Original Rate</div>
+                  <div class="text-2xl font-bold text-gray-900 dark:text-white"><%= number_to_percentage(@refinancing.original_rate, precision: 2) %></div>
+                </div>
+
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">New Rate</div>
+                  <div class="text-2xl font-bold text-green-600 dark:text-green-400"><%= number_to_percentage(@refinancing.requested_rate, precision: 2) %></div>
+                </div>
+
+                <div class="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+
+                <div class="text-center">
+                  <div class="text-sm text-gray-500 dark:text-gray-400">Savings</div>
+                  <div class="text-2xl font-bold text-green-600 dark:text-green-400"><%= number_to_percentage(@refinancing.original_rate - @refinancing.requested_rate, precision: 2) %></div>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                  <div class="bg-green-500 h-2.5 rounded-full" style="width: <%= @refinancing.savings_percentage %>%"></div>
+                </div>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+                  Savings of approximately <%= number_to_percentage(@refinancing.savings_percentage, precision: 2) %> on interest payments.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Savings Breakdown</h2>
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Estimated Total Savings</p>
+                  <p class="font-medium text-green-600 dark:text-green-400"><%= number_to_currency(@refinancing.estimated_savings, unit: "GHS ") %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Original Monthly Payment</p>
+                  <p class="font-medium text-gray-900 dark:text-white"><%= number_to_currency(@refinancing.original_monthly_payment, unit: "GHS ") %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">New Monthly Payment</p>
+                  <p class="font-medium text-green-600 dark:text-green-400"><%= number_to_currency(@refinancing.new_monthly_payment, unit: "GHS ") %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Monthly Savings</p>
+                  <p class="font-medium text-green-600 dark:text-green-400"><%= number_to_currency(@refinancing.monthly_savings, unit: "GHS ") %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <% if @refinancing.approved? && @refinancing.new_loan.present? %>
+            <div class="mb-8">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">New Loan Details</h2>
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">New Loan Reference</p>
+                    <p class="font-medium text-gray-900 dark:text-white">
+                      <%= link_to @refinancing.new_loan.reference_number, admin_loan_path(@refinancing.new_loan), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                    </p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Loan Amount</p>
+                    <p class="font-medium text-gray-900 dark:text-white"><%= number_to_currency(@refinancing.new_loan.amount, unit: "GHS ") %></p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Interest Rate</p>
+                    <p class="font-medium text-gray-900 dark:text-white"><%= number_to_percentage(@refinancing.new_loan.interest_rate, precision: 2) %></p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Term</p>
+                    <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.new_loan.term_days %> days</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Status</p>
+                    <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.new_loan.status.titleize %></p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Created On</p>
+                    <p class="font-medium text-gray-900 dark:text-white"><%= @refinancing.new_loan.created_at.strftime("%B %d, %Y") %></p>
+                  </div>
+                </div>
+
+                <div class="mt-4">
+                  <%= link_to "View New Loan", admin_loan_path(@refinancing.new_loan), class: "btn-primary w-full text-center" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @refinancing.pending? %>
+            <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Application Decision</h2>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <%= button_to approve_admin_loan_refinancing_path(@refinancing), method: :post, class: "btn-success w-full", data: { confirm: "Are you sure you want to approve this refinancing application?" } do %>
+                    <i class="fas fa-check mr-1"></i> Approve Refinancing
+                  <% end %>
+                </div>
+
+                <div>
+                  <button type="button" class="btn-danger w-full" data-toggle="modal" data-target="#rejectModal">
+                    <i class="fas fa-times mr-1"></i> Reject Refinancing
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reject Modal -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden" id="rejectModal">
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Reject Refinancing Application</h3>
+                </div>
+
+                <%= form_with url: reject_admin_loan_refinancing_path(@refinancing), method: :post, local: true do |form| %>
+                  <div class="p-4">
+                    <div class="mb-4">
+                      <%= form.label :rejection_reason, "Reason for Rejection", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+                      <%= form.text_area :rejection_reason, rows: 3, class: "form-textarea block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500", required: true %>
+                    </div>
+
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                      This reason will be visible to the user in their refinancing application details.
+                    </p>
+                  </div>
+
+                  <div class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('rejectModal').classList.add('hidden')">
+                      Cancel
+                    </button>
+                    <%= form.submit "Reject Application", class: "btn-danger" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">User Information</h2>
+        </div>
+
+        <div class="p-4">
+          <div class="flex items-center mb-4">
+            <div class="flex-shrink-0 h-12 w-12">
+              <% if @user.avatar.attached? %>
+                <%= image_tag @user.avatar, class: "h-12 w-12 rounded-full" %>
+              <% else %>
+                <div class="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <i class="fas fa-user text-gray-400 dark:text-gray-500 text-xl"></i>
+                </div>
+              <% end %>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white"><%= @user.display_name %></h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400"><%= @user.email %></p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 mb-4">
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Phone Number</p>
+              <p class="font-medium text-gray-900 dark:text-white"><%= @user.phone || "Not provided" %></p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Member Since</p>
+              <p class="font-medium text-gray-900 dark:text-white"><%= @user.created_at.strftime("%B %d, %Y") %></p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Verification Status</p>
+              <p class="font-medium text-gray-900 dark:text-white">
+                <% if @user.verified? %>
+                  <span class="text-green-600 dark:text-green-400">Verified</span>
+                <% else %>
+                  <span class="text-yellow-600 dark:text-yellow-400">Not Verified</span>
+                <% end %>
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <%= link_to "View User Profile", admin_user_path(@user), class: "btn-secondary w-full text-center" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-6">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Credit Score</h2>
+        </div>
+
+        <div class="p-4">
+          <% if @credit_score.present? %>
+            <div class="flex justify-center mb-4">
+              <div class="w-24 h-24 rounded-full flex items-center justify-center text-white font-bold text-2xl
+                <%= @credit_score.score >= 700 ? 'bg-gradient-to-r from-green-400 to-green-600' :
+                   (@credit_score.score >= 600 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
+                   (@credit_score.score >= 500 ? 'bg-gradient-to-r from-orange-400 to-orange-600' :
+                   'bg-gradient-to-r from-red-400 to-red-600')) %>">
+                <%= @credit_score.score %>
+              </div>
+            </div>
+
+            <div class="text-center mb-4">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+                <%= @credit_score.score >= 700 ? 'Excellent' :
+                   (@credit_score.score >= 600 ? 'Good' :
+                   (@credit_score.score >= 500 ? 'Fair' : 'Poor')) %>
+              </h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Last updated: <%= @credit_score.calculated_at&.strftime("%B %d, %Y") || "Unknown" %>
+              </p>
+            </div>
+
+            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mb-2">
+              <div class="h-2.5 rounded-full <%= @credit_score.score >= 700 ? 'bg-green-500' : (@credit_score.score >= 600 ? 'bg-yellow-500' : (@credit_score.score >= 500 ? 'bg-orange-500' : 'bg-red-500')) %>" style="width: <%= (@credit_score.score / 850.0 * 100).to_i %>%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-4">
+              <span>300</span>
+              <span>850</span>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <p class="text-gray-500 dark:text-gray-400">No credit score available</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Other Active Loans</h2>
+        </div>
+
+        <div class="p-4">
+          <% if @other_loans.present? %>
+            <div class="space-y-4">
+              <% @other_loans.each do |loan| %>
+                <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+                  <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                      <%= link_to loan.reference_number, admin_loan_path(loan), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                    </h3>
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                      <%= loan.status.titleize %>
+                    </span>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <p class="text-gray-500 dark:text-gray-400">Amount</p>
+                      <p class="font-medium text-gray-900 dark:text-white"><%= number_to_currency(loan.amount, unit: "GHS ") %></p>
+                    </div>
+                    <div>
+                      <p class="text-gray-500 dark:text-gray-400">Balance</p>
+                      <p class="font-medium text-gray-900 dark:text-white"><%= number_to_currency(loan.current_balance, unit: "GHS ") %></p>
+                    </div>
+                    <div>
+                      <p class="text-gray-500 dark:text-gray-400">Rate</p>
+                      <p class="font-medium text-gray-900 dark:text-white"><%= number_to_percentage(loan.interest_rate, precision: 2) %></p>
+                    </div>
+                    <div>
+                      <p class="text-gray-500 dark:text-gray-400">Due Date</p>
+                      <p class="font-medium text-gray-900 dark:text-white"><%= loan.due_date&.strftime("%b %d, %Y") || "N/A" %></p>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <p class="text-gray-500 dark:text-gray-400">No other active loans</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Modal toggle
+  document.addEventListener('DOMContentLoaded', function() {
+    const modalToggle = document.querySelector('[data-toggle="modal"]');
+    const modal = document.getElementById('rejectModal');
+
+    if (modalToggle && modal) {
+      modalToggle.addEventListener('click', function() {
+        modal.classList.remove('hidden');
+      });
+    }
+  });
+</script>

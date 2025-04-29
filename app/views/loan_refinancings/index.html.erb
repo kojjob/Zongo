@@ -1,0 +1,164 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Loan Refinancing</h1>
+    <p class="text-gray-600 dark:text-gray-400 mt-2">
+      Refinance your existing loans to get better interest rates and save money.
+    </p>
+  </div>
+
+  <% if @eligible_loans.present? %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Eligible Loans for Refinancing</h2>
+      </div>
+      <div class="p-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @eligible_loans.each do |loan| %>
+            <% service = LoanRefinancingService.new(current_user) %>
+            <% savings = service.calculate_savings(loan) %>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600">
+              <div class="p-4 bg-primary-50 dark:bg-primary-900/30 border-b border-gray-200 dark:border-gray-600">
+                <div class="flex justify-between items-center">
+                  <h3 class="text-md font-medium text-gray-900 dark:text-white">
+                    <%= loan.reference_number %>
+                  </h3>
+                  <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                    Eligible
+                  </span>
+                </div>
+              </div>
+              <div class="p-4">
+                <div class="mb-4">
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Loan Type</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white"><%= loan.loan_type.titleize %></span>
+                  </div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Current Balance</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white"><%= number_to_currency(loan.current_balance, unit: "GHS ") %></span>
+                  </div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Current Rate</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white"><%= number_to_percentage(loan.interest_rate, precision: 2) %></span>
+                  </div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">New Rate</span>
+                    <span class="text-sm font-medium text-green-600 dark:text-green-400"><%= number_to_percentage(savings[:new_rate], precision: 2) %></span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Potential Savings</span>
+                    <span class="text-sm font-medium text-green-600 dark:text-green-400"><%= number_to_currency(savings[:savings], unit: "GHS ") %></span>
+                  </div>
+                </div>
+                
+                <div class="mt-4">
+                  <%= link_to new_loan_refinancing_path(loan_id: loan.id), class: "btn-primary w-full text-center" do %>
+                    Refinance This Loan
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden mb-8">
+      <div class="p-6 text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 dark:bg-yellow-900">
+          <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 class="mt-3 text-lg font-medium text-gray-900 dark:text-white">No Eligible Loans</h3>
+        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+          You don't have any loans eligible for refinancing at this time. To be eligible, loans must be active, not overdue, and have at least 25% of the balance remaining.
+        </p>
+        <div class="mt-4">
+          <%= link_to loans_path, class: "btn-secondary" do %>
+            View Your Loans
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @refinancings.present? %>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+      <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Your Refinancing Applications</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead class="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Reference</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Original Loan</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Amount</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rate Change</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Savings</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            <% @refinancings.each do |refinancing| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                  <%= link_to "REF-#{refinancing.id}", loan_refinancing_path(refinancing), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= link_to refinancing.original_loan.reference_number, loan_path(refinancing.original_loan), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300" %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= number_to_currency(refinancing.requested_amount, unit: "GHS ") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <span class="text-green-600 dark:text-green-400">
+                    <%= number_to_percentage(refinancing.original_rate, precision: 2) %> → <%= number_to_percentage(refinancing.requested_rate, precision: 2) %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <span class="text-green-600 dark:text-green-400">
+                    <%= number_to_currency(refinancing.estimated_savings, unit: "GHS ") %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% case refinancing.status %>
+                  <% when "pending" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                      Pending
+                    </span>
+                  <% when "approved" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                      Approved
+                    </span>
+                  <% when "rejected" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                      Rejected
+                    </span>
+                  <% when "cancelled" %>
+                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                      Cancelled
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= refinancing.created_at.strftime("%b %d, %Y") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                  <%= link_to "View", loan_refinancing_path(refinancing), class: "text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-2" %>
+                  
+                  <% if refinancing.pending? %>
+                    <%= button_to "Cancel", cancel_loan_refinancing_path(refinancing), method: :post, class: "text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 inline", data: { confirm: "Are you sure you want to cancel this refinancing application?" } %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>

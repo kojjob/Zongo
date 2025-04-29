@@ -58,7 +58,12 @@ module Admin
     private
 
     def set_loan
-      @loan = Loan.find(params[:id])
+      @loan = Loan.find_by(id: params[:id])
+
+      unless @loan
+        redirect_to admin_loans_path, alert: "Loan not found"
+        return
+      end
     end
   end
 end
