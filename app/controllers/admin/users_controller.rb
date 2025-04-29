@@ -71,10 +71,17 @@ module Admin
     end
 
     def update
+      # Log the parameters for debugging
+      Rails.logger.debug "User update params: #{user_params.inspect}"
+
       if @user.update(user_params)
+        # Log success
+        Rails.logger.debug "User update successful"
         redirect_to admin_user_path(@user), notice: "User was successfully updated."
       else
-        render :edit
+        # Log failure and errors
+        Rails.logger.debug "User update failed: #{@user.errors.full_messages.join(', ')}"
+        render :edit, status: :unprocessable_entity
       end
     end
 
@@ -170,6 +177,9 @@ module Admin
     end
 
     def user_params
+      # Log the raw parameters for debugging
+      Rails.logger.debug "Raw params: #{params.inspect}"
+
       # Only allow certain parameters to be updated
       permitted_params = [:username, :email, :phone, :kyc_level, :status]
 
@@ -179,6 +189,10 @@ module Admin
       # Add super_admin parameter if the current user is a super_admin
       permitted_params << :super_admin if current_user.super_admin?
 
+      # Log the permitted parameters
+      Rails.logger.debug "Permitted params: #{permitted_params.inspect}"
+
+      # Return the permitted parameters
       params.require(:user).permit(permitted_params)
     end
   end
