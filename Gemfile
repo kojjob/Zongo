@@ -79,7 +79,7 @@ gem "pagy", "~> 9.3"
 gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 
-gem "rspec-rails", "~> 7.1", groups: [ :development, :test ]
+gem "rspec-rails", "~> 8.0", groups: [ :development, :test ]
 
 gem "factory_bot_rails", "~> 6.4", groups: [ :development, :test ]
 
